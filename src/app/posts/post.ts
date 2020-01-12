@@ -5,4 +5,5 @@ export interface IPost {
   author: string;
   slug: string;
   categories: string[];
+  preview: string;
 }

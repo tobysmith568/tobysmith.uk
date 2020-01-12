@@ -1,0 +1,14 @@
+@import '../../../styles.scss';
+
+.content {
+	width: $content-width;
+	margin: 30px auto auto auto;
+	padding: 0px;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+}
+
+.post {
+	background-color: white;
+	margin: 20px;
+}

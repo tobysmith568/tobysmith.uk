@@ -9,6 +9,7 @@ import { HeaderComponent } from "./components/header/header.component";
 import { FooterComponent } from "./components/footer/footer.component";
 import { CategoryComponent } from "./components/category/category.component";
 import { PostComponent } from "./components/post/post.component";
+import { CategoryItemComponent } from "./components/category-item/category-item.component";
 
 const scrollConfig: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -49,7 +50,8 @@ const routes: Routes = [
     HeaderComponent,
     FooterComponent,
     CategoryComponent,
-    PostComponent
+    PostComponent,
+    CategoryItemComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

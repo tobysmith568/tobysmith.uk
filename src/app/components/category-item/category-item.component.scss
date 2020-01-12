@@ -1,0 +1,35 @@
+@import '../../../styles.scss';
+
+:host {
+	border-radius: 5px;
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.title {
+	margin-top: 20px;
+	margin-left: 20px;
+	margin-right: 20px;
+	text-align: center;
+	color: $blackText;
+	font-size: 28px;
+}
+
+.main-content {
+	flex-grow: 1;
+}
+
+.preview {
+	margin: 20px;
+	text-align: center;
+	color: $greyText;
+	font-size: 18px;
+}
+
+.date {
+	margin: 20px;
+}
