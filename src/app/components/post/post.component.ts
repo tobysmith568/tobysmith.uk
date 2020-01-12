@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { PostConfig } from "src/app/postConfig";
 import { Router, ActivatedRoute } from "@angular/router";
+import { PostService } from "src/app/services/posts/post.service";
 
 @Component({
   selector: "app-post",
@@ -9,13 +9,14 @@ import { Router, ActivatedRoute } from "@angular/router";
 })
 export class PostComponent implements OnInit {
 
-  constructor(private readonly activatedRoute: ActivatedRoute) { }
+  constructor(private readonly activatedRoute: ActivatedRoute,
+              private readonly postService: PostService) { }
 
   ngOnInit() {
   }
 
   public getPostDetails(): string {
-    for (const post of PostConfig.posts) {
+    for (const post of this.postService.getPosts()) {
       if (post.slug === this.activatedRoute.snapshot.paramMap.get("slug")) {
         return JSON.stringify(post);
       }

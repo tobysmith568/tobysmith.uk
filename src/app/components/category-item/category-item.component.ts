@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { IPost } from "src/app/posts/post";
+import { IPost } from "src/app/models/posts/post";
 
 @Component({
   selector: "app-category-item",

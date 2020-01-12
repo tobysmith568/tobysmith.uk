@@ -1,7 +1,12 @@
-import { IPost } from "./posts/post";
+import { Injectable } from "@angular/core";
+import { IPost } from "src/app/models/posts/post";
 
-export class PostConfig {
-  public static posts: IPost[] = [
+@Injectable({
+  providedIn: "root"
+})
+export class PostService {
+
+  private posts: IPost[] = [
     {
       author: "Toby Smith",
       categories: [
@@ -46,4 +51,10 @@ export class PostConfig {
       title: "I am a post"
     }
   ] as IPost[];
+
+  constructor() { }
+
+  public getPosts(): IPost[] {
+    return this.posts;
+  }
 }
