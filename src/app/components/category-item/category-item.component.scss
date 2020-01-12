@@ -4,6 +4,10 @@
 	border-radius: 5px;
 }
 
+a, p {
+	text-decoration: none;
+}
+
 .content {
 	display: flex;
 	flex-direction: column;
@@ -25,11 +29,12 @@
 
 .preview {
 	margin: 20px;
-	text-align: center;
+	text-align: left;
 	color: $greyText;
 	font-size: 18px;
 }
 
 .date {
 	margin: 20px;
+	color: $greyText;
 }
