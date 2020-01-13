@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { PostService } from "src/app/services/posts/post.service";
 import { IPost } from "src/app/models/posts/post.interface";
 import { SafeHtml } from "@angular/platform-browser";
@@ -20,10 +20,15 @@ export class PostComponent implements OnInit {
   constructor(private readonly activatedRoute: ActivatedRoute,
               private readonly postService: PostService,
               private readonly markdownService: MarkdownService,
-              private readonly httpClient: HttpClient) { }
+              private readonly httpClient: HttpClient,
+              private readonly router: Router) { }
 
   async ngOnInit() {
     this.post = this.postService.getPost(this.activatedRoute.snapshot.paramMap.get("slug"));
+
+    if (!this.post) {
+      this.goTo404();
+    }
 
     try {
       const result = await this.httpClient.get("./assets/posts/" + this.post.contentPath, {
@@ -32,7 +37,13 @@ export class PostComponent implements OnInit {
 
       this.postContent = this.markdownService.toSafeHTML(result);
     } catch (e) {
-      this.postContent = "<p>This post could not be found!<p>";
+      this.goTo404();
     }
+  }
+
+  private goTo404() {
+    this.router.navigate([ "404" ], {
+      skipLocationChange: true
+    });
   }
 }

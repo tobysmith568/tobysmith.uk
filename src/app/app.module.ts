@@ -12,6 +12,7 @@ import { FooterComponent } from "./components/footer/footer.component";
 import { CategoryComponent } from "./components/category/category.component";
 import { PostComponent } from "./components/post/post.component";
 import { CategoryItemComponent } from "./components/category-item/category-item.component";
+import { NotFoundComponent } from "./components/not-found/not-found.component";
 
 const scrollConfig: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -41,6 +42,9 @@ const routes: Routes = [
 
   { path: "about", pathMatch: "full", component: CategoryComponent },
   { path: "contact", pathMatch: "full", component: CategoryComponent },
+
+  { path: "404", component: NotFoundComponent },
+  { path: "**", component: NotFoundComponent }
 ];
 
 
@@ -53,7 +57,8 @@ const routes: Routes = [
     FooterComponent,
     CategoryComponent,
     PostComponent,
-    CategoryItemComponent
+    CategoryItemComponent,
+    NotFoundComponent
   ],
   imports: [
     RouterModule.forRoot(routes),
