@@ -8,6 +8,10 @@ a, p {
 	text-decoration: none;
 }
 
+a {
+	cursor: pointer;
+}
+
 .content {
 	display: flex;
 	flex-direction: column;

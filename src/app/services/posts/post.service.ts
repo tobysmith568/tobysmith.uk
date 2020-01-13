@@ -49,6 +49,14 @@ export class PostService {
       date: "2020/01/09 15:30",
       slug: "something3",
       title: "I am a post"
+    },
+    {
+      categories: [
+        "projects/windows"
+      ],
+      externalLink: "https://bbc.co.uk",
+      preview: "Click me with your rhythm stick",
+      title: "I am an external link"
     }
   ] as IPost[];
 

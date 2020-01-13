@@ -6,4 +6,5 @@ export interface IPost {
   slug: string;
   categories: string[];
   preview: string;
+  externalLink: string;
 }
