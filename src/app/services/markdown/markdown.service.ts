@@ -34,8 +34,6 @@ export class MarkdownService {
       ]
     }).makeHtml(markdown);
 
-    console.log(html);
-
     return this.sanitiser.sanitize(SecurityContext.HTML, html);
   }
 }
