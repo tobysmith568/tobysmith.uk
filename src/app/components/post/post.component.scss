@@ -1,0 +1,68 @@
+@import '../../../styles.scss';
+
+.post {
+	width: $content-width;
+	margin: 30px auto auto auto;
+	padding: 0px;
+	display: grid;
+	grid-template-columns: 75% auto;
+}
+
+.content {
+	background-color: $white;
+	border-radius: 5px;
+	margin: 20px;
+	padding: 20px;
+}
+
+.title {
+	text-align: center;
+	font-size: 32px;
+	font-weight: bold;
+}
+
+.post-content {
+	margin-top: 35px;
+	padding: 20px;
+	text-align: left;
+	font-size: 16px;
+}
+
+.post-content h1 {
+	font-size: 32px;
+}
+
+.post-content h2 {
+	font-size: 26px;
+}
+
+.post-content h3 {
+	font-size: 22px;
+}
+
+.post-content h4 {
+	font-size: 18px;
+}
+
+.post-content p, .post-content ul, .post-content ol,
+.post-content h1, .post-content h2, .post-content h3, .post-content h4 {
+	margin-top: 10px;
+}
+
+.post-content ul, .post-content ol {
+	margin-left: 20px;
+}
+	
+.post-content .taskbox {
+	margin-left: -20px;
+	padding-left: 20px;
+	list-style: none;
+	background-image: url(../../../assets/img/unchecked_checkbox.png);
+	background-repeat: no-repeat;
+	background-position: left center;
+	background-size: 14px;
+}
+
+.post-content .taskbox.checked-taskbox {
+	background-image: url(../../../assets/img/checked_checkbox.png);
+}

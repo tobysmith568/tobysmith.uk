@@ -1,10 +1,12 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 import { AppRoutingModule } from "./app-routing.module";
-import { AppComponent } from "./app.component";
 import { HomeComponent } from "./components/home/home.component";
 import { Routes, RouterModule } from "@angular/router";
 import { PerfectScrollbarConfigInterface, PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarModule } from "ngx-perfect-scrollbar";
+import { HttpClientModule } from "@angular/common/http";
+
+import { AppComponent } from "./app.component";
 import { HeaderComponent } from "./components/header/header.component";
 import { FooterComponent } from "./components/footer/footer.component";
 import { CategoryComponent } from "./components/category/category.component";
@@ -57,7 +59,8 @@ const routes: Routes = [
     RouterModule.forRoot(routes),
     BrowserModule,
     AppRoutingModule,
-    PerfectScrollbarModule
+    PerfectScrollbarModule,
+    HttpClientModule,
   ],
   providers: [
     {

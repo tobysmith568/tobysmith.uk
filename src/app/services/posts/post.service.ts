@@ -54,7 +54,28 @@ export class PostService {
 
   constructor() { }
 
-  public getPosts(): IPost[] {
-    return this.posts;
+  public getPostsInCategory(category: string): IPost[] {
+    const foundPosts: IPost[] = [];
+
+    for (const post of this.posts) {
+      for (const postCategory of post.categories) {
+        if (("/" + postCategory).startsWith(category)) {
+          foundPosts.push(post);
+          break;
+        }
+      }
+    }
+
+    return foundPosts;
+  }
+
+  public getPost(slug: string): IPost | undefined {
+    for (const post of this.posts) {
+      if (post.slug === slug) {
+        return post;
+      }
+    }
+
+    return undefined;
   }
 }

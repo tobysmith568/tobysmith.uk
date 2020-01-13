@@ -16,15 +16,6 @@ export class CategoryComponent implements OnInit {
               private readonly postService: PostService) { }
 
   ngOnInit() {
-    this.posts = [];
-
-    for (const post of this.postService.getPosts()) {
-      for (const category of post.categories) {
-        if (("/" + category).startsWith(this.router.url)) {
-          this.posts.push(post);
-          break;
-        }
-      }
-    }
+    this.posts = this.postService.getPostsInCategory(this.router.url);
   }
 }

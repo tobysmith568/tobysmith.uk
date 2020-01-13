@@ -1,1 +1,16 @@
-<p>{{ getPostDetails() }}</p>
+<div>
+	<div class="post">
+		<div class="main content">
+			<div class="title">
+				{{ post.title }}
+			</div>
+			<br/>
+			<div class="post-content"
+									[innerHtml]="postContent">
+			</div>
+		</div>
+		<div class="sidebar content">
+			hey
+		</div>
+	</div>
+</div>
