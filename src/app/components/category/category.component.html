@@ -1,5 +1,11 @@
 <div>
 	<div class="content">
-		<app-category-item class="post" [post]="post" *ngFor="let post of posts"></app-category-item>
+		<div class="header" *ngIf="category">
+			<h1 class="category-title">{{ category.name }}</h1>
+			<p class="category-description">{{ category.description }}</p>
+		</div>
+		<div class="posts">
+			<app-category-item class="post" [post]="post" *ngFor="let post of posts"></app-category-item>
+		</div>
 	</div>
 </div>

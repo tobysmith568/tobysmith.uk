@@ -3,6 +3,30 @@
 .content {
 	width: $content-width;
 	margin: 30px auto auto auto;
+}
+
+.header {
+	background-color: $white;
+	border-radius: 5px;
+	padding: 10px;
+	text-align: center;
+	min-width: 40%;
+	max-width: 60%;
+	width: fit-content;
+	margin: auto;
+}
+
+.category-title {
+	font-size: 32px;
+	text-transform: capitalize; 
+}
+
+.category-description {
+	margin-top: 10px;
+	font-size: 18px;
+}
+
+.posts {
 	padding: 0px;
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
@@ -10,5 +34,5 @@
 
 .post {
 	background-color: white;
-	margin: 20px;
+	margin: 30px;
 }

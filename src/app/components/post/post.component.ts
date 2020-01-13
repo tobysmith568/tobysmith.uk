@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { PostService } from "src/app/services/posts/post.service";
-import { IPost } from "src/app/models/posts/post";
+import { IPost } from "src/app/models/posts/post.interface";
 import { SafeHtml } from "@angular/platform-browser";
 import { HttpClient } from "@angular/common/http";
 import { MarkdownService } from "src/app/services/markdown/markdown.service";
