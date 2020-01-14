@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "generate": "ts-node src/scripts/buildPostData.ts"
+    "generate": "ts-node src/scripts/buildPostData.ts && ts-node src/scripts/verifyCategories.ts"
   },
   "private": true,
   "dependencies": {

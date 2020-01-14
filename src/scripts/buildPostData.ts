@@ -1,5 +1,6 @@
 import * as del from "del";
 import * as fs from "fs";
+import { ScriptUtils as SU } from "./scriptUtils";
 import { IPost } from "src/app/models/posts/post.interface";
 
 /* Constants */
@@ -27,15 +28,9 @@ function getFiles(path: string): string[] {
   return results;
 }
 
-function warn(message: string) {
-  console.warn("\x1b[33m", message, "\x1b[0m");
-}
-
-function error(message: string) {
-  console.error("\x1b[31m", message, "\x1b[0m");
-}
-
 /* Script */
+
+SU.startsection("Building Posts");
 
 del.sync(genFolder);
 fs.mkdirSync(genFolder);
@@ -44,64 +39,60 @@ const postFiles = getFiles(postFolder);
 
 const posts: IPost[] = [];
 const slugs: string[] = [];
-let hasErrored = false;
 
 postFiles.forEach(file => {
   const data = fs.readFileSync(file, "utf8");
   const post = JSON.parse(data) as IPost;
 
   if (!post.slug) {
-    error(`Slug in ${file} is empty or not present`);
+    SU.error(`Slug in ${file} is empty or not present`);
   }
 
-  if (slugs.includes(post.slug)) {
-    error(`${file} is trying to use the slug ${post.slug} which is already used by ${posts.filter(p => p.slug === post.slug)[0]}`);
+  if (slugs.includes(post.slug.toLowerCase())) {
+    SU.error(`${file} is trying to use the slug ${post.slug} which is already used`);
+  }
+
+  if (!post.slug.match(/^[a-zA-Z0-9-]*$/)) {
+    SU.error(`Slug in ${file} contains invalid characters`);
   }
 
   if (!post.author) {
-    warn(`Author in file ${file} is empty or not present`);
+    SU.warn(`Author in file ${file} is empty or not present`);
   }
 
   if (!post.categories || post.categories.length === 0) {
-    error(`Categories in file ${file} is empty or not present`);
-    hasErrored = true;
+    SU.error(`Categories in file ${file} is empty or not present`);
   }
 
   if (!post.contentPath && !post.externalLink) {
-    error(`${file} has no content path or external link`);
-    hasErrored = true;
+    SU.error(`${file} has no content path or external link`);
   }
 
   if (post.contentPath && !fs.existsSync(postContent + post.contentPath)) {
-    error(`The content path ${post.contentPath} in file ${file} could not be found`);
-    hasErrored = true;
+    SU.error(`The content path ${post.contentPath} in file ${file} could not be found`);
   }
 
   if (!post.date) {
-    error(`Date in file ${file} is empty or not present`);
-    hasErrored = true;
+    SU.error(`Date in file ${file} is empty or not present`);
   }
 
   if (!post.preview) {
-    warn(`Preview in file ${file} is empty or not present`);
+    SU.warn(`Preview in file ${file} is empty or not present`);
   }
 
   if (!post.slug && !post.externalLink) {
-    error(`${file} has no slug or external link`);
-    hasErrored = true;
+    SU.error(`${file} has no slug or external link`);
   }
 
   if (!post.title) {
-    warn(`Title in file ${file} is empty or not present`);
+    SU.warn(`Title in file ${file} is empty or not present`);
   }
 
-  slugs.push(post.slug);
+  slugs.push(post.slug.toLowerCase());
   posts.push(post);
 });
 
-if (hasErrored) {
-  process.exit(1);
-}
+SU.testFail();
 
 posts.sort((a, b) => (a.date > b.date) ? 1 : -1);
 
