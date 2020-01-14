@@ -50,15 +50,19 @@ postFiles.forEach(file => {
   const data = fs.readFileSync(file, "utf8");
   const post = JSON.parse(data) as IPost;
 
+  if (!post.slug) {
+    error(`Slug in ${file} is empty or not present`);
+  }
+
   if (slugs.includes(post.slug)) {
-    warn(`Duplicate posts found with the slug: ${post.slug}. ${file} is overwriting something`);
+    error(`${file} is trying to use the slug ${post.slug} which is already used by ${posts.filter(p => p.slug === post.slug)[0]}`);
   }
 
   if (!post.author) {
     warn(`Author in file ${file} is empty or not present`);
   }
 
-  if (post.categories === undefined || post.categories.length === 0) {
+  if (!post.categories || post.categories.length === 0) {
     error(`Categories in file ${file} is empty or not present`);
     hasErrored = true;
   }
