@@ -1,33 +1,17 @@
 import { Injectable } from "@angular/core";
 import { ICategory } from "src/app/models/posts/category.interface";
+import categoryData from "../../data/categories.json";
 
 @Injectable({
   providedIn: "root"
 })
 export class CategoryService {
 
-  private categories: ICategory[] = [
-    {
-      name: "projects",
-      description: "These are projects which I have developed in my free time.",
-      children: [
-        {
-          name: "windows",
-          description: "These projects are windows applications, typically built in WPF"
-        },
-        {
-          name: "websites",
-          description: "These projects are websites or web utilities that I have developed"
-        },
-        {
-          name: "alexa",
-          description: "These are Skills I have made for Amazon’s personal assistant, Alexa."
-        }
-      ]
-    }
-  ] as ICategory[];
+  private categories: ICategory[];
 
-  constructor() { }
+  constructor() {
+    this.categories = categoryData as ICategory[];
+  }
 
   public getCategory(category: string): ICategory | undefined {
     const parts = category.substring(1).split("/");

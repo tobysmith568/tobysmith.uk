@@ -1,0 +1,20 @@
+[
+	{
+		"name": "projects",
+		"description": "These are projects which I have developed in my free time.",
+		"children": [
+			{
+				"name": "windows",
+				"description": "These projects are windows applications, typically built in WPF"
+			},
+			{
+				"name": "websites",
+				"description": "These projects are websites or web utilities that I have developed"
+			},
+			{
+				"name": "alexa",
+				"description": "These are Skills I have made for Amazon’s personal assistant, Alexa."
+			}
+		]
+	}
+]
