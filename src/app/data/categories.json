@@ -23,12 +23,12 @@
 		"children": [
 			{
 				"slug": "year1",
-				"displayName": "Year 1",
+				"displayName": "First Year",
 				"description": "Projects I have completed during my first year of university."
 			},
 			{
 				"slug": "year2",
-				"displayName": "Year 2",
+				"displayName": "Second Year",
 				"description": "Projects I have completed during my second year of university.",
 				"children": [
 					{
@@ -40,7 +40,7 @@
 			},
 			{
 				"slug": "year3",
-				"displayName": "Year 3",
+				"displayName": "Final Year",
 				"description": "Projects I have completed during my final year of university."
 			}
 		]
