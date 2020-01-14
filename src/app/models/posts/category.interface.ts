@@ -1,5 +1,6 @@
 export interface ICategory {
-  name: string;
+  slug: string;
+  displayName: string;
   description: string;
   children: ICategory[];
 }

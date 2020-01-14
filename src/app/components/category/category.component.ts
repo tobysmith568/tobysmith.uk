@@ -23,4 +23,12 @@ export class CategoryComponent implements OnInit {
     this.posts = this.postService.getPostsInCategory(this.router.url);
     this.category = this.categoryService.getCategory(this.router.url);
   }
+
+  public getName(): string {
+    if (this.category.displayName) {
+      return this.category.displayName;
+    }
+
+    return this.category.slug;
+  }
 }

@@ -1,19 +1,47 @@
 [
 	{
-		"name": "projects",
+		"slug": "projects",
 		"description": "These are projects which I have developed in my free time.",
 		"children": [
 			{
-				"name": "windows",
-				"description": "These projects are windows applications, typically built in WPF"
+				"slug": "windows",
+				"description": "These projects are windows applications, typically built in WPF."
 			},
 			{
-				"name": "websites",
-				"description": "These projects are websites or web utilities that I have developed"
+				"slug": "websites",
+				"description": "These projects are websites or web utilities that I have developed."
 			},
 			{
-				"name": "alexa",
+				"slug": "alexa",
 				"description": "These are Skills I have made for Amazon’s personal assistant, Alexa."
+			}
+		]
+	},
+	{
+		"slug": "university",
+		"description": "Projects I have completed as work towards my degree.",
+		"children": [
+			{
+				"slug": "year1",
+				"displayName": "Year 1",
+				"description": "Projects I have completed during my first year of university."
+			},
+			{
+				"slug": "year2",
+				"displayName": "Year 2",
+				"description": "Projects I have completed during my second year of university.",
+				"children": [
+					{
+						"slug": "shooter-unknown",
+						"displayName": "Shooter Unknown",
+						"description": "Blog posts I wrote while I developed my second year project “Shooter Unknown”"
+					}
+				]
+			},
+			{
+				"slug": "year3",
+				"displayName": "Year 3",
+				"description": "Projects I have completed during my final year of university."
 			}
 		]
 	}

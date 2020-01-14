@@ -16,17 +16,17 @@ export class CategoryService {
   public getCategory(category: string): ICategory | undefined {
     const parts = category.substring(1).split("/");
 
-    return this.getDescriptionWithIndex(parts, this.categories, 0);
+    return this.getCategoryWithIndex(parts, this.categories, 0);
   }
 
-  private getDescriptionWithIndex(parts: string[], categories: ICategory[], index: number): ICategory | undefined {
+  private getCategoryWithIndex(parts: string[], categories: ICategory[], index: number): ICategory | undefined {
     for (const child of categories) {
-      if (child.name === parts[index] && index === parts.length - 1) {
+      if (child.slug === parts[index] && index === parts.length - 1) {
         return child;
       }
 
-      if (child.name === parts[index]) {
-        return this.getDescriptionWithIndex(parts, child.children, index + 1);
+      if (child.slug === parts[index]) {
+        return this.getCategoryWithIndex(parts, child.children, index + 1);
       }
     }
 
