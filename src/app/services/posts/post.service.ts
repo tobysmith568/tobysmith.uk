@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { IPost } from "src/app/models/posts/post.interface";
-import postData from "../../data/posts.json";
+import postData from "../../generated/posts.json";
 
 @Injectable({
   providedIn: "root"

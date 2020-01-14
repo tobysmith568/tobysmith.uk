@@ -1,0 +1,11 @@
+{
+	"author": "Toby Smith",
+	"categories": [
+		"projects/windows"
+	],
+	"contentPath": "this-is-a-post.md",
+	"date": "2020/01/09 15:30",
+	"preview": "Once apon a time, I wrote a post about some stuff. This is that post",
+	"slug": "something",
+	"title": "This post is about something"
+}
