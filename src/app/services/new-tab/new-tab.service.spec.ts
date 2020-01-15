@@ -1,11 +1,11 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed } from "@angular/core/testing";
 
-import { NewTabService } from './new-tab.service';
+import { NewTabService } from "./new-tab.service";
 
-describe('NewTabService', () => {
+describe("NewTabService", () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
-  it('should be created', () => {
+  it("should be created", () => {
     const service: NewTabService = TestBed.get(NewTabService);
     expect(service).toBeTruthy();
   });
