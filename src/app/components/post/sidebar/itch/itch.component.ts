@@ -1,4 +1,5 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
+import { IItch } from "src/app/models/posts/sidebar/itch.interface";
 
 @Component({
   selector: "app-itch",
@@ -7,9 +8,11 @@ import { Component, OnInit } from "@angular/core";
 })
 export class ItchComponent implements OnInit {
 
+  @Input()
+  private itch: IItch;
+
   constructor() { }
 
   ngOnInit() {
   }
-
 }

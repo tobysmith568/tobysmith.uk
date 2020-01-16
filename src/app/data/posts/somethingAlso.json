@@ -14,5 +14,11 @@
 	},
 	"github": {
 		"url": "https://github.com/tobysmith568/somethingAlso"
+	},
+	"itch": {
+		"url": "https://itch.io/something"
+	},
+	"download": {
+		"url": "assets/downloads/something"
 	}
 }

@@ -9,24 +9,27 @@
 }
 
 .post-with-sidebar {
-	grid-template-columns: 75% auto;
+	grid-template-columns: 75% 25%;
 }
 
 .content {
 	background-color: $white;
 	border-radius: 5px;
 	margin: 20px;
+}
+
+.main {
 	padding: 20px;
+}
+
+.sidebar {
+	height: fit-content;
 }
 
 .title {
 	text-align: center;
 	font-size: 32px;
 	font-weight: bold;
-}
-
-.sidebar {
-	height: fit-content;
 }
 
 .post-content {

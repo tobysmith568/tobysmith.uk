@@ -1,6 +1,6 @@
 <div class="sidebar-host">
-	<app-skill *ngIf="post.skill"></app-skill>
-	<app-itch *ngIf="post.itch"></app-itch>
-	<app-github *ngIf="post.github"></app-github>
+	<app-skill *ngIf="post.skill" [skill]="post.skill"></app-skill>
+	<app-itch *ngIf="post.itch" [itch]="post.itch"></app-itch>
+	<app-github *ngIf="post.github" [github]="post.github"></app-github>
 	<app-download *ngIf="post.download"></app-download>
 </div>
