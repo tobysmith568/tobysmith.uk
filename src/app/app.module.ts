@@ -13,6 +13,11 @@ import { CategoryComponent } from "./components/category/category.component";
 import { PostComponent } from "./components/post/post.component";
 import { CategoryItemComponent } from "./components/category/category-item/category-item.component";
 import { NotFoundComponent } from "./components/not-found/not-found.component";
+import { GithubComponent } from "./components/post/sidebar/github/github.component";
+import { SkillComponent } from "./components/post/sidebar/skill/skill.component";
+import { ItchComponent } from "./components/post/sidebar/itch/itch.component";
+import { SidebarComponent } from "./components/post/sidebar/sidebar.component";
+import { DownloadComponent } from "./components/post/sidebar/download/download.component";
 
 const scrollConfig: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -58,7 +63,12 @@ const routes: Routes = [
     CategoryComponent,
     PostComponent,
     CategoryItemComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    GithubComponent,
+    SkillComponent,
+    ItchComponent,
+    SidebarComponent,
+    DownloadComponent
   ],
   imports: [
     RouterModule.forRoot(routes),

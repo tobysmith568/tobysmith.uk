@@ -7,5 +7,12 @@
 	"date": "2020/01/09 15:32",
 	"preview": "Are you ready kids? Aye, aye, Captain! OHHHHHHHHHHHHHHHHHH",
 	"slug": "somethingAlso",
-	"title": "This post is not about windows"
+	"title": "This post is not about windows",
+	"skill": {
+		"url": "https://amazon.co.uk/something",
+		"searchTerm": "hello"
+	},
+	"github": {
+		"url": "https://github.com/tobysmith568/somethingAlso"
+	}
 }

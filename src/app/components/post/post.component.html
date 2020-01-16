@@ -1,16 +1,17 @@
 <div>
-	<div class="post">
+	<div class="post"
+						[class.post-with-sidebar]="hasSidebarContent()">
 		<div class="content">
 			<div class="title">
 				{{ post.title }}
 			</div>
 			<br/>
 			<div class="post-content"
-									[innerHtml]="postContent">
+								[innerHtml]="postContent">
 			</div>
 		</div>
-		<div class="sidebar content">
-			hey
+		<div class="sidebar content" *ngIf="hasSidebarContent()">
+			<app-sidebar [post]="post"></app-sidebar>
 		</div>
 	</div>
 </div>

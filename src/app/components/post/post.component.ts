@@ -41,6 +41,10 @@ export class PostComponent implements OnInit {
     }
   }
 
+  public hasSidebarContent(): boolean {
+    return !(!this.post.github && !this.post.itch && !this.post.skill && !this.post.download);
+  }
+
   private goTo404() {
     this.router.navigate([ "404" ], {
       skipLocationChange: true

@@ -7,5 +7,11 @@
 	"date": "2020/01/09 15:30",
 	"preview": "Once apon a time, I wrote a post about some stuff. This is that post",
 	"slug": "something",
-	"title": "This post is about something"
+	"title": "This post is about something",
+	"github": {
+		"url": "https://github.com/tobysmith568/something"
+	},
+	"itch": {
+		"url": "https://itch.io/tobysmith568/something"
+	}
 }

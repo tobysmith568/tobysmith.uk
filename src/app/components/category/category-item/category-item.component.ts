@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { IPost } from "src/app/models/posts/post";
+import { IPost } from "src/app/models/posts/post.interface";
 import { Router, ActivatedRoute } from "@angular/router";
 import { NewTabService } from "src/app/services/new-tab/new-tab.service";
 
