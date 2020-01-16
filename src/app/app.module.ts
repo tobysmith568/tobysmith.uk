@@ -11,7 +11,7 @@ import { HeaderComponent } from "./components/header/header.component";
 import { FooterComponent } from "./components/footer/footer.component";
 import { CategoryComponent } from "./components/category/category.component";
 import { PostComponent } from "./components/post/post.component";
-import { CategoryItemComponent } from "./components/category-item/category-item.component";
+import { CategoryItemComponent } from "./components/category/category-item/category-item.component";
 import { NotFoundComponent } from "./components/not-found/not-found.component";
 
 const scrollConfig: PerfectScrollbarConfigInterface = {
