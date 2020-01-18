@@ -16,4 +16,12 @@ export class SkillComponent implements OnInit {
   ngOnInit() {
   }
 
+  public getURL(): string {
+    return this.skill.url;
+  }
+
+  public getSearchTerm(): string {
+    return this.skill.searchTerm;
+  }
+
 }

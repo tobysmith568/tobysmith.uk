@@ -1,5 +1,9 @@
 import { Component, OnInit, Input } from "@angular/core";
 import { IPost } from "src/app/models/posts/post.interface";
+import { ISkill } from "src/app/models/posts/sidebar/skill";
+import { IItch } from "src/app/models/posts/sidebar/itch.interface";
+import { IGithub } from "src/app/models/posts/sidebar/github.interface";
+import { IDownload } from "src/app/models/posts/sidebar/download.interface";
 
 @Component({
   selector: "app-sidebar",
@@ -14,5 +18,21 @@ export class SidebarComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+  }
+
+  public getSkill(): ISkill {
+    return this.post.skill;
+  }
+
+  public getItch(): IItch {
+    return this.post.itch;
+  }
+
+  public getGithub(): IGithub {
+    return this.post.github;
+  }
+
+  public getDownloads(): IDownload[] {
+    return this.post.downloads;
   }
 }

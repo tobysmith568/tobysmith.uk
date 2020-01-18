@@ -16,11 +16,15 @@ export class DownloadComponent implements OnInit {
   ngOnInit() {
   }
 
-  private getTitle(): string {
+  public getTitle(): string {
     if (this.downloads.length > 1) {
       return "Direct downloads:";
     }
 
     return "Direct download:";
+  }
+
+  public getDownloads(): IDownload[] {
+    return this.downloads;
   }
 }

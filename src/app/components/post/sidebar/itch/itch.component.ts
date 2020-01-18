@@ -15,4 +15,8 @@ export class ItchComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  public getURL(): string {
+    return this.itch.url;
+  }
 }

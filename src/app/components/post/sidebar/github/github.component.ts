@@ -16,4 +16,8 @@ export class GithubComponent implements OnInit {
   ngOnInit() {
   }
 
+  public getURL(): string {
+    return this.github.url;
+  }
+
 }
