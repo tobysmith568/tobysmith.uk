@@ -15,5 +15,5 @@ export interface IPost {
   github: IGithub;
   itch: IItch;
   skill: ISkill;
-  download: IDownload;
+  downloads: IDownload[];
 }

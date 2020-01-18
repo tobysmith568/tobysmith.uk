@@ -7,8 +7,10 @@
 	"date": "2020/01/09 15:31",
 	"slug": "something3",
 	"title": "I am a post",
-	"download": {
-		"url": "https://this.is.a.download.com/something",
-		"content": "the thing"
-	}
+	"downloads": [
+		{
+			"url": "https://this.is.a.download.com/something",
+			"name": "the thing"
+		}
+	]
 }

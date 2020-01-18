@@ -1,4 +1,5 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
+import { IDownload } from "src/app/models/posts/sidebar/download.interface";
 
 @Component({
   selector: "app-download",
@@ -7,9 +8,19 @@ import { Component, OnInit } from "@angular/core";
 })
 export class DownloadComponent implements OnInit {
 
+  @Input()
+  private downloads: IDownload[];
+
   constructor() { }
 
   ngOnInit() {
   }
 
+  private getTitle(): string {
+    if (this.downloads.length > 1) {
+      return "Direct downloads:";
+    }
+
+    return "Direct download:";
+  }
 }

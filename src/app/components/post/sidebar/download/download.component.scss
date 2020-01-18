@@ -1,0 +1,28 @@
+@import '../../../../../styles.scss';
+
+.downloads-content {
+	text-align: center;
+	padding: 20px;
+}
+
+.downloads-title {
+	font-size: 22px;
+	margin-bottom: 10px;
+}
+
+.downloads-list {
+	width: fit-content;
+	text-align: left;
+	margin: auto;
+}
+
+.downloads-bullet {
+	font-size: 18px;
+	color: $greyText;
+	text-decoration: underline;
+}
+
+.downloads-bullet:hover {
+	font-size: 18px;
+	color: $blackText;
+}

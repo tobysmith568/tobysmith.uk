@@ -42,7 +42,7 @@ export class PostComponent implements OnInit {
   }
 
   public hasSidebarContent(): boolean {
-    return !(!this.post.github && !this.post.itch && !this.post.skill && !this.post.download);
+    return !(!this.post.github && !this.post.itch && !this.post.skill && !this.post.downloads);
   }
 
   private goTo404() {

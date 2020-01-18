@@ -1,4 +1,4 @@
 export interface IDownload {
   url: string;
-  content: string;
+  name: string;
 }

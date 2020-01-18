@@ -16,9 +16,20 @@
 		"url": "https://github.com/tobysmith568/somethingAlso"
 	},
 	"itch": {
-		"url": "https://itch.io/something"
+		"url": "https://tobysmith568.itch.io/something"
 	},
-	"download": {
-		"url": "assets/downloads/something"
-	}
+	"downloads": [
+		{
+			"url": "assets/downloads/something",
+			"name": "something"
+		},
+		{
+			"url": "assets/downloads/somethingDifferent",
+			"name": "something different"
+		},
+		{
+			"url": "assets/downloads/somethingElse",
+			"name": "something else"
+		}
+	]
 }
