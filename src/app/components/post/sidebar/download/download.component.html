@@ -1,9 +1,7 @@
 <div class="downloads-content">
 	<h3 class="downloads-title">{{ getTitle() }}</h3>
-	<div>
 		<ul class="downloads-list">
 			<li *ngFor="let download of downloads"><a class="downloads-bullet" download
 					href="{{ download.url }}">{{ download.name }}</a></li>
 		</ul>
-	</div>
 </div>

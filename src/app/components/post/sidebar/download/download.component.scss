@@ -2,7 +2,7 @@
 
 .downloads-content {
 	text-align: center;
-	padding: 20px;
+	margin: 20px;
 }
 
 .downloads-title {
@@ -11,9 +11,12 @@
 }
 
 .downloads-list {
-	width: fit-content;
 	text-align: left;
 	margin: auto;
+	width: fit-content;
+	min-width: 60%;
+	max-width: 100%;
+	padding-left: 25px;
 }
 
 .downloads-bullet {
