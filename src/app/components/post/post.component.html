@@ -1,12 +1,12 @@
 <div>
 	<div class="post"
 						[class.post-with-sidebar]="hasSidebarContent()">
-		<div class="main content">
-			<div class="title">
+		<div class="content">
+			<div class="title element">
 				{{ post.title }}
 			</div>
-			<br/>
-			<div class="post-content"
+			<hr class="split"/>
+			<div class="post-content element"
 								[innerHtml]="postContent">
 			</div>
 		</div>
