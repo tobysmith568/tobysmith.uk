@@ -1,13 +1,16 @@
 <div>
 	<div class="post"
 						[class.post-with-sidebar]="hasSidebarContent()">
-		<div class="content">
-			<div class="title element">
+						<div class="content">
+							<div class="title element">
 				{{ post.title }}
 			</div>
 			<hr class="split"/>
 			<div class="post-content element"
 								[innerHtml]="postContent">
+			</div>
+			<div class="comments">
+				<disqus [identifier]="post.slug"></disqus>
 			</div>
 		</div>
 		<div class="sidebar content" *ngIf="hasSidebarContent()">

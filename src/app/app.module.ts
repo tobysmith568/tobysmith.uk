@@ -5,6 +5,7 @@ import { HomeComponent } from "./components/home/home.component";
 import { Routes, RouterModule } from "@angular/router";
 import { PerfectScrollbarConfigInterface, PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarModule } from "ngx-perfect-scrollbar";
 import { HttpClientModule } from "@angular/common/http";
+import { DisqusModule  } from "ngx-disqus";
 
 import { AppComponent } from "./app.component";
 import { HeaderComponent } from "./components/header/header.component";
@@ -71,11 +72,12 @@ const routes: Routes = [
     DownloadComponent
   ],
   imports: [
+    DisqusModule.forRoot("tobysmith"),
     RouterModule.forRoot(routes),
     BrowserModule,
     AppRoutingModule,
     PerfectScrollbarModule,
-    HttpClientModule,
+    HttpClientModule
   ],
   providers: [
     {
