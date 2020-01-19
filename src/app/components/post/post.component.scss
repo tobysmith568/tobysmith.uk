@@ -20,6 +20,11 @@
 	flex-direction: column;
 }
 
+.main-content {
+	padding: 0px 20px 20px 20px;
+	margin-top: 0px;
+}
+
 .comments {
 	padding-left: 20px;
 	padding-right: 20px;
@@ -37,58 +42,10 @@
 	text-align: center;
 	font-size: 42px;
 	font-weight: bold;
+	padding: 20px;
 }
 
 .split {
 	margin: 0px;
   border-top: 1px solid #00000014;
-}
-
-.post-content {
-	margin-top: 15px;
-	margin-left: 20px;
-	margin-right: 20px;
-	padding: 20px;
-	text-align: left;
-	font-size: 16px;
-	flex-grow: 1;
-}
-
-.post-content h1 {
-	font-size: 32px;
-}
-
-.post-content h2 {
-	font-size: 26px;
-}
-
-.post-content h3 {
-	font-size: 22px;
-}
-
-.post-content h4 {
-	font-size: 18px;
-}
-
-.post-content p, .post-content ul, .post-content ol,
-.post-content h1, .post-content h2, .post-content h3, .post-content h4 {
-	margin-top: 10px;
-}
-
-.post-content ul, .post-content ol {
-	margin-left: 20px;
-}
-	
-.post-content .taskbox {
-	margin-left: -20px;
-	padding-left: 20px;
-	list-style: none;
-	background-image: url(../../../assets/img/unchecked_checkbox.png);
-	background-repeat: no-repeat;
-	background-position: left center;
-	background-size: 14px;
-}
-
-.post-content .taskbox.checked-taskbox {
-	background-image: url(../../../assets/img/checked_checkbox.png);
 }

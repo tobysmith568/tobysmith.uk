@@ -19,6 +19,7 @@ import { SkillComponent } from "./components/post/sidebar/skill/skill.component"
 import { ItchComponent } from "./components/post/sidebar/itch/itch.component";
 import { SidebarComponent } from "./components/post/sidebar/sidebar.component";
 import { DownloadComponent } from "./components/post/sidebar/download/download.component";
+import { ContentComponent } from "./components/post/content/content.component";
 
 const scrollConfig: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -69,7 +70,8 @@ const routes: Routes = [
     SkillComponent,
     ItchComponent,
     SidebarComponent,
-    DownloadComponent
+    DownloadComponent,
+    ContentComponent
   ],
   imports: [
     DisqusModule.forRoot("tobysmith"),

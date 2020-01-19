@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { PostService } from "src/app/services/posts/post.service";
 import { IPost } from "src/app/models/posts/post.interface";
@@ -14,7 +14,7 @@ import { MarkdownService } from "src/app/services/markdown/markdown.service";
 export class PostComponent implements OnInit {
 
   public post: IPost;
-  public postContent: SafeHtml;
+  private postContent: SafeHtml;
 
   constructor(private readonly activatedRoute: ActivatedRoute,
               private readonly postService: PostService,
@@ -38,6 +38,10 @@ export class PostComponent implements OnInit {
     } catch (e) {
       this.goTo404();
     }
+  }
+
+  public getPostContent() {
+    return this.postContent;
   }
 
   public hasSidebarContent(): boolean {
