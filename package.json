@@ -5,10 +5,12 @@
     "ng": "ng",
     "start": "npm run generate && ng serve",
     "build": "npm run generate && ng build",
+    "build:prod": "npm run generate && ng build --prod --aot --output-path ./docs --base-href /tobysmith-uk/ && npm run copyIndex",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "generate": "ts-node src/scripts/buildPostData.ts && ts-node src/scripts/verifyCategories.ts"
+    "generate": "ts-node src/scripts/buildPostData.ts && ts-node src/scripts/verifyCategories.ts",
+    "copyIndex": "ts-node src/scripts/copyAndRenameIndex.ts"
   },
   "private": true,
   "dependencies": {
@@ -39,6 +41,7 @@
     "@types/node": "~8.9.4",
     "@types/recursive-readdir": "^2.2.0",
     "codelyzer": "^5.0.0",
+    "cpx": "^1.5.0",
     "del": "^5.1.0",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
