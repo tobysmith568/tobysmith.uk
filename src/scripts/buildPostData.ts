@@ -28,6 +28,22 @@ function getFiles(path: string): string[] {
   return results;
 }
 
+function parseData(data: string): IPost {
+  return JSON.parse(data, (key: string, value: any) => {
+    if (key.toLowerCase() === "date") {
+
+      const date = new Date(value);
+
+      if (!date.toJSON()) {
+        return null;
+      }
+
+      return date;
+    }
+    return value;
+  }) as IPost;
+}
+
 /* Script */
 
 SU.startsection("Building Posts");
@@ -41,13 +57,8 @@ const posts: IPost[] = [];
 const slugs: string[] = [];
 
 postFiles.forEach(file => {
-  const data = fs.readFileSync(file, "utf8");
-  const post = JSON.parse(data, (key: string, value: any) => {
-    if (key.toLowerCase() === "date") {
-      return new Date(value);
-    }
-    return value;
-  }) as IPost;
+  const data: string = fs.readFileSync(file, "utf8");
+  const post: IPost = parseData(data);
 
   if (!post.slug) {
     SU.error(`Slug in ${file} is empty or not present`);
@@ -78,7 +89,7 @@ postFiles.forEach(file => {
   }
 
   if (!post.date) {
-    SU.error(`Date in file ${file} is empty or not present`);
+    SU.error(`Date in file ${file} is empty, not present, or invalid`);
   }
 
   if (!post.preview) {
