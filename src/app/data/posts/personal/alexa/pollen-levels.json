@@ -1,0 +1,16 @@
+{
+	"author": "Toby Smith",
+	"categories": [
+		"projects/alexa"
+	],
+	"contentPath": "pollen-levels.md",
+	"date": "30th August 2017",
+	"preview": "This is an Amazon Alexa skill which tells you the pollen levels local to you in the UK during your flash briefing. Like all other flash briefing skills, it can be reordered in either the Alexa app or on the website.",
+	"previewImage": "assets/posts/img/pollen-levels.png",
+	"slug": "pollen-levels",
+	"title": "Amazon Alexa: Daily Pollen Levels",
+	"skill": {
+		"url": "https://www.amazon.co.uk/dp/B07565719Y",
+		"searchTerm": "Daily Pollen Levels"
+	}
+}
