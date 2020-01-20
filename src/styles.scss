@@ -20,4 +20,12 @@ $content-width: 70%;
 	font-size: 100%;
 	vertical-align: baseline;
 	background: transparent;
+	font-family: 'Roboto Slab', sans-serif;
+}
+
+::selection {
+	background: $greyMenuText; /* WebKit/Blink Browsers */
+}
+::-moz-selection {
+	background: $greyMenuText; /* Gecko Browsers */
 }
