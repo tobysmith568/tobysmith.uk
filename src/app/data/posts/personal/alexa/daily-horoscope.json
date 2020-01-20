@@ -4,7 +4,7 @@
 		"projects/alexa"
 	],
 	"contentPath": "daily-horoscope.md",
-	"date": "28th August 2017",
+	"date": "28 August 2017",
 	"preview": "This is an Amazon Alexa skill which tells you a daily horoscope for any of the 12 zodiac signs during your flash briefing. Like all other flash briefing skills, it can be reordered in either the Alexa app or on the website.",
 	"previewImage": "assets/posts/img/daily-horoscope.png",
 	"slug": "daily-horoscope",

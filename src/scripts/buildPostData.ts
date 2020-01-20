@@ -42,7 +42,12 @@ const slugs: string[] = [];
 
 postFiles.forEach(file => {
   const data = fs.readFileSync(file, "utf8");
-  const post = JSON.parse(data) as IPost;
+  const post = JSON.parse(data, (key: string, value: any) => {
+    if (key.toLowerCase() === "date") {
+      return new Date(value);
+    }
+    return value;
+  }) as IPost;
 
   if (!post.slug) {
     SU.error(`Slug in ${file} is empty or not present`);
@@ -94,7 +99,7 @@ postFiles.forEach(file => {
 
 SU.testFail();
 
-posts.sort((a, b) => (a.date > b.date) ? 1 : -1);
+posts.sort((a, b) => (a.date > b.date) ? -1 : 1);
 
 if (process.argv.length > 2 && process.argv[2].includes("prod")) {
   fs.writeFileSync(postFile, JSON.stringify(posts));

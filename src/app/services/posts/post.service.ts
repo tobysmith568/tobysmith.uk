@@ -10,7 +10,25 @@ export class PostService {
   private readonly posts: IPost[];
 
   constructor() {
-    this.posts = postData as IPost[];
+
+    this.posts = [];
+    for (const post of postData) {
+      this.posts.push({
+        author: post.author,
+        categories: post.categories,
+        contentPath: post.contentPath,
+        date: new Date(post.date),
+        downloads: post.downloads,
+        externalLink: post.externalLink,
+        github: post.github,
+        itch: post.itch,
+        preview: post.preview,
+        previewImage: post.previewImage,
+        skill: post.skill,
+        slug: post.slug,
+        title: post.title
+      });
+    }
   }
 
   public getPostsInCategory(category: string): IPost[] {

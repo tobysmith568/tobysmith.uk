@@ -4,7 +4,7 @@
 		"projects/alexa"
 	],
 	"contentPath": "tube-status.md",
-	"date": "3rd September 2017",
+	"date": "3 September 2017",
 	"preview": "This is an Amazon Alexa skill which tells you what the status is of each London tube and train is line by reporting any delays, closures, and updates and a brief and concise manner.",
 	"previewImage": "assets/posts/img/tube-status.png",
 	"slug": "tube-status",

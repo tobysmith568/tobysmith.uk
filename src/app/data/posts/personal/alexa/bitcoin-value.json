@@ -4,7 +4,7 @@
 		"projects/alexa"
 	],
 	"contentPath": "bitcoin-value.md",
-	"date": "7th November 2017",
+	"date": "7 November 2017",
 	"preview": "This is an Amazon Alexa Skill which tells you the current value of the Bitcoin currency in your Flash Briefing. The current conversion options are GBP, USD, and EUR.",
 	"previewImage": "assets/posts/img/bitcoin-value.png",
 	"slug": "bitcoin-value",

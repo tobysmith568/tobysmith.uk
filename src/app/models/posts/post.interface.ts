@@ -6,7 +6,7 @@ import { IDownload } from "./sidebar/download.interface";
 export interface IPost {
   title: string;
   contentPath: string;
-  date: string;
+  date: Date;
   author: string;
   slug: string;
   categories: string[];
