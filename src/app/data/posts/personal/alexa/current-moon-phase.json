@@ -1,0 +1,16 @@
+{
+	"author": "Toby Smith",
+	"categories": [
+		"projects/alexa"
+	],
+	"contentPath": "current-moon-phase.md",
+	"date": "23rd August 2017",
+	"preview": "This is an Amazon Alexa skill which tells you the current moon phase during your flash briefing.",
+	"previewImage": "assets/posts/img/current-moon-phase.png",
+	"slug": "current-moon-phase",
+	"title": "Amazon Alexa: Current Moon Phase",
+	"skill": {
+		"url": "https://www.amazon.co.uk/dp/B0752DHWNV",
+		"searchTerm": "Current Moon Phase"
+	}
+}

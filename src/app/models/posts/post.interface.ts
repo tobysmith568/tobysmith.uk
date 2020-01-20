@@ -11,6 +11,7 @@ export interface IPost {
   slug: string;
   categories: string[];
   preview: string;
+  previewImage: string;
   externalLink: string;
   github: IGithub;
   itch: IItch;

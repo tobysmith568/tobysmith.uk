@@ -4,6 +4,9 @@
 			<p>{{ post.title }}</p>
 		</div>
 		<hr class="split"/>
+		<div class="preview-image" *ngIf="post.previewImage">
+			<img src="{{ post.previewImage }}"/>
+		</div>
 		<div class="main-content">
 			<div class="preview">
 				<p>{{ post.preview }}</p>
