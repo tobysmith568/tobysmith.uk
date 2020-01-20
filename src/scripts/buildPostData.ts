@@ -80,8 +80,8 @@ postFiles.forEach(file => {
     SU.error(`Categories in file ${file} is empty or not present`);
   }
 
-  if (!post.contentPath && !post.externalLink) {
-    SU.error(`${file} has no content path or external link`);
+  if (!post.contentPath && !post.externalLink && !post.internalLink) {
+    SU.error(`${file} has no content path, external link, or internal link`);
   }
 
   if (post.contentPath && !fs.existsSync(postContent + post.contentPath)) {

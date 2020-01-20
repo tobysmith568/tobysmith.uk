@@ -35,7 +35,8 @@
 }
 
 .post-content p, .post-content ul, .post-content ol,
-.post-content h1, .post-content h2, .post-content h3, .post-content h4 {
+.post-content h1, .post-content h2, .post-content h3,
+.post-content h4, .post-content blockquote {
 	margin-top: 10px;
 }
 
@@ -64,6 +65,15 @@
 	border-top: 1px solid #00000014;
 	margin-top: 20px;
 	margin-bottom: 20px;
+}
+
+.post-content blockquote {
+	border-radius: 5px;
+	padding: 1px 5px 5px 20px;
+	border-left: 5px #616161 solid;
+	font-style: italic;
+	color: #5a5a5a;
+	background-color: #f1f1f1;
 }
 
 .post-content .taskbox {

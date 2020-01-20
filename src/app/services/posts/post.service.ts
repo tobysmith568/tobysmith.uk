@@ -20,6 +20,7 @@ export class PostService {
         date: new Date(post.date),
         downloads: post.downloads,
         externalLink: post.externalLink,
+        internalLink: post.internalLink,
         github: post.github,
         itch: post.itch,
         preview: post.preview,

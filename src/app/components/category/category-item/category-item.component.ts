@@ -28,7 +28,11 @@ export class CategoryItemComponent implements OnInit {
   }
 
   public navigate() {
-    if (this.post.externalLink) {
+    if (this.post.internalLink && !this.post.internalLink.isRelative) {
+      this.router.navigate([ this.post.internalLink.url ]);
+    } else if (this.post.internalLink && this.post.internalLink.isRelative) {
+      this.router.navigate([ this.post.internalLink.url ], { relativeTo: this.activatedRoute });
+    } else if (this.post.externalLink) {
       this.newTabService.open(this.post.externalLink, true);
     } else {
       this.router.navigate([ this.post.slug ], {

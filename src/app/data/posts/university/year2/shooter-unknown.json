@@ -1,0 +1,19 @@
+{
+	"author": "Toby Smith",
+	"categories": [
+		"university/year2",
+		"shooter-unknown-blog"
+	],
+	"contentPath": "shooter-unknown.md",
+	"date": "16 January 2018",
+	"preview": "This is a Unity game which I made as part of the second year of my degree. The objective is to shoot all the targets as quickly as possible.",
+	"previewImage": "assets/posts/img/shooter-unknown.png",
+	"slug": "shooter-unknown",
+	"title": "Shooter: Unknown",
+	"github": {
+		"url": "https://github.com/tobysmith568/AINT-254_Interactive_Systems"
+	},
+	"itch": {
+		"url": "https://tobysmith568.itch.io/shooter-unknown"
+	}
+}
