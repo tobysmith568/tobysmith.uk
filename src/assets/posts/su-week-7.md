@@ -1,0 +1,7 @@
+If the player shoots within a few meters of a target, it will immediatly stop and return fire for a few seconds. In this time they spray automatic fire. These shots are only roughly within the direction of the player - some might hit but others will probably miss. All the targets shoot with the same accuracy, because of this, the nearer ones are more deadly.
+
+If the player doesn’t hide behind cover when a nearby target fires, they should expect to be killed one in every three sets of fire The player would be unlucky if they were killed by the furthest away target.
+
+The current player health system works on the idea that it takes 3 hits close together to kill the player, this means you can take an unlimited number of hits from targets if they’re spaced out. This is because I want the targets to be a real but avoidable threat to the player, but I don’t want the damage taken from one target to effect the entire rest of your game play. This also removes the need for a health bar or number in the GUI – it’s as simple as if there’s a red damage ring on the GUI then you’re wounded and should be hiding – once it’s gone away in a couple of seconds then you’re no longer wounded.
+
+My goals for the upcoming week will be to have the targets move on fixed paths or be animated on the spot, this will have to temporally stop while they’re firing at the player.

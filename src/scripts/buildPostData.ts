@@ -28,6 +28,22 @@ function getFiles(path: string): string[] {
   return results;
 }
 
+function parseData(data: string): IPost {
+  return JSON.parse(data, (key: string, value: any) => {
+    if (key.toLowerCase() === "date") {
+
+      const date = new Date(value);
+
+      if (!date.toJSON()) {
+        return null;
+      }
+
+      return date;
+    }
+    return value;
+  }) as IPost;
+}
+
 /* Script */
 
 SU.startsection("Building Posts");
@@ -41,8 +57,8 @@ const posts: IPost[] = [];
 const slugs: string[] = [];
 
 postFiles.forEach(file => {
-  const data = fs.readFileSync(file, "utf8");
-  const post = JSON.parse(data) as IPost;
+  const data: string = fs.readFileSync(file, "utf8");
+  const post: IPost = parseData(data);
 
   if (!post.slug) {
     SU.error(`Slug in ${file} is empty or not present`);
@@ -64,8 +80,8 @@ postFiles.forEach(file => {
     SU.error(`Categories in file ${file} is empty or not present`);
   }
 
-  if (!post.contentPath && !post.externalLink) {
-    SU.error(`${file} has no content path or external link`);
+  if (!post.contentPath && !post.externalLink && !post.internalLink) {
+    SU.error(`${file} has no content path, external link, or internal link`);
   }
 
   if (post.contentPath && !fs.existsSync(postContent + post.contentPath)) {
@@ -73,7 +89,7 @@ postFiles.forEach(file => {
   }
 
   if (!post.date) {
-    SU.error(`Date in file ${file} is empty or not present`);
+    SU.error(`Date in file ${file} is empty, not present, or invalid`);
   }
 
   if (!post.preview) {
@@ -94,7 +110,7 @@ postFiles.forEach(file => {
 
 SU.testFail();
 
-posts.sort((a, b) => (a.date > b.date) ? 1 : -1);
+posts.sort((a, b) => (a.date > b.date) ? -1 : 1);
 
 if (process.argv.length > 2 && process.argv[2].includes("prod")) {
   fs.writeFileSync(postFile, JSON.stringify(posts));

@@ -2,13 +2,11 @@
 	<div class="post"
 						[class.post-with-sidebar]="hasSidebarContent()">
 		<div class="content">
-			<div class="title element">
+			<div class="title">
 				{{ post.title }}
 			</div>
 			<hr class="split"/>
-			<div class="post-content element"
-								[innerHtml]="postContent">
-			</div>
+			<app-content class="main-content" [postContent]="getPostContent()"></app-content>
 			<div class="comments">
 				<disqus [identifier]="post.slug"></disqus>
 			</div>

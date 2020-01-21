@@ -19,6 +19,7 @@ import { SkillComponent } from "./components/post/sidebar/skill/skill.component"
 import { ItchComponent } from "./components/post/sidebar/itch/itch.component";
 import { SidebarComponent } from "./components/post/sidebar/sidebar.component";
 import { DownloadComponent } from "./components/post/sidebar/download/download.component";
+import { ContentComponent } from "./components/post/content/content.component";
 
 const scrollConfig: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -34,7 +35,9 @@ const routes: Routes = [
   { path: "university", pathMatch: "full", component: CategoryComponent },
   { path: "university/year1", pathMatch: "full", component: CategoryComponent },
   { path: "university/year2", pathMatch: "full", component: CategoryComponent },
+  { path: "university/year2/shooter-unknown-blog", pathMatch: "full", component: CategoryComponent },
   { path: "university/year3", pathMatch: "full", component: CategoryComponent },
+  { path: "shooter-unknown-blog", pathMatch: "full", component: CategoryComponent },
 
   { path: "projects/:slug", pathMatch: "full", component: PostComponent },
   { path: "projects/windows/:slug", pathMatch: "full", component: PostComponent },
@@ -43,7 +46,9 @@ const routes: Routes = [
   { path: "university/:slug", pathMatch: "full", component: PostComponent },
   { path: "university/year1/:slug", pathMatch: "full", component: PostComponent },
   { path: "university/year2/:slug", pathMatch: "full", component: PostComponent },
+  { path: "university/year2/shooter-unknown-blog/:slug", pathMatch: "full", component: PostComponent },
   { path: "university/year3/:slug", pathMatch: "full", component: PostComponent },
+  { path: "shooter-unknown-blog/:slug", pathMatch: "full", component: PostComponent },
 
 
   { path: "about", pathMatch: "full", component: CategoryComponent },
@@ -69,7 +74,8 @@ const routes: Routes = [
     SkillComponent,
     ItchComponent,
     SidebarComponent,
-    DownloadComponent
+    DownloadComponent,
+    ContentComponent
   ],
   imports: [
     DisqusModule.forRoot("tobysmith"),

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "npm run generate && ng serve",
+    "start": "npm run generate && ng serve --disable-host-check",
     "build": "npm run generate && ng build",
     "build:prod": "npm run generate && ng build --prod --aot --output-path ./docs --base-href /tobysmith-uk/ && npm run copyIndex",
     "test": "ng test",

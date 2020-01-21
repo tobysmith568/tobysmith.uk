@@ -33,6 +33,18 @@ a {
   border-top: 1px solid #00000014;
 }
 
+.preview-image {
+	max-height: 250px;
+	margin: 20px 20px 0px 20px;
+	text-align: center;
+	transition: all .2s ease-in-out;
+}
+
+.preview-image:hover {
+	transform: scale(1.1);
+	opacity: 0.8;
+}
+
 .main-content {
 	flex-grow: 1;
 }

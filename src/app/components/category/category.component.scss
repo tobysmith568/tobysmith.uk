@@ -8,17 +8,14 @@
 .header {
 	background-color: $white;
 	border-radius: 5px;
-	padding: 10px;
+	padding: 10px 15px 15px 15px;
 	text-align: center;
-	min-width: 40%;
-	max-width: 60%;
-	width: fit-content;
-	margin: auto;
+	margin: 30px 30px 30px 30px;
 }
 
 .category-title {
 	font-size: 32px;
-	text-transform: capitalize; 
+	text-transform: capitalize;
 }
 
 .category-description {
@@ -29,7 +26,7 @@
 .posts {
 	padding: 0px;
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(auto-fit, minmax(370px, 1fr));
 }
 
 .post {
