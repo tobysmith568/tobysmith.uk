@@ -1,0 +1,306 @@
+[
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "projects/alexa"
+    ],
+    "contentPath": "waterstones-book-recommender.md",
+    "date": "2018-10-14T23:00:00.000Z",
+    "preview": "Use this Alexa Skill to hear about book recommendations from the UK book retailer, Waterstones.",
+    "previewImage": "assets/posts/img/waterstones-book-recommender.png",
+    "slug": "waterstones-book-recommender",
+    "title": "Amazon Alexa: Waterstones Book Recommender",
+    "skill": {
+      "url": "https://www.amazon.co.uk/dp/B07K58NV6Q",
+      "searchTerm": "Waterstones Book Recommender"
+    },
+    "github": {
+      "url": "https://github.com/tobysmith568/Alexa-Waterstones-Book-Recommendations"
+    }
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "projects/alexa"
+    ],
+    "contentPath": "morse-code-translator.md",
+    "date": "2018-09-19T23:00:00.000Z",
+    "preview": "This Amazon Alexa skill enables Alexa to be able to translate phrases into Morse Code from English.",
+    "previewImage": "assets/posts/img/morse-code-translator.png",
+    "slug": "morse-code-translator",
+    "title": "Amazon Alexa: Morse Code Translator",
+    "skill": {
+      "url": "https://www.amazon.co.uk/dp/B07JPX5B36",
+      "searchTerm": "Morse Code Translator"
+    },
+    "github": {
+      "url": "https://github.com/tobysmith568/Alexa-Morse-Code-Translator"
+    }
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "university/year2"
+    ],
+    "contentPath": "keycard-system.md",
+    "date": "2018-01-30T00:00:00.000Z",
+    "preview": "In the first semester of my second year at university I was tasked with developing a program to control a door keycard entry system for a university in Java.",
+    "slug": "keycard-system",
+    "title": "University Keycard System",
+    "github": {
+      "url": "https://github.com/tobysmith568/SOFT-252_University_Keycard_DataModel"
+    }
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "university/year2",
+      "shooter-unknown-blog"
+    ],
+    "contentPath": "shooter-unknown.md",
+    "date": "2018-01-16T00:00:00.000Z",
+    "preview": "This is a Unity game which I made as part of the second year of my degree. The objective is to shoot all the targets as quickly as possible.",
+    "previewImage": "assets/posts/img/shooter-unknown.png",
+    "slug": "shooter-unknown",
+    "title": "Shooter: Unknown",
+    "github": {
+      "url": "https://github.com/tobysmith568/AINT-254_Interactive_Systems"
+    },
+    "itch": {
+      "url": "https://tobysmith568.itch.io/shooter-unknown"
+    }
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "shooter-unknown-blog"
+    ],
+    "contentPath": "su-week-9.md",
+    "date": "2017-12-18T00:00:00.000Z",
+    "preview": "My aim for the last week was to develop the menu system for my game. I started out with the main menu as this is the core of the menu system....",
+    "slug": "su-week-9",
+    "title": "Week #9"
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "shooter-unknown-blog"
+    ],
+    "contentPath": "su-week-8.md",
+    "date": "2017-12-12T00:00:00.000Z",
+    "preview": "I spent the whole of the last week animating paths for the targets. About half the targets aren’t active when the game starts however....",
+    "slug": "su-week-8",
+    "title": "Week #8"
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "shooter-unknown-blog"
+    ],
+    "contentPath": "su-week-7.md",
+    "date": "2017-12-04T00:00:00.000Z",
+    "preview": "The targets shoot back! If the player shoots within a few meters of a target, it will immediatly stop and return fire for a few seconds. In this time they spray automatic fire....",
+    "slug": "su-week-7",
+    "title": "Week #7"
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "shooter-unknown-blog"
+    ],
+    "contentPath": "su-week-5.md",
+    "date": "2017-11-21T00:00:00.000Z",
+    "preview": "No full update this week as university work was heavy in other modules – I do however finally have a name for my game!...",
+    "slug": "su-week-5",
+    "title": "Week #5"
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "projects/alexa"
+    ],
+    "contentPath": "bitcoin-value.md",
+    "date": "2017-11-07T00:00:00.000Z",
+    "preview": "This is an Amazon Alexa Skill which tells you the current value of the Bitcoin currency in your Flash Briefing. The current conversion options are GBP, USD, and EUR.",
+    "previewImage": "assets/posts/img/bitcoin-value.png",
+    "slug": "bitcoin-value",
+    "title": "Amazon Alexa: Bitcoin Value",
+    "skill": {
+      "url": "https://www.amazon.co.uk/dp/B0776LZY2W",
+      "searchTerm": "Bitcoin value in flash briefing"
+    }
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "shooter-unknown-blog"
+    ],
+    "contentPath": "su-week-3.md",
+    "date": "2017-11-07T00:00:00.000Z",
+    "preview": "During the last week not much progress has been made on game play as I was waiting for feedback from the demo session in class for feedback on where I should take the game....",
+    "slug": "su-week-3",
+    "title": "Week #3"
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "shooter-unknown-blog"
+    ],
+    "contentPath": "su-week-2.md",
+    "date": "2017-11-01T00:00:00.000Z",
+    "preview": "Another week into development of the game mechanic and targets are now in the first level. Initially they were 1x1x1 cubes but have also been upgraded to 1x2x1 mannequin figures in the last week....",
+    "slug": "su-week-2",
+    "title": "Week #2"
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "shooter-unknown-blog"
+    ],
+    "contentPath": "su-week-1.md",
+    "date": "2017-10-23T23:00:00.000Z",
+    "preview": "Initial progress has been quick as I managed to add all the controls to my player while I was testing ideas. Currently the player....",
+    "slug": "su-week-1",
+    "title": "Week #1"
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "shooter-unknown-blog"
+    ],
+    "contentPath": "su-game-proposal.md",
+    "date": "2017-10-23T23:00:00.000Z",
+    "preview": "As this game is made for one of my university modules I’m also making documentation for it to be submitted. Today I handed in a proposal document for my game and I decided to also publish it here.",
+    "slug": "su-game-proposal",
+    "title": "Game Proposal"
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "shooter-unknown-blog"
+    ],
+    "contentPath": "su-initial-concept.md",
+    "date": "2017-10-16T23:00:00.000Z",
+    "preview": "This is the initial concept pitch for my second year university project, Shooter: Unknown",
+    "slug": "su-initial-concept",
+    "title": "Initial Concept"
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "university/year2"
+    ],
+    "internalLink": {
+      "url": "./shooter-unknown-blog",
+      "isRelative": false
+    },
+    "date": "2017-10-13T23:00:00.000Z",
+    "preview": "This is the development blog of my first-person sniping game developed in the Unity game engine.",
+    "slug": "shooter-unknown-blog-link",
+    "title": "Shooter: Unknown Development Blog"
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "projects/alexa"
+    ],
+    "contentPath": "tube-status.md",
+    "date": "2017-09-02T23:00:00.000Z",
+    "preview": "This is an Amazon Alexa skill which tells you what the status is of each London tube and train is line by reporting any delays, closures, and updates and a brief and concise manner.",
+    "previewImage": "assets/posts/img/tube-status.png",
+    "slug": "tube-status",
+    "title": "Amazon Alexa: London Tube Statuses",
+    "skill": {
+      "url": "https://www.amazon.co.uk/dp/B075812L92",
+      "searchTerm": "London Tube and Train Line Statuses"
+    }
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "projects/alexa"
+    ],
+    "contentPath": "pollen-levels.md",
+    "date": "2017-08-29T23:00:00.000Z",
+    "preview": "This is an Amazon Alexa skill which tells you the pollen levels local to you in the UK during your flash briefing. Like all other flash briefing skills, it can be reordered in either the Alexa app or on the website.",
+    "previewImage": "assets/posts/img/pollen-levels.png",
+    "slug": "pollen-levels",
+    "title": "Amazon Alexa: Daily Pollen Levels",
+    "skill": {
+      "url": "https://www.amazon.co.uk/dp/B07565719Y",
+      "searchTerm": "Daily Pollen Levels"
+    }
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "projects/alexa"
+    ],
+    "contentPath": "daily-horoscope.md",
+    "date": "2017-08-27T23:00:00.000Z",
+    "preview": "This is an Amazon Alexa skill which tells you a daily horoscope for any of the 12 zodiac signs during your flash briefing. Like all other flash briefing skills, it can be reordered in either the Alexa app or on the website.",
+    "previewImage": "assets/posts/img/daily-horoscope.png",
+    "slug": "daily-horoscope",
+    "title": "Amazon Alexa: Daily Horoscope",
+    "skill": {
+      "url": "https://www.amazon.co.uk/dp/B07534DSFX",
+      "searchTerm": "Your Daily Horoscope"
+    }
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "projects/alexa"
+    ],
+    "contentPath": "current-moon-phase.md",
+    "date": "2017-08-22T23:00:00.000Z",
+    "preview": "This is an Amazon Alexa skill which tells you the current moon phase during your flash briefing.",
+    "previewImage": "assets/posts/img/current-moon-phase.png",
+    "slug": "current-moon-phase",
+    "title": "Amazon Alexa: Current Moon Phase",
+    "skill": {
+      "url": "https://www.amazon.co.uk/dp/B0752DHWNV",
+      "searchTerm": "Current Moon Phase"
+    }
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "university/year1"
+    ],
+    "contentPath": "apocalypse-z.md",
+    "date": "2017-05-23T23:00:00.000Z",
+    "preview": "I made this as part of my university course: Computer Science and Video Games Development, and was for the first year module AINT152.",
+    "previewImage": "assets/posts/img/apocalypse-z.png",
+    "slug": "apocalypse-z",
+    "title": "Apocalypse Z",
+    "itch": {
+      "url": "https://tobysmith568.itch.io/apocalypse-z"
+    }
+  },
+  {
+    "author": "Toby Smith",
+    "categories": [
+      "university/year1"
+    ],
+    "contentPath": "data-miner.md",
+    "date": "2017-02-16T00:00:00.000Z",
+    "preview": "This project was made as part of my university course: Computer Science and Video Games Development, and was for the module SOFT152. This program takes data files containing sales records and represents the data in 5 different graphs.",
+    "previewImage": "assets/posts/img/data-miner.png",
+    "slug": "data-miner",
+    "title": "Data Miner",
+    "github": {
+      "url": "https://github.com/tobysmith568/SOFT-151_Data_Miner"
+    },
+    "downloads": [
+      {
+        "name": "Compiled program",
+        "url": "https://github.com/tobysmith568/SOFT-151_Data_Miner/releases/download/v1.0.0/DataMiner.zip"
+      },
+      {
+        "name": "Zipped source code",
+        "url": "https://github.com/tobysmith568/SOFT-151_Data_Miner/archive/v1.0.0.zip"
+      }
+    ]
+  }
+]
