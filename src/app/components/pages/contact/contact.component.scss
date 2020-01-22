@@ -1,0 +1,84 @@
+@import '../../../../styles.scss';
+
+hr {
+	margin: 0px;
+	border-top: 1px solid $greyHr;
+	margin: 20px -20px;
+}
+
+input, textarea {
+	border: 1px black solid;
+	margin: 5px;
+	padding: 5px;
+	border-radius: 5px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+textarea {
+	resize: vertical;
+	width: 100%;
+	width: -moz-available;
+	width: -webkit-fill-available;
+	width: stretch;
+}
+
+input.submit {
+	background-color: rgb(216, 216, 216);
+	cursor: pointer;
+}
+
+.content {
+	width: $content-width;
+	margin: auto;
+	padding: 0px 20px;
+}
+
+.title {
+	background-color: $white;
+	border-radius: 5px;
+	padding: 10px 15px 15px 15px;
+	text-align: center;
+	margin: 30px 30px 30px 30px;
+}
+
+.title h1 {
+	font-size: 32px;
+	text-transform: capitalize;
+}
+
+.title p {
+	margin-top: 10px;
+	font-size: 18px;
+}
+
+.main-content {
+	padding: 0px;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(370px, 1fr));
+}
+
+.area {
+	background-color: $white;
+	border-radius: 5px;
+	margin: 30px;
+	padding: 20px;
+}
+
+.contact-form {
+	width: 100%;
+}
+
+.form-title {
+	font-size: 20px;
+	margin-bottom: 10px;
+}
+
+.required, .error-message {
+	color: red;
+}
+
+.success {
+	font-size: 26px;
+	color: #a5a5a5;
+}

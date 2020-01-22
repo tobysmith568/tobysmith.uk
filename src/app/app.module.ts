@@ -1,10 +1,11 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
-import { AppRoutingModule } from "./app-routing.module";
-import { HomeComponent } from "./components/home/home.component";
+import { FormsModule } from "@angular/forms";
 import { Routes, RouterModule } from "@angular/router";
-import { PerfectScrollbarConfigInterface, PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarModule } from "ngx-perfect-scrollbar";
 import { HttpClientModule } from "@angular/common/http";
+import { AppRoutingModule } from "./app-routing.module";
+import { HomeComponent } from "./components/pages/home/home.component";
+import { PerfectScrollbarConfigInterface, PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarModule } from "ngx-perfect-scrollbar";
 import { DisqusModule  } from "ngx-disqus";
 
 import { AppComponent } from "./app.component";
@@ -20,6 +21,7 @@ import { ItchComponent } from "./components/post/sidebar/itch/itch.component";
 import { SidebarComponent } from "./components/post/sidebar/sidebar.component";
 import { DownloadComponent } from "./components/post/sidebar/download/download.component";
 import { ContentComponent } from "./components/post/content/content.component";
+import { ContactComponent } from "./components/pages/contact/contact.component";
 
 const scrollConfig: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -52,7 +54,7 @@ const routes: Routes = [
 
 
   { path: "about", pathMatch: "full", component: CategoryComponent },
-  { path: "contact", pathMatch: "full", component: CategoryComponent },
+  { path: "contact", pathMatch: "full", component: ContactComponent },
 
   { path: "404", component: NotFoundComponent },
   { path: "**", component: NotFoundComponent }
@@ -75,7 +77,8 @@ const routes: Routes = [
     ItchComponent,
     SidebarComponent,
     DownloadComponent,
-    ContentComponent
+    ContentComponent,
+    ContactComponent
   ],
   imports: [
     DisqusModule.forRoot("tobysmith"),
@@ -83,7 +86,8 @@ const routes: Routes = [
     BrowserModule,
     AppRoutingModule,
     PerfectScrollbarModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule
   ],
   providers: [
     {
