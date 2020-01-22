@@ -24,12 +24,39 @@
 				</form>
 
 				<div class="success" *ngIf="messageSent">
-					Message successfully sent!
+					<div class="success-message">Message successfully sent!</div>
 				</div>
 			</div>
 
-			<div class="area">
-				Todo. Will have links to email, linkedin, github, and messenger
+			<div class="area details-grid">
+				<a class="contact-method" href="mailto:tobysmith568@hotmail.co.uk" target="_blank">
+					<img src="assets\img\email.png" />
+					<div class="contact-details">
+						<h3 class="contact-method-title">Email</h3>
+						<div>It is generally best to get in contact with me via email here: tobysmith568@hotmail.co.uk</div>
+					</div>
+				</a>
+				<a class="contact-method" href="https://tobysmith.uk/linkedin" target="_blank">
+					<img src="assets\img\linkedin.png" />
+					<div class="contact-details">
+						<h3 class="contact-method-title">LinkedIn</h3>
+						<div>For professional communication you can also contact me on Linkedin</div>
+					</div>
+				</a>
+				<a class="contact-method" href="https://tobysmith.uk/github" target="_blank">
+					<img src="assets\img\github.png" />
+					<div class="contact-details">
+						<h3 class="contact-method-title">Github</h3>
+						<div>While not for communication, you can also find me and all of my projects on Github</div>
+					</div>
+				</a>
+				<a class="contact-method" href="https://tobysmith.uk/messenger" target="_blank">
+					<img src="assets\img\messenger.png" />
+					<div class="contact-details">
+						<h3 class="contact-method-title">Messenger</h3>
+						<div>If you're looking for an informal chat, feel free to reach me on Facebook Messenger</div>
+					</div>
+				</a>
 			</div>
 
 		</div>

@@ -82,4 +82,44 @@ input.submit {
 	font-size: 26px;
 	color: #a5a5a5;
 	user-select: none;
+	text-align: center;
+}
+
+.success-message {
+	margin: auto;
+}
+
+.details-grid {
+	padding: 0px;
+	display: flex;
+	flex-direction: column;
+}
+
+.contact-method {
+	margin: 10px;
+	padding: 10px;
+	border-radius: 5px;
+	text-decoration: none;
+	color: $blackText;
+	text-align: center;
+	display: flex;
+	flex-direction: row;
+}
+
+.contact-method:hover {
+	background-color: rgb(235, 235, 235);
+}
+
+.contact-method img {
+	flex-grow: 1;
+	max-width: 80px;
+	margin: auto;
+}
+
+.contact-details {
+	margin: auto 20px;
+}
+
+.contact-method-title {
+	margin-bottom: 5px;
 }
