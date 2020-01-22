@@ -1,5 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
+import { RecaptchaComponent } from "ng-recaptcha";
 
 @Component({
   selector: "app-contact",
@@ -7,6 +8,9 @@ import { HttpClient } from "@angular/common/http";
   styleUrls: ["./contact.component.scss"]
 })
 export class ContactComponent implements OnInit {
+
+  @ViewChild(RecaptchaComponent, { static: true })
+  private recaptcha: RecaptchaComponent;
 
   public name: string;
   public email: string;
@@ -22,19 +26,31 @@ export class ContactComponent implements OnInit {
   }
 
   public async onSubmit() {
+    this.recaptcha.execute();
+  }
+
+  public async resolved(captchaResponse: string) {
+
+    if (!captchaResponse) {
+      this.errors = [
+        "Unable to get reCAPTCHA response, please try again later or use another form of contact."
+      ];
+      return;
+    }
 
     const data = {
       name: this.name,
       email: this.email,
-      message: this.message
+      message: this.message,
+      recaptcha: captchaResponse
     };
 
-    const result = await this.sendMessage(data);
+    await this.sendMessage(data);
   }
 
   private async sendMessage(body: any): Promise<boolean> {
     try {
-      await this.httpClient.post("https://api.tobysmith.uk/contact/", body, {
+      const result = await this.httpClient.post("https://api.tobysmith.uk/contact/", body, {
         headers: {
           "Content-Type": "application/json"
         },

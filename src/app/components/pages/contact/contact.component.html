@@ -4,6 +4,10 @@
 			<h1>Contact Me</h1>
 			<p>Please feel free to use any method below to contact me</p>
 		</div>
+		
+		<re-captcha #captchaRef="reCaptcha" size="invisible" siteKey="6LevB28UAAAAANT7QerDGOfqQcGb1JCoM3bPPbgE"
+				(resolved)="resolved($event)"></re-captcha>
+
 		<div class="main-content">
 
 			<div class="area">

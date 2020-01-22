@@ -6,7 +6,8 @@ import { HttpClientModule } from "@angular/common/http";
 import { AppRoutingModule } from "./app-routing.module";
 import { HomeComponent } from "./components/pages/home/home.component";
 import { PerfectScrollbarConfigInterface, PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarModule } from "ngx-perfect-scrollbar";
-import { DisqusModule  } from "ngx-disqus";
+import { DisqusModule } from "ngx-disqus";
+import { RecaptchaModule } from "ng-recaptcha";
 
 import { AppComponent } from "./app.component";
 import { HeaderComponent } from "./components/header/header.component";
@@ -87,7 +88,8 @@ const routes: Routes = [
     AppRoutingModule,
     PerfectScrollbarModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    RecaptchaModule
   ],
   providers: [
     {
