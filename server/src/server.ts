@@ -1,4 +1,5 @@
 import * as express from "express";
+import * as path from "path";
 import { Express, Router } from "express";
 import { Server as HTTPServer } from "http";
 import { RedirectRoute } from "./routes/redirect.route";
@@ -19,27 +20,26 @@ export class Server {
 
   public initializeControllers() {
 
-    const mainRoute = new RedirectRoute(Router(), this.config);
-    const notFoundRoute = new NotFoundRoute(Router());
-
-    mainRoute.setupRoutes();
-
+    const redirectRoute = new RedirectRoute(Router(), this.config);
+    redirectRoute.setupRoutes();
     this.app.use([
-      mainRoute.getRouter(),
+      redirectRoute.getRouter(),
     ]);
-
-    this.app.use(express.static("dist"));
-
+    
+    this.app.use(express.static(path.join(__dirname, "../../public")));
+    
+    const notFoundRoute = new NotFoundRoute(Router());
     notFoundRoute.setupRoutes();
-
     this.app.use([
       notFoundRoute.getRouter()
     ]);
   }
 
   public listen(): void {
-    this.httpServer.listen(3000, () => {
-      console.log(`Server started at port ${3000}`);
+    const port = process.env.PORT || 3000;
+
+    this.httpServer.listen(port, () => {
+      console.log(`Server started at port ${port}`);
     });
   }
 }

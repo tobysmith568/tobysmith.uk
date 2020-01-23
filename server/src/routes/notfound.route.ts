@@ -1,4 +1,4 @@
-import { Router, Request, Response, static as staticHost } from "express";
+import { Router, Request, Response } from "express";
 import { IRoute } from "./route.interface";
 import * as path from "path";
 
@@ -8,7 +8,7 @@ export class NotFoundRoute implements IRoute {
 
   public setupRoutes(): void {
     this.expressRouter.get("*", async (req: Request, res: Response) => {
-      res.sendFile(path.join(__dirname + "../../..//dist/index.html"));
+      res.sendFile(path.join(__dirname, "../../../public/index.html"));
     });
   }
   

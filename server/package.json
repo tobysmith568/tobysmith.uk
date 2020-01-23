@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cls && npm run build:live",
-    "build": "node ./node_modules/typescript/lib/tsc",
-    "build:live": "nodemon -e * --exec ./node_modules/.bin/ts-node -- index.ts"
+    "start": "npm run build && node dist/index.js",
+    "start:live": "nodemon -e * --exec ./node_modules/.bin/ts-node -- index.ts",
+    "build": "node ./node_modules/typescript/lib/tsc"
   },
   "nyc": {
     "include": [

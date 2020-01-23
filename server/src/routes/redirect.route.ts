@@ -1,4 +1,4 @@
-import { Router, Request, Response, static as staticHost } from "express";
+import { Router, Request, Response } from "express";
 import { IRoute } from "./route.interface";
 import { Config } from "../config/config";
 
