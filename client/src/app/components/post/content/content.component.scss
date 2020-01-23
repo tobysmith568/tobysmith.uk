@@ -1,0 +1,91 @@
+@import '../../../../styles.scss';
+
+.post-content {
+	margin-top: 15px;
+	margin-left: 20px;
+	margin-right: 20px;
+	padding: 20px;
+	text-align: left;
+	font-size: 20px;
+	flex-grow: 1;
+}
+
+.post-content h1 {
+	font-size: 32px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.post-content h2 {
+	font-size: 28px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.post-content h3 {
+	font-size: 24px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.post-content h4 {
+	font-size: 20px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.post-content p, .post-content ul, .post-content ol,
+.post-content h1, .post-content h2, .post-content h3,
+.post-content h4, .post-content blockquote {
+	margin-top: 10px;
+}
+
+.post-content ul, .post-content ol {
+	margin-left: 20px;
+}
+
+.post-content li ul, .post-content li ol {
+	margin-top: 0px;
+}
+
+.post-content img {
+	max-width: 100%;
+	display: block;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.post-content img.center {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.post-content hr {
+	margin: 0px;
+	border-top: 1px solid $greyHr;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.post-content blockquote {
+	border-radius: 5px;
+	padding: 1px 5px 5px 20px;
+	border-left: 5px #616161 solid;
+	font-style: italic;
+	color: #5a5a5a;
+	background-color: #f1f1f1;
+}
+
+.post-content .taskbox {
+	margin-left: -20px;
+	padding-left: 20px;
+	list-style: none;
+	background-image: url(../../../../assets/img/unchecked_checkbox.png);
+	background-repeat: no-repeat;
+	background-position: left center;
+	background-size: 14px;
+}
+
+.post-content .taskbox.checked-taskbox {
+	background-image: url(../../../../assets/img/checked_checkbox.png);
+}

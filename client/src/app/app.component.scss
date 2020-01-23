@@ -1,0 +1,24 @@
+@import "../styles.scss";
+
+.container {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+}
+
+.outer-content {
+	background-color: $blueBackground;
+	flex-grow: 1;
+}
+
+.content {
+	width: 70%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+@media only screen and (max-width: $mobile-width) {
+	.content {
+		width: 100%;
+	}
+}
