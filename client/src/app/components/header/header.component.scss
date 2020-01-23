@@ -9,8 +9,16 @@ button {
 }
 
 .content {
-	width: $content-width;
+	width: 70%;
 	margin: auto;
+}
+
+@media only screen and (max-width: $mobile-width) {
+	.content {
+		width: auto;
+		margin-left: 20px;
+		margin-right: 20px;
+	}
 }
 
 .title {

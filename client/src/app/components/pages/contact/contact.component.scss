@@ -30,12 +30,11 @@ input.submit {
 }
 
 .content {
-	width: $content-width;
-	margin: auto;
-	padding: 0px 20px;
+	width: 100%;
+	margin: 30px auto auto auto;
 }
 
-.title {
+.header {
 	background-color: $white;
 	border-radius: 5px;
 	padding: 10px 15px 15px 15px;
@@ -43,12 +42,12 @@ input.submit {
 	margin: 30px 30px 30px 30px;
 }
 
-.title h1 {
+.header-title {
 	font-size: 32px;
 	text-transform: capitalize;
 }
 
-.title p {
+.header-description {
 	margin-top: 10px;
 	font-size: 18px;
 }
