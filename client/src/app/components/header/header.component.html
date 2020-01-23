@@ -1,4 +1,4 @@
-<div class="header">
+<div class="header" #header>
 	<div class="content">
 		<h1 class="title">Toby Smith's Portfolio</h1>
 		<h3 class="subtitle">Computer Science student at Plymouth University</h3>
@@ -9,7 +9,7 @@
 				<button routerLink="/projects" class="dropbtn">Projects
 					<i class="fa fa-caret-down"></i>
 				</button>
-				<div class="dropdown-content">
+				<div class="dropdown-content" #projectDropdown>
 					<a routerLink="/projects/windows">Windows</a>
 					<a routerLink="/projects/websites">Websites</a>
 					<a routerLink="/projects/alexa">Alexa</a>
@@ -20,7 +20,7 @@
 				<button routerLink="/university" class="dropbtn">University
 					<i class="fa fa-caret-down"></i>
 				</button>
-				<div class="dropdown-content">
+				<div class="dropdown-content" #universityDropdown>
 					<a routerLink="/university/year1">First Year</a>
 					<a routerLink="/university/year2">Second Year</a>
 					<a routerLink="/university/year3">Final Year</a>
