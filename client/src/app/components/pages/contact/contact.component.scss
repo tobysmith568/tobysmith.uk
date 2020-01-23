@@ -26,6 +26,7 @@ textarea {
 input.submit {
 	background-color: rgb(216, 216, 216);
 	cursor: pointer;
+	width: 75px;
 }
 
 .content {
@@ -67,6 +68,9 @@ input.submit {
 
 .contact-form {
 	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
 }
 
 .form-title {
@@ -76,6 +80,16 @@ input.submit {
 
 .required, .error-message {
 	color: red;
+}
+
+.input {
+	width: 250px;
+	max-width: 100%;
+}
+
+.message {
+	flex-grow: 1;
+	min-height: 150px;
 }
 
 .success {

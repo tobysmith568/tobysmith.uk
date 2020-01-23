@@ -14,11 +14,11 @@
 				<form class="contact-form" *ngIf="!messageSent">
 					<h3 class="form-title">Contact form</h3>
 					<p>Your name:<span class="required">*</span></p>
-					<input type="text" name="name" [(ngModel)]="name"><br>
+					<input class="input" type="text" name="name" [(ngModel)]="name"><br>
 					<p>Your email:<span class="required">*</span></p>
-					<input type="email" name="email" [(ngModel)]="email"><br>
+					<input class="input" type="email" name="email" [(ngModel)]="email"><br>
 					<p>Message:<span class="required">*</span></p>
-					<textarea rows="4" name="message" [(ngModel)]="message"></textarea><br>
+					<textarea class="message" name="message" [(ngModel)]="message"></textarea><br>
 					<p class="error-message" *ngFor="let error of errors">{{ error }}</p>
 					<input class="submit" type="button" value="Submit" (click)="onSubmit()">
 				</form>
