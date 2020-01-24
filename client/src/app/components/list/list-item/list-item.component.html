@@ -1,12 +1,12 @@
 <a class="item" #link target="_blank" (click)="click()">
 	<img class="icon" src="{{ icon }}" />
 	<div class="details">
-		<h3 class="title">{{ title }}</h3>
+		<h3 class="header">{{ header }}</h3>
 		<div class="content">{{ content }}</div>
 	</div>
 </a>
-<ngx-smart-modal custom-class="nsm-centered" #modal identifier="{{ title }}">
-	<h1 class="modal-title">{{ title }}</h1>
+<ngx-smart-modal custom-class="nsm-centered" #modal identifier="{{ header }}">
+	<h1 class="modal-header">{{ header }}</h1>
 	<hr />
 	<div class="content">
 		<ng-content></ng-content>

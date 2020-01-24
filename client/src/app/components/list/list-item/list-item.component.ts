@@ -17,7 +17,7 @@ export class ListItemComponent implements OnInit {
   public icon: string;
 
   @Input()
-  public title: string;
+  public header: string;
 
   @Input()
   public content: string;
