@@ -1,0 +1,69 @@
+@import '../../../../styles.scss';
+
+app-githubwidget {
+	width: 250px;
+}
+
+.content {
+	width: 100%;
+	margin: 30px auto auto auto;
+}
+
+.header {
+	background-color: $white;
+	border-radius: 5px;
+	padding: 10px 15px 15px 15px;
+	text-align: center;
+	margin: 30px 30px 30px 30px;
+}
+
+.header-title {
+	font-size: 32px;
+	text-transform: capitalize;
+}
+
+.header-description {
+	margin-top: 10px;
+	font-size: 18px;
+}
+
+.main-content {
+	padding: 0px;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(370px, 1fr));
+}
+
+.area {
+	background-color: $white;
+	border-radius: 5px;
+	margin: 30px;
+	padding: 20px;
+	font-size: 20px;
+	line-height: 30px;
+}
+
+.about-para:not(:first-child) {
+	margin-top: 20px;
+}
+
+.area a {
+	text-decoration: underline;
+	color: $blackText;
+}
+
+.skills-area {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+
+.skill-block {
+	flex-grow: 1;
+	padding: 10px;
+	border-radius: 5px;
+}
+
+.skill-block ul {
+	margin-left: 20px;
+	margin-top: 5px;
+}

@@ -23,6 +23,9 @@ import { SidebarComponent } from "./components/post/sidebar/sidebar.component";
 import { DownloadComponent } from "./components/post/sidebar/download/download.component";
 import { ContentComponent } from "./components/post/content/content.component";
 import { ContactComponent } from "./components/pages/contact/contact.component";
+import { AboutComponent } from "./components/pages/about/about.component";
+import { LinkedinComponent } from "./components/pages/about/linkedin/linkedin.component";
+import { GithubComponent as GithubWidgetComponent } from "./components/pages/about/github/github.component";
 
 const scrollConfig: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -54,7 +57,7 @@ const routes: Routes = [
   { path: "shooter-unknown-blog/:slug", pathMatch: "full", component: PostComponent },
 
 
-  { path: "about", pathMatch: "full", component: CategoryComponent },
+  { path: "about", pathMatch: "full", component: AboutComponent },
   { path: "contact", pathMatch: "full", component: ContactComponent },
 
   { path: "404", component: NotFoundComponent },
@@ -79,7 +82,10 @@ const routes: Routes = [
     SidebarComponent,
     DownloadComponent,
     ContentComponent,
-    ContactComponent
+    ContactComponent,
+    AboutComponent,
+    LinkedinComponent,
+    GithubWidgetComponent
   ],
   imports: [
     DisqusModule.forRoot("tobysmith"),
