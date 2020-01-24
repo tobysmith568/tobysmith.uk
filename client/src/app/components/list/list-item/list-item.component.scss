@@ -5,7 +5,7 @@
 	border-radius: 5px;
 	text-decoration: none;
 	color: $blackText;
-	text-align: center;
+	text-align: left;
 	display: flex;
 	flex-direction: row;
 	min-height: 80px;
@@ -27,9 +27,5 @@
 }
 
 .title {
-	
-}
-
-.content {
-	
+	font-size: 20px;	
 }

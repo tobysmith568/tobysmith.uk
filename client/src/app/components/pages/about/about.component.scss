@@ -70,8 +70,19 @@ input.submit {
 	line-height: 30px;
 }
 
-.about-para:not(:first-child) {
-	margin-top: 10px;
+.me {
+	width: 175px;
+	border-radius: 5px;
+	float: left;
+	margin-right: 30px;
+}
+
+.about-para {
+	margin-top: 20px;
+}
+
+.about-para a {
+	color: $blackText;
 }
 
 .message {
