@@ -8,6 +8,7 @@ import { HomeComponent } from "./components/pages/home/home.component";
 import { PerfectScrollbarConfigInterface, PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarModule } from "ngx-perfect-scrollbar";
 import { DisqusModule } from "ngx-disqus";
 import { RecaptchaModule } from "ng-recaptcha";
+import { NgxSmartModalModule } from "ngx-smart-modal";
 
 import { AppComponent } from "./app.component";
 import { HeaderComponent } from "./components/header/header.component";
@@ -94,6 +95,7 @@ const routes: Routes = [
   imports: [
     DisqusModule.forRoot("tobysmith"),
     RouterModule.forRoot(routes),
+    NgxSmartModalModule.forRoot(),
     BrowserModule,
     AppRoutingModule,
     PerfectScrollbarModule,

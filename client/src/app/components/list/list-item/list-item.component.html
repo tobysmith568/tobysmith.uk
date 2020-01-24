@@ -1,7 +1,17 @@
-<a class="item" #link target="_blank">
+<a class="item" #link target="_blank" (click)="click()">
 	<img class="icon" src="{{ icon }}" />
 	<div class="details">
 		<h3 class="title">{{ title }}</h3>
 		<div class="content">{{ content }}</div>
 	</div>
 </a>
+<ngx-smart-modal custom-class="nsm-centered" #modal identifier="{{ title }}">
+	<h1 class="modal-title">{{ title }}</h1>
+	<hr />
+	<div class="content">
+		<ng-content></ng-content>
+	</div>
+	<div class="bottom-bar">
+		<button class="close" (click)="modal.close()">Close</button>
+	</div>
+</ngx-smart-modal>
