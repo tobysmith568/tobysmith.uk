@@ -50,7 +50,7 @@ export class ContactComponent implements OnInit {
 
   private async sendMessage(body: any): Promise<boolean> {
     try {
-      const result = await this.httpClient.post("https://api.tobysmith.uk/contact/", body, {
+      await this.httpClient.post("https://api.tobysmith.uk/contact/", body, {
         headers: {
           "Content-Type": "application/json"
         },

@@ -63,6 +63,7 @@ input.submit {
 	border-radius: 5px;
 	margin: 30px;
 	padding: 20px;
+	height: fit-content;
 }
 
 .contact-form {
@@ -88,7 +89,7 @@ input.submit {
 
 .message {
 	flex-grow: 1;
-	min-height: 150px;
+	min-height: 117px;
 }
 
 .success {
