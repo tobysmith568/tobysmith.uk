@@ -1,0 +1,35 @@
+@import '../../../../styles.scss';
+
+.item {
+	padding: 10px;
+	border-radius: 5px;
+	text-decoration: none;
+	color: $blackText;
+	text-align: center;
+	display: flex;
+	flex-direction: row;
+	min-height: 80px;
+	flex-grow: 1;
+}
+
+.item:hover {
+	background-color: rgb(235, 235, 235);
+}
+
+.icon {
+	max-width: 80px;
+	margin: auto 0px;
+}
+
+.details {
+	flex-grow: 1;
+	margin: auto 20px;
+}
+
+.title {
+	
+}
+
+.content {
+	
+}

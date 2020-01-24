@@ -26,6 +26,8 @@ import { ContactComponent } from "./components/pages/contact/contact.component";
 import { AboutComponent } from "./components/pages/about/about.component";
 import { LinkedinComponent } from "./components/pages/about/linkedin/linkedin.component";
 import { GithubComponent as GithubWidgetComponent } from "./components/pages/about/github/github.component";
+import { ListComponent } from "./components/list/list.component";
+import { ListItemComponent } from "./components/list/list-item/list-item.component";
 
 const scrollConfig: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -85,7 +87,9 @@ const routes: Routes = [
     ContactComponent,
     AboutComponent,
     LinkedinComponent,
-    GithubWidgetComponent
+    GithubWidgetComponent,
+    ListComponent,
+    ListItemComponent
   ],
   imports: [
     DisqusModule.forRoot("tobysmith"),

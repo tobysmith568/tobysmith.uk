@@ -1,7 +1,32 @@
 @import '../../../../styles.scss';
 
-app-githubwidget {
-	width: 250px;
+hr {
+	margin: 0px;
+	border-top: 1px solid $greyHr;
+	margin: 20px -20px;
+}
+
+input, textarea {
+	border: 1px black solid;
+	margin: 5px;
+	padding: 5px;
+	border-radius: 5px;
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+textarea {
+	resize: vertical;
+	width: 100%;
+	width: -moz-available;
+	width: -webkit-fill-available;
+	width: stretch;
+}
+
+input.submit {
+	background-color: rgb(216, 216, 216);
+	cursor: pointer;
+	width: 75px;
 }
 
 .content {
@@ -38,32 +63,18 @@ app-githubwidget {
 	border-radius: 5px;
 	margin: 30px;
 	padding: 20px;
+}
+
+.bio {
 	font-size: 20px;
 	line-height: 30px;
 }
 
 .about-para:not(:first-child) {
-	margin-top: 20px;
+	margin-top: 10px;
 }
 
-.area a {
-	text-decoration: underline;
-	color: $blackText;
-}
-
-.skills-area {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-}
-
-.skill-block {
+.message {
 	flex-grow: 1;
-	padding: 10px;
-	border-radius: 5px;
-}
-
-.skill-block ul {
-	margin-left: 20px;
-	margin-top: 5px;
+	min-height: 150px;
 }
