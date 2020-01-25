@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~ngx-smart-modal/ngx-smart-modal";
 
 $greyBackground: #1D1D1D;
 $blueBackground: #1e73be;
@@ -29,4 +30,29 @@ $mobile-width: 700px;
 }
 ::-moz-selection {
 	background: $greyMenuText; /* Gecko Browsers */
+}
+
+/* Model CSS */
+
+.nsm-dialog {
+	width: 90vw;
+	max-width: 800px;
+}
+
+.nsm-content {
+	border-radius: 5px;
+}
+
+.nsm-dialog hr {
+	margin: 10px 10px 30px 10px;
+	border-top: 1px grey solid;
+}
+
+.nsm-dialog .content {
+	font-size: 18px;
+	line-height: 28px;
+}
+
+.nsm-dialog .content p {
+	margin-top: 10px;
 }

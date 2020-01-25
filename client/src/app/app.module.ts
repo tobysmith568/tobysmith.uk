@@ -8,6 +8,7 @@ import { HomeComponent } from "./components/pages/home/home.component";
 import { PerfectScrollbarConfigInterface, PERFECT_SCROLLBAR_CONFIG, PerfectScrollbarModule } from "ngx-perfect-scrollbar";
 import { DisqusModule } from "ngx-disqus";
 import { RecaptchaModule } from "ng-recaptcha";
+import { NgxSmartModalModule } from "ngx-smart-modal";
 
 import { AppComponent } from "./app.component";
 import { HeaderComponent } from "./components/header/header.component";
@@ -23,6 +24,11 @@ import { SidebarComponent } from "./components/post/sidebar/sidebar.component";
 import { DownloadComponent } from "./components/post/sidebar/download/download.component";
 import { ContentComponent } from "./components/post/content/content.component";
 import { ContactComponent } from "./components/pages/contact/contact.component";
+import { AboutComponent } from "./components/pages/about/about.component";
+import { LinkedinComponent } from "./components/pages/about/linkedin/linkedin.component";
+import { GithubComponent as GithubWidgetComponent } from "./components/pages/about/github/github.component";
+import { ListComponent } from "./components/list/list.component";
+import { ListItemComponent } from "./components/list/list-item/list-item.component";
 
 const scrollConfig: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -54,7 +60,7 @@ const routes: Routes = [
   { path: "shooter-unknown-blog/:slug", pathMatch: "full", component: PostComponent },
 
 
-  { path: "about", pathMatch: "full", component: CategoryComponent },
+  { path: "about", pathMatch: "full", component: AboutComponent },
   { path: "contact", pathMatch: "full", component: ContactComponent },
 
   { path: "404", component: NotFoundComponent },
@@ -79,11 +85,17 @@ const routes: Routes = [
     SidebarComponent,
     DownloadComponent,
     ContentComponent,
-    ContactComponent
+    ContactComponent,
+    AboutComponent,
+    LinkedinComponent,
+    GithubWidgetComponent,
+    ListComponent,
+    ListItemComponent
   ],
   imports: [
     DisqusModule.forRoot("tobysmith"),
     RouterModule.forRoot(routes),
+    NgxSmartModalModule.forRoot(),
     BrowserModule,
     AppRoutingModule,
     PerfectScrollbarModule,

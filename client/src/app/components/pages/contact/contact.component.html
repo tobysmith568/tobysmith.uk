@@ -4,9 +4,6 @@
 			<h1 class="header-title">Contact Me</h1>
 			<p class="header-description">Please feel free to use any method below to contact me</p>
 		</div>
-		
-		<re-captcha #captchaRef="reCaptcha" size="invisible" siteKey="6LevB28UAAAAANT7QerDGOfqQcGb1JCoM3bPPbgE"
-				(resolved)="resolved($event)"></re-captcha>
 
 		<div class="main-content">
 
@@ -28,37 +25,15 @@
 				</div>
 			</div>
 
-			<div class="area details-grid">
-				<a class="contact-method" href="mailto:tobysmith568@hotmail.co.uk" target="_blank">
-					<img src="assets\img\email.png" />
-					<div class="contact-details">
-						<h3 class="contact-method-title">Email</h3>
-						<div>It is generally best to get in contact with me via email here: tobysmith568@hotmail.co.uk</div>
-					</div>
-				</a>
-				<a class="contact-method" href="https://tobysmith.uk/linkedin" target="_blank">
-					<img src="assets\img\linkedin.png" />
-					<div class="contact-details">
-						<h3 class="contact-method-title">LinkedIn</h3>
-						<div>For professional communication you can also contact me on Linkedin</div>
-					</div>
-				</a>
-				<a class="contact-method" href="https://tobysmith.uk/github" target="_blank">
-					<img src="assets\img\github.png" />
-					<div class="contact-details">
-						<h3 class="contact-method-title">Github</h3>
-						<div>While not for communication, you can also find me and all of my projects on Github</div>
-					</div>
-				</a>
-				<a class="contact-method" href="https://tobysmith.uk/messenger" target="_blank">
-					<img src="assets\img\messenger.png" />
-					<div class="contact-details">
-						<h3 class="contact-method-title">Messenger</h3>
-						<div>If you're looking for an informal chat, feel free to reach me on Facebook Messenger</div>
-					</div>
-				</a>
+			<div class="area">
+				<app-list class="contact-list">
+					<app-list-item icon="assets\img\email.png" header="Email" href="mailto:tobysmith568@hotmail.co.uk" content="It is generally best to get in contact with me via email here: tobysmith568@hotmail.co.uk"></app-list-item>
+					<app-list-item icon="assets\img\linkedin.png" header="LinkedIn" href="https://tobysmith.uk/linkedin" content="For professional communication you can also contact me on Linkedin"></app-list-item>
+					<app-list-item icon="assets\img\github.png" header="Github" href="https://tobysmith.uk/github" content="While not for communication, you can also find me and all of my projects on Github"></app-list-item>
+					<app-list-item icon="assets\img\messenger.png" header="Messenger" href="https://tobysmith.uk/messenger" content="If you're looking for an informal chat, feel free to reach me on Facebook Messenger"></app-list-item>
+				</app-list>
 			</div>
-
-		</div>
 	</div>
+	<re-captcha #captchaRef="reCaptcha" size="invisible" siteKey="6LevB28UAAAAANT7QerDGOfqQcGb1JCoM3bPPbgE"
+			(resolved)="resolved($event)"></re-captcha>
 </div>
