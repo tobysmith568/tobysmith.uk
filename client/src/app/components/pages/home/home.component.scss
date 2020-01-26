@@ -1,54 +1,86 @@
 @import '../../../../styles.scss';
 
-.grid {
-	width: 100%;
-	height: 100%;
-	margin-top: 10px;
+hr {
+	margin: 0px;
+	border-top: 1px solid $greyHr;
+	margin: 0px 0px;
+}
 
+.content {
+	width: 100%;
 	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
+	flex-direction: column;
+}
+
+.main-title {
+	font-size: 42px;
+	padding: 20px;
 }
 
 .item {
-	padding: 20px;
-	margin: 0px;
-	border-radius: 5px;
-	flex-grow: 1;
-	flex-basis: 20%;
-}
-
-.github {
-	flex-grow: 2;
-	flex-basis: auto;
-	height: 250px;
-}
-
-.title {
 	background-color: $white;
-	border-radius: 5px;
-	margin-bottom: 10px;
-	font-size: 28px;
-	text-align: center;
-	padding: 10px;
-}
-
-.body {
-	background-color: $white;
+	margin: 20px;
 	border-radius: 5px;
 }
 
-.about-body {
+.me {
+	width: 225px;
+	float: left;
+	margin-right: 30px;
+	padding: 25px;
+	max-width: 80%;
+}
+
+.inner-me {
+	border-radius: 5px;
+	width: 100%;
+	height: 100%;
+}
+
+.header {
 	padding: 20px;
-	color: #666666;
+}
+
+
+@media only screen and (max-width: 708px) {
+	.header {
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-content: center;
+	}
+
+	.me {
+		float: none;
+		margin: auto;
+	}
+
+	.main-title {
+		padding: 0px;
+	}
+}
+
+.header p {
 	font-size: 18px;
 	line-height: 27px;
+	margin-top: 20px;
 }
 
-.about-body p:not(:first-child) {
-	margin-top: 10px;
+.item .title {
+	font-size: 32px;
+	text-align: center;
+	padding: 20px;
 }
 
-.about-body b {
-	color: $black;
+.posts {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	flex-wrap: wrap;
+}
+
+.post {
+	width: 300px;
+	flex-grow: 1;
 }

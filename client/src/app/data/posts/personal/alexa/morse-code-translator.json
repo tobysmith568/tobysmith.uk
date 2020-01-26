@@ -1,7 +1,8 @@
 {
 	"author": "Toby Smith",
 	"categories": [
-		"projects/alexa"
+		"projects/alexa",
+		"favourites"
 	],
 	"contentPath": "morse-code-translator.md",
 	"date": "20 September 2018",

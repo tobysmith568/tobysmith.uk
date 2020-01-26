@@ -1,7 +1,8 @@
 {
 	"author": "Toby Smith",
 	"categories": [
-		"projects/alexa"
+		"projects/alexa",
+		"favourites"
 	],
 	"contentPath": "waterstones-book-recommender.md",
 	"date": "15 October 2018",

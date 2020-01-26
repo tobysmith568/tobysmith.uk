@@ -1,7 +1,8 @@
 {
 	"author": "Toby Smith",
 	"categories": [
-		"projects/alexa"
+		"projects/alexa",
+		"favourites"
 	],
 	"contentPath": "tube-status.md",
 	"date": "3 September 2017",
