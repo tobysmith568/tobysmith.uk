@@ -32,13 +32,17 @@ export class PostService {
     }
   }
 
-  public getPostsInCategory(category: string): IPost[] {
+  public getPostsInCategory(category: string, max?: number): IPost[] {
     const foundPosts: IPost[] = [];
 
     for (const post of this.posts) {
       for (const postCategory of post.categories) {
         if (("/" + postCategory).startsWith(category)) {
           foundPosts.push(post);
+
+          if (foundPosts.length === max) {
+            return foundPosts;
+          }
           break;
         }
       }
