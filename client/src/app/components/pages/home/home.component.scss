@@ -23,6 +23,16 @@ hr {
 	border-radius: 5px;
 }
 
+@media only screen and (max-width: $mobile-width) {
+	.item {
+		margin-bottom: 10px;
+	}
+
+	.item:not(:first-child) {
+		margin-top: 10px;
+	}
+}
+
 .me {
 	width: 225px;
 	float: left;

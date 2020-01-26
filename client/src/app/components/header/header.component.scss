@@ -13,17 +13,17 @@ button {
 	margin: auto;
 }
 
+@media only screen and (max-width: $tablet-width) {
+	.content {
+		width: 85%;
+	}
+}
+
 @media only screen and (max-width: $mobile-width) {
 	.content {
 		width: auto;
 		margin-left: 20px;
 		margin-right: 20px;
-	}
-}
-
-@media only screen and (max-width: $tablet-width) {
-	.content {
-		width: 85%;
 	}
 }
 

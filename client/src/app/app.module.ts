@@ -29,6 +29,7 @@ import { LinkedinComponent } from "./components/pages/about/linkedin/linkedin.co
 import { GithubComponent as GithubWidgetComponent } from "./components/pages/about/github/github.component";
 import { ListComponent } from "./components/list/list.component";
 import { ListItemComponent } from "./components/list/list-item/list-item.component";
+import { SmallPostComponent } from "./components/pages/home/small-post/small-post.component";
 
 const scrollConfig: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -89,7 +90,8 @@ const routes: Routes = [
     LinkedinComponent,
     GithubWidgetComponent,
     ListComponent,
-    ListItemComponent
+    ListItemComponent,
+    SmallPostComponent
   ],
   imports: [
     DisqusModule.forRoot("tobysmith"),
