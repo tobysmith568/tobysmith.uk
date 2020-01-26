@@ -21,6 +21,12 @@ button {
 	}
 }
 
+@media only screen and (max-width: $tablet-width) {
+	.content {
+		width: 85%;
+	}
+}
+
 .title {
 	font-size: 55px;
 	color: $whiteText;

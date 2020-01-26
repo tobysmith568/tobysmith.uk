@@ -81,7 +81,11 @@ input.submit {
 }
 
 .about-para {
-	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.about-para:not(:last-child()) {
+	margin-bottom: 20px;
 }
 
 .about-para a {
