@@ -59,15 +59,14 @@ const routes: Routes = [
   { path: "university/year3/:slug", pathMatch: "full", component: PostComponent },
   { path: "shooter-unknown-blog/:slug", pathMatch: "full", component: PostComponent },
 
-
   { path: "about", pathMatch: "full", component: AboutComponent },
   { path: "contact", pathMatch: "full", component: ContactComponent },
-
   { path: "404", component: NotFoundComponent },
+
+  { path: ":slug", pathMatch: "full", component: PostComponent },
+
   { path: "**", component: NotFoundComponent }
 ];
-
-
 
 @NgModule({
   declarations: [
