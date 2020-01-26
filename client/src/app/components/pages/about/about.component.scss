@@ -85,6 +85,10 @@ input.submit {
 }
 
 .about-para a {
+	color: $greyText;
+}
+
+.about-para a:hover {
 	color: $blackText;
 }
 
