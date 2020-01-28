@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 
 @Component({
   selector: "app-about",
@@ -6,6 +6,9 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./about.component.scss"]
 })
 export class AboutComponent implements OnInit {
+
+  @ViewChild("imgpara", { static: true })
+  private imgpara: ElementRef;
 
   constructor() { }
 
@@ -21,5 +24,9 @@ export class AboutComponent implements OnInit {
     }
 
     return age;
+  }
+
+  public shortImgPara(): boolean {
+    return this.imgpara.nativeElement.scrollWidth < 458;
   }
 }

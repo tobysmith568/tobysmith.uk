@@ -87,11 +87,25 @@ input.submit {
 	justify-content: space-between;
 }
 
+.img-para {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 20px;
+}
+
+.img-para-short {
+	flex-direction: column;
+}
+
 .me {
-	width: 175px;
+	max-width: 175px;
+	max-height: 175px;
 	border-radius: 5px;
-	float: left;
 	margin-right: 30px;
+}
+
+.me-short {
+	margin: 0px auto 20px auto;
 }
 
 .about-para {
