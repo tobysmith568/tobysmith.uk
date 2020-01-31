@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from "@angular/core";
 import { PerfectScrollbarComponent } from "ngx-perfect-scrollbar";
+import { mdiChevronDown } from "@mdi/js";
 
 @Component({
   selector: "app-header",
@@ -19,6 +20,8 @@ export class HeaderComponent implements OnInit {
 
   @ViewChild("universityDropdown", { static: true })
   private universityDropdown: ElementRef;
+
+  public downArrow = mdiChevronDown;
 
   constructor() { }
 

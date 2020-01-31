@@ -7,7 +7,7 @@
 			<p>/</p>
 			<div class="dropdown">
 				<button routerLink="/projects" class="dropbtn">Projects
-					<i class="fa fa-caret-down"></i>
+					<app-icon [icon]="downArrow" width="1rem"></app-icon>
 				</button>
 				<div class="dropdown-content" #projectDropdown>
 					<a routerLink="/projects/windows">Windows</a>
@@ -18,7 +18,7 @@
 			<p>/</p>
 			<div class="dropdown">
 				<button routerLink="/university" class="dropbtn">University
-					<i class="fa fa-caret-down"></i>
+					<app-icon [icon]="downArrow" width="1rem"></app-icon>
 				</button>
 				<div class="dropdown-content" #universityDropdown>
 					<a routerLink="/university/year1">First Year</a>

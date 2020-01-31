@@ -42,32 +42,32 @@ button {
 }
 
 .navbar {
-	overflow: hidden;
 	font-family: Arial;
 	margin-top: 35px;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	align-items: baseline;
 }
 
 .navbar a {
-	float: left;
 	font-size: 16px;
 	color: $greyMenuText;
-	text-align: center;
 	padding: 14px 16px;
 	text-decoration: none;
 }
 
 .navbar p {
-	float: left;
 	font-size: 16px;
 	color: $greyMenuText;
-	text-align: center;
 	padding: 14px 0px;
 	text-decoration: none;
 }
 
 .dropdown {
-	float: left;
 	overflow: hidden;
+	fill: $greyMenuText;
 }
 
 .dropdown .dropbtn {
@@ -105,6 +105,7 @@ button {
 
 .navbar a:hover, .dropdown:hover .dropbtn {
 	color: $whiteText;
+	fill: $whiteText;
 }
 
 .dropdown:hover .dropdown-content {
