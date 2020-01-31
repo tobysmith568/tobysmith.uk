@@ -30,6 +30,7 @@ import { GithubComponent as GithubWidgetComponent } from "./components/pages/abo
 import { ListComponent } from "./components/list/list.component";
 import { ListItemComponent } from "./components/list/list-item/list-item.component";
 import { SmallPostComponent } from "./components/pages/home/small-post/small-post.component";
+import { IconComponent } from "./components/icon/icon.component";
 
 const scrollConfig: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -91,7 +92,8 @@ const routes: Routes = [
     GithubWidgetComponent,
     ListComponent,
     ListItemComponent,
-    SmallPostComponent
+    SmallPostComponent,
+    IconComponent
   ],
   imports: [
     DisqusModule.forRoot("tobysmith"),
