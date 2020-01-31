@@ -60,4 +60,11 @@ a {
 .date {
 	margin: 20px;
 	color: $greyText;
+	fill: $greyText;
+	display: flex;
+	align-items: center;
+}
+
+.date p {
+	margin-left: 10px;
 }

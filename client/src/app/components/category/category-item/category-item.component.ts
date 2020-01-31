@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from "@angular/core";
 import { IPost } from "src/app/models/posts/post.interface";
 import { Router, ActivatedRoute } from "@angular/router";
 import { NewTabService } from "src/app/services/new-tab/new-tab.service";
+import { mdiCalendar } from "@mdi/js";
 
 @Component({
   selector: "app-category-item",
@@ -19,6 +20,8 @@ export class CategoryItemComponent implements OnInit {
 
   @Input()
   private post: IPost;
+
+  public dateIcon = mdiCalendar;
 
   constructor(private readonly router: Router,
               private readonly activatedRoute: ActivatedRoute,
