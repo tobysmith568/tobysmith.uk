@@ -21,6 +21,11 @@ hr {
 	background-color: $white;
 	margin: 20px;
 	border-radius: 5px;
+	margin: 30px;
+}
+
+.header {
+	padding: 20px;
 }
 
 @media only screen and (max-width: $mobile-width) {
@@ -30,6 +35,10 @@ hr {
 
 	.item:not(:first-child) {
 		margin-top: 10px;
+	}
+
+	.item:first-child {
+		margin-top: 20px;
 	}
 }
 
@@ -45,10 +54,6 @@ hr {
 	border-radius: 5px;
 	width: 100%;
 	height: 100%;
-}
-
-.header {
-	padding: 20px;
 }
 
 
