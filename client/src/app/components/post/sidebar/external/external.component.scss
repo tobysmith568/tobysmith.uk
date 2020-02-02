@@ -1,0 +1,24 @@
+@import '../../../../../styles.scss';
+
+.external-content {
+	text-align: center;
+	padding: 20px;
+}
+
+.external-link {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	color: $greyText;
+	fill: $greyText;
+}
+
+.external-link:hover {
+	color: $blackText;
+	fill: $blackText;
+}
+
+.external-title {
+	font-size: 22px;
+	margin-bottom: 10px;
+}

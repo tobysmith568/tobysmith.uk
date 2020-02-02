@@ -3,6 +3,7 @@ import { IItch } from "./sidebar/itch.interface";
 import { ISkill } from "./sidebar/skill";
 import { IDownload } from "./sidebar/download.interface";
 import { IInternalLink } from "./internalLink.interface";
+import { IExternal } from "./sidebar/external.interface";
 
 export interface IPost {
   title: string;
@@ -19,4 +20,5 @@ export interface IPost {
   itch: IItch;
   skill: ISkill;
   downloads: IDownload[];
+  external: IExternal;
 }

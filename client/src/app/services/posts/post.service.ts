@@ -19,6 +19,7 @@ export class PostService {
         contentPath: post.contentPath,
         date: new Date(post.date),
         downloads: post.downloads,
+        external: post.external,
         externalLink: undefined, // TODO post.externalLink,
         internalLink: post.internalLink,
         github: post.github,
