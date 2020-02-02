@@ -42,6 +42,7 @@ const routes: Routes = [
   { path: "", pathMatch: "full", component: HomeComponent },
 
   { path: "projects", pathMatch: "full", component: CategoryComponent },
+  { path: "projects/libraries", pathMatch: "full", component: CategoryComponent },
   { path: "projects/windows", pathMatch: "full", component: CategoryComponent },
   { path: "projects/websites", pathMatch: "full", component: CategoryComponent },
   { path: "projects/alexa", pathMatch: "full", component: CategoryComponent },
@@ -53,6 +54,7 @@ const routes: Routes = [
   { path: "shooter-unknown-blog", pathMatch: "full", component: CategoryComponent },
 
   { path: "projects/:slug", pathMatch: "full", component: PostComponent },
+  { path: "projects/libraries/:slug", pathMatch: "full", component: PostComponent },
   { path: "projects/windows/:slug", pathMatch: "full", component: PostComponent },
   { path: "projects/websites/:slug", pathMatch: "full", component: PostComponent },
   { path: "projects/alexa/:slug", pathMatch: "full", component: PostComponent },

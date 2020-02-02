@@ -14,6 +14,10 @@
 			{
 				"slug": "alexa",
 				"description": "These are Skills I have made for Amazon’s personal assistant, Alexa."
+			},
+			{
+				"slug": "libraries",
+				"description": "These are software packages that I have written - usually to help me with other projects."
 			}
 		]
 	},
