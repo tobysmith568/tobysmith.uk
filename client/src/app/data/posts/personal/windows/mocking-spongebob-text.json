@@ -1,0 +1,25 @@
+{
+	"author": "Toby Smith",
+	"categories": [
+		"projects/windows"
+	],
+	"contentPath": "mocking-spongebob-text.md",
+	"date": "6 September 2019",
+	"preview": "This is a semi-joke project based on the mocking spongebob meme. A Windows application to MoCkiFy any text on the Windows clipboard though a global shortcut",
+	"previewImage": "assets/posts/img/mocking-spongebob.png",
+	"slug": "mocking-spongebob-text",
+	"title": "Mocking Spongebob Text",
+	"github": {
+		"url": "https://github.com/tobysmith568/Mocking-Spongebob-Text"
+	},
+	"downloads": [
+		{
+			"name": "Installer",
+			"url": "https://github.com/tobysmith568/Mocking-Spongebob-Text/releases/download/v1.0.1/Mocking.Spongebob.Text.Converter.msi"
+		},
+		{
+			"name": "Zipped source code",
+			"url": "https://github.com/tobysmith568/Mocking-Spongebob-Text/archive/v1.0.1.zip"
+		}
+	]
+}
