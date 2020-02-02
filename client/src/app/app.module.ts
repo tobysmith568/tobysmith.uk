@@ -32,6 +32,7 @@ import { ListItemComponent } from "./components/list/list-item/list-item.compone
 import { SmallPostComponent } from "./components/pages/home/small-post/small-post.component";
 import { IconComponent } from "./components/icon/icon.component";
 import { ExternalComponent } from "./components/post/sidebar/external/external.component";
+import { NugetComponent } from "./components/post/sidebar/nuget/nuget.component";
 
 const scrollConfig: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -95,7 +96,8 @@ const routes: Routes = [
     ListItemComponent,
     SmallPostComponent,
     IconComponent,
-    ExternalComponent
+    ExternalComponent,
+    NugetComponent
   ],
   imports: [
     DisqusModule.forRoot("tobysmith"),
