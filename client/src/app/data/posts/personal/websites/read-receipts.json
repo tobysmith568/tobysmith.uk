@@ -7,10 +7,13 @@
 	"contentPath": "read-receipts.md",
 	"date": "14 July 2019",
 	"preview": "This is a tool I developed to show users why simply opening junk email can be dangerous. Using a few simple tricks, this tool can tell the sender of an email exactly when you open an email as well as give away a few details about you!",
-	"previewImage": "assets/posts/img/tube-status.png",
+	"previewImage": "assets/img/email.png",
 	"slug": "read-receipts",
 	"title": "Read Receipts",
 	"github": {
 		"url": "https://github.com/tobysmith568/Read-Receipt"
+	},
+	"external": {
+		"url": "https://readreceipt.tobysmith.uk"
 	}
 }
