@@ -68,6 +68,14 @@
 	margin-bottom: 20px;
 }
 
+.post-content a {
+	color: $greyText;
+}
+
+.post-content a:hover {
+	color: $blackText;
+}
+
 .post-content blockquote {
 	border-radius: 5px;
 	padding: 1px 5px 5px 20px;
