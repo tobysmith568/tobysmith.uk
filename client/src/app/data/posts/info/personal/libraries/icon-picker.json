@@ -1,0 +1,19 @@
+{
+	"author": "Toby Smith",
+	"categories": [
+		"projects/libraries",
+		"favourites"
+	],
+	"contentPath": "icon-picker",
+	"date": "20 May 2019",
+	"preview": "This NuGet library allows WPF developers to prompt the user to select an icon using the native Windows icon picker",
+	"previewImage": "assets/img/posts/icon-picker.png",
+	"slug": "icon-picker",
+	"title": "Icon Picker",
+	"github": {
+		"url": "https://github.com/tobysmith568/Icon-Picker"
+	},
+	"nuget": {
+		"url": "https://nuget.org/packages/IconPicker/"
+	}
+}

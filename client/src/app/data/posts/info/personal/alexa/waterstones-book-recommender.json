@@ -1,0 +1,20 @@
+{
+	"author": "Toby Smith",
+	"categories": [
+		"projects/alexa",
+		"favourites"
+	],
+	"contentPath": "waterstones-book-recommender",
+	"date": "15 October 2018",
+	"preview": "Use this Alexa Skill to hear about book recommendations from the UK book retailer, Waterstones.",
+	"previewImage": "assets/img/posts/waterstones-book-recommender.png",
+	"slug": "waterstones-book-recommender",
+	"title": "Amazon Alexa: Waterstones Book Recommender",
+	"skill": {
+		"url": "https://www.amazon.co.uk/dp/B07K58NV6Q",
+		"searchTerm": "Waterstones Book Recommender"
+	},
+	"github": {
+		"url": "https://github.com/tobysmith568/Alexa-Waterstones-Book-Recommendations"
+	}
+}
