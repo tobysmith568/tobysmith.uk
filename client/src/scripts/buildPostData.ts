@@ -7,12 +7,12 @@ import { IPost } from "src/app/models/posts/post.interface";
 
 /* Constants */
 
-const codeGenFolder = "src/app/generated";
+const codeGenFolder = "src/app/data/generated";
 const assetGenFolder = "src/assets/generated-posts";
 
 const postDataFolder = "src/app/data/posts/info/";
 const postContentFolder = "src/app/data/posts/content/";
-const postDataOutputFile = "src/app/generated/posts.json";
+const postDataOutputFile = "src/app/data/generated/posts.json";
 
 const markdownService = new MarkdownService();
 

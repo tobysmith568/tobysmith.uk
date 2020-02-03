@@ -5,7 +5,7 @@
 /tmp
 /out-tsc
 # Content generated for build process
-/src/app/generated
+/src/app/data/generated
 /src/assets/generated-posts
 # Only exists if Bazel was run
 /bazel-out
