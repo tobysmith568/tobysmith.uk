@@ -22,6 +22,7 @@
     "@angular/platform-browser": "~8.2.14",
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
+    "@mdi/js": "^4.8.95",
     "@types/showdown": "^1.9.3",
     "ng-recaptcha": "^5.0.0",
     "ngx-disqus": "^2.4.3",

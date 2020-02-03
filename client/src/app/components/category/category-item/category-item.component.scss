@@ -34,10 +34,16 @@ a {
 }
 
 .preview-image {
-	max-height: 250px;
+	max-height: 200px;
 	margin: 20px 20px 0px 20px;
 	text-align: center;
 	transition: all .2s ease-in-out;
+	height: 100%;
+}
+
+.preview-image img {
+	max-width: 100%;
+	max-height: inherit;
 }
 
 .preview-image:hover {
@@ -54,9 +60,17 @@ a {
 	text-align: left;
 	color: $greyText;
 	font-size: 18px;
+	line-height: 27px;
 }
 
 .date {
 	margin: 20px;
 	color: $greyText;
+	fill: $greyText;
+	display: flex;
+	align-items: center;
+}
+
+.date p {
+	margin-left: 10px;
 }

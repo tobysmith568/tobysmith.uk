@@ -40,6 +40,8 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
+    "@types/axios": "^0.14.0",
+    "axios": "^0.19.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "nodemailer": "^6.4.2"

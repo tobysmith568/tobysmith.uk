@@ -1,10 +1,9 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, SecurityContext } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { PostService } from "src/app/services/posts/post.service";
 import { IPost } from "src/app/models/posts/post.interface";
-import { SafeHtml } from "@angular/platform-browser";
+import { SafeHtml, DomSanitizer } from "@angular/platform-browser";
 import { HttpClient } from "@angular/common/http";
-import { MarkdownService } from "src/app/services/markdown/markdown.service";
 
 @Component({
   selector: "app-post",
@@ -18,8 +17,8 @@ export class PostComponent implements OnInit {
 
   constructor(private readonly activatedRoute: ActivatedRoute,
               private readonly postService: PostService,
-              private readonly markdownService: MarkdownService,
               private readonly httpClient: HttpClient,
+              private readonly sanitizer: DomSanitizer,
               private readonly router: Router) { }
 
   async ngOnInit() {
@@ -30,11 +29,11 @@ export class PostComponent implements OnInit {
     }
 
     try {
-      const result = await this.httpClient.get("./assets/posts/" + this.post.contentPath, {
+      const result = await this.httpClient.get("./assets/generated-posts/" + this.post.contentPath + ".html", {
         responseType: "text"
       }).toPromise();
 
-      this.postContent = this.markdownService.toSafeHTML(result);
+      this.postContent = this.sanitizer.sanitize(SecurityContext.HTML, result);
     } catch (e) {
       this.goTo404();
     }

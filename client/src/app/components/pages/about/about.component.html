@@ -9,11 +9,13 @@
 
 			<div class="area bio">
 				<div>
-					<img class="me" src="assets/img/me.png" />
+					<div #imgpara class="img-para" [class.img-para-short]="shortImgPara()">
+						<img class="me" src="assets/img/me.png"  [class.me-short]="shortImgPara()" />
 					
-					<p class="about-para">I'm a {{ getAge() }}-year-old Computing and Video Games student at The University of Plymouth.
-						<b>I'm currently looking for a graduate software development job in and around London.</b>
-					</p>
+						<p class="about-para">I'm a {{ getAge() }}-year-old Computing and Video Games student at The University of Plymouth.
+							<b>I'm currently looking for a graduate software development job in and around London.</b>
+						</p>
+					</div>
 					
 					<p class="about-para">I started programming at 16 using Python but quickly moved on to C#, which remains one of
 						my primary skills today.
@@ -43,7 +45,7 @@
 					<app-list-item
 										icon="assets\img\csharp.png"
 										header="C#"
-										content="WPF, ASP.NET, Entity Framework, .NET Framework, .NET Core, Nuget">
+										content="WPF, ASP.NET, Entity Framework, .NET Framework, .NET Core, Nuget, Unity Game Engine">
 					<p>C# is the language I have the most experience with.
 					</p>
 					<p>I was introduced to C# in college and spent the two years developing simple Windows tools using WPF and the .NET Framework.
@@ -65,15 +67,15 @@
 					<app-list-item
 										icon="assets\img\java.png"
 										header="Java"
-										content="Swing, JAXB, Apatche Camel, Spring, Maven">
+										content="Swing, JAXB, Apatche Camel, Spring, Maven, MyBatis">
 						<p>I was introduced to Java in my first year of university. During my studies I have used Java for either
 							console applications or with Java Swing GUIs.
 						</p>
 						<p>While on my placement year, I gained a more in-depth experience of Java and used in exclusively for the first six months.
 							During this time, I was writing integration software using Java with frameworks and tools like JAXB, Spring, and Maven.
 						</p>
-						<p>In the second half of my placement, I continued to use Java but only server-side while my workload was full-stack.
-							During this time, I continued to work with Spring and Maven.
+						<p>In the second half of my placement, I continued to use Java but only server-side while my total workload was full-stack.
+							During this time, I continued to work with Spring and Maven and also picked up the use of MyBatis for database interactions.
 						</p>
 					</app-list-item>
 
@@ -121,22 +123,35 @@
 										icon="assets\img\git.png"
 										header="Version Control"
 										content="Git, Mercurial, Github, Kallithea, GitKraken, Sourcetree">
-						<p>I have been using version control since the beginning of university. Initially, due to recommendations buy my university,
+						<p>I have been using version control since the beginning of university. Initially, due to recommendations by my university,
 							this was by using Bitbucket and Sourcetree.
 						</p>
 						<p>Since then, I have moved all my projects over to Github and am an avid supporter and user of GitKraken.
 						</p>
 						<p>While on my placement year, I became familiar with using Mercurial rather than Git. I also returned to using Sourcetree
-							while I was at work because it supports both Git and Mercurial.
+							while I was at work because it supports both Git and Mercurial repositories.
+						</p>
+					</app-list-item>
+					<app-list-item
+										icon="assets\img\db.png"
+										header="Databases"
+										content="DB2, MongoDB, SQL Server, Datagrip, RoboMongo, SQuirreL">
+						<p>During my placement I was introduced to the process of storing the data for an application in a database. Throughout the year I
+							became familiar with IBM's Db2, as well as how to write database layers within server-side applications in Java.
+						</p>
+						<p>Since returning to university in my final year I have chosen to use databases in two modules. The first was MongoDB, which I used
+							in conjunction with a Nodejs application using express. The second project was an ASP.NET Core application which used Entity Framework
+							core in order to store data within a SQL Server database.
 						</p>
 					</app-list-item>
 					<app-list-item
 										icon="assets\img\vs.png"
 										header="IDEs and Other Tools"
 										content="Visual Studio, VS Code, IntelliJ, Eclipse, Postman, Beyond Compare">
-						<p>For all C# development, my choice of IDE is Visual Studio. I've not yet heard an argument for why anyone would use anything else?
+						<p>For all C# development, my choice of IDE is Visual Studio. As well it supporting all .NET functionality, I regularly enjoy its
+							many secondary features like Azure integrations and database tooling.
 						</p>
-						<p>For all TypeScript and web-based tech stacks, VS Code is my editor of choice.
+						<p>For all TypeScript and web-based technology stacks, VS Code is my editor of choice.
 						</p>
 						<p>IntelliJ is my IDE of choice for Java development due to its extensive feature list. I am also familiar with Eclipse and have
 							had minor experience with Netbeans. I am comfortable developing in any of the three.

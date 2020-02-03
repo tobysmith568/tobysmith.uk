@@ -33,3 +33,18 @@
 	background-color: white;
 	margin: 30px;
 }
+
+
+@media only screen and (max-width: $mobile-width) {
+	.post {
+		margin-top: 15px;
+	}
+	
+	.post:not(:last-child) {
+		margin-bottom: 15px;
+	}
+
+	.post:first-child {
+		margin-top: 0px;
+	}
+}

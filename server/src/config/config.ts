@@ -1,6 +1,7 @@
 export class Config {
 
   private readonly redirects: Map<string, string>;
+  private readonly githubAccessToken: string;
 
   constructor() {
 
@@ -13,9 +14,15 @@ export class Config {
         }
       }
     }
+
+    this.githubAccessToken = process.env.githubAccessToken || "";
   }
 
   public getRedirects(): Map<string, string> {
     return this.redirects;
+  }
+
+  public getGithubAccessToken(): string {
+    return this.githubAccessToken;
   }
 }

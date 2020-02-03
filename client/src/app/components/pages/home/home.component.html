@@ -1,1 +1,35 @@
-<p>home works!</p>
+<div class="content">
+	<div class="item header">
+		<div class="me"><img class="inner-me" src="assets/img/me.png" /></div>
+		<h3 class="main-title">Welcome!</h3>
+		<p>My name is Toby, I'm a final-year Computing and Games student at The University of Plymouth.</p>
+		<p><b>I'm currently looking for a graduate software development job in and around London.</b></p>
+		<p>On this site you can find posts detailing all the projects I have worked on in the last few years.
+			Some have been a part of my degree, others I have completed in my own time.
+		</p>
+	</div>
+	<div class="item favourites">
+		<div class="title">My Favourite Projects</div>
+		<hr />
+		<div class="posts">
+			<app-small-post *ngFor="let post of favourites; let i = index" [post]="post" class="post">
+			</app-small-post>
+		</div>
+	</div>
+	<div class="item recent">
+		<div class="title">Recent Personal Posts</div>
+		<hr />
+		<div class="posts">
+			<app-small-post *ngFor="let post of projects; let i = index" [post]="post" class="post">
+			</app-small-post>
+		</div>
+	</div>
+	<div class="item recent">
+		<div class="title">Recent University Posts</div>
+		<hr />
+		<div class="posts">
+			<app-small-post *ngFor="let post of university; let i = index" [post]="post" class="post">
+			</app-small-post>
+		</div>
+	</div>
+</div>

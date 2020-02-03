@@ -7,6 +7,7 @@
 	padding: 20px;
 	text-align: left;
 	font-size: 20px;
+	line-height: 30px;
 	flex-grow: 1;
 }
 
@@ -65,6 +66,34 @@
 	border-top: 1px solid $greyHr;
 	margin-top: 20px;
 	margin-bottom: 20px;
+}
+
+.post-content a {
+	color: $greyText;
+}
+
+.post-content a:hover {
+	color: $blackText;
+}
+
+.post-content code {
+	background-color: #cacaca;
+	padding: 2px 5px;
+	border-radius: 5px;
+	font-family: "Courier New";
+	font-weight: 600;
+}
+
+.post-content pre {
+	margin-top: 10px;
+	padding: 10px;
+	background-color: #cacaca;
+	border-radius: 5px;
+}
+
+.post-content pre code {
+	padding: 2px 5px;
+	font-family: "Courier New";
 }
 
 .post-content blockquote {

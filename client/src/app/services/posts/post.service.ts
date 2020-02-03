@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { IPost } from "src/app/models/posts/post.interface";
-import postData from "../../generated/posts.json";
+import postData from "../../data/generated/posts.json";
 
 @Injectable({
   providedIn: "root"
@@ -19,10 +19,12 @@ export class PostService {
         contentPath: post.contentPath,
         date: new Date(post.date),
         downloads: post.downloads,
+        external: post.external,
         externalLink: undefined, // TODO post.externalLink,
-        internalLink: post.internalLink,
         github: post.github,
+        internalLink: post.internalLink,
         itch: post.itch,
+        nuget: post.nuget,
         preview: post.preview,
         previewImage: post.previewImage,
         skill: post.skill,
@@ -32,13 +34,17 @@ export class PostService {
     }
   }
 
-  public getPostsInCategory(category: string): IPost[] {
+  public getPostsInCategory(category: string, max?: number): IPost[] {
     const foundPosts: IPost[] = [];
 
     for (const post of this.posts) {
       for (const postCategory of post.categories) {
         if (("/" + postCategory).startsWith(category)) {
           foundPosts.push(post);
+
+          if (foundPosts.length === max) {
+            return foundPosts;
+          }
           break;
         }
       }

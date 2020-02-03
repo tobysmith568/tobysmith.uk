@@ -65,6 +65,20 @@ input.submit {
 	padding: 20px;
 }
 
+@media only screen and (max-width: $mobile-width) {
+	.area {
+		margin-top: 15px;
+	}
+	
+	.area:not(:last-child) {
+		margin-bottom: 15px;
+	}
+
+	.area:first-child {
+		margin-top: 0px;
+	}
+}
+
 .bio {
 	font-size: 20px;
 	line-height: 30px;
@@ -73,18 +87,40 @@ input.submit {
 	justify-content: space-between;
 }
 
+.img-para {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 20px;
+}
+
+.img-para-short {
+	flex-direction: column;
+}
+
 .me {
-	width: 175px;
+	max-width: 175px;
+	max-height: 175px;
 	border-radius: 5px;
-	float: left;
 	margin-right: 30px;
 }
 
+.me-short {
+	margin: 0px auto 20px auto;
+}
+
 .about-para {
-	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.about-para:not(:last-child()) {
+	margin-bottom: 20px;
 }
 
 .about-para a {
+	color: $greyText;
+}
+
+.about-para a:hover {
 	color: $blackText;
 }
 

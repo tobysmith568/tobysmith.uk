@@ -17,6 +17,13 @@
 	margin-right: auto;
 }
 
+
+@media only screen and (max-width: $tablet-width) {
+	.content {
+		width: 85%;
+	}
+}
+
 @media only screen and (max-width: $mobile-width) {
 	.content {
 		width: 100%;

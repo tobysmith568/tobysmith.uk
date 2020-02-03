@@ -66,6 +66,20 @@ input.submit {
 	height: fit-content;
 }
 
+@media only screen and (max-width: $mobile-width) {
+	.area {
+		margin-top: 15px;
+	}
+	
+	.area:not(:last-child) {
+		margin-bottom: 15px;
+	}
+
+	.area:first-child {
+		margin-top: 0px;
+	}
+}
+
 .contact-form {
 	width: 100%;
 	height: 100%;

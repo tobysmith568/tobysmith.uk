@@ -1,0 +1,20 @@
+{
+	"author": "Toby Smith",
+	"categories": [
+		"projects/alexa",
+		"favourites"
+	],
+	"contentPath": "morse-code-translator",
+	"date": "20 September 2018",
+	"preview": "This Amazon Alexa skill enables Alexa to be able to translate phrases into Morse Code from English.",
+	"previewImage": "assets/img/posts/morse-code-translator.png",
+	"slug": "morse-code-translator",
+	"title": "Amazon Alexa: Morse Code Translator",
+	"skill": {
+		"url": "https://www.amazon.co.uk/dp/B07JPX5B36",
+		"searchTerm": "Morse Code Translator"
+	},
+	"github": {
+		"url": "https://github.com/tobysmith568/Alexa-Morse-Code-Translator"
+	}
+}

@@ -1,0 +1,101 @@
+@import '../../../../styles.scss';
+
+hr {
+	margin: 0px;
+	border-top: 1px solid $greyHr;
+	margin: 0px 0px;
+}
+
+.content {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.main-title {
+	font-size: 42px;
+	padding: 20px;
+}
+
+.item {
+	background-color: $white;
+	margin: 20px;
+	border-radius: 5px;
+	margin: 30px;
+}
+
+.header {
+	padding: 20px;
+}
+
+@media only screen and (max-width: $mobile-width) {
+	.item {
+		margin-bottom: 10px;
+	}
+
+	.item:not(:first-child) {
+		margin-top: 10px;
+	}
+
+	.item:first-child {
+		margin-top: 20px;
+	}
+}
+
+.me {
+	width: 225px;
+	float: left;
+	margin-right: 30px;
+	padding: 25px;
+	max-width: 80%;
+}
+
+.inner-me {
+	border-radius: 5px;
+	width: 100%;
+	height: 100%;
+}
+
+
+@media only screen and (max-width: 708px) {
+	.header {
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-content: center;
+	}
+
+	.me {
+		float: none;
+		margin: auto;
+	}
+
+	.main-title {
+		padding: 0px;
+	}
+}
+
+.header p {
+	font-size: 18px;
+	line-height: 27px;
+	margin-top: 20px;
+}
+
+.item .title {
+	font-size: 32px;
+	text-align: center;
+	padding: 20px;
+}
+
+.posts {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	flex-wrap: wrap;
+}
+
+.post {
+	width: 300px;
+	flex-grow: 1;
+}

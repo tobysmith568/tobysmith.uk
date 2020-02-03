@@ -1,14 +1,20 @@
 import * as del from "del";
 import * as fs from "fs";
+import * as p from "path";
 import { ScriptUtils as SU } from "./scriptUtils";
+import { MarkdownService } from "./markdown.service";
 import { IPost } from "src/app/models/posts/post.interface";
 
 /* Constants */
 
-const genFolder = "src/app/generated";
-const postFolder = "src/app/data/posts";
-const postFile = "src/app/generated/posts.json";
-const postContent = "src/assets/posts/";
+const codeGenFolder = "src/app/data/generated";
+const assetGenFolder = "src/assets/generated-posts";
+
+const postDataFolder = "src/app/data/posts/info/";
+const postContentFolder = "src/app/data/posts/content/";
+const postDataOutputFile = "src/app/data/generated/posts.json";
+
+const markdownService = new MarkdownService();
 
 /* Functions */
 
@@ -48,10 +54,13 @@ function parseData(data: string): IPost {
 
 SU.startsection("Building Posts");
 
-del.sync(genFolder);
-fs.mkdirSync(genFolder);
+del.sync(codeGenFolder);
+fs.mkdirSync(codeGenFolder);
 
-const postFiles = getFiles(postFolder);
+del.sync(assetGenFolder);
+fs.mkdirSync(assetGenFolder);
+
+const postFiles = getFiles(postDataFolder);
 
 const posts: IPost[] = [];
 const slugs: string[] = [];
@@ -59,6 +68,8 @@ const slugs: string[] = [];
 postFiles.forEach(file => {
   const data: string = fs.readFileSync(file, "utf8");
   const post: IPost = parseData(data);
+
+  const markdownFilePath = postContentFolder + post.contentPath + ".md";
 
   if (!post.slug) {
     SU.error(`Slug in ${file} is empty or not present`);
@@ -84,8 +95,8 @@ postFiles.forEach(file => {
     SU.error(`${file} has no content path, external link, or internal link`);
   }
 
-  if (post.contentPath && !fs.existsSync(postContent + post.contentPath)) {
-    SU.error(`The content path ${post.contentPath} in file ${file} could not be found`);
+  if (post.contentPath && !fs.existsSync(markdownFilePath)) {
+    SU.error(`The content path ${markdownFilePath} in file ${file} could not be found`);
   }
 
   if (!post.date) {
@@ -106,6 +117,15 @@ postFiles.forEach(file => {
 
   slugs.push(post.slug.toLowerCase());
   posts.push(post);
+
+  if (post.contentPath) {
+    const markdown: string = fs.readFileSync(markdownFilePath, "utf8");
+    const html = markdownService.toHTML(markdown);
+
+    const newFileName = assetGenFolder + "/" + p.parse(post.contentPath).name + ".html";
+
+    fs.writeFileSync(newFileName, html);
+  }
 });
 
 SU.testFail();
@@ -113,7 +133,7 @@ SU.testFail();
 posts.sort((a, b) => (a.date > b.date) ? -1 : 1);
 
 if (process.argv.length > 2 && process.argv[2].includes("prod")) {
-  fs.writeFileSync(postFile, JSON.stringify(posts));
+  fs.writeFileSync(postDataOutputFile, JSON.stringify(posts));
 } else {
-  fs.writeFileSync(postFile, JSON.stringify(posts, null, 2));
+  fs.writeFileSync(postDataOutputFile, JSON.stringify(posts, null, 2));
 }

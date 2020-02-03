@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, ViewChild, ElementRef } from "@angular/core";
+import { mdiOpenInNew } from "@mdi/js";
 
 @Component({
   selector: "app-list-item",
@@ -24,6 +25,8 @@ export class ListItemComponent implements OnInit {
 
   @Input()
   public href: string;
+
+  public externalIcon = mdiOpenInNew;
 
   constructor() { }
 

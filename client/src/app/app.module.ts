@@ -29,6 +29,10 @@ import { LinkedinComponent } from "./components/pages/about/linkedin/linkedin.co
 import { GithubComponent as GithubWidgetComponent } from "./components/pages/about/github/github.component";
 import { ListComponent } from "./components/list/list.component";
 import { ListItemComponent } from "./components/list/list-item/list-item.component";
+import { SmallPostComponent } from "./components/pages/home/small-post/small-post.component";
+import { IconComponent } from "./components/icon/icon.component";
+import { ExternalComponent } from "./components/post/sidebar/external/external.component";
+import { NugetComponent } from "./components/post/sidebar/nuget/nuget.component";
 
 const scrollConfig: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -38,6 +42,7 @@ const routes: Routes = [
   { path: "", pathMatch: "full", component: HomeComponent },
 
   { path: "projects", pathMatch: "full", component: CategoryComponent },
+  { path: "projects/libraries", pathMatch: "full", component: CategoryComponent },
   { path: "projects/windows", pathMatch: "full", component: CategoryComponent },
   { path: "projects/websites", pathMatch: "full", component: CategoryComponent },
   { path: "projects/alexa", pathMatch: "full", component: CategoryComponent },
@@ -49,6 +54,7 @@ const routes: Routes = [
   { path: "shooter-unknown-blog", pathMatch: "full", component: CategoryComponent },
 
   { path: "projects/:slug", pathMatch: "full", component: PostComponent },
+  { path: "projects/libraries/:slug", pathMatch: "full", component: PostComponent },
   { path: "projects/windows/:slug", pathMatch: "full", component: PostComponent },
   { path: "projects/websites/:slug", pathMatch: "full", component: PostComponent },
   { path: "projects/alexa/:slug", pathMatch: "full", component: PostComponent },
@@ -59,15 +65,14 @@ const routes: Routes = [
   { path: "university/year3/:slug", pathMatch: "full", component: PostComponent },
   { path: "shooter-unknown-blog/:slug", pathMatch: "full", component: PostComponent },
 
-
   { path: "about", pathMatch: "full", component: AboutComponent },
   { path: "contact", pathMatch: "full", component: ContactComponent },
-
   { path: "404", component: NotFoundComponent },
+
+  { path: ":slug", pathMatch: "full", component: PostComponent },
+
   { path: "**", component: NotFoundComponent }
 ];
-
-
 
 @NgModule({
   declarations: [
@@ -90,7 +95,11 @@ const routes: Routes = [
     LinkedinComponent,
     GithubWidgetComponent,
     ListComponent,
-    ListItemComponent
+    ListItemComponent,
+    SmallPostComponent,
+    IconComponent,
+    ExternalComponent,
+    NugetComponent
   ],
   imports: [
     DisqusModule.forRoot("tobysmith"),

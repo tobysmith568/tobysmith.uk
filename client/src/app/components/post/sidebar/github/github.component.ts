@@ -19,5 +19,4 @@ export class GithubComponent implements OnInit {
   public getURL(): string {
     return this.github.url;
   }
-
 }

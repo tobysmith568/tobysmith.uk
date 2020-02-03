@@ -27,8 +27,16 @@
 	margin: auto 20px;
 }
 
+.external {
+	margin: auto 0px;
+}
+
 .header {
 	font-size: 20px;	
+}
+
+.content {
+	word-break: break-word;
 }
 
 .nsm-dialog {
