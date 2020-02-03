@@ -8,6 +8,10 @@
 	"preview": "This is an Amazon Alexa skill which tells you the current moon phase during your flash briefing.",
 	"previewImage": "assets/img/posts/current-moon-phase.png",
 	"slug": "current-moon-phase",
+	"tags" : [
+		"php",
+		"alexa sdk"
+	],
 	"title": "Amazon Alexa: Current Moon Phase",
 	"skill": {
 		"url": "https://www.amazon.co.uk/dp/B0752DHWNV",

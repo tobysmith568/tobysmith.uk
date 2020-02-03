@@ -8,6 +8,11 @@
 	"preview": "This project was made as part of my university course: Computer Science and Video Games Development, and was for the module SOFT152. This program takes data files containing sales records and represents the data in 5 different graphs.",
 	"previewImage": "assets/img/posts/data-miner.png",
 	"slug": "data-miner",
+	"tags" : [
+		"C#",
+		"WinForms",
+		".NET Framework"
+	],
 	"title": "Data Miner",
 	"github": {
 		"url": "https://github.com/tobysmith568/SOFT-151_Data_Miner"

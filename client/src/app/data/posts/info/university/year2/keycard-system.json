@@ -7,6 +7,10 @@
 	"date": "30 January 2018",
 	"preview": "In the first semester of my second year at university I was tasked with developing a program to control a door keycard entry system for a university in Java.",
 	"slug": "keycard-system",
+	"tags" : [
+		"Java",
+		"Swing"
+	],
 	"title": "University Keycard System",
 	"github": {
 		"url": "https://github.com/tobysmith568/SOFT-252_University_Keycard_DataModel"

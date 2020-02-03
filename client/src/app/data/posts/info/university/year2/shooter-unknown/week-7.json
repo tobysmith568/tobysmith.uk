@@ -7,5 +7,8 @@
 	"date": "4 December 2017",
 	"preview": "The targets shoot back! If the player shoots within a few meters of a target, it will immediatly stop and return fire for a few seconds. In this time they spray automatic fire....",
 	"slug": "su-week-7",
+	"tags" : [
+		"Shooter Unknown"
+	],
 	"title": "Week #7"
 }

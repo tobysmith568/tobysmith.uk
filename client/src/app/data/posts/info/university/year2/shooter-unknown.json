@@ -9,6 +9,9 @@
 	"preview": "This is a Unity game which I made as part of the second year of my degree. The objective is to shoot all the targets as quickly as possible.",
 	"previewImage": "assets/img/posts/shooter-unknown.png",
 	"slug": "shooter-unknown",
+	"tags" : [
+		"Shooter Unknown"
+	],
 	"title": "Shooter: Unknown",
 	"github": {
 		"url": "https://github.com/tobysmith568/AINT-254_Interactive_Systems"
