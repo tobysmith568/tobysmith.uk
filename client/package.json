@@ -9,7 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "generate": "ts-node src/scripts/buildPostData.ts && ts-node src/scripts/verifyCategories.ts",
+    "generate": "ts-node src/scripts/buildPostData.ts && ts-node src/scripts/verifyCategories.ts && ts-node src/scripts/verifyTags.ts",
     "copyIndex": "ts-node src/scripts/copyAndRenameIndex.ts"
   },
   "private": true,
