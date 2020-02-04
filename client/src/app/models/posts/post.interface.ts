@@ -12,6 +12,7 @@ export interface IPost {
   date: Date;
   author: string;
   slug: string;
+  tags: string[];
   categories: string[];
   preview: string;
   previewImage: string;

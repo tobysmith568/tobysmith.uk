@@ -1,0 +1,21 @@
+[
+	{
+		"name": "csharp",
+		"displayName": "C#",
+		"description": "This is me talking about C#",
+		"aliases": [
+			"c#",
+			"c-sharp"
+		]
+	},
+	{
+		"name": "java",
+		"displayName": "Java",
+		"description": "This is me talking about Java"
+	},
+	{
+		"name": "php",
+		"displayName": "PHP",
+		"description": "This is me talking about PHP"
+	}
+]

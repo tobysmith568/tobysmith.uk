@@ -115,6 +115,18 @@ postFiles.forEach(file => {
     SU.warn(`Title in file ${file} is empty or not present`);
   }
 
+  if (post.tags) {
+    for (const [i, tag] of post.tags.entries()) {
+      const originalTag = tag;
+
+      post.tags[i] = tag.replace(" ", "-").toLowerCase();
+
+      if (originalTag !== post.tags[i]) {
+        SU.warn(`Tag ${originalTag} in file ${file} was changed to ${tag}`);
+      }
+    }
+  }
+
   slugs.push(post.slug.toLowerCase());
   posts.push(post);
 

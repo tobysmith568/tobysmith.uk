@@ -40,6 +40,11 @@ const scrollConfig: PerfectScrollbarConfigInterface = {
 
 const routes: Routes = [
   { path: "", pathMatch: "full", component: HomeComponent },
+  { path: "about", pathMatch: "full", component: AboutComponent },
+  { path: "contact", pathMatch: "full", component: ContactComponent },
+  { path: "404", component: NotFoundComponent },
+
+  { path: "tag/:tags", pathMatch: "full", component: CategoryComponent, data: { isTag: true } },
 
   { path: "projects", pathMatch: "full", component: CategoryComponent },
   { path: "projects/libraries", pathMatch: "full", component: CategoryComponent },
@@ -64,10 +69,6 @@ const routes: Routes = [
   { path: "university/year2/shooter-unknown-blog/:slug", pathMatch: "full", component: PostComponent },
   { path: "university/year3/:slug", pathMatch: "full", component: PostComponent },
   { path: "shooter-unknown-blog/:slug", pathMatch: "full", component: PostComponent },
-
-  { path: "about", pathMatch: "full", component: AboutComponent },
-  { path: "contact", pathMatch: "full", component: ContactComponent },
-  { path: "404", component: NotFoundComponent },
 
   { path: ":slug", pathMatch: "full", component: PostComponent },
 
