@@ -10,7 +10,7 @@
 	"slug": "bitcoin-value",
 	"tags" : [
 		"php",
-		"alexa sdk"
+		"alexa-sdk"
 	],
 	"title": "Amazon Alexa: Bitcoin Value",
 	"skill": {

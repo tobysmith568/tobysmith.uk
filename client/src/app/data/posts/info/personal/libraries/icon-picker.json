@@ -10,10 +10,10 @@
 	"previewImage": "assets/img/posts/icon-picker.png",
 	"slug": "icon-picker",
 	"tags" : [
-		"C#",
-		"WPF",
-		".NET Framework",
-		"NuGet"
+		"c#",
+		"wpf",
+		".net-framework",
+		"nuget"
 	],
 	"title": "Icon Picker",
 	"github": {

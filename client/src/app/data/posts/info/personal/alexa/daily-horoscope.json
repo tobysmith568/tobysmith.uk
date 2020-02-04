@@ -10,7 +10,7 @@
 	"slug": "daily-horoscope",
 	"tags" : [
 		"php",
-		"alexa sdk"
+		"alexa-sdk"
 	],
 	"title": "Amazon Alexa: Daily Horoscope",
 	"skill": {

@@ -10,9 +10,9 @@
 	"previewImage": "assets/img/posts/right-click-commands.png",
 	"slug": "right-click-commands",
 	"tags" : [
-		"C#",
-		"WPF",
-		".NET Framework"
+		"c#",
+		"wpf",
+		".net-framework"
 	],
 	"title": "Right-Click Commands",
 	"github": {

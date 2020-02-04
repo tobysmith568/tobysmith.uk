@@ -10,7 +10,7 @@
 	"slug": "current-moon-phase",
 	"tags" : [
 		"php",
-		"alexa sdk"
+		"alexa-sdk"
 	],
 	"title": "Amazon Alexa: Current Moon Phase",
 	"skill": {

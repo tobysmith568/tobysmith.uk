@@ -11,7 +11,7 @@
 	"slug": "morse-code-translator",
 	"tags" : [
 		"php",
-		"alexa sdk"
+		"alexa-sdk"
 	],
 	"title": "Amazon Alexa: Morse Code Translator",
 	"skill": {

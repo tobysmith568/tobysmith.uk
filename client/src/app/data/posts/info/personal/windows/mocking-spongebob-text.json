@@ -9,9 +9,9 @@
 	"previewImage": "assets/img/posts/mocking-spongebob.png",
 	"slug": "mocking-spongebob-text",
 	"tags" : [
-		"C#",
-		"WPF",
-		".NET Framework"
+		"c#",
+		"wpf",
+		".net-framework"
 	],
 	"title": "Mocking Spongebob Text",
 	"github": {

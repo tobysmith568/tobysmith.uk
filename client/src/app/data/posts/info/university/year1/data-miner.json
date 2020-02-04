@@ -9,9 +9,9 @@
 	"previewImage": "assets/img/posts/data-miner.png",
 	"slug": "data-miner",
 	"tags" : [
-		"C#",
-		"WinForms",
-		".NET Framework"
+		"c#",
+		"winforms",
+		".net-framework"
 	],
 	"title": "Data Miner",
 	"github": {
