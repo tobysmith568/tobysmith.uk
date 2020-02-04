@@ -11,7 +11,7 @@
 	"slug": "tube-status",
 	"tags" : [
 		"php",
-		"alexa-sdk"
+		"alexa"
 	],
 	"title": "Amazon Alexa: London Tube Statuses",
 	"skill": {

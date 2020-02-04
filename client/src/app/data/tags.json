@@ -17,5 +17,13 @@
 		"name": "php",
 		"displayName": "PHP",
 		"description": "This is me talking about PHP"
+	},
+	{
+		"name": "alexa",
+		"displayName": "Alexa",
+		"description": "These are all skills that I have written for Amazon's virtual assistant, Alexa....",
+		"aliases": [
+			"alexa-sdk"
+		]
 	}
 ]

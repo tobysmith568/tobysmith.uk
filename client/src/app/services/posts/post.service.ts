@@ -62,6 +62,10 @@ export class PostService {
     const foundPosts: IPost[] = [];
 
     for (const post of this.posts) {
+      if (!post.tags) {
+        continue;
+      }
+
       for (const postTag of post.tags) {
         if (postTag === tag.name || (!isNullOrUndefined(tag.aliases) && tag.aliases.includes(postTag))) {
           foundPosts.push(post);
@@ -82,6 +86,10 @@ export class PostService {
     const foundPosts: IPost[] = [];
 
     for (const post of this.posts) {
+      if (!post.tags) {
+        continue;
+      }
+      
       for (const postTag of post.tags) {
         if (postTag === tag) {
           foundPosts.push(post);

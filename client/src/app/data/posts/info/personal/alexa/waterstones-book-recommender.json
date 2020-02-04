@@ -11,7 +11,7 @@
 	"slug": "waterstones-book-recommender",
 	"tags" : [
 		"php",
-		"alexa-sdk"
+		"alexa"
 	],
 	"title": "Amazon Alexa: Waterstones Book Recommender",
 	"skill": {

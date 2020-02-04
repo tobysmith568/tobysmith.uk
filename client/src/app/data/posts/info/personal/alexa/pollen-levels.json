@@ -10,7 +10,7 @@
 	"slug": "pollen-levels",
 	"tags" : [
 		"php",
-		"alexa-sdk"
+		"alexa"
 	],
 	"title": "Amazon Alexa: Daily Pollen Levels",
 	"skill": {
