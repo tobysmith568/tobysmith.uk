@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "npm run generate && ng serve --disable-host-check",
     "build": "npm run generate && ng build",
+    "build:watch": "npm run generate && ng build --output-path ../server/public --watch",
     "build:prod": "npm run generate && ng build --prod --aot --output-path ../server/public",
     "test": "ng test",
     "lint": "ng lint",

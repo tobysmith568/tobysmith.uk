@@ -14,26 +14,25 @@ export class GithubComponent implements OnInit {
   public bio: string;
   public publicRepoUrl: string;
   public publicRepoCount: string;
-  public gistUrl: string;
-  public gistCount: string;
+  public contributions: string;
+  public organizations: any;
 
   constructor(private readonly httpClient: HttpClient) { }
 
   async ngOnInit() {
-    const result = await this.httpClient.get("https://api.github.com/users/tobysmith568", {
+    const result = await this.httpClient.get("/api/gh-widget", {
       observe: "body"
     }).toPromise() as any;
 
     console.log(result);
 
-    this.avatarUrl = result.avatar_url;
+    this.avatarUrl = result.avatarUrl;
     this.name = result.name;
-    this.htmlUrl = result.html_url;
+    this.htmlUrl = result.url;
     this.bio = result.bio;
-    this.publicRepoUrl = result.html_url + "?tab=repositories";
-    this.publicRepoCount = result.public_repos + " public repositories";
-    this.gistUrl = "https://gist.github.com/" + result.login;
-    this.gistCount = result.public_gists + " public gists";
+    this.publicRepoUrl = result.url + "?tab=repositories";
+    this.publicRepoCount = result.repoCount + " public repositories";
+    this.contributions = result.contributionCount + " contributions in the last year";
+    this.organizations = result.organizations;
   }
-
 }

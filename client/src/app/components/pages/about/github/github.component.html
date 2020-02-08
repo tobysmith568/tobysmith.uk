@@ -12,7 +12,16 @@
 	</div>
 	<ul class="more-info">
 			<li class="GH-field"><a target="_blank" href="{{ publicRepoUrl }}">{{ publicRepoCount }}</a></li>
-			<li class="GH-field"><a target="_blank" href="{{ gistUrl }}">{{ gistCount }}</a></li>
+			<li class="GH-field"><a target="_blank" href="{{ htmlUrl }}">{{ contributions }}</a></li>
+			<li class="GH-field GH-org-field" *ngIf="organizations">
+				<a target="_blank" href="{{ htmlUrl }}">Organizations</a>
+				<div class="GH-orgs">
+					<a class="GH-org tooltip" target="_blank" href="{{ org.url }}" *ngFor="let org of organizations">
+						<img class="GH-org-img" src="{{ org.avatarUrl }}" />
+					  <span class="tooltiptext">{{ org.name }}</span>
+					</a>
+				</div>
+			</li>
 	</ul>
 	<div class="GH-profile-badge-footer">
 			<a target="_blank" href="{{ htmlUrl }}" class="GH-view-profile">View profile</a>

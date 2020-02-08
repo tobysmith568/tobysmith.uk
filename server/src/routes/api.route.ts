@@ -9,6 +9,7 @@ export class APIRoute implements IRoute {
 
   public setupRoutes(): void {
     this.expressRouter.get("/repos", this.controller.repos);
+    this.expressRouter.get("/gh-widget", this.controller.githubWidget);
   }
   
   public getRouter(): Router {

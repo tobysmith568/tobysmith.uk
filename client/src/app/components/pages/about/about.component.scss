@@ -54,8 +54,8 @@ input.submit {
 
 .main-content {
 	padding: 0px;
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(370px, 1fr));
+	display: flex;
+	flex-direction: row;
 }
 
 .area {
@@ -82,6 +82,7 @@ input.submit {
 .bio {
 	font-size: 20px;
 	line-height: 30px;
+	flex-grow: 1;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
@@ -138,4 +139,19 @@ input.submit {
 .message {
 	flex-grow: 1;
 	min-height: 150px;
+}
+
+.widgets {
+	height: fit-content;
+	min-width: 250px;
+}
+
+@media only screen and (max-width: 1200px) {
+	.widgets {
+		display: none;
+	}
+}
+
+.widget:not(:first-child) {
+	margin-top: 20px;
 }

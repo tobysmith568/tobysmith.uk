@@ -8,7 +8,7 @@ export class NotFoundRoute implements IRoute {
 
   public setupRoutes(): void {
     this.expressRouter.get("*", async (req: Request, res: Response) => {
-      res.sendFile(path.join(__dirname, "../../../public/index.html"));
+      res.sendFile(path.join(__dirname, "../../public/index.html"));
     });
   }
   
