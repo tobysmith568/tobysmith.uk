@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as p from "path";
 import { ScriptUtils as SU } from "./scriptUtils";
 import { MarkdownService } from "./markdown.service";
-import { IPost } from "src/app/models/posts/post.interface";
+import { Post } from "src/app/models/posts/post.interface";
 
 /* Constants */
 
@@ -34,7 +34,7 @@ function getFiles(path: string): string[] {
   return results;
 }
 
-function parseData(data: string): IPost {
+function parseData(data: string): Post {
   return JSON.parse(data, (key: string, value: any) => {
     if (key.toLowerCase() === "date") {
 
@@ -47,7 +47,7 @@ function parseData(data: string): IPost {
       return date;
     }
     return value;
-  }) as IPost;
+  }) as Post;
 }
 
 /* Script */
@@ -62,12 +62,12 @@ fs.mkdirSync(assetGenFolder);
 
 const postFiles = getFiles(postDataFolder);
 
-const posts: IPost[] = [];
+const posts: Post[] = [];
 const slugs: string[] = [];
 
 postFiles.forEach(file => {
   const data: string = fs.readFileSync(file, "utf8");
-  const post: IPost = parseData(data);
+  const post: Post = parseData(data);
 
   const markdownFilePath = postContentFolder + post.contentPath + ".md";
 

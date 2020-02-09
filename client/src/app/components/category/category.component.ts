@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { IPost } from "src/app/models/posts/post.interface";
+import { Post } from "src/app/models/posts/post.interface";
 import { PostService } from "src/app/services/posts/post.service";
 import { CategoryService } from "src/app/services/categories/category.service";
 import { ICategory } from "src/app/models/posts/category.interface";
@@ -13,7 +13,7 @@ import { isNullOrUndefined } from "util";
 })
 export class CategoryComponent implements OnInit {
 
-  public posts: IPost[];
+  public posts: Post[];
   public name: string;
   public description: string;
 

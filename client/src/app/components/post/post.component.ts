@@ -1,7 +1,7 @@
 import { Component, OnInit, SecurityContext } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { PostService } from "src/app/services/posts/post.service";
-import { IPost } from "src/app/models/posts/post.interface";
+import { Post } from "src/app/models/posts/post.interface";
 import { SafeHtml, DomSanitizer } from "@angular/platform-browser";
 import { HttpClient } from "@angular/common/http";
 
@@ -12,7 +12,7 @@ import { HttpClient } from "@angular/common/http";
 })
 export class PostComponent implements OnInit {
 
-  public post: IPost;
+  public post: Post;
   private postContent: SafeHtml;
 
   constructor(private readonly activatedRoute: ActivatedRoute,
@@ -44,7 +44,7 @@ export class PostComponent implements OnInit {
   }
 
   public hasSidebarContent(): boolean {
-    return !(!this.post.github && !this.post.itch && !this.post.skill && !this.post.downloads);
+    return this.post.hasSidebarData();
   }
 
   private goTo404() {

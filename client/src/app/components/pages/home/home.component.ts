@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { PostService } from "src/app/services/posts/post.service";
-import { IPost } from "src/app/models/posts/post.interface";
+import { Post } from "src/app/models/posts/post.interface";
 import { IRepository } from "src/app/models/github/repository.interface";
 
 @Component({
@@ -10,9 +10,9 @@ import { IRepository } from "src/app/models/github/repository.interface";
 })
 export class HomeComponent implements OnInit {
 
-  public projects: IPost[];
-  public university: IPost[];
-  public favourites: IPost[];
+  public projects: Post[];
+  public university: Post[];
+  public favourites: Post[];
 
   public repositories: IRepository[];
 
