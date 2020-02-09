@@ -7,9 +7,6 @@ import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 })
 export class AboutComponent implements OnInit {
 
-  @ViewChild("imgpara", { static: true })
-  private imgpara: ElementRef;
-
   constructor() { }
 
   ngOnInit() {
@@ -24,9 +21,5 @@ export class AboutComponent implements OnInit {
     }
 
     return age;
-  }
-
-  public shortImgPara(): boolean {
-    return this.imgpara.nativeElement.scrollWidth < 458;
   }
 }
