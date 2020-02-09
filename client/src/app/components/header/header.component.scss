@@ -27,18 +27,50 @@ button {
 	}
 }
 
-.title {
+.title, .title-mobile {
 	font-size: 55px;
 	color: $whiteText;
 	padding-top: 30px;
 	font-family: 'Times', auto;
 }
 
-.subtitle {
+.title-mobile {
+	display: none;
+	text-align: center;
+	font-size: 36px;
+}
+
+@media only screen and (max-width: 570px) {
+	.title {
+		display: none;
+	}
+
+	.title-mobile {
+		display: block;
+	}
+}
+
+.subtitle, .subtitle-mobile {
 	font-size: 25px;
 	color: $whiteText;
 	padding-top: 10px;
 	font-family: 'Times', auto;
+}
+
+.subtitle-mobile {
+	display: none;
+	text-align: center;
+	font-size: 22px;
+}
+
+@media only screen and (max-width: 570px) {
+	.subtitle {
+		display: none;
+	}
+
+	.subtitle-mobile {
+		display: block;
+	}
 }
 
 .navbar {
