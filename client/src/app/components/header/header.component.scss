@@ -40,7 +40,7 @@ button {
 	font-size: 36px;
 }
 
-@media only screen and (max-width: 570px) {
+@media only screen and (max-width: 575px) {
 	.title {
 		display: none;
 	}
@@ -63,7 +63,7 @@ button {
 	font-size: 22px;
 }
 
-@media only screen and (max-width: 570px) {
+@media only screen and (max-width: 575px) {
 	.subtitle {
 		display: none;
 	}
@@ -75,17 +75,34 @@ button {
 
 .navbar {
 	font-family: Arial;
-	margin-top: 35px;
 	display: flex;
+	margin-top: 35px;
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: flex-start;
 	align-items: baseline;
 }
 
+.navbar-mobile {
+	font-family: Arial;
+	display: none;
+	fill: $greyMenuText;
+}
+
+@media only screen and (max-width: $mobileMenu-width) {
+	.navbar {
+		display: none;
+	}
+
+	.navbar-mobile {
+		display: block;
+	}
+}
+
 .navbar a {
 	font-size: 16px;
 	color: $greyMenuText;
+	fill: $greyMenuText;
 	padding: 14px 16px;
 	text-decoration: none;
 }
@@ -93,12 +110,14 @@ button {
 .navbar p {
 	font-size: 16px;
 	color: $greyMenuText;
+	fill: $greyMenuText;
 	padding: 14px 0px;
 	text-decoration: none;
 }
 
 .dropdown {
 	overflow: hidden;
+	fill: $greyMenuText;
 	fill: $greyMenuText;
 }
 
@@ -107,6 +126,7 @@ button {
 	border: none;
 	outline: none;
 	color: $greyMenuText;
+	fill: $greyMenuText;
 	padding: 14px 16px;
 	background-color: inherit;
 	font-family: inherit;
@@ -125,6 +145,7 @@ button {
 .dropdown-content a {
 	float: none;
 	color: $greyMenuText;
+	fill: $greyMenuText;
 	padding: 12px 16px;
 	text-decoration: none;
 	display: block;
@@ -135,11 +156,27 @@ button {
 	color: $whiteText;
 }
 
-.navbar a:hover, .dropdown:hover .dropbtn {
+.navbar a:hover, .navbar-mobile a:hover, .dropdown:hover .dropbtn {
 	color: $whiteText;
 	fill: $whiteText;
 }
 
 .dropdown:hover .dropdown-content {
 	display: block;
+}
+
+.menu-button {
+	padding: 22px 22px 22px 10px;
+}
+
+.menu-icon {
+	padding: 10px;
+	width: fit-content;
+	cursor: pointer;
+	border: 2px $greyMenuText solid;
+	border-radius: 5px;
+}
+
+.menu-icon:hover {
+	border: 2px $whiteText solid;
 }

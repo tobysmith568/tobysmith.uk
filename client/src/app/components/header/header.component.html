@@ -1,5 +1,6 @@
 <div class="header" #header>
 	<div class="content">
+
 		<h1 class="title">Toby Smith's Portfolio</h1>
 		<h1 class="title-mobile">Toby's Portfolio</h1>
 		<h3 class="subtitle">Computer Science student at Plymouth University</h3>
@@ -35,6 +36,13 @@
 			<a routerLink="/contact">Contact</a>
 			<p>/</p>
 			<a href="https://tobysmith568.github.io/cv/TobySmith.pdf" target="_blank">My CV</a>
+		</div>
+		<div class="navbar-mobile">
+			<div class="menu-button">
+				<a class="menu-icon" (click)="toggleMobileMenu()">
+					<app-icon [icon]="menuIcon" width="1.5rem"></app-icon>
+				</a>
+			</div>
 		</div>
 	</div>
 </div>
