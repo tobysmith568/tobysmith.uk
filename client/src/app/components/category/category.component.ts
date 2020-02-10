@@ -55,15 +55,15 @@ export class CategoryComponent implements OnInit {
     const category = this.categoryService.getCategory(categoryName);
 
     if (!isNullOrUndefined(category)) {
-      this.posts = this.postService.getPostsInCategory(categoryName);
+      this.name = category.displayName || category.slug;
+      this.description = category.description;
     }
+
+    this.posts = this.postService.getPostsInCategory(categoryName);
 
     if (isNullOrUndefined(this.posts) || this.posts.length === 0) {
       this.name = `No posts could be found in the category "${categoryName}"`;
       return;
     }
-
-    this.name = category.displayName || category.slug;
-    this.description = category.description;
   }
 }
