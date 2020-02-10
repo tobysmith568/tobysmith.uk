@@ -45,6 +45,7 @@ const routes: Routes = [
   { path: "404", component: NotFoundComponent },
 
   { path: "tag/:tags", pathMatch: "full", component: CategoryComponent, data: { isTag: true } },
+  { path: "tag/:tags/:slug", pathMatch: "full", component: PostComponent },
 
   { path: "projects", pathMatch: "full", component: CategoryComponent },
   { path: "projects/libraries", pathMatch: "full", component: CategoryComponent },
