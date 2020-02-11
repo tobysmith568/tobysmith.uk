@@ -1,5 +1,5 @@
-<a (click)="navigate()">
-	<div class="content">
+<div class="content">
+	<a class="main-content" (click)="navigate()">
 		<div class="title">
 			<p>{{ getTitle() }}</p>
 		</div>
@@ -7,14 +7,17 @@
 		<div class="preview-image" *ngIf="getPreviewImage()">
 			<img src="{{ getPreviewImage() }}"/>
 		</div>
-		<div class="main-content">
-			<div class="preview">
-				<p>{{ getPreview() }}</p>
-			</div>
+		<div class="preview">
+			<p>{{ getPreview() }}</p>
 		</div>
+	</a>
+	<div class="tags">
+		<a class="tag" routerLink="/tag/{{ getTagName(tag) }}" *ngFor="let tag of getTags()">{{ getTagDisplayName(tag) }}</a>
+	</div>
+	<a (click)="navigate()">
 		<div class="date">
 			<app-icon [icon]="dateIcon"></app-icon>
 			<p>{{ getDate() }}</p>
 		</div>
-	</div>
-</a>
+	</a>
+</div>

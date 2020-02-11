@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute, NavigationEnd } from "@angular/router";
 import { Post } from "src/app/models/posts/post.interface";
 import { PostService } from "src/app/services/posts/post.service";
 import { CategoryService } from "src/app/services/categories/category.service";
@@ -23,14 +23,16 @@ export class CategoryComponent implements OnInit {
               private readonly activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
-    if (this.activatedRoute.snapshot.data.isTag) {
-      let tagName = this.activatedRoute.snapshot.url.slice(-1)[0].path;
-      tagName = tagName.replace(" ", "-").toLowerCase();
+    this.activatedRoute.url.subscribe((event: any) => {
+      if (this.activatedRoute.snapshot.data.isTag) {
+        let tagName = this.activatedRoute.snapshot.url.slice(-1)[0].path;
+        tagName = tagName.replace(" ", "-").toLowerCase();
 
-      this.getContentForTag(tagName);
-    } else {
-      this.getContentForCategory(this.router.url);
-    }
+        this.getContentForTag(tagName);
+      } else {
+        this.getContentForCategory(this.router.url);
+      }
+    });
   }
 
   private getContentForTag(tagName: string): void {
@@ -40,15 +42,14 @@ export class CategoryComponent implements OnInit {
       this.posts = this.postService.getPostsWithTagName(tagName);
     } else {
       this.posts = this.postService.getPostsWithTag(tag);
+
+      this.name = tag.displayName || tag.name;
+      this.description = tag.description;
     }
 
     if (isNullOrUndefined(this.posts) || this.posts.length === 0) {
       this.name = `No posts could be found with the tag "${tagName}"`;
-      return;
     }
-
-    this.name = tag.displayName || tag.name;
-    this.description = tag.description;
   }
 
   private getContentForCategory(categoryName: string): void {
