@@ -38,6 +38,16 @@
 	height: fit-content;
 }
 
+@media only screen and (max-width: 1070px) {
+	.post-with-sidebar {
+		grid-template-columns: 100%;
+	}
+	
+	.sidebar {
+		display: none;
+	}
+}
+
 .title {
 	text-align: center;
 	font-size: 42px;

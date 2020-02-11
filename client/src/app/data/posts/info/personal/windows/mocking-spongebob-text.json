@@ -8,6 +8,11 @@
 	"preview": "This is a semi-joke project based on the mocking spongebob meme. A Windows application to MoCkiFy any text on the Windows clipboard though a global shortcut",
 	"previewImage": "assets/img/posts/mocking-spongebob.png",
 	"slug": "mocking-spongebob-text",
+	"tags" : [
+		"c#",
+		"wpf",
+		".net-framework"
+	],
 	"title": "Mocking Spongebob Text",
 	"github": {
 		"url": "https://github.com/tobysmith568/Mocking-Spongebob-Text"

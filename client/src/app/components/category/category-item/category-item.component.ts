@@ -1,8 +1,11 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { IPost } from "src/app/models/posts/post.interface";
+import { Post } from "src/app/models/posts/post.interface";
 import { Router, ActivatedRoute } from "@angular/router";
 import { NewTabService } from "src/app/services/new-tab/new-tab.service";
 import { mdiCalendar } from "@mdi/js";
+import { isNullOrUndefined } from "util";
+import { CategoryService } from "src/app/services/categories/category.service";
+import { ITag } from "src/app/models/posts/tag.interface";
 
 @Component({
   selector: "app-category-item",
@@ -19,13 +22,14 @@ export class CategoryItemComponent implements OnInit {
   ];
 
   @Input()
-  private post: IPost;
+  private post: Post;
 
   public dateIcon = mdiCalendar;
 
   constructor(private readonly router: Router,
               private readonly activatedRoute: ActivatedRoute,
-              private readonly newTabService: NewTabService) { }
+              private readonly newTabService: NewTabService,
+              private readonly categoryService: CategoryService) { }
 
   ngOnInit() {
   }
@@ -74,5 +78,31 @@ export class CategoryItemComponent implements OnInit {
     }
 
     return day + "th " + CategoryItemComponent.monthNames[monthIndex] + " " + year;
+  }
+
+  public getTags(): string[] {
+    if (isNullOrUndefined(this.post.tags)) {
+      return [];
+    }
+
+    return this.post.tags;
+  }
+
+  public getTagName(tagAlias: string) {
+    const category = this.categoryService.getTag(tagAlias);
+    if (category) {
+      return category.name;
+    }
+
+    return tagAlias;
+  }
+
+  public getTagDisplayName(tagAlias: string): string {
+    const category = this.categoryService.getTag(tagAlias);
+    if (category) {
+      return category.displayName;
+    }
+
+    return tagAlias;
   }
 }

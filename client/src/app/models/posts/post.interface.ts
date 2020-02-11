@@ -6,12 +6,13 @@ import { IInternalLink } from "./internalLink.interface";
 import { IExternal } from "./sidebar/external.interface";
 import { INuget } from "./sidebar/nuget.interface";
 
-export interface IPost {
+export class Post {
   title: string;
   contentPath: string;
   date: Date;
   author: string;
   slug: string;
+  tags: string[];
   categories: string[];
   preview: string;
   previewImage: string;
@@ -23,4 +24,13 @@ export interface IPost {
   downloads: IDownload[];
   external: IExternal;
   nuget: INuget;
+
+  public hasSidebarData(): boolean {
+    return !(!this.github
+          && !this.itch
+          && !this.skill
+          && !this.downloads
+          && !this.external
+          && !this.nuget);
+  }
 }

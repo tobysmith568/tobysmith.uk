@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { PostService } from "src/app/services/posts/post.service";
-import { IPost } from "src/app/models/posts/post.interface";
+import { Post } from "src/app/models/posts/post.interface";
 import { IRepository } from "src/app/models/github/repository.interface";
 
 @Component({
@@ -10,11 +10,34 @@ import { IRepository } from "src/app/models/github/repository.interface";
 })
 export class HomeComponent implements OnInit {
 
-  public projects: IPost[];
-  public university: IPost[];
-  public favourites: IPost[];
+  public projects: Post[];
+  public university: Post[];
+  public favourites: Post[];
 
   public repositories: IRepository[];
+
+  public featuredTags = [
+    {
+      name: "csharp",
+      displayName: "C#",
+      icon: "assets/img/csharp.png"
+    },
+    {
+      name: "typescript",
+      displayName: "TypeScript",
+      icon: "assets/img/typescript.png"
+    },
+    {
+      name: "java",
+      displayName: "Java",
+      icon: "assets/img/java.png"
+    },
+    {
+      name: "alexa",
+      displayName: "Alexa",
+      icon: "assets/img/alexa.png"
+    }
+  ];
 
   constructor(private readonly postService: PostService) {
     this.repositories = [
@@ -32,8 +55,8 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.projects = this.postService.getPostsInCategory("/projects", 3);
-    this.university = this.postService.getPostsInCategory("/university", 3);
+    this.projects = this.postService.getPostsInCategory("/projects", 1);
+    this.university = this.postService.getPostsInCategory("/university", 1);
     this.favourites = this.postService.getPostsInCategory("/favourites", 3);
   }
 

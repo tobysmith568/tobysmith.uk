@@ -1,6 +1,6 @@
-import { Component, OnInit, Input, ViewChild, ElementRef } from "@angular/core";
+import { Component, OnInit, Input, ViewChild, ElementRef, EventEmitter, Output } from "@angular/core";
 import { PerfectScrollbarComponent } from "ngx-perfect-scrollbar";
-import { mdiChevronDown } from "@mdi/js";
+import { mdiChevronDown, mdiForwardburger } from "@mdi/js";
 
 @Component({
   selector: "app-header",
@@ -12,6 +12,9 @@ export class HeaderComponent implements OnInit {
   @Input()
   private scrollbar: PerfectScrollbarComponent;
 
+  @Output()
+  public menuToggled = new EventEmitter();
+
   @ViewChild("header", { static: true })
   private header: ElementRef;
 
@@ -22,6 +25,7 @@ export class HeaderComponent implements OnInit {
   private universityDropdown: ElementRef;
 
   public downArrow = mdiChevronDown;
+  public menuIcon = mdiForwardburger;
 
   constructor() { }
 
@@ -40,5 +44,9 @@ export class HeaderComponent implements OnInit {
       this.projectDropdown.nativeElement.style.top = formattedPosition;
       this.universityDropdown.nativeElement.style.top = formattedPosition;
     }, null, null);
+  }
+
+  public toggleMobileMenu() {
+    this.menuToggled.emit();
   }
 }

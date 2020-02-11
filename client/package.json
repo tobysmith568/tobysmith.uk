@@ -5,11 +5,12 @@
     "ng": "ng",
     "start": "npm run generate && ng serve --disable-host-check",
     "build": "npm run generate && ng build",
+    "build:watch": "npm run generate && ng build --output-path ../server/public --watch",
     "build:prod": "npm run generate && ng build --prod --aot --output-path ../server/public",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "generate": "ts-node src/scripts/buildPostData.ts && ts-node src/scripts/verifyCategories.ts",
+    "generate": "ts-node src/scripts/buildPostData.ts && ts-node src/scripts/verifyCategories.ts && ts-node src/scripts/verifyTags.ts",
     "copyIndex": "ts-node src/scripts/copyAndRenameIndex.ts"
   },
   "private": true,

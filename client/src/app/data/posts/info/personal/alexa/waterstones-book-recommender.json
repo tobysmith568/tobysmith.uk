@@ -9,6 +9,10 @@
 	"preview": "Use this Alexa Skill to hear about book recommendations from the UK book retailer, Waterstones.",
 	"previewImage": "assets/img/posts/waterstones-book-recommender.png",
 	"slug": "waterstones-book-recommender",
+	"tags" : [
+		"php",
+		"alexa"
+	],
 	"title": "Amazon Alexa: Waterstones Book Recommender",
 	"skill": {
 		"url": "https://www.amazon.co.uk/dp/B07K58NV6Q",

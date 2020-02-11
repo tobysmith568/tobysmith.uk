@@ -1,0 +1,29 @@
+[
+	{
+		"name": "csharp",
+		"displayName": "C#",
+		"description": "This is me talking about C#",
+		"aliases": [
+			"c#",
+			"c-sharp"
+		]
+	},
+	{
+		"name": "java",
+		"displayName": "Java",
+		"description": "This is me talking about Java"
+	},
+	{
+		"name": "php",
+		"displayName": "PHP",
+		"description": "This is me talking about PHP"
+	},
+	{
+		"name": "alexa",
+		"displayName": "Alexa",
+		"description": "These are all skills that I have written for Amazon's virtual assistant, Alexa....",
+		"aliases": [
+			"alexa-sdk"
+		]
+	}
+]

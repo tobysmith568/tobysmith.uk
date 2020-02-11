@@ -17,7 +17,6 @@
 	margin-right: auto;
 }
 
-
 @media only screen and (max-width: $tablet-width) {
 	.content {
 		width: 85%;
@@ -28,4 +27,62 @@
 	.content {
 		width: 100%;
 	}
+}
+
+.header {
+	z-index: 2;
+}
+
+.mobile-menu-background {
+	width: 100vw;
+	height: 100%;
+	z-index: 1;
+	position: absolute;
+	display: none;
+	color: $greyMenuText;
+	transition: background-color ease-in-out 0.5s;
+	pointer-events: none;
+}
+
+@media only screen and (max-width: $mobileMenu-width) {
+	.mobile-menu-background {
+		display: block;
+	}
+}
+
+.mobile-menu {
+	background-color: $greyBackground;
+	width: 140px;
+	height: 100%;
+	padding: 220px 20px 20px 20px;
+	margin-left: -200px;
+	transition: margin-left ease-in-out 0.5s;
+}
+
+.is-open {
+	background-color: rgb(0,0,0,0.5);
+	pointer-events: all;
+}
+
+.is-open .mobile-menu {
+	margin-left: 0px;
+}
+
+.navbar ul {
+	padding-left: 20px;
+}
+
+.navbar li {
+	padding-top: 15px;
+	list-style: none;
+}
+
+.navbar ul li {
+	padding-top: 5px;
+}
+
+.navbar li a {
+	text-decoration: none;
+	color: $whiteText;
+	font-size: 18px;
 }

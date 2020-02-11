@@ -341,3 +341,57 @@
   font-size: 14px;
   line-height: 16px;
 }
+
+.GH-badge-container.vertical.dark .GH-org-field {
+  margin-top: 10px;
+}
+
+.GH-badge-container.vertical.dark .GH-orgs {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 5px;
+}
+
+.GH-badge-container.vertical.dark a.GH-org {
+  margin: 2px;
+}
+
+.GH-org-img {
+  max-height: 32px;
+}
+
+.GH-badge-container.vertical.dark .tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.GH-badge-container.vertical.dark .tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #202326;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 5px;
+  position: absolute;
+  z-index: 1;
+  top: 110%;
+  left: 50%;
+  margin-left: -65px;
+}
+
+.GH-badge-container.vertical.dark .tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #202326 transparent;
+}
+
+.GH-badge-container.vertical.dark .tooltip:hover .tooltiptext {
+  visibility: visible;
+}

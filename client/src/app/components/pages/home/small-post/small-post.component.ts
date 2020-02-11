@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { IPost } from "src/app/models/posts/post.interface";
+import { Post } from "src/app/models/posts/post.interface";
 import { Router, ActivatedRoute } from "@angular/router";
 import { NewTabService } from "src/app/services/new-tab/new-tab.service";
 
@@ -11,7 +11,7 @@ import { NewTabService } from "src/app/services/new-tab/new-tab.service";
 export class SmallPostComponent implements OnInit {
 
   @Input()
-  public post: IPost;
+  public post: Post;
 
   constructor(private readonly router: Router,
               private readonly activatedRoute: ActivatedRoute,

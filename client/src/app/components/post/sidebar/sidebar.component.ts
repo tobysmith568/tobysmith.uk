@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from "@angular/core";
-import { IPost } from "src/app/models/posts/post.interface";
+import { Post } from "src/app/models/posts/post.interface";
 import { ISkill } from "src/app/models/posts/sidebar/skill";
 import { IItch } from "src/app/models/posts/sidebar/itch.interface";
 import { IGithub } from "src/app/models/posts/sidebar/github.interface";
@@ -15,7 +15,7 @@ import { INuget } from "src/app/models/posts/sidebar/nuget.interface";
 export class SidebarComponent implements OnInit {
 
   @Input()
-  private post: IPost;
+  private post: Post;
 
   constructor() { }
 

@@ -9,6 +9,11 @@
 	"preview": "This tool allows users to add both cmd and Powershell scripts to the right-click context menu in Windows Explorer",
 	"previewImage": "assets/img/posts/right-click-commands.png",
 	"slug": "right-click-commands",
+	"tags" : [
+		"c#",
+		"wpf",
+		".net-framework"
+	],
 	"title": "Right-Click Commands",
 	"github": {
 		"url": "https://github.com/tobysmith568/Right-Click-Commands"

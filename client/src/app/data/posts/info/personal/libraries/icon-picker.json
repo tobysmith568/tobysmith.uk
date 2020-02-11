@@ -9,6 +9,12 @@
 	"preview": "This NuGet library allows WPF developers to prompt the user to select an icon using the native Windows icon picker",
 	"previewImage": "assets/img/posts/icon-picker.png",
 	"slug": "icon-picker",
+	"tags" : [
+		"c#",
+		"wpf",
+		".net-framework",
+		"nuget"
+	],
 	"title": "Icon Picker",
 	"github": {
 		"url": "https://github.com/tobysmith568/Icon-Picker"

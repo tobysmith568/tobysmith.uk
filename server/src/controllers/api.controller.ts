@@ -1,50 +1,88 @@
-import { default as axios } from "axios";
 import { Request, Response } from "express";
-import { IRepository } from "../models/github/repository.interface";
-import { ILanguage } from "../models/github/language.interface";
-import { Config } from "../config/config";
+import { IRepository } from "../models/github-repo-request/repository.interface";
+import { ILanguage } from "../models/github-repo-request/language.interface";
+import { GithubGraphQLService } from "../services/github-graphql.service";
+import { isNullOrUndefined } from "util";
+import { IUser } from "../models/github-widget-request/user.interface";
+import { IOrganization } from "../models/github-widget-request/organization.interface";
 
 export class APIController {
 
   private static lastRepoResponse: IRepository[];
+  private static lastWidgetResponse: IUser;
 
-  constructor(private readonly config: Config) {}
-
-  public repos = async (req: Request, res: Response) => {
-    try {
-      const response = await axios.post("https://api.github.com/graphql", {
-        query : `{
-          user(login: "tobysmith568") {
-            repositories(orderBy: { field: PUSHED_AT, direction: DESC }, first: 3, privacy: PUBLIC) {
-              nodes {
-                name
-                languages(first: 3, orderBy: { field: SIZE, direction: DESC}) {
-                  nodes {
-                    name
-                    color
-                  }
-                }
-                description,
-                url,
-                updatedAt,
-                stargazers {
-                  totalCount
-                }
-              }
+  private static readonly reposRequest = `{
+    user(login: "tobysmith568") {
+      repositories(orderBy: { field: PUSHED_AT, direction: DESC }, first: 3, privacy: PUBLIC) {
+        nodes {
+          name
+          languages(first: 3, orderBy: { field: SIZE, direction: DESC}) {
+            nodes {
+              name
+              color
             }
           }
-        }`
-      }, {
-        headers: {
-          Authorization: "Bearer " + this.config.getGithubAccessToken()
+          description,
+          url,
+          updatedAt,
+          stargazers {
+            totalCount
+          }
         }
-      });
+      }
+    }
+  }`;
 
-      APIController.lastRepoResponse = this.mapRepoResponse(response.data);
-    } catch (e) {
+  private static readonly widgetRequest = `{
+    user(login: "tobysmith568") {
+      login
+      avatarUrl
+      name
+      bio
+      url
+      repoCount: repositories(privacy: PUBLIC) {
+        totalCount
+      }
+      gists(privacy: PUBLIC) {
+        totalCount
+      }
+      contributionsCollection {
+        contributionCalendar {
+          totalContributions
+        }
+      }
+      organizations(first: 5) {
+        nodes {
+          avatarUrl
+          url
+          name
+        }
+      }
+    }
+  }`;
+
+  constructor(private readonly githubGraphQLService: GithubGraphQLService) {}
+
+  public repos = async (req: Request, res: Response) => {
+    
+    const data = await this.githubGraphQLService.get(APIController.reposRequest);
+
+    if (!isNullOrUndefined(data)) {
+      APIController.lastRepoResponse = this.mapRepoResponse(data);
     }
 
     res.json(APIController.lastRepoResponse);
+  }
+
+  public githubWidget = async (req: Request, res: Response) => {
+    
+    const data = await this.githubGraphQLService.get(APIController.widgetRequest);
+
+    if (!isNullOrUndefined(data)) {
+      APIController.lastWidgetResponse = this.mapWidgetResponse(data);
+    }
+
+    res.json(APIController.lastWidgetResponse);
   }
 
   private mapRepoResponse(response: any): IRepository[] {
@@ -76,6 +114,38 @@ export class APIController {
       };
 
       results.push(result);
+    }
+
+    return results;
+  }
+
+  private mapWidgetResponse(response: any): IUser {
+    const data = response.data.user;
+
+    const result: IUser = {
+      avatarUrl: data.avatarUrl,
+      bio: data.bio,
+      contributionCount: data.contributionsCollection.contributionCalendar.totalContributions,
+      gistCount: data.gists.totalCount,
+      login: data.login,
+      name: data.name,
+      organizations: this.mapWidgetOrganizations(data.organizations.nodes),
+      repoCount: data.repoCount.totalCount,
+      url: data.url
+    };
+
+    return result;
+  }
+
+  private mapWidgetOrganizations(organizations: any[]): IOrganization[] {
+    const results: IOrganization[] = [];
+
+    for (const org of organizations) {
+      results.push({
+        avatarUrl: org.avatarUrl,
+        name: org.name,
+        url: org.url
+      });
     }
 
     return results;

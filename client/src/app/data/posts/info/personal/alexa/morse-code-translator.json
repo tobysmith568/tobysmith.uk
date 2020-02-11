@@ -9,6 +9,10 @@
 	"preview": "This Amazon Alexa skill enables Alexa to be able to translate phrases into Morse Code from English.",
 	"previewImage": "assets/img/posts/morse-code-translator.png",
 	"slug": "morse-code-translator",
+	"tags" : [
+		"php",
+		"alexa"
+	],
 	"title": "Amazon Alexa: Morse Code Translator",
 	"skill": {
 		"url": "https://www.amazon.co.uk/dp/B07JPX5B36",
