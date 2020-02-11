@@ -24,8 +24,6 @@ export class GithubComponent implements OnInit {
       observe: "body"
     }).toPromise() as any;
 
-    console.log(result);
-
     this.avatarUrl = result.avatarUrl;
     this.name = result.name;
     this.htmlUrl = result.url;
