@@ -8,6 +8,7 @@ import { NotFoundRoute } from "./routes/notfound.route";
 import { APIRoute } from "./routes/api.route";
 import { APIController } from "./controllers/api.controller";
 import { GithubGraphQLService } from "./services/github-graphql.service";
+import { HttpService } from "./services/http.service";
 
 export class Server {
 
@@ -15,6 +16,7 @@ export class Server {
   private readonly app: Express;
   private readonly httpServer: HTTPServer;
   private readonly githubGraphQLService: GithubGraphQLService;
+  private readonly httpService: HttpService;
 
   private readonly apiController: APIController;
 
@@ -23,8 +25,9 @@ export class Server {
     this.app = express();
     this.httpServer = new HTTPServer(this.app);
     this.githubGraphQLService = new GithubGraphQLService(this.config);
+    this.httpService = new HttpService();
 
-    this.apiController = new APIController(this.githubGraphQLService);
+    this.apiController = new APIController(this.githubGraphQLService, this.httpService);
   }
 
   public initializeControllers() {
@@ -41,7 +44,6 @@ export class Server {
       redirectRoute.getRouter(),
     ]);
     
-    // this.app.use(express.static(path.join(__dirname, "../public")));
     this.app.use("/", express.static("public"));
     
     const notFoundRoute = new NotFoundRoute(Router());
