@@ -41,7 +41,8 @@ export class Server {
       redirectRoute.getRouter(),
     ]);
     
-    this.app.use(express.static(path.join(__dirname, "../public")));
+    // this.app.use(express.static(path.join(__dirname, "../public")));
+    this.app.use("/", express.static("public"));
     
     const notFoundRoute = new NotFoundRoute(Router());
     notFoundRoute.setupRoutes();
