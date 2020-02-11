@@ -41,7 +41,10 @@ export class AppComponent implements OnInit {
 
     this.router.events.pipe(
       filter(event => event instanceof NavigationStart)
-    ).subscribe(() => this.closeMobileMenu());
+    ).subscribe(() => {
+      this.closeMobileMenu();
+      this.scrollbar.directiveRef.scrollToTop();
+    });
   }
 
   public toggleMobileMenu() {
