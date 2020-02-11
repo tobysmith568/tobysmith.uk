@@ -5,11 +5,14 @@ import { GithubGraphQLService } from "../services/github-graphql.service";
 import { isNullOrUndefined } from "util";
 import { IUser } from "../models/github-widget-request/user.interface";
 import { IOrganization } from "../models/github-widget-request/organization.interface";
+import { HttpService } from "../services/http.service";
+const unescapeJs = require("unescape-js");
 
 export class APIController {
 
   private static lastRepoResponse: IRepository[];
-  private static lastWidgetResponse: IUser;
+  private static lastGithubWidgetResponse: IUser;
+  private static lastLinkedWidgetResponse: string;
 
   private static readonly reposRequest = `{
     user(login: "tobysmith568") {
@@ -61,7 +64,10 @@ export class APIController {
     }
   }`;
 
-  constructor(private readonly githubGraphQLService: GithubGraphQLService) {}
+  private static linkedinUrl = "https://badges.linkedin.com/profile?locale=en_US&badgetype=vertical&badgetheme=dark&uid=510212&version=v1&maxsize=medium&trk=profile-badge&vanityname=tobysmith568";
+
+  constructor(private readonly githubGraphQLService: GithubGraphQLService,
+              private readonly httpService: HttpService) {}
 
   public repos = async (req: Request, res: Response) => {
     
@@ -79,10 +85,24 @@ export class APIController {
     const data = await this.githubGraphQLService.get(APIController.widgetRequest);
 
     if (!isNullOrUndefined(data)) {
-      APIController.lastWidgetResponse = this.mapWidgetResponse(data);
+      APIController.lastGithubWidgetResponse = this.mapWidgetResponse(data);
     }
 
-    res.json(APIController.lastWidgetResponse);
+    res.json(APIController.lastGithubWidgetResponse);
+  }
+
+  public linkedinWidget = async (req: Request, res: Response) => {
+    const data = await this.httpService.get(APIController.linkedinUrl);
+
+    if (!isNullOrUndefined(data)) {
+
+      const unexcaped: string = unescapeJs(data);
+      const tagsOnly = unexcaped.substring(17, unexcaped.lastIndexOf("\""));
+
+      APIController.lastLinkedWidgetResponse = tagsOnly;
+    }
+
+    res.json(APIController.lastLinkedWidgetResponse);
   }
 
   private mapRepoResponse(response: any): IRepository[] {
