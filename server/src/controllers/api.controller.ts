@@ -102,7 +102,7 @@ export class APIController {
       APIController.lastLinkedWidgetResponse = tagsOnly;
     }
 
-    res.json(APIController.lastLinkedWidgetResponse);
+    res.send(APIController.lastLinkedWidgetResponse);
   }
 
   private mapRepoResponse(response: any): IRepository[] {
