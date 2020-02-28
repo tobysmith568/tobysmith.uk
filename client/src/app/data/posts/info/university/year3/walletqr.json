@@ -1,7 +1,8 @@
 {
 	"author": "Toby Smith",
 	"categories": [
-		"university/year3"
+		"university/year3",
+		"favourites"
 	],
 	"contentPath": "walletqr",
 	"date": "16 January 2020",
