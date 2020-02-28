@@ -1,0 +1,22 @@
+{
+	"author": "Toby Smith",
+	"categories": [
+		"university/year3",
+		"favourites"
+	],
+	"contentPath": "walletqr",
+	"date": "16 January 2020",
+	"preview": "This website is a place for cryptocurrency owners/users to share their wallet addresses with others through publically available profiles.",
+	"previewImage": "assets/img/posts/walletqr.png",
+	"slug": "walletqr",
+	"tags" : [
+		"node",
+		"typescript",
+		"angular",
+		"mongodb"
+	],
+	"title": "WalletQR",
+	"github": {
+		"url": "https://github.com/tobysmith568/SOFT-355_Wallet_QR"
+	}
+}

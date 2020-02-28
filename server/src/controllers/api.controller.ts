@@ -9,11 +9,14 @@ import { HttpService } from "../services/http.service";
 const unescapeJs = require("unescape-js");
 
 export class APIController {
-
+  
   private static lastRepoResponse: IRepository[];
   private static lastGithubWidgetResponse: IUser;
   private static lastLinkedWidgetResponse: string;
-
+  
+  private static readonly defaultLinkedWidgetResponse = `<div class="LI-profile-badge" data-version="v1" data-size="medium" data-locale="en_US" data-type="vertical" data-theme="dark" data-vanity="tobysmith568" data-rendered="true" data-uid="654123"><a class="LI-simple-link" href="https://uk.linkedin.com/in/tobysmith568?trk=profile-badge">Toby Smith</a><div><script src="https://static-exp1.licdn.com/sc/h/3qk7aqkysw7gz575y2ma1e5ky" type="text/javascript"></script><code id="__pageContext__" style="display: none;"></code><script src="https://static-exp1.licdn.com/sc/p/com.linkedin.badger-frontend%3Abadger-frontend-static-content%2B0.1.132/f/%2Fbadger-frontend%2Fsc-hashes%2Fsc-hashes_en_US.js"></script><script src="https://static-exp1.licdn.com/sc/h/19dd5wwuyhbk7uttxpuelttdg"></script><link rel="stylesheet" href="https://static-exp1.licdn.com/sc/h/cfzfb7mbaaxnxarmlhhyn5t8p"><div dir="ltr" class="LI-badge-container-vertical-dark LI-badge-container vertical dark medium" style="display: none"> <div class="LI-profile-badge-header LI-name-container"><div class="LI-col"><div class="LI-profile-pic-container" style="background-image: url(https://static-exp1.licdn.com/sc/h/856xpihrituhwdjrua9z5u5na);"><img src="https://media-exp1.licdn.com/dms/image/C4D03AQFez08sp3Q3NQ/profile-displayphoto-shrink_200_200/0?e=1586995200&amp;v=beta&amp;t=roBTZSr7Chg0pMASy5Z4yS7owLT9E8AE6Frf_SESIJU" class="LI-profile-pic" alt="Toby Smith"></div></div><div class="LI-col LI-header"><div class="LI-name"><a href="https://uk.linkedin.com/in/tobysmith568?trk=profile-badge-name">Toby Smith</a></div><div class="LI-title">Final year Computing student at Plymouth University</div></div></div><ul class="more-info"><li class="LI-field"><a href="https://www.linkedin.com/company/pcms-group?trk=profile-badge-company">PCMS Group</a></li></ul><div class="LI-profile-badge-footer"><a href="https://uk.linkedin.com/in/tobysmith568?trk=profile-badge-cta" class="LI-view-profile">View profile</a><span class="LI-logo"><img src="https://static-exp1.licdn.com/scds/common/u/images/logos/linkedin/logo_linkedin_flat_white_93x21.png" alt="LinkedIn" class="LI-icon"></span></div></div></div></div>`;
+  private static readonly linkedinUrl = "https://badges.linkedin.com/profile?locale=en_US&badgetype=vertical&badgetheme=dark&uid=510212&version=v1&maxsize=medium&trk=profile-badge&vanityname=tobysmith568";
+  
   private static readonly reposRequest = `{
     user(login: "tobysmith568") {
       repositories(orderBy: { field: PUSHED_AT, direction: DESC }, first: 3, privacy: PUBLIC) {
@@ -64,10 +67,10 @@ export class APIController {
     }
   }`;
 
-  private static linkedinUrl = "https://badges.linkedin.com/profile?locale=en_US&badgetype=vertical&badgetheme=dark&uid=510212&version=v1&maxsize=medium&trk=profile-badge&vanityname=tobysmith568";
-
   constructor(private readonly githubGraphQLService: GithubGraphQLService,
-              private readonly httpService: HttpService) {}
+              private readonly httpService: HttpService) {
+    APIController.lastLinkedWidgetResponse = APIController.defaultLinkedWidgetResponse;
+  }
 
   public repos = async (req: Request, res: Response) => {
     
@@ -102,7 +105,7 @@ export class APIController {
       APIController.lastLinkedWidgetResponse = tagsOnly;
     }
 
-    res.json(APIController.lastLinkedWidgetResponse);
+    res.json({ payload: APIController.lastLinkedWidgetResponse });
   }
 
   private mapRepoResponse(response: any): IRepository[] {
