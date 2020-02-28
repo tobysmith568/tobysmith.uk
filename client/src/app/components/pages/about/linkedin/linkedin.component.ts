@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild, OnInit } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
+import { isNullOrUndefined } from "util";
 
 @Component({
   selector: "app-linkedin",
@@ -18,9 +19,13 @@ export class LinkedinComponent implements OnInit {
       observe: "body"
     }).toPromise() as any;
 
+    if (isNullOrUndefined(result.payload)) {
+      return;
+    }
+
     const element = this.linkedinScript.nativeElement;
     const container = document.createElement("div");
-    container.innerHTML = result;
+    container.innerHTML = result.payload;
 
     if (element.innerHTML) {
       container.innerHTML = element.innerHTML;
