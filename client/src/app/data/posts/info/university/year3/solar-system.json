@@ -1,0 +1,21 @@
+{
+	"author": "Toby Smith",
+	"categories": [
+		"university/year3"
+	],
+	"contentPath": "solar-system",
+	"date": "8 January 2020",
+	"preview": "A configurable solar system simulator with accurate gravity without using a physics engine as a dependency. Written in C/C++ using OpenGL.",
+	"previewImage": "assets/img/posts/solar-system.png",
+	"slug": "solar-system",
+	"tags" : [
+		"c++",
+		"opengl",
+		"glm",
+		"glfw"
+	],
+	"title": "Solar System Simulator",
+	"github": {
+		"url": "https://github.com/tobysmith568/SOFT-356_Solar_System"
+	}
+}

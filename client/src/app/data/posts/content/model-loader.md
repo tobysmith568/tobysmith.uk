@@ -28,7 +28,7 @@ The `Reset (R)` key binding can be used to reset the position, rotation, and sca
 The `PolygonMode (P)` key binding can be used to toggle between drawing faces and drawing lines only.
 
 Here you can see a 3D model of a boat which I have loaded in. This boat is made from 40,000 triangles and 120,000 verticies.
-<img src="assets/img/posts/modelloader.png" width="75%" class="center" alt="A 3D model of a boat loaded in using my software">
+<img src="assets/img/posts/model-loader.png" width="75%" class="center" alt="A 3D model of a boat loaded in using my software">
 
 ### Code Structure
 
