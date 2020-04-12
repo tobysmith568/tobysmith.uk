@@ -36,6 +36,11 @@
 		]
 	},
 	{
+		"name": "express",
+		"displayName": "Express",
+		"description": "These projects use the Node.JS library Express for creating HTTP endpoints."
+	},
+	{
 		"name": "glfw",
 		"displayName": "GLFW"
 	},

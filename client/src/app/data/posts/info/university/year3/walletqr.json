@@ -13,10 +13,14 @@
 		"node",
 		"typescript",
 		"angular",
+		"express",
 		"mongodb"
 	],
 	"title": "WalletQR",
 	"github": {
 		"url": "https://github.com/tobysmith568/SOFT-355_Wallet_QR"
+	},
+	"external": {
+		"url": "https://walletqr.co.uk"
 	}
 }

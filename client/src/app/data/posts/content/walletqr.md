@@ -8,7 +8,7 @@ WalletQR is built using **Node** and **Typescript**. The client-side application
 
 Both halves of the application are extensively unit tested; the client-side application contains 199 tests with 95% coverage while the server-side application contains 154 tests with a 94% coverage.
 
-WalletQR is not currently online for people to use in production, but it will be shortly after I recieve my marks from the module I developed it for.
+WalletQR is available at the URL: [https://walletqr.co.uk](https://walletqr.co.uk). 
 
 ### Functionality
 
@@ -26,4 +26,8 @@ Should two people which to engage in a cryptocurrency transation, the recepient 
 
 The URLs of profiles have been designed to be as short as possible, they work in a similar manner to profiles on Medium.com:
 ```https://domain.com/@username```
-It's important that you include the `@` as this is what differentiates your URL from that of a static page. I chose this design over having a prefix like `/u/` which Reddit uses and having having no prefix like Twitter or Github as I belive that the `@` is a simple way to identify that a URL is for a profile, rather than other content. 
+It's important that you include the `@` as this is what differentiates your URL from that of a static page. I chose this design over having a prefix like `/u/` which Reddit uses and having having no prefix like Twitter or Github as I belive that the `@` is a simple way to identify that a URL is for a profile, rather than other content.
+
+### Security
+
+As far as I know, the website has been developed in a secure manner. If you have security or pen-testing knowedge, then you are invited to try and hack the profile found at https://walletqr.co.uk/@hackme. **Important:** Please only attack the website itself, you do not have permission to hack the hosting company, my hosting plan, or cPanel.
