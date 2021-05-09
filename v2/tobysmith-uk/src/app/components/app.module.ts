@@ -1,12 +1,28 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
-
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
+import { GeneralModule } from "./general/general.module";
+import { AboutModule } from "./pages/about/about.module";
+import { BlogModule } from "./pages/blog/blog.module";
+import { ContactModule } from "./pages/contact/contact.module";
+import { FourOhFourModule } from "./pages/four-oh-four/four-oh-four.module";
+import { HomeModule } from "./pages/home/home.module";
+import { ProjectsModule } from "./pages/projects/projects.module";
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule.withServerTransition({ appId: "serverApp" }), AppRoutingModule],
+  imports: [
+    BrowserModule.withServerTransition({ appId: "serverApp" }),
+    AppRoutingModule,
+    GeneralModule,
+    HomeModule,
+    AboutModule,
+    ProjectsModule,
+    BlogModule,
+    ContactModule,
+    FourOhFourModule
+  ],
   providers: [],
   bootstrap: [AppComponent]
 })
