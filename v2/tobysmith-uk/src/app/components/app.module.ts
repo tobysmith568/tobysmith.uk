@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { BrowserModule } from "@angular/platform-browser";
+import { BrowserModule, BrowserTransferStateModule } from "@angular/platform-browser";
 import { NgScrollbarModule } from "ngx-scrollbar";
 import { AppRoutingModule } from "./app-routing.module";
 import { AppComponent } from "./app.component";
@@ -29,7 +29,8 @@ import { environment } from "src/environments/environment";
     ContactModule,
     FourOhFourModule,
     GraphQLModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserTransferStateModule
   ],
   providers: [
     {
