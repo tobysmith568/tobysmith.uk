@@ -1,9 +1,13 @@
 <div class="header">
-  <div class="header-item brand"><a routerLink="">Toby Smith</a></div>
-  <ul class="header-item menu">
-    <li class="header-item menu-item"><a routerLink="about">About</a></li>
-    <li class="header-item menu-item"><a routerLink="projects">Projects</a></li>
-    <li class="header-item menu-item"><a routerLink="blog">Blog</a></li>
-    <li class="header-item menu-item"><a routerLink="contact">Contact</a></li>
-  </ul>
+  <div class="menu">
+    <a routerLink="">Toby Smith</a>
+  </div>
+  <div class="menu">
+    <app-search></app-search>
+
+    <a routerLink="about" routerLinkActive="current"><span>About</span></a>
+    <a routerLink="projects" routerLinkActive="current"><span>Projects</span></a>
+    <a routerLink="blog" routerLinkActive="current"><span>Blog</span></a>
+    <a routerLink="contact" routerLinkActive="current"><span>Contact</span></a>
+  </div>
 </div>

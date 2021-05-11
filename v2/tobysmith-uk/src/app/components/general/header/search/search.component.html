@@ -1,0 +1,11 @@
+<div *ngIf="onBlog" class="searchbar">
+  <input
+    class="search-input"
+    type="search"
+    value=""
+    placeholder="search"
+    #searchbar
+    [class.on-search]="onBlogSearch"
+    (keyup.enter)="search(searchbar.value)"
+  />
+</div>
