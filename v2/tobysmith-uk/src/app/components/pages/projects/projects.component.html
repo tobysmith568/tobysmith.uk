@@ -1,21 +1,11 @@
 <h1>Projects</h1>
-<article>
+<article *ngFor="let project of projects">
   <header>
     <h2>
-      <a routerLink="./walletqr">Wallet QR</a>
+      <a routerLink="./{{ project.slug }}">{{ project.title }}</a>
     </h2>
-    <h4>Something about Wallet QR</h4>
+    <h4>{{ project.subtitle }}</h4>
   </header>
-  <p>Wallet QR is a website designed for this and that and this and that. Check it out today</p>
-  <hr />
-</article>
-<article>
-  <header>
-    <h2>
-      <a routerLink="./read-receipt">Read Receipt</a>
-    </h2>
-    <h4>Something about Read Receipt</h4>
-  </header>
-  <p>Read Receipt is a website designed for this and that and this and that. Check it out today</p>
+  <div [innerHtml]="project.content.html | safeHtml"></div>
   <hr />
 </article>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { Project, ProjectsServiceGQL } from "src/app/services/api/projects/projects.service";
 
 @Component({
   selector: "app-projects",
@@ -6,7 +7,12 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./projects.component.scss"]
 })
 export class ProjectsComponent implements OnInit {
-  constructor() {}
+  public projects?: Project[] = [];
 
-  ngOnInit(): void {}
+  constructor(private readonly projectsServiceGql: ProjectsServiceGQL) {}
+
+  async ngOnInit(): Promise<void> {
+    const result = await this.projectsServiceGql.fetch().toPromise();
+    this.projects = result.data.projects;
+  }
 }

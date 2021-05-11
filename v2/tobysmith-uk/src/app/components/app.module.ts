@@ -10,6 +10,10 @@ import { ContactModule } from "./pages/contact/contact.module";
 import { FourOhFourModule } from "./pages/four-oh-four/four-oh-four.module";
 import { HomeModule } from "./pages/home/home.module";
 import { ProjectsModule } from "./pages/projects/projects.module";
+import { GraphQLModule } from "../modules/graphql.module";
+import { HttpClientModule } from "@angular/common/http";
+import { ENVIRONMENT } from "src/environments/environment.interface";
+import { environment } from "src/environments/environment";
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,9 +27,16 @@ import { ProjectsModule } from "./pages/projects/projects.module";
     ProjectsModule,
     BlogModule,
     ContactModule,
-    FourOhFourModule
+    FourOhFourModule,
+    GraphQLModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: ENVIRONMENT,
+      useValue: environment
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

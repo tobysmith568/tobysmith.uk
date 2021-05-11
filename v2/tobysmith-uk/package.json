@@ -27,11 +27,14 @@
     "@angular/platform-server": "~11.2.12",
     "@angular/router": "~11.2.12",
     "@nguniversal/express-engine": "^11.2.1",
+    "apollo-angular": "^2.4.0",
     "express": "^4.15.2",
     "ngx-scrollbar": "^7.5.4",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
-    "zone.js": "~0.11.3"
+    "zone.js": "~0.11.3",
+    "@apollo/client": "^3.0.0",
+    "graphql": "^15.0.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1102.11",
