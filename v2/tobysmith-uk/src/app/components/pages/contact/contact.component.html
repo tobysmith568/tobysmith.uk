@@ -1,1 +1,32 @@
-<p>contact works!</p>
+<h1>Contact Me</h1>
+<p>Feel free to reach out me to via any of the methods below</p>
+<div class="externals">
+  <a class="external" target="_blank" ref="noopener noreferrer" [href]="'mailto:' + environment.email">
+    <img src="/assets/img/email.svg" />
+    <div>
+      <h3>Email</h3>
+      <p>{{ environment.email }}</p>
+    </div>
+  </a>
+  <a class="external" target="_blank" ref="noopener noreferrer" [href]="environment.github.url">
+    <img src="/assets/img/github.svg" />
+    <div>
+      <h3>GitHub</h3>
+      <p>{{ environment.github.username }}</p>
+    </div>
+  </a>
+  <a class="external" target="_blank" ref="noopener noreferrer" [href]="environment.linkedin.url">
+    <img src="/assets/img/linkedin.svg" />
+    <div>
+      <h3>LinkedIn</h3>
+      <p>{{ environment.github.username }}</p>
+    </div>
+  </a>
+  <a class="external" target="_blank" ref="noopener noreferrer" [href]="environment.facebook.url">
+    <img src="/assets/img/facebook.svg" />
+    <div>
+      <h3>Messenger</h3>
+      <p>{{ environment.facebook.username }}</p>
+    </div>
+  </a>
+</div>
