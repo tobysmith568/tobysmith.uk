@@ -2,10 +2,9 @@
   <input
     class="search-input"
     type="search"
-    value=""
     placeholder="search"
-    #searchbar
+    [(ngModel)]="searchTerm"
     [class.on-search]="onBlogSearch"
-    (keyup.enter)="search(searchbar.value)"
+    (keyup.enter)="search()"
   />
 </div>
