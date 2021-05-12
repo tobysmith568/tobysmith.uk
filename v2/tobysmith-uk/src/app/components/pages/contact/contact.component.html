@@ -30,3 +30,19 @@
     </div>
   </a>
 </div>
+
+<div class="contact-form">
+  <h2>Contact Form</h2>
+  <form autocomplete="off">
+    <label for="name">Name</label><br />
+    <input type="text" id="name" name="name" [(ngModel)]="name" /><br />
+
+    <label for="email">Email</label><br />
+    <input type="email" id="email" name="email" [(ngModel)]="email" /><br />
+
+    <label for="message">Message</label><br />
+    <textarea id="message" name="message" rows="5" [(ngModel)]="message"></textarea><br />
+
+    <input type="button" value="Send Message" (click)="submit()" />
+  </form>
+</div>

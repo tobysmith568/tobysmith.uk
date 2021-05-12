@@ -56,3 +56,29 @@ a:focus h3::after {
   opacity: 1;
   transform: translate3d(0, 0.05em, 0);
 }
+
+.contact-form {
+  display: grid;
+  align-items: center;
+  justify-content: center;
+
+  h2 {
+    margin-top: 5em;
+  }
+
+  input,
+  textarea {
+    font-size: 1em;
+    padding: 0.2em;
+    margin: 0.4em 0;
+  }
+
+  #name {
+    min-width: 200px;
+  }
+
+  input,
+  textarea {
+    min-width: 400px;
+  }
+}
