@@ -2,29 +2,31 @@ import { Injectable } from "@angular/core";
 import { gql, Query } from "apollo-angular";
 
 export interface Project {
-  slug: string;
   title: string;
   subtitle: string;
-  summary: {
+  content: {
     html: string;
   };
 }
 
 interface Response {
-  projects: Project[];
+  project: Project;
+}
+
+interface Variables {
+  slug: string;
 }
 
 @Injectable({
   providedIn: "root"
 })
-export class ProjectsServiceGQL extends Query<Response> {
+export class ProjectServiceGQL extends Query<Response, Variables> {
   document = gql`
-    query GetProjects {
-      projects {
-        slug
+    query GetProject($slug: String) {
+      project(where: { slug: $slug }) {
         title
         subtitle
-        summary {
+        content {
           html
         }
       }

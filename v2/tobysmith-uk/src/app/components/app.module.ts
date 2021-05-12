@@ -14,6 +14,7 @@ import { GraphQLModule } from "../modules/graphql.module";
 import { HttpClientModule } from "@angular/common/http";
 import { ENVIRONMENT } from "src/environments/environment.interface";
 import { environment } from "src/environments/environment";
+import { PagesModule } from "./pages/pages.module";
 
 @NgModule({
   declarations: [AppComponent],
@@ -22,12 +23,7 @@ import { environment } from "src/environments/environment";
     NgScrollbarModule,
     AppRoutingModule,
     GeneralModule,
-    HomeModule,
-    AboutModule,
-    ProjectsModule,
-    BlogModule,
-    ContactModule,
-    FourOhFourModule,
+    PagesModule,
     GraphQLModule,
     HttpClientModule,
     BrowserTransferStateModule
