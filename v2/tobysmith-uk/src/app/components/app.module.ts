@@ -15,6 +15,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { ENVIRONMENT } from "src/environments/environment.interface";
 import { environment } from "src/environments/environment";
 import { PagesModule } from "./pages/pages.module";
+import { RouterModule } from "@angular/router";
 
 @NgModule({
   declarations: [AppComponent],
@@ -26,7 +27,8 @@ import { PagesModule } from "./pages/pages.module";
     PagesModule,
     GraphQLModule,
     HttpClientModule,
-    BrowserTransferStateModule
+    BrowserTransferStateModule,
+    RouterModule
   ],
   providers: [
     {

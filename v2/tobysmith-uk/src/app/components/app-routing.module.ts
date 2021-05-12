@@ -15,6 +15,7 @@ const routes: Routes = [
   { path: "projects", component: ProjectsComponent, pathMatch: "prefix" },
   { path: "projects/:slug", component: ProjectComponent, pathMatch: "prefix" },
   { path: "blog", component: BlogComponent, pathMatch: "prefix" },
+  { path: "blog/search/:term", component: BlogComponent, pathMatch: "prefix" },
   { path: "blog/:slug", component: PostComponent, pathMatch: "prefix" },
   { path: "contact", component: ContactComponent, pathMatch: "prefix" },
   { path: "**", component: FourOhFourComponent }

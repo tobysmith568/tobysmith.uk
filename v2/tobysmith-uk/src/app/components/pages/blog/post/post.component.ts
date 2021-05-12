@@ -1,5 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, ParamMap } from "@angular/router";
+import { Subscription } from "rxjs";
 import { Post, PostServiceGQL } from "src/app/services/api/post/post.service";
 
 @Component({
@@ -7,13 +8,15 @@ import { Post, PostServiceGQL } from "src/app/services/api/post/post.service";
   templateUrl: "./post.component.html",
   styleUrls: ["./post.component.scss"]
 })
-export class PostComponent implements OnInit {
+export class PostComponent implements OnInit, OnDestroy {
+  private paramMapSubscription?: Subscription;
+
   public post?: Post;
 
   constructor(private readonly route: ActivatedRoute, private readonly postServiceGql: PostServiceGQL) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(async (params: ParamMap) => {
+    this.paramMapSubscription = this.route.paramMap.subscribe(async (params: ParamMap) => {
       const slug = params.get("slug") ?? undefined;
 
       if (!slug) {
@@ -23,5 +26,9 @@ export class PostComponent implements OnInit {
       const result = await this.postServiceGql.fetch({ slug }).toPromise();
       this.post = result.data.post;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.paramMapSubscription?.unsubscribe();
   }
 }
