@@ -5,7 +5,7 @@ export interface Project {
   slug: string;
   title: string;
   subtitle: string;
-  content: {
+  summary: {
     html: string;
   };
 }
@@ -24,7 +24,7 @@ export class ProjectsServiceGQL extends Query<Response> {
         slug
         title
         subtitle
-        content {
+        summary {
           html
         }
       }

@@ -1,7 +1,12 @@
 @import "/src/app/styles/colours.scss";
 
-article {
-  margin-top: 3em;
+article,
+hr {
+  margin: 1.5em 0em;
+}
+
+hr {
+  border-bottom: $blue 2px solid;
 }
 
 header {

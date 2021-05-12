@@ -6,6 +6,6 @@
     </h2>
     <h4>{{ project.subtitle }}</h4>
   </header>
-  <div [innerHtml]="project.content.html | safeHtml"></div>
+  <div [innerHtml]="project.summary.html | safeHtml"></div>
   <hr />
 </article>
