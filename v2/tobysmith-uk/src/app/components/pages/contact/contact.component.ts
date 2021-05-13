@@ -1,6 +1,10 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { EmailService } from "src/app/services/email/email.service";
+import { ProgressService } from "src/app/services/progress/progress.service";
+import { TimeoutService } from "src/app/services/timeout/timeout.service";
 import { ENVIRONMENT, IEnvironment } from "src/environments/environment.interface";
+
+type State = "unsent" | "saving" | "sent" | "error";
 
 @Component({
   selector: "app-contact",
@@ -12,6 +16,8 @@ export class ContactComponent implements OnInit {
   public email = "";
   public message = "";
 
+  public state: State = "unsent";
+
   public get isValid(): boolean {
     const validName = !!this.name && this.name.length > 0;
     const validEmail = !!this.email && !!this.email.match(/^\S+@\S+\.\S+$/);
@@ -22,12 +28,28 @@ export class ContactComponent implements OnInit {
 
   constructor(
     @Inject(ENVIRONMENT) public readonly environment: IEnvironment,
-    private readonly emailService: EmailService
+    private readonly emailService: EmailService,
+    private readonly progressService: ProgressService,
+    private readonly timeoutService: TimeoutService
   ) {}
 
   ngOnInit(): void {}
 
   public async submit(): Promise<void> {
-    this.emailService.send(this.name, this.email, this.message);
+    this.progressService.start();
+    this.state = "saving";
+
+    try {
+      await this.timeoutService.waitAtleast(500, this.emailService.send(this.name, this.email, this.message));
+      this.state = "sent";
+    } catch {
+      this.state = "error";
+    } finally {
+      this.progressService.stop();
+    }
+  }
+
+  public reset(): void {
+    this.state = "unsent";
   }
 }

@@ -35,14 +35,23 @@
   <h2>Message Form</h2>
   <form autocomplete="off">
     <label for="name">Name</label><br />
-    <input type="text" id="name" name="name" [(ngModel)]="name" /><br />
+    <input type="text" id="name" name="name" [disabled]="state !== 'unsent'" [(ngModel)]="name" /><br />
 
     <label for="email">Email</label><br />
-    <input type="email" id="email" name="email" [(ngModel)]="email" /><br />
+    <input type="email" id="email" name="email" [disabled]="state !== 'unsent'" [(ngModel)]="email" /><br />
 
     <label for="message">Message</label><br />
-    <textarea id="message" name="message" rows="5" [(ngModel)]="message"></textarea><br />
+    <textarea id="message" name="message" rows="5" [disabled]="state !== 'unsent'" [(ngModel)]="message"></textarea
+    ><br />
 
-    <input type="button" value="Send Message" [disabled]="!isValid" (click)="submit()" />
+    <input
+      *ngIf="state === 'unsent' || state === 'saving'"
+      type="button"
+      value="Send Message"
+      [disabled]="!isValid || state === 'saving'"
+      (click)="submit()"
+    />
+    <h3 *ngIf="state === 'sent'">Sent!</h3>
+    <input *ngIf="state === 'error'" type="button" value="Error. Try Again?" (click)="reset()" />
   </form>
 </div>

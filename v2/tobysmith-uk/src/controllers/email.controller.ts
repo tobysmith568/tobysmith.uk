@@ -34,7 +34,8 @@ export class EmailController implements IController {
     try {
       await this.emailService.sendTextEmail(to, name, from, `New message from ${name} via tobysmith.uk`, fullMessage);
     } catch {
-      res.json({ success: false });
+      res.status(500).json({ success: false });
+      return;
     }
 
     res.json({ success: true });
