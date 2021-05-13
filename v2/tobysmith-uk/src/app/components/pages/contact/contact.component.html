@@ -32,7 +32,7 @@
 </div>
 
 <div class="contact-form">
-  <h2>Contact Form</h2>
+  <h2>Message Form</h2>
   <form autocomplete="off">
     <label for="name">Name</label><br />
     <input type="text" id="name" name="name" [(ngModel)]="name" /><br />
@@ -43,6 +43,6 @@
     <label for="message">Message</label><br />
     <textarea id="message" name="message" rows="5" [(ngModel)]="message"></textarea><br />
 
-    <input type="button" value="Send Message" (click)="submit()" />
+    <input type="button" value="Send Message" [disabled]="!isValid" (click)="submit()" />
   </form>
 </div>

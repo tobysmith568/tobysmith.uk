@@ -12,6 +12,14 @@ export class ContactComponent implements OnInit {
   public email = "";
   public message = "";
 
+  public get isValid(): boolean {
+    const validName = !!this.name && this.name.length > 0;
+    const validEmail = !!this.email && !!this.email.match(/^\S+@\S+\.\S+$/);
+    const validMessage = !!this.message && this.message.length > 0;
+
+    return validName && validEmail && validMessage;
+  }
+
   constructor(
     @Inject(ENVIRONMENT) public readonly environment: IEnvironment,
     private readonly emailService: EmailService
