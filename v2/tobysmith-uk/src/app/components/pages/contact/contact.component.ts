@@ -36,7 +36,6 @@ export class ContactComponent implements OnInit {
   ngOnInit(): void {}
 
   public async submit(): Promise<void> {
-    this.progressService.start();
     this.state = "saving";
 
     try {
@@ -44,8 +43,6 @@ export class ContactComponent implements OnInit {
       this.state = "sent";
     } catch {
       this.state = "error";
-    } finally {
-      this.progressService.stop();
     }
   }
 

@@ -11,11 +11,12 @@ import { FourOhFourModule } from "./pages/four-oh-four/four-oh-four.module";
 import { HomeModule } from "./pages/home/home.module";
 import { ProjectsModule } from "./pages/projects/projects.module";
 import { GraphQLModule } from "../modules/graphql.module";
-import { HttpClientModule } from "@angular/common/http";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { ENVIRONMENT } from "src/environments/environment.interface";
 import { environment } from "src/environments/environment";
 import { PagesModule } from "./pages/pages.module";
 import { RouterModule } from "@angular/router";
+import { ProgressInterceptor } from "../services/progress/progress.service";
 
 @NgModule({
   declarations: [AppComponent],
@@ -34,6 +35,11 @@ import { RouterModule } from "@angular/router";
     {
       provide: ENVIRONMENT,
       useValue: environment
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ProgressInterceptor,
+      multi: true
     }
   ],
   bootstrap: [AppComponent]
