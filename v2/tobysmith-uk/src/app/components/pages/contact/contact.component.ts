@@ -1,6 +1,5 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { EmailService } from "src/app/services/email/email.service";
-import { ProgressService } from "src/app/services/progress/progress.service";
 import { TimeoutService } from "src/app/services/timeout/timeout.service";
 import { ENVIRONMENT, IEnvironment } from "src/environments/environment.interface";
 
@@ -29,7 +28,6 @@ export class ContactComponent implements OnInit {
   constructor(
     @Inject(ENVIRONMENT) public readonly environment: IEnvironment,
     private readonly emailService: EmailService,
-    private readonly progressService: ProgressService,
     private readonly timeoutService: TimeoutService
   ) {}
 
