@@ -1,1 +1,13 @@
-<p>about works!</p>
+<div *ngIf="about">
+  <div class="intro">
+    <img [src]="about.avatar.url" draggable="false" alt="Profile picture of Toby" class="avatar" />
+    <div [innerHtml]="about.topText.html | safeHtml"></div>
+  </div>
+  <div class="about-me">
+    <div class="about-me" [innerHtml]="about.mainText.html | safeHtml"></div>
+
+    <div class="tags">
+      <app-tag *ngFor="let tag of about.tags" [label]="tag.name" [url]="tag.url"></app-tag>
+    </div>
+  </div>
+</div>

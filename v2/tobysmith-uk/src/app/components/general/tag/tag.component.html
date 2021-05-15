@@ -1,0 +1,12 @@
+<a *ngIf="external" [href]="url" class="container" rel="noopener noreferrer" target="_blank">
+  <img class="icon" src="assets/img/github.svg" />
+  <span class="label">
+    {{ label }}
+  </span>
+</a>
+<a *ngElse [routerLink]="url" class="container">
+  <img class="icon" src="assets/img/github.svg" />
+  <span class="label">
+    {{ label }}
+  </span>
+</a>

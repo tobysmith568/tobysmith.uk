@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { gql, Query } from "apollo-angular";
+import { SEO } from "../seo.interface";
 
 export interface Project {
   slug: string;
@@ -12,6 +13,7 @@ export interface Project {
 
 interface Response {
   projects: Project[];
+  seo: SEO;
 }
 
 @Injectable({
@@ -20,6 +22,10 @@ interface Response {
 export class ProjectsServiceGQL extends Query<Response> {
   document = gql`
     query GetProjects {
+      seo(where: { identifier: "projects" }) {
+        title
+        description
+      }
       projects {
         slug
         title
