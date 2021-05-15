@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from "@angular/core";
 import { EmailService } from "src/app/services/email/email.service";
+import { MetaService } from "src/app/services/meta/meta.service";
 import { TimeoutService } from "src/app/services/timeout/timeout.service";
 import { ENVIRONMENT, IEnvironment } from "src/environments/environment.interface";
 
@@ -28,10 +29,15 @@ export class ContactComponent implements OnInit {
   constructor(
     @Inject(ENVIRONMENT) public readonly environment: IEnvironment,
     private readonly emailService: EmailService,
-    private readonly timeoutService: TimeoutService
+    private readonly timeoutService: TimeoutService,
+    private readonly metaService: MetaService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.metaService
+      .title("Contact Me")
+      .description("Get in contact with Toby using one of these methods including email, and LinkedIn");
+  }
 
   public async submit(): Promise<void> {
     this.state = "saving";

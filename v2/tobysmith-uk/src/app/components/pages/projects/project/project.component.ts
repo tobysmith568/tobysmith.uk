@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import { Subscription } from "rxjs";
 import { Project, ProjectServiceGQL } from "src/app/services/api/project/project.service";
+import { MetaService } from "src/app/services/meta/meta.service";
 
 @Component({
   selector: "app-project",
@@ -13,7 +14,11 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
   public project?: Project;
 
-  constructor(private readonly route: ActivatedRoute, private readonly projectServiceGql: ProjectServiceGQL) {}
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly projectServiceGql: ProjectServiceGQL,
+    private readonly metaService: MetaService
+  ) {}
 
   ngOnInit(): void {
     this.paramMapSubscription = this.route.paramMap.subscribe(async (params: ParamMap) => {
@@ -25,6 +30,11 @@ export class ProjectComponent implements OnInit, OnDestroy {
 
       const result = await this.projectServiceGql.fetch({ slug }).toPromise();
       this.project = result.data.project;
+
+      if (!!result.data.project.seo) {
+        const { title, description } = result.data.project.seo;
+        this.metaService.title(title).description(description);
+      }
     });
   }
 

@@ -19,6 +19,11 @@ export class MetaService {
   }
 
   public title(title: string): MetaService {
+    if (!title || title.length === 0) {
+      this.titleService.setTitle("Toby Smith");
+      return this;
+    }
+
     this.titleService.setTitle(`${title} - Toby Smith`);
     return this;
   }
