@@ -1,0 +1,46 @@
+.container {
+  position: absolute;
+  top: 0;
+  bottom: 10em;
+  display: grid;
+  align-items: center;
+}
+
+h1 {
+  font-size: 4em;
+  margin-bottom: 0px;
+  margin-right: 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  span {
+    font-size: 2rem;
+    color: grey;
+    margin-left: 1em;
+    animation: cycle 3s infinite;
+
+    &::before {
+      content: "-";
+      margin-right: 1rem;
+    }
+  }
+}
+
+@keyframes cycle {
+  0% {
+    opacity: 0%;
+  }
+  15% {
+    opacity: 100%;
+  }
+  80% {
+    opacity: 100%;
+  }
+  95% {
+    opacity: 0%;
+  }
+  100% {
+    opacity: 0%;
+  }
+}
