@@ -11,11 +11,11 @@ interface SendResult {
 export class EmailService {
   constructor(private readonly httpClient: HttpClient) {}
 
-  public async send(name: string, email: string, message: string): Promise<void> {
+  public async send(name: string, email: string, message: string, recaptcha: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
       try {
         const sendResult = await this.httpClient
-          .post<SendResult>("/api/send-email", { name, email, message }, { observe: "response" })
+          .post<SendResult>("/api/send-email", { name, email, message, recaptcha }, { observe: "response" })
           .toPromise();
 
         if (sendResult.ok && sendResult.body?.success) {

@@ -12,6 +12,9 @@ interface IConfig {
     from: string;
     to: string;
   };
+  recaptcha: {
+    secret: string;
+  };
 }
 
 @singleton()
@@ -31,6 +34,9 @@ export class EnvironmentService {
         pass: process.env.EMAIL_PASS ?? "",
         from: process.env.EMAIL_FROM ?? "",
         to: process.env.EMAIL_TO ?? ""
+      },
+      recaptcha: {
+        secret: process.env.RECAPTCHA_SECRET ?? ""
       }
     });
   }

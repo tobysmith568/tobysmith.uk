@@ -55,3 +55,4 @@
     <input *ngIf="state === 'error'" type="button" value="Error. Try Again?" (click)="reset()" />
   </form>
 </div>
+<re-captcha (resolved)="resolvedReCaptcha($event)" size="invisible" siteKey="{{ recaptchaPublicKey }}"></re-captcha>
