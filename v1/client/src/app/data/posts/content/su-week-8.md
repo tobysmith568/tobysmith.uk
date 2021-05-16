@@ -1,7 +1,0 @@
-I spent the whole of the last week animating paths for the targets.
-
-About half the targets aren’t active when the game starts however, they only appear when other targets are shot, this forces the player to a small extent to shoot them in an order I can decide on.
-
-Most walk on linear paths, where they stop and turn on the spot at each end. The targets are easier to shoot when they’re stopped which means that players can wait until these targets are at the end of their paths before they shoot them, this will however mean that their overall time is longer. A couple of targets walk in small circles, one of which spends half it’s time walking behind something and out of line of sight for the player – for a quick time players will need to prioritise this target while it is available to avoid having to wait for it later. Another target will need a similar priority as it alternates between hiding behind cover and showing itself. Unlike the other which is not available at times, this one is doing so from the start of the game.
-
-My goals for the next week will be to work on the menu system of my game – this will hopefully include splash, game over (successful), and game over (unsuccessful) screens too.
