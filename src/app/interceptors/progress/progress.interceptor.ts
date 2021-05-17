@@ -1,7 +1,14 @@
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpResponse } from "@angular/common/http";
+import {
+  HttpInterceptor,
+  HttpRequest,
+  HttpHandler,
+  HttpEvent,
+  HttpResponse,
+  HttpErrorResponse
+} from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { Observable, throwError } from "rxjs";
+import { catchError, map } from "rxjs/operators";
 import { ProgressService } from "src/app/services/progress/progress.service";
 
 @Injectable()
@@ -12,6 +19,10 @@ export class ProgressInterceptor implements HttpInterceptor {
     this.progressService.start();
 
     return next.handle(request).pipe(
+      catchError((error: HttpErrorResponse) => {
+        this.progressService.stop();
+        return throwError(error);
+      }),
       map(event => {
         if (event instanceof HttpResponse) {
           this.progressService.stop();
