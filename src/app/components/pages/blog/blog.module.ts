@@ -4,9 +4,18 @@ import { BlogComponent } from "./blog.component";
 import { RouterModule } from "@angular/router";
 import { PipesModule } from "src/app/pipes/pipes.module";
 import { PostComponent } from "./post/post.component";
+import { DisqusModule, DISQUS_SHORTNAME } from "ngx-disqus";
+import { ENVIRONMENT, IEnvironment } from "src/environments/environment.interface";
 
 @NgModule({
   declarations: [BlogComponent, PostComponent],
-  imports: [CommonModule, RouterModule, PipesModule]
+  imports: [CommonModule, RouterModule, PipesModule, DisqusModule],
+  providers: [
+    {
+      provide: DISQUS_SHORTNAME,
+      deps: [ENVIRONMENT],
+      useFactory: (environment: IEnvironment) => environment.disqusShortname
+    }
+  ]
 })
 export class BlogModule {}

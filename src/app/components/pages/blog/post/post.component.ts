@@ -12,6 +12,7 @@ import { MetaService } from "src/app/services/meta/meta.service";
 export class PostComponent implements OnInit, OnDestroy {
   private paramMapSubscription?: Subscription;
 
+  public slug?: string;
   public post?: Post;
 
   constructor(
@@ -30,6 +31,7 @@ export class PostComponent implements OnInit, OnDestroy {
 
       const result = await this.postServiceGql.fetch({ slug }).toPromise();
       this.post = result.data.post;
+      this.slug = slug;
 
       if (!!result.data.post.seo) {
         const { title, description } = result.data.post.seo;

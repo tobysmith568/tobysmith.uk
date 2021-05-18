@@ -34,6 +34,7 @@
     "express": "^4.15.2",
     "graphql": "^15.0.0",
     "ng-recaptcha": "^8.0.0",
+    "ngx-disqus": "^2.4.3",
     "ngx-progressbar": "^6.1.0",
     "ngx-scrollbar": "^7.5.4",
     "nodemailer": "^6.6.0",

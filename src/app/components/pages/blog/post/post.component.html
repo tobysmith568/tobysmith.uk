@@ -4,4 +4,5 @@
     <h4>{{ post.date | date: "dd MMM, yyyy" }}</h4>
   </header>
   <div [innerHtml]="post.content.html | safeHtml"></div>
+  <disqus *ngIf="slug" [identifier]="slug"></disqus>
 </article>

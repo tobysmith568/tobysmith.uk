@@ -6,6 +6,7 @@ export interface IEnvironment {
   production: boolean;
   apiUrl: string;
   recaptchaPublicKey: string;
+  disqusShortname: string;
   github: {
     username: string;
     url: string;
