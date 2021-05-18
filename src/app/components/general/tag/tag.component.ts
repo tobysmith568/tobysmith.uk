@@ -12,6 +12,9 @@ export class TagComponent {
   @Input()
   public url = "";
 
+  @Input()
+  public iconUrl: string | undefined = "";
+
   public get external(): boolean | undefined {
     if (!this.url) {
       return undefined;

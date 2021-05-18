@@ -16,8 +16,8 @@ export class AboutComponent implements OnInit {
     const result = await this.aboutServiceGql.fetch().toPromise();
     this.about = result.data.abouts[0] ?? undefined;
 
-    if (!!result.data.seo) {
-      const { title, description } = result.data.seo;
+    if (!!result.data.abouts[0]?.seo) {
+      const { title, description } = result.data.abouts[0].seo;
       this.metaService.title(title).description(description);
     }
   }

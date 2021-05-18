@@ -15,11 +15,14 @@ export interface About {
   tags: {
     name: string;
     url: string;
+    icon?: {
+      url: string;
+    };
   }[];
+  seo: SEO;
 }
 
 interface Response {
-  seo: SEO;
   abouts: About[];
 }
 
@@ -29,10 +32,6 @@ interface Response {
 export class AboutServiceGQL extends Query<Response> {
   document = gql`
     query About {
-      seo(where: { identifier: "about" }) {
-        title
-        description
-      }
       abouts(first: 1) {
         avatar {
           url
@@ -46,6 +45,9 @@ export class AboutServiceGQL extends Query<Response> {
         tags {
           name
           url
+          icon {
+            url
+          }
         }
         seo {
           title
