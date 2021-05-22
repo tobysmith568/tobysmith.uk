@@ -16,7 +16,12 @@ const STATE_KEY = makeStateKey<any>("apollo.state");
     },
     {
       provide: APOLLO_OPTIONS,
-      useFactory(httpLink: HttpLink, cache: InMemoryCache, transferState: TransferState, environment: IEnvironment) {
+      useFactory: (
+        httpLink: HttpLink,
+        cache: InMemoryCache,
+        transferState: TransferState,
+        environment: IEnvironment
+      ) => {
         const isBrowser = transferState.hasKey<any>(STATE_KEY);
 
         if (isBrowser) {
