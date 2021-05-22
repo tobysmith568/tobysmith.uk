@@ -48,6 +48,7 @@
       *ngIf="state === 'unsent' || state === 'saving'"
       type="button"
       value="Send Message"
+      class="submit"
       [disabled]="!isValid || state === 'saving'"
       (click)="submit()"
     />

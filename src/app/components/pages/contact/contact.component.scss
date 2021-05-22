@@ -51,6 +51,19 @@ a {
   }
 }
 
+.submit {
+  background-color: $blue;
+  border: $blue 1px solid;
+  color: $white;
+  border-radius: 3px;
+
+  &:disabled {
+    background-color: #eeeeee;
+    border: #d0d0d0 1px solid;
+    color: #9e9e9e;
+  }
+}
+
 a:hover h3::after,
 a:focus h3::after {
   opacity: 1;
