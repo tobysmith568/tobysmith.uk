@@ -38,7 +38,7 @@ export class EmailController implements IController {
       const recaptchaSuccess = await this.recaptchaService.verify(recaptcha);
 
       if (!recaptchaSuccess) {
-        res.status(500).json({ success: false });
+        res.status(401).json({ success: false });
         return;
       }
 
