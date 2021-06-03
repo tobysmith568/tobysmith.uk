@@ -53,6 +53,10 @@ export class ContactComponent implements OnInit {
   }
 
   public async resolvedReCaptcha(response: string): Promise<void> {
+    if (!response) {
+      return;
+    }
+
     try {
       await this.timeoutService.waitAtleast(500, this.emailService.send(this.name, this.email, this.message, response));
       this.state = "sent";
