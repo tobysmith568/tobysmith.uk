@@ -31,7 +31,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
       const result = await this.projectServiceGql.fetch({ slug }).toPromise();
       this.project = result.data.project;
 
-      if (!!result.data.project.seo) {
+      if (!!result.data?.project?.seo) {
         const { title, description } = result.data.project.seo;
         this.metaService.title(title).description(description);
       }

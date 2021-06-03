@@ -36,7 +36,7 @@ export class BlogComponent implements OnInit, OnDestroy {
       const result = await this.postsServiceGql.fetch().toPromise();
       this.posts = result.data.posts;
 
-      if (!!result.data.seo) {
+      if (!!result?.data?.seo) {
         const { title, description } = result.data.seo;
         this.metaService.title(title).description(description);
       }

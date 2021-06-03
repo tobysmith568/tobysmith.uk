@@ -16,7 +16,7 @@ export class ProjectsComponent implements OnInit {
     const result = await this.projectsServiceGql.fetch().toPromise();
     this.projects = result.data.projects;
 
-    if (!!result.data.seo) {
+    if (!!result?.data?.seo) {
       const { title, description } = result.data.seo;
       this.metaService.title(title).description(description);
     }
