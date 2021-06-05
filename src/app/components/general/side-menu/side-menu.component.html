@@ -1,4 +1,20 @@
 <div class="sidemenu" [class.open]="isOpen">
   <div class="overlay" (click)="isOpen = !isOpen"></div>
-  <div class="menu">Hello</div>
+  <div class="menu">
+    <div class="menu-item">
+      <a class="underline" routerLink="/" routerLinkActive="current" (click)="isOpen = false">Home</a>
+    </div>
+    <div class="menu-item">
+      <a class="underline" routerLink="about" routerLinkActive="current" (click)="isOpen = false">About</a>
+    </div>
+    <div class="menu-item">
+      <a class="underline" routerLink="projects" routerLinkActive="current" (click)="isOpen = false">Projects</a>
+    </div>
+    <div class="menu-item">
+      <a class="underline" routerLink="blog" routerLinkActive="current" (click)="isOpen = false">Blog</a>
+    </div>
+    <div class="menu-item">
+      <a class="underline" routerLink="contact" routerLinkActive="current" (click)="isOpen = false">Contact</a>
+    </div>
+  </div>
 </div>

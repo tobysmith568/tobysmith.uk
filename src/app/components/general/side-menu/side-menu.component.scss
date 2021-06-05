@@ -1,3 +1,4 @@
+@import "/src/app/styles/colours.scss";
 @import "/src/app/styles/sizes.scss";
 
 $transition: 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
@@ -8,16 +9,13 @@ $transition: 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 
   &.open {
     .overlay {
-      background-color: #00000000;
-
       @media only screen and (max-width: $mobileHeaderWidth) {
         background-color: #0000009e;
+        pointer-events: all;
       }
     }
 
     .menu {
-      left: -80%;
-
       @media only screen and (max-width: $mobileHeaderWidth) {
         left: -10%;
       }
@@ -32,6 +30,7 @@ $transition: 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
   background-color: #00000000;
   transition: background-color $transition;
   z-index: 10;
+  pointer-events: none;
 }
 
 .menu {
@@ -43,4 +42,18 @@ $transition: 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
   left: -80%;
   transition: left $transition;
   z-index: 10;
+}
+
+.menu-item {
+  margin-top: 2em;
+
+  a {
+    color: $white;
+    font-size: 1.4em;
+    font-weight: normal;
+
+    &::after {
+      background-color: $white;
+    }
+  }
 }
