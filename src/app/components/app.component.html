@@ -1,5 +1,6 @@
 <div class="site">
-  <app-header></app-header>
+  <app-header (toggleMobileMenu)="sideMenu.isOpen = !sideMenu.isOpen"></app-header>
+  <app-side-menu #sideMenu></app-side-menu>
   <ng-scrollbar>
     <div class="page">
       <router-outlet></router-outlet>

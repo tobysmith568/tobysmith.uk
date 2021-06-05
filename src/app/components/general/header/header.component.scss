@@ -1,4 +1,5 @@
 @import "/src/app/styles/colours.scss";
+@import "/src/app/styles/sizes.scss";
 
 .header {
   display: flex;
@@ -9,6 +10,10 @@
   background-color: $blue;
   padding: 0 2em;
   color: $white;
+
+  @media only screen and (max-width: $mobileHeaderWidth) {
+    justify-content: center;
+  }
 }
 
 .menu {
@@ -16,6 +21,32 @@
   flex-direction: row;
   align-items: stretch;
   height: 100%;
+
+  &.mobile {
+    display: none;
+    position: absolute;
+    height: 30px;
+    top: 15px;
+    left: 15px;
+    cursor: pointer;
+    padding: 0;
+
+    @media only screen and (max-width: $mobileHeaderWidth) {
+      display: flex;
+    }
+
+    img {
+      height: 30px;
+    }
+  }
+
+  &.right {
+    display: flex;
+
+    @media only screen and (max-width: $mobileHeaderWidth) {
+      display: none;
+    }
+  }
 }
 
 a {

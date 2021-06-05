@@ -7,10 +7,11 @@ import { SearchComponent } from "./header/search/search.component";
 import { FormsModule } from "@angular/forms";
 import { NgProgressModule } from "ngx-progressbar";
 import { TagComponent } from "./tag/tag.component";
+import { SideMenuComponent } from "./side-menu/side-menu.component";
 
 @NgModule({
-  declarations: [HeaderComponent, FooterComponent, SearchComponent, TagComponent],
+  declarations: [HeaderComponent, FooterComponent, SearchComponent, TagComponent, SideMenuComponent],
   imports: [CommonModule, RouterModule, FormsModule, NgProgressModule],
-  exports: [HeaderComponent, FooterComponent, TagComponent]
+  exports: [HeaderComponent, FooterComponent, TagComponent, SideMenuComponent]
 })
 export class GeneralModule {}

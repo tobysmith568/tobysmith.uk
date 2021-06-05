@@ -1,0 +1,46 @@
+@import "/src/app/styles/sizes.scss";
+
+$transition: 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+
+.sidemenu {
+  height: 100%;
+  width: 100%;
+
+  &.open {
+    .overlay {
+      background-color: #00000000;
+
+      @media only screen and (max-width: $mobileHeaderWidth) {
+        background-color: #0000009e;
+      }
+    }
+
+    .menu {
+      left: -80%;
+
+      @media only screen and (max-width: $mobileHeaderWidth) {
+        left: -10%;
+      }
+    }
+  }
+}
+
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: #00000000;
+  transition: background-color $transition;
+  z-index: 10;
+}
+
+.menu {
+  position: fixed;
+  height: 100%;
+  width: 80%;
+  padding-left: 15%;
+  background-color: dodgerblue;
+  left: -80%;
+  transition: left $transition;
+  z-index: 10;
+}

@@ -1,8 +1,11 @@
 <div class="header">
-  <div class="menu">
+  <a class="menu mobile" (click)="toggleMobileMenu.emit()">
+    <img src="assets/img/menu.svg" alt="Mobile menu button" />
+  </a>
+  <div class="menu left">
     <a routerLink="">Toby Smith</a>
   </div>
-  <div class="menu">
+  <div class="menu right">
     <app-search></app-search>
 
     <a routerLink="about" routerLinkActive="current"><span>About</span></a>
