@@ -1,3 +1,7 @@
+@import "/src/app/styles/sizes.scss";
+@import "@lunelson/sass-calc";
+@import "@lunelson/sass-lerp";
+
 .site {
   height: 100%;
   width: 100%;
@@ -7,8 +11,14 @@
 
 .page {
   flex-grow: 1;
-  width: 70%;
-  max-width: 1000px;
+  width: lerp(
+    (
+      1024px: 70%,
+      525px: 90%
+    ),
+    100%
+  );
+  max-width: min(1000px, 90%);
   margin: 2em auto auto auto;
   min-height: 100%;
 }

@@ -27,6 +27,8 @@
     "@angular/platform-server": "~11.2.12",
     "@angular/router": "~11.2.12",
     "@apollo/client": "^3.0.0",
+    "@lunelson/sass-calc": "^1.2.0",
+    "@lunelson/sass-lerp": "^1.0.0",
     "@nguniversal/express-engine": "^11.2.1",
     "apollo-angular": "^2.4.0",
     "axios": "^0.21.1",
