@@ -25,6 +25,7 @@
     code:only-child {
       display: block;
       margin: auto;
+      overflow: overlay;
 
       @media only screen and (max-width: $mobileWidth) {
         width: 100%;
