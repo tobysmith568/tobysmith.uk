@@ -1,3 +1,5 @@
+@import "/src/app/styles/sizes.scss";
+
 .container {
   position: absolute;
   top: 0;
@@ -14,11 +16,23 @@ h1 {
   flex-direction: row;
   align-items: center;
 
+  @media only screen and (max-width: 1024px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   span {
     font-size: 2rem;
     color: grey;
     margin-left: 1em;
     animation: cycle 3s infinite;
+
+    @media only screen and (max-width: 1024px) {
+      margin-left: 0;
+      &::before {
+        display: none;
+      }
+    }
 
     &::before {
       content: "-";
