@@ -11,7 +11,7 @@
   padding: 0 2em;
   color: $white;
 
-  @media only screen and (max-width: $mobileHeaderWidth) {
+  @media only screen and (max-width: $mobileWidth) {
     justify-content: center;
   }
 }
@@ -31,7 +31,7 @@
     cursor: pointer;
     padding: 0;
 
-    @media only screen and (max-width: $mobileHeaderWidth) {
+    @media only screen and (max-width: $mobileWidth) {
       display: flex;
     }
 
@@ -44,7 +44,7 @@
     display: none;
     text-transform: capitalize;
 
-    @media only screen and (max-width: $mobileHeaderWidth) {
+    @media only screen and (max-width: $mobileWidth) {
       display: flex;
     }
   }
@@ -53,7 +53,7 @@
   &.right {
     display: flex;
 
-    @media only screen and (max-width: $mobileHeaderWidth) {
+    @media only screen and (max-width: $mobileWidth) {
       display: none;
     }
   }

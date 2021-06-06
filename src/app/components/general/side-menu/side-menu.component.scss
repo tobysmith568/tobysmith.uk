@@ -9,14 +9,14 @@ $transition: 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 
   &.open {
     .overlay {
-      @media only screen and (max-width: $mobileHeaderWidth) {
+      @media only screen and (max-width: $mobileWidth) {
         background-color: #0000009e;
         pointer-events: all;
       }
     }
 
     .menu {
-      @media only screen and (max-width: $mobileHeaderWidth) {
+      @media only screen and (max-width: $mobileWidth) {
         left: -10%;
       }
     }
