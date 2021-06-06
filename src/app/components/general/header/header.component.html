@@ -1,7 +1,10 @@
 <div class="header">
-  <a class="menu mobile" (click)="toggleMobileMenu.emit()">
+  <a class="menu mobile-menu" (click)="toggleMobileMenu.emit()">
     <img src="assets/img/menu.svg" alt="Mobile menu button" />
   </a>
+  <div class="menu mobile-title">
+    <a>{{ mobileTitle }}</a>
+  </div>
   <div class="menu left">
     <a routerLink="">Toby Smith</a>
   </div>

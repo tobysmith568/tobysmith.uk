@@ -22,7 +22,7 @@
   align-items: stretch;
   height: 100%;
 
-  &.mobile {
+  &.mobile-menu {
     display: none;
     position: absolute;
     height: 30px;
@@ -40,6 +40,16 @@
     }
   }
 
+  &.mobile-title {
+    display: none;
+    text-transform: capitalize;
+
+    @media only screen and (max-width: $mobileHeaderWidth) {
+      display: flex;
+    }
+  }
+
+  &.left,
   &.right {
     display: flex;
 
