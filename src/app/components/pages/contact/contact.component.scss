@@ -1,16 +1,59 @@
 @import "/src/app/styles/colours.scss";
+@import "/src/app/styles/sizes.scss";
+
+$externalsBreak1: 1285px;
+$externalsBreak2: 960px;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  @media only screen and (max-width: $externalsBreak1) {
+    flex-direction: row-reverse;
+  }
+
+  @media only screen and (max-width: $externalsBreak2) {
+    flex-direction: column;
+  }
+}
 
 .externals {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   margin-top: 2em;
+
+  @media only screen and (max-width: $externalsBreak1) {
+    flex-direction: column;
+  }
+
+  @media only screen and (max-width: $externalsBreak2) {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    row-gap: 0.5em;
+  }
+
+  @media only screen and (max-width: $mobileWidth) {
+    grid-template-columns: 100%;
+    margin-top: 0;
+  }
 }
 
 .external {
   display: flex;
   flex-direction: row;
   align-items: center;
+
+  @media only screen and (max-width: $externalsBreak2) {
+    &:nth-child(even) {
+      flex-direction: row-reverse;
+    }
+  }
+
+  @media only screen and (max-width: $mobileWidth) {
+    flex-direction: row !important;
+  }
 
   img {
     height: 3em;
@@ -75,8 +118,16 @@ a:focus h3::after {
   align-items: center;
   justify-content: center;
 
+  @media only screen and (max-width: $externalsBreak1) {
+    justify-content: stretch;
+  }
+
   h2 {
     margin-top: 5em;
+
+    @media only screen and (max-width: $externalsBreak1) {
+      margin-top: 1em;
+    }
   }
 
   input,
@@ -84,14 +135,24 @@ a:focus h3::after {
     font-size: 1em;
     padding: 0.2em;
     margin: 0.4em 0;
+    min-width: 400px;
+
+    @media only screen and (max-width: $mobileWidth) {
+      min-width: 000px;
+      width: 100%;
+    }
   }
 
   #name {
     min-width: 200px;
   }
+}
 
-  input,
-  textarea {
-    min-width: 400px;
+.recaptcha-terms {
+  font-size: 0.7em;
+  max-width: 400px;
+
+  a {
+    color: $blue;
   }
 }
