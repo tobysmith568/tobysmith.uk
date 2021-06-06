@@ -1,13 +1,17 @@
 @import "/src/app/styles/colours.scss";
+@import "/src/app/styles/sizes.scss";
 
-app-project,
-app-post {
+.cms-content {
   img {
     display: block;
     width: 75%;
     height: auto;
     margin-left: auto;
     margin-right: auto;
+
+    @media only screen and (max-width: $mobileWidth) {
+      width: 100%;
+    }
   }
 
   code {
@@ -20,8 +24,11 @@ app-post {
   div.code p {
     code:only-child {
       display: block;
-      width: 75%;
       margin: auto;
+
+      @media only screen and (max-width: $mobileWidth) {
+        width: 100%;
+      }
     }
   }
 

@@ -3,5 +3,5 @@
     <h1>{{ project.title }}</h1>
     <h4>{{ project.subtitle }}</h4>
   </header>
-  <div [innerHtml]="project.content.html | safeHtml"></div>
+  <div class="cms-content" [innerHtml]="project.content.html | safeHtml"></div>
 </article>
