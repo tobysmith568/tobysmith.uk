@@ -1,4 +1,13 @@
-.hljs-punctuation {
+@import "./colours.scss";
+
+.code code {
+  color: #005cc5;
+}
+
+.hljs-punctuation,
+.hljs-attr,
+.hljs-meta,
+.hljs-function .hljs-params {
   color: #005cc5;
 }
 
@@ -8,4 +17,18 @@
 
 .hljs-string {
   color: #a31515;
+}
+
+.hljs-keyword,
+.hljs-function {
+  color: #b700db;
+}
+
+.hljs-title.function_ {
+  color: #145182;
+}
+
+.hljs-variable,
+.hljs-title.class_ {
+  color: #7b1fa2;
 }
