@@ -1,13 +1,10 @@
 @import "./colours.scss";
 
-.code code {
-  color: #005cc5;
-}
-
+.code code,
 .hljs-punctuation,
 .hljs-attr,
-.hljs-meta,
-.hljs-function .hljs-params {
+.hljs-function .hljs-params,
+.hljs-attribute {
   color: #005cc5;
 }
 
@@ -20,7 +17,8 @@
 }
 
 .hljs-keyword,
-.hljs-function {
+.hljs-function,
+.hljs-selector-pseudo {
   color: #b700db;
 }
 
@@ -29,6 +27,7 @@
 }
 
 .hljs-variable,
+.hljs-meta,
 .hljs-title.class_ {
   color: #7b1fa2;
 }
