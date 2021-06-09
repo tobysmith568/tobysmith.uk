@@ -26,6 +26,7 @@
       display: block;
       margin: auto;
       overflow: overlay;
+      padding: 0.5em;
 
       @media only screen and (max-width: $mobileWidth) {
         width: 100%;

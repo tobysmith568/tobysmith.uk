@@ -4,6 +4,7 @@ import { InMemoryCache } from "@apollo/client/core";
 import { HttpLink } from "apollo-angular/http";
 import { ENVIRONMENT, IEnvironment } from "src/environments/environment.interface";
 import { makeStateKey, TransferState } from "@angular/platform-browser";
+import { graphCmsContentLink } from "./graph-cms-content.link";
 
 const APOLLO_CACHE = new InjectionToken<InMemoryCache>("apollo-cache");
 const STATE_KEY = makeStateKey<any>("apollo.state");
@@ -33,8 +34,11 @@ const STATE_KEY = makeStateKey<any>("apollo.state");
           });
         }
 
+        const http = httpLink.create({ uri: environment.apiUrl });
+        const link = graphCmsContentLink.concat(http);
+
         return {
-          link: httpLink.create({ uri: environment.apiUrl }),
+          link,
           cache
         };
       },
