@@ -37,8 +37,8 @@ export class BlogComponent implements OnInit, OnDestroy {
       this.posts = result.data.posts;
 
       if (!!result?.data?.seo) {
-        const { title, description } = result.data.seo;
-        this.metaService.title(title).description(description);
+        const { title, description, noIndex } = result.data.seo;
+        this.metaService.title(title).description(description).noIndex(noIndex);
       }
     });
   }

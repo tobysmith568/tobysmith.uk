@@ -32,8 +32,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
       this.project = result.data.project;
 
       if (!!result.data?.project?.seo) {
-        const { title, description } = result.data.project.seo;
-        this.metaService.title(title).description(description);
+        const { title, description, noIndex } = result.data.project.seo;
+        this.metaService.title(title).description(description).noIndex(noIndex);
       }
     });
   }

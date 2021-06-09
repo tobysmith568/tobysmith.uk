@@ -25,6 +25,7 @@ export class ProjectsServiceGQL extends Query<Response> {
       seo(where: { identifier: "projects" }) {
         title
         description
+        noIndex
       }
       projects {
         slug

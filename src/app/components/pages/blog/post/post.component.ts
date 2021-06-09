@@ -34,8 +34,8 @@ export class PostComponent implements OnInit, OnDestroy {
       this.slug = slug;
 
       if (!!result?.data?.post?.seo) {
-        const { title, description } = result.data.post.seo;
-        this.metaService.title(title).description(description);
+        const { title, description, noIndex } = result.data.post.seo;
+        this.metaService.title(title).description(description).noIndex(noIndex);
       }
     });
   }

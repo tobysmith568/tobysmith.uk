@@ -17,8 +17,8 @@ export class ProjectsComponent implements OnInit {
     this.projects = result.data.projects;
 
     if (!!result?.data?.seo) {
-      const { title, description } = result.data.seo;
-      this.metaService.title(title).description(description);
+      const { title, description, noIndex } = result.data.seo;
+      this.metaService.title(title).description(description).noIndex(noIndex);
     }
   }
 }

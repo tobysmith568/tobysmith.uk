@@ -52,6 +52,7 @@ export class AboutServiceGQL extends Query<Response> {
         seo {
           title
           description
+          noIndex
         }
       }
     }

@@ -34,6 +34,7 @@ export class ProjectServiceGQL extends Query<Response, Variables> {
         seo {
           title
           description
+          noIndex
         }
       }
     }

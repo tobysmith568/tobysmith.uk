@@ -23,6 +23,7 @@ export class PostsServiceGQL extends Query<Response> {
       seo(where: { identifier: "posts" }) {
         title
         description
+        noIndex
       }
       posts(orderBy: date_DESC) {
         slug

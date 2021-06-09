@@ -17,8 +17,8 @@ export class AboutComponent implements OnInit {
     this.about = result.data.abouts[0] ?? undefined;
 
     if (!!result?.data?.abouts[0]?.seo) {
-      const { title, description } = result.data.abouts[0].seo;
-      this.metaService.title(title).description(description);
+      const { title, description, noIndex } = result.data.abouts[0].seo;
+      this.metaService.title(title).description(description).noIndex(noIndex);
     }
   }
 }

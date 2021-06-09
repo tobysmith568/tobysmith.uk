@@ -30,6 +30,7 @@ export class PostServiceGQL extends Query<Response> {
         seo {
           title
           description
+          noIndex
         }
       }
     }

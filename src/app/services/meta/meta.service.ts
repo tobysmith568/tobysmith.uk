@@ -18,7 +18,7 @@ export class MetaService {
     return this;
   }
 
-  public title(title: string): MetaService {
+  public title(title?: string): MetaService {
     if (!title || title.length === 0) {
       this.titleService.setTitle("Toby Smith");
       return this;
@@ -28,8 +28,23 @@ export class MetaService {
     return this;
   }
 
-  public description(description: string): MetaService {
-    this.meta.updateTag({ name: "description", content: description });
+  public description(description?: string): MetaService {
+    if (!!description) {
+      this.meta.updateTag({ name: "description", content: description });
+      return this;
+    }
+
+    this.meta.removeTag("name='description'");
+    return this;
+  }
+
+  public noIndex(noIndex?: boolean): MetaService {
+    if (!!noIndex) {
+      this.meta.updateTag({ name: "robots", content: "noIndex" });
+      return this;
+    }
+
+    this.meta.removeTag("name='robots'");
     return this;
   }
 }
