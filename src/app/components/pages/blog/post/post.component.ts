@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import { Subscription } from "rxjs";
 import { Post, PostServiceGQL } from "src/app/services/api/post/post.service";
+import { FourOhFourService } from "src/app/services/FourOhFour/four-oh-four.service";
 import { MetaService } from "src/app/services/meta/meta.service";
 
 @Component({
@@ -18,7 +19,8 @@ export class PostComponent implements OnInit, OnDestroy {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly postServiceGql: PostServiceGQL,
-    private readonly metaService: MetaService
+    private readonly metaService: MetaService,
+    private readonly fourOhFourService: FourOhFourService
   ) {}
 
   ngOnInit(): void {
@@ -26,10 +28,17 @@ export class PostComponent implements OnInit, OnDestroy {
       const slug = params.get("slug") ?? undefined;
 
       if (!slug) {
+        this.fourOhFourService.GoTo404();
         return;
       }
 
       const result = await this.postServiceGql.fetch({ slug }).toPromise();
+
+      if (!result.data.post) {
+        this.fourOhFourService.GoTo404();
+        return;
+      }
+
       this.post = result.data.post;
       this.slug = slug;
 

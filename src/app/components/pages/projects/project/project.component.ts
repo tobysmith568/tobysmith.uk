@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import { Subscription } from "rxjs";
 import { Project, ProjectServiceGQL } from "src/app/services/api/project/project.service";
+import { FourOhFourService } from "src/app/services/FourOhFour/four-oh-four.service";
 import { MetaService } from "src/app/services/meta/meta.service";
 
 @Component({
@@ -17,7 +18,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly projectServiceGql: ProjectServiceGQL,
-    private readonly metaService: MetaService
+    private readonly metaService: MetaService,
+    private readonly fourOhFourService: FourOhFourService
   ) {}
 
   ngOnInit(): void {
@@ -25,10 +27,17 @@ export class ProjectComponent implements OnInit, OnDestroy {
       const slug = params.get("slug") ?? undefined;
 
       if (!slug) {
+        this.fourOhFourService.GoTo404();
         return;
       }
 
       const result = await this.projectServiceGql.fetch({ slug }).toPromise();
+
+      if (!result.data.project) {
+        this.fourOhFourService.GoTo404();
+        return;
+      }
+
       this.project = result.data.project;
 
       if (!!result.data?.project?.seo) {

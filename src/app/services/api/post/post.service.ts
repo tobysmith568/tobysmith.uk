@@ -12,7 +12,7 @@ export interface Post {
 }
 
 interface Response {
-  post: Post;
+  post?: Post;
 }
 
 @Injectable({
