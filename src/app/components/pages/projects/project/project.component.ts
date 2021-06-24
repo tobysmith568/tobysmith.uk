@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, ParamMap } from "@angular/router";
 import { Subscription } from "rxjs";
 import { Project, ProjectServiceGQL } from "src/app/services/api/project/project.service";
-import { FourOhFourService } from "src/app/services/FourOhFour/four-oh-four.service";
+import { FourOhFourService } from "src/app/services/four-oh-four/four-oh-four.service";
 import { MetaService } from "src/app/services/meta/meta.service";
 
 @Component({
