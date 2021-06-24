@@ -44,6 +44,11 @@
     display: none;
     text-transform: capitalize;
 
+    h1 {
+      font-size: 1.3em;
+      font-weight: normal;
+    }
+
     @media only screen and (max-width: $mobileWidth) {
       display: flex;
     }
