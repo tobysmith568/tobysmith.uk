@@ -24,13 +24,14 @@ export const graphCmsContentLink = new ApolloLink((operation, forward) => {
         const { html } = response.data[key]?.content;
         const $ = Cheerio.load(html);
 
-        $("div.code p code").replaceWith(function (): Cheerio.Cheerio<Cheerio.Node> {
+        $("pre code").replaceWith(function (): Cheerio.Cheerio<Cheerio.Node> {
           const unformattedCode = $(this).text() ?? "";
 
           const classes = $(this).parent().parent().attr("class");
-          const languageClass = classes?.split(" ").find(value => value !== "code") ?? "javascript";
+          const languageClass = classes?.split(" ").find(value => value !== "code");
 
-          const formattedCode = hljs.highlight(unformattedCode, { language: languageClass }).value;
+          const formattedCode = format(unformattedCode, languageClass);
+
           $(this).html(formattedCode);
           return $(this);
         });
@@ -42,3 +43,11 @@ export const graphCmsContentLink = new ApolloLink((operation, forward) => {
     return response;
   });
 });
+
+const format = (unformattedCode: string, language?: string) => {
+  if (!!language) {
+    return hljs.highlight(unformattedCode, { language }).value;
+  }
+
+  return hljs.highlightAuto(unformattedCode).value;
+};

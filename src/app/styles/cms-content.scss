@@ -21,16 +21,14 @@
     white-space: pre;
   }
 
-  div.code p {
-    code:only-child {
-      display: block;
-      margin: auto;
-      overflow: overlay;
-      padding: 0.5em;
+  pre code {
+    display: block;
+    margin: auto;
+    overflow: overlay;
+    padding: 0.5em;
 
-      @media only screen and (max-width: $mobileWidth) {
-        width: 100%;
-      }
+    @media only screen and (max-width: $mobileWidth) {
+      width: 100%;
     }
   }
 
