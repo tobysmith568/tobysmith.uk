@@ -39,4 +39,11 @@
     background: $paleBlue;
     border-left: $blue 4px solid;
   }
+
+  ul,
+  ol {
+    li {
+      margin-bottom: 0.5em;
+    }
+  }
 }
