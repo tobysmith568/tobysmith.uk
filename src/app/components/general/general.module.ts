@@ -8,10 +8,18 @@ import { FormsModule } from "@angular/forms";
 import { NgProgressModule } from "ngx-progressbar";
 import { TagComponent } from "./tag/tag.component";
 import { SideMenuComponent } from "./side-menu/side-menu.component";
+import { BackButtonComponent } from "./back-button/back-button.component";
 
 @NgModule({
-  declarations: [HeaderComponent, FooterComponent, SearchComponent, TagComponent, SideMenuComponent],
+  declarations: [
+    HeaderComponent,
+    FooterComponent,
+    SearchComponent,
+    TagComponent,
+    SideMenuComponent,
+    BackButtonComponent
+  ],
   imports: [CommonModule, RouterModule, FormsModule, NgProgressModule],
-  exports: [HeaderComponent, FooterComponent, TagComponent, SideMenuComponent]
+  exports: [HeaderComponent, FooterComponent, TagComponent, SideMenuComponent, BackButtonComponent]
 })
 export class GeneralModule {}
