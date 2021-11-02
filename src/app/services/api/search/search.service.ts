@@ -1,5 +1,6 @@
-import { Injectable } from "@angular/core";
-import { gql, Query } from "apollo-angular";
+import { Inject, Injectable } from "@angular/core";
+import { Apollo, gql, Query } from "apollo-angular";
+import { ENVIRONMENT, IEnvironment } from "src/environments/environment.interface";
 import { Post } from "../posts/posts.service";
 
 interface Response {
@@ -14,9 +15,13 @@ interface Variables {
   providedIn: "root"
 })
 export class SearchServiceGQL extends Query<Response, Variables> {
+  constructor(apollo: Apollo, @Inject(ENVIRONMENT) public readonly environment: IEnvironment) {
+    super(apollo);
+  }
+
   document = gql`
     query Search($term: String) {
-      posts(where: { _search: $term }) {
+      posts(where: { AND: [{_search: $term}${this.allowDevOnly()}] }) {
         slug
         title
         date
@@ -24,4 +29,12 @@ export class SearchServiceGQL extends Query<Response, Variables> {
       }
     }
   `;
+
+  private allowDevOnly(): string {
+    if (this.environment.production) {
+      return ", { OR: [{devOnly: null}, {devOnly: false}] } ";
+    }
+
+    return "";
+  }
 }
