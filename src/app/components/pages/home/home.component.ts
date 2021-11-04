@@ -9,7 +9,7 @@ import { SsrService } from "src/app/services/ssr/ssr.service";
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private currentPhrase = 0;
-  private phrases = ["Full-stack developer", "TypeScript fanatic", "Burrito over-filler", "NPM package author"];
+  private phrases = ["Full-stack developer", "TypeScript fanatic", "Burrito over-filler", "npm package author"];
 
   private timeout: NodeJS.Timeout | undefined;
 
