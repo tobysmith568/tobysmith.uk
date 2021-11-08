@@ -9,6 +9,7 @@ import { APP_BASE_HREF } from "@angular/common";
 import { existsSync } from "fs";
 import { container } from "tsyringe";
 import { json } from "express";
+import { RedirectController } from "src/controllers/redirect.controller";
 import { EmailController } from "src/controllers/email.controller";
 
 export function app(): express.Express {
@@ -16,6 +17,7 @@ export function app(): express.Express {
   const distFolder = join(process.cwd(), "dist/tobysmith-uk/browser");
   const indexHtml = existsSync(join(distFolder, "index.original.html")) ? "index.original.html" : "index";
 
+  const redirectController = container.resolve(RedirectController);
   const emailController = container.resolve(EmailController);
 
   server.engine(
@@ -28,6 +30,7 @@ export function app(): express.Express {
   server.set("view engine", "html");
   server.set("views", distFolder);
 
+  server.use("", redirectController.getRouter());
   server.use("/api/send-email", json(), emailController.getRouter());
 
   server.get("*.*", express.static(distFolder, { maxAge: "1y" }));

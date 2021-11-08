@@ -3,6 +3,11 @@ import { singleton } from "tsyringe";
 
 config();
 
+interface Redirect {
+  key: string;
+  url: string;
+}
+
 interface IConfig {
   email: {
     host: string;
@@ -15,6 +20,7 @@ interface IConfig {
   recaptcha: {
     secret: string;
   };
+  redirects: Redirect[];
 }
 
 @singleton()
@@ -26,6 +32,17 @@ export class EnvironmentService {
   }
 
   constructor() {
+    const redirects: Redirect[] = [];
+
+    for (const fullKey of Object.keys(process.env)) {
+      if (fullKey.startsWith("REDIRECT_")) {
+        const key = fullKey.substr(9).toLowerCase();
+        const url = process.env[fullKey] ?? "https://tobysmith.uk";
+
+        redirects.push({ key, url });
+      }
+    }
+
     this._config = Object.freeze({
       email: {
         host: process.env.EMAIL_HOST ?? "",
@@ -37,7 +54,8 @@ export class EnvironmentService {
       },
       recaptcha: {
         secret: process.env.RECAPTCHA_SECRET ?? ""
-      }
+      },
+      redirects
     });
   }
 
