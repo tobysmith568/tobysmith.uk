@@ -31,7 +31,7 @@
     "@lunelson/sass-lerp": "^1.0.0",
     "@nguniversal/express-engine": "^11.2.1",
     "apollo-angular": "^2.4.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "cheerio": "^1.0.0-rc.10",
     "dotenv": "^9.0.2",
     "express": "^4.15.2",
