@@ -27,7 +27,7 @@ export class ProjectsServiceGQL extends Query<Response> {
         description
         noIndex
       }
-      projects {
+      projects(orderBy: order_DESC) {
         slug
         title
         subtitle
