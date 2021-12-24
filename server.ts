@@ -11,6 +11,7 @@ import { container } from "tsyringe";
 import { json } from "express";
 import { RedirectController } from "src/controllers/redirect.controller";
 import { EmailController } from "src/controllers/email.controller";
+import { RssController } from "src/controllers/rss.controller";
 
 export function app(): express.Express {
   const server = express();
@@ -19,6 +20,7 @@ export function app(): express.Express {
 
   const redirectController = container.resolve(RedirectController);
   const emailController = container.resolve(EmailController);
+  const rssController = container.resolve(RssController);
 
   server.engine(
     "html",
@@ -32,6 +34,7 @@ export function app(): express.Express {
 
   server.use("", redirectController.getRouter());
   server.use("/api/send-email", json(), emailController.getRouter());
+  server.use("/blog/rss", rssController.getRouter());
 
   server.get("*.*", express.static(distFolder, { maxAge: "1y" }));
 

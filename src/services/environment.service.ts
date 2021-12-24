@@ -21,6 +21,7 @@ interface IConfig {
     secret: string;
   };
   redirects: Redirect[];
+  apiUrl: string;
 }
 
 @singleton()
@@ -55,7 +56,8 @@ export class EnvironmentService {
       recaptcha: {
         secret: process.env.RECAPTCHA_SECRET ?? ""
       },
-      redirects
+      redirects,
+      apiUrl: process.env.API_URL ?? ""
     });
   }
 
