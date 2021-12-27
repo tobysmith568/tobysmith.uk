@@ -1,11 +1,11 @@
 <h1>Projects</h1>
 <article *ngFor="let project of projects">
-  <header>
-    <h2>
-      <a routerLink="./{{ project.slug }}">{{ project.title }}</a>
-    </h2>
-    <h4>{{ project.subtitle }}</h4>
-  </header>
-  <div [innerHtml]="project.summary.html | safeHtml"></div>
+  <a class="project" routerLink="./{{ project.slug }}">
+    <header>
+      <h2>{{ project.title }}</h2>
+      <h4>{{ project.subtitle }}</h4>
+    </header>
+    <div [innerHtml]="project.summary.html | safeHtml"></div>
+  </a>
   <hr />
 </article>

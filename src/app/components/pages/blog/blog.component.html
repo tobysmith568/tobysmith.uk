@@ -11,12 +11,12 @@
 </div>
 
 <article *ngFor="let post of posts">
-  <header>
-    <h2>
-      <a routerLink="/blog/{{ post.slug }}">{{ post.title }}</a>
-    </h2>
-    <h4>{{ post.date | date: "dd MMM, yyyy" }}</h4>
-  </header>
-  <div [innerHtml]="post.excerpt | safeHtml"></div>
+  <a class="post" routerLink="/blog/{{ post.slug }}">
+    <header>
+      <h2>{{ post.title }}</h2>
+      <h4>{{ post.date | date: "dd MMM, yyyy" }}</h4>
+    </header>
+    <div [innerHtml]="post.excerpt | safeHtml"></div>
+  </a>
   <hr />
 </article>

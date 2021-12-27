@@ -12,32 +12,38 @@ hr {
 header {
   h2 {
     margin-bottom: 0;
+    width: fit-content;
   }
   h4 {
     margin-top: 0.4em;
   }
 }
 
-a {
+a.project {
   text-decoration: none;
   position: relative;
   color: $black;
 
-  &::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 0.1em;
-    background-color: $black;
-    opacity: 0;
-    transition: opacity 300ms, transform 300ms;
+  h2 {
+    position: relative;
+    color: $black;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: $black;
+      opacity: 0;
+      transition: opacity 300ms, transform 300ms;
+    }
   }
 
-  &:hover::after,
-  &:focus::after {
+  &:hover h2::after,
+  &:focus h2::after {
     opacity: 1;
-    transform: translate3d(0, 0.2em, 0);
+    transform: translate3d(0, 0.15em, 0);
   }
 }
