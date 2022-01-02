@@ -1,5 +1,25 @@
 @import "/src/app/styles/colours.scss";
 
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .title {
+    flex-grow: 1;
+  }
+
+  .all {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+}
+
+.subtitle {
+  margin-top: 0;
+}
+
 article,
 hr {
   margin: 1.5em 0em;

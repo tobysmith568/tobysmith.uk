@@ -22,10 +22,4 @@ export class TagComponent {
 
     return this.url.startsWith("http");
   }
-
-  public click(): void {
-    if (!!this.url) {
-      window.open(this.url, "_blank", "noopener");
-    }
-  }
 }

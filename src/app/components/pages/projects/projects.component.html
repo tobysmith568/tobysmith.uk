@@ -1,4 +1,12 @@
-<h1>Projects</h1>
+<div class="header">
+  <h1 class="title">Projects</h1>
+
+  <a class="all underline" routerLink="all">
+    <span>All Projects</span>
+  </a>
+</div>
+<p class="subtitle">A selection of my best work to date, demonstrating some of my abilities</p>
+
 <article *ngFor="let project of projects">
   <a class="project" routerLink="./{{ project.slug }}">
     <header>

@@ -1,0 +1,24 @@
+<app-back-button></app-back-button>
+<h1>All Projects</h1>
+<p class="subtitle">A list of all my projects; no matter how big, small, or incomplete!</p>
+<div *ngIf="projectIndex">
+  <div *ngFor="let categories of projectIndex.categories" class="category">
+    <h2>
+      {{ categories.name }}
+    </h2>
+    <article *ngFor="let project of categories.items">
+      <header>
+        <h3>
+          <a [href]="project.url" class="underline" target="_blank">
+            {{ project.title }}
+          </a>
+          <span class="tag owner" *ngIf="project.owner === 'JointOwner'">Joint Owner</span>
+          <span class="tag owner" *ngIf="project.owner === 'Contributor'">Contributor</span>
+          <span class="tag incomplete" *ngIf="!!project.incomplete">Incomplete</span>
+          <span class="tag abandoned" *ngIf="!!project.abandoned">Abandoned</span>
+        </h3>
+      </header>
+      <div class="content" [innerHtml]="project.content.html | safeHtml"></div>
+    </article>
+  </div>
+</div>
