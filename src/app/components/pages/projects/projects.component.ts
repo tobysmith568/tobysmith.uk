@@ -14,10 +14,12 @@ export class ProjectsComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     const result = await this.projectsServiceGql.fetch().toPromise();
-    this.projects = result.data.projects;
+    const projectPage = result.data.projectPages[0];
 
-    if (!!result?.data?.seo) {
-      const { title, description, noIndex } = result.data.seo;
+    this.projects = projectPage?.projects;
+
+    if (!!projectPage?.seo) {
+      const { title, description, noIndex } = projectPage.seo;
       this.metaService.title(title).description(description).noIndex(noIndex);
     }
   }
