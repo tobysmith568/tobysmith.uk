@@ -1,4 +1,5 @@
 @import "/src/app/styles/colours.scss";
+@import "/src/app/styles/sizes.scss";
 
 .header {
   display: flex;
@@ -7,6 +8,13 @@
 
   .title {
     flex-grow: 1;
+  }
+
+  @media only screen and (max-width: $mobileWidth) {
+    .title {
+      margin-top: 0;
+      margin-bottom: 0.5em;
+    }
   }
 
   .all {

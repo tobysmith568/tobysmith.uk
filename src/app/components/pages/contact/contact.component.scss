@@ -4,6 +4,12 @@
 $externalsBreak1: 1285px;
 $externalsBreak2: 960px;
 
+@media only screen and (max-width: $mobileWidth) {
+  .title {
+    margin: 0;
+  }
+}
+
 .container {
   display: flex;
   flex-direction: column;
