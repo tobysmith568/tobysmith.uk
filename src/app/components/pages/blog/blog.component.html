@@ -10,6 +10,8 @@
   </a>
 </div>
 
+<div class="no-results" *ngIf="showNoSearchResults()">No results for "{{ searchTerm }}" :(</div>
+
 <article *ngFor="let post of posts">
   <a class="post" routerLink="/blog/{{ post.slug }}">
     <header>

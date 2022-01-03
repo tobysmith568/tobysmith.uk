@@ -31,6 +31,11 @@ export class BlogComponent implements OnInit, OnDestroy {
     this.paramMapSubscription?.unsubscribe();
   }
 
+  public showNoSearchResults(): boolean {
+    const numberOfPosts = this.posts?.length ?? 0;
+    return !!this.searchTerm && numberOfPosts === 0;
+  }
+
   private async onParamMapChange(paramMap: ParamMap): Promise<void> {
     this.searchTerm = paramMap.get("term") ?? undefined;
 
