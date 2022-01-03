@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, ParamMap } from "@angular/router";
 import { Subscription } from "rxjs";
 import { Post, PostsServiceGQL } from "src/app/services/api/posts/posts.service";
 import { SearchServiceGQL } from "src/app/services/api/search/search.service";
@@ -24,26 +24,38 @@ export class BlogComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.paramMapSubscription = this.route.paramMap.subscribe(async paramMap => {
-      this.searchTerm = paramMap.get("term") ?? undefined;
-
-      if (!!this.searchTerm) {
-        const searchResult = await this.searchServiceGql.fetch({ term: this.searchTerm }).toPromise();
-        this.posts = searchResult.data.posts;
-        return;
-      }
-
-      const result = await this.postsServiceGql.fetch().toPromise();
-      this.posts = result.data.posts;
-
-      if (!!result?.data?.seo) {
-        const { title, description, noIndex } = result.data.seo;
-        this.metaService.title(title).description(description).noIndex(noIndex);
-      }
-    });
+    this.paramMapSubscription = this.route.paramMap.subscribe(paramMap => this.onParamMapChange(paramMap));
   }
 
   ngOnDestroy(): void {
     this.paramMapSubscription?.unsubscribe();
+  }
+
+  private async onParamMapChange(paramMap: ParamMap): Promise<void> {
+    this.searchTerm = paramMap.get("term") ?? undefined;
+
+    if (!!this.searchTerm) {
+      this.search(this.searchTerm);
+      return;
+    }
+
+    await this.getAllPosts();
+  }
+
+  private async search(term: string): Promise<void> {
+    const result = await this.searchServiceGql.fetch({ term }).toPromise();
+    this.posts = result.data.posts;
+
+    this.metaService.title("Search results").description(`Search results for "${term}"`).noIndex(true);
+  }
+
+  private async getAllPosts(): Promise<void> {
+    const result = await this.postsServiceGql.fetch().toPromise();
+    this.posts = result.data.posts;
+
+    const seo = result.data.postPages[0].seo;
+    if (!!seo) {
+      this.metaService.title(seo.title).description(seo.description).noIndex(seo.noIndex);
+    }
   }
 }

@@ -3,16 +3,20 @@ import { Apollo, gql, Query } from "apollo-angular";
 import { ENVIRONMENT, IEnvironment } from "src/environments/environment.interface";
 import { SEO } from "../seo.interface";
 
+interface Response {
+  postPages: PostPage[];
+  posts: Post[];
+}
+
+interface PostPage {
+  seo?: SEO;
+}
+
 export interface Post {
   slug: string;
   title: string;
   date: string;
   excerpt: string;
-}
-
-interface Response {
-  seo?: SEO;
-  posts: Post[];
 }
 
 @Injectable({
@@ -25,16 +29,18 @@ export class PostsServiceGQL extends Query<Response> {
 
   document = gql`
     query Posts {
-      seo(where: { identifier: "posts" }) {
-        title
-        description
-        noIndex
-      }
-      posts(orderBy: date_DESC ${this.allowDevOnly()}) {
+      posts(orderBy: date_DESC) {
         slug
         title
         date
         excerpt
+      }
+      postPages(first: 1) {
+        seo {
+          title
+          description
+          noIndex
+        }
       }
     }
   `;
