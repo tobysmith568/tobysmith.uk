@@ -29,7 +29,7 @@ export class PostsServiceGQL extends Query<Response> {
 
   document = gql`
     query Posts {
-      posts(orderBy: date_DESC) {
+      posts(orderBy: date_DESC ${this.allowDevOnly()}) {
         slug
         title
         date
