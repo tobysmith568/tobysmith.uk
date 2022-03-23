@@ -34,9 +34,13 @@ export const graphCmsContentLink = new ApolloLink((operation, forward) => {
           const classes = $(this).parent().parent().attr("class");
           const languageClass = classes?.split(" ").find(value => value !== "code");
 
-          const formattedCode = format(unformattedCode, languageClass);
+          try {
+            const formattedCode = format(unformattedCode, languageClass);
 
-          $(this).html(formattedCode);
+            $(this).html(formattedCode);
+          } catch {
+            $(this).html(unformattedCode);
+          }
           return $(this);
         });
 
