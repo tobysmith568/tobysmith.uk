@@ -8,12 +8,14 @@ import javascript from "highlight.js/lib/languages/javascript";
 import typescript from "highlight.js/lib/languages/typescript";
 import json from "highlight.js/lib/languages/json";
 import yaml from "highlight.js/lib/languages/yaml";
+import bash from "highlight.js/lib/languages/bash";
 hljs.registerLanguage("xml", xml);
 hljs.registerLanguage("css", css);
 hljs.registerLanguage("javascript", javascript);
 hljs.registerLanguage("typescript", typescript);
 hljs.registerLanguage("json", json);
 hljs.registerLanguage("yaml", yaml);
+hljs.registerLanguage("bash", bash);
 
 export const graphCmsContentLink = new ApolloLink((operation, forward) => {
   return forward(operation).map(response => {
