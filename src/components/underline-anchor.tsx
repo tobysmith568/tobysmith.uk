@@ -1,22 +1,14 @@
+import { Colours } from "@emotion/react";
 import styled from "@emotion/styled";
-import NextLink from "next/link";
-import { FC, HTMLProps } from "react";
 
-const UnderlineLink: FC<HTMLProps<HTMLAnchorElement>> = props => {
-  const { href, ...otherProps } = props;
+interface Props {
+  colour: keyof Colours;
+}
 
-  return (
-    <Link href={href ?? "/"} passHref>
-      <a {...otherProps}></a>
-    </Link>
-  );
-};
-export default UnderlineLink;
-
-const Link = styled(NextLink)`
+const UnderlineAnchor = styled.a<Props>`
   text-decoration: none;
   position: relative;
-  color: $black;
+  color: ${({ theme, colour }) => theme.colours[colour]};
   font-weight: bold;
 
   &::after {
@@ -26,7 +18,7 @@ const Link = styled(NextLink)`
     left: 0;
     width: 100%;
     height: 0.1em;
-    background-color: $black;
+    background-color: ${({ theme, colour }) => theme.colours[colour]};
     opacity: 0;
     transition: opacity 300ms, transform 300ms;
   }
@@ -37,3 +29,4 @@ const Link = styled(NextLink)`
     transform: translate3d(0, 0.2em, 0);
   }
 `;
+export default UnderlineAnchor;

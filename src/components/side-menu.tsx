@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
 import { atom, useAtom } from "jotai";
+import Link from "next/link";
 import { FC, useCallback } from "react";
-import UnderlineLink from "./underline-link";
+import UnderlineAnchor from "./underline-anchor";
 
 const isOpenAtom = atom<boolean>(false);
 
@@ -35,29 +36,43 @@ const SideMenu: FC = () => {
       <Overlay onClick={overlayClick}></Overlay>
       <Menu>
         <MenuItem>
-          <UnderlineLink href="/" tabIndex={-1} onClick={overlayClick}>
-            Home
-          </UnderlineLink>
+          <Link href="/" passHref>
+            <UnderlineAnchor colour="white" tabIndex={-1} onClick={overlayClick}>
+              Home
+            </UnderlineAnchor>
+          </Link>
         </MenuItem>
+
         <MenuItem>
-          <UnderlineLink href="about" tabIndex={-1} onClick={overlayClick}>
-            About
-          </UnderlineLink>
+          <Link href="/about" passHref>
+            <UnderlineAnchor colour="white" tabIndex={-1} onClick={overlayClick}>
+              About
+            </UnderlineAnchor>
+          </Link>
         </MenuItem>
+
         <MenuItem>
-          <UnderlineLink href="projects" tabIndex={-1} onClick={overlayClick}>
-            Projects
-          </UnderlineLink>
+          <Link href="/projects" passHref>
+            <UnderlineAnchor colour="white" tabIndex={-1} onClick={overlayClick}>
+              Projects
+            </UnderlineAnchor>
+          </Link>
         </MenuItem>
+
         <MenuItem>
-          <UnderlineLink href="blog" tabIndex={-1} onClick={overlayClick}>
-            Blog
-          </UnderlineLink>
+          <Link href="/blog" passHref>
+            <UnderlineAnchor colour="white" tabIndex={-1} onClick={overlayClick}>
+              Blog
+            </UnderlineAnchor>
+          </Link>
         </MenuItem>
+
         <MenuItem>
-          <UnderlineLink href="contact" tabIndex={-1} onClick={overlayClick}>
-            Contact
-          </UnderlineLink>
+          <Link href="/contact" passHref>
+            <UnderlineAnchor colour="white" tabIndex={-1} onClick={overlayClick}>
+              Contact
+            </UnderlineAnchor>
+          </Link>
         </MenuItem>
       </Menu>
     </SideMenuWrapper>

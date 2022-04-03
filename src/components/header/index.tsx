@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
-import UnderlineLink from "../underline-link";
+import UnderlineAnchor from "../underline-anchor";
 import Search from "./search";
 
 const defaultMobileTitle = "Toby Smith";
@@ -15,7 +15,7 @@ const Header: FC = () => {
 
   useEffect(() => {
     const onRouteChange = () => {
-      const path = window?.location?.pathname ?? "";
+      const path = window?.location?.pathname ?? "/";
       const urlSegments = path.split("/");
 
       if (urlSegments.length < 2 || urlSegments[1] === "") {
@@ -36,7 +36,7 @@ const Header: FC = () => {
   return (
     <HeaderWrapper>
       <MobileMenu>
-        <Image src="assets/img/menu.svg" alt="Mobile menu button" />
+        <Image src="/assets/img/menu.svg" layout="fill" alt="Mobile menu button" />
       </MobileMenu>
 
       <MobileTitle>
@@ -44,31 +44,28 @@ const Header: FC = () => {
       </MobileTitle>
 
       <MenuSide>
-        <UnderlineLink href="">{defaultMobileTitle}</UnderlineLink>
+        <Link href="/" passHref>
+          <NavbarAnchor colour="white">{defaultMobileTitle}</NavbarAnchor>
+        </Link>
       </MenuSide>
 
       <MenuSide>
-        {router.pathname.startsWith("blog") && <Search />}
+        {router.pathname.startsWith("/blog") && <Search />}
 
-        <Link href="about" passHref>
-          <a>
-            <span>About</span>
-          </a>
+        <Link href="/about" passHref>
+          <NavbarAnchor colour="white">About</NavbarAnchor>
         </Link>
-        <Link href="projects" passHref>
-          <a>
-            <span>Projects</span>
-          </a>
+
+        <Link href="/projects" passHref>
+          <NavbarAnchor colour="white">Projects</NavbarAnchor>
         </Link>
-        <Link href="blog" passHref>
-          <a>
-            <span>Blog</span>
-          </a>
+
+        <Link href="/blog" passHref>
+          <NavbarAnchor colour="white">Blog</NavbarAnchor>
         </Link>
-        <Link href="contact" passHref>
-          <a>
-            <span>Contact</span>
-          </a>
+
+        <Link href="/contact" passHref>
+          <NavbarAnchor colour="white">Contact</NavbarAnchor>
         </Link>
       </MenuSide>
     </HeaderWrapper>
@@ -77,13 +74,15 @@ const Header: FC = () => {
 export default Header;
 
 const HeaderWrapper = styled.div`
+  position: fixed;
+  width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   height: 3.5em;
-  background-color: ${({ theme }) => theme.colours.blue};
   padding: 0 2em;
+  background-color: ${({ theme }) => theme.colours.blue};
   color: ${({ theme }) => theme.colours.white};
 
   @media only screen and (max-width: ${({ theme }) => theme.sizes.mobileWidth}) {
@@ -142,4 +141,12 @@ const MenuSide = styled.div`
   @media only screen and (max-width: ${({ theme }) => theme.sizes.mobileWidth}) {
     display: none;
   }
+`;
+
+const NavbarAnchor = styled(UnderlineAnchor)`
+  padding: 0em 1em;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  font-weight: normal;
 `;
