@@ -1,13 +1,17 @@
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
-import { FC } from "react";
+import { FC, useCallback } from "react";
 import UnderlineAnchor from "./underline-anchor";
 
 const BackButton: FC = () => {
   const router = useRouter();
 
+  const onClick = useCallback(() => {
+    router.back();
+  }, [router]);
+
   return (
-    <UnderlineAnchor onClick={() => router.back()} colour="black">
+    <UnderlineAnchor onClick={onClick} colour="black">
       <Arrow>⮜</Arrow>Back
     </UnderlineAnchor>
   );

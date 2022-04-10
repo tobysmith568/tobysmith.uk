@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { GetServerSideProps, NextPage } from "next";
+import Link from "next/link";
 import ProjectResult from "../../components/projects/project-result";
 import Seo from "../../components/seo";
 import UnderlineAnchor from "../../components/underline-anchor";
@@ -24,9 +25,11 @@ const ProjectsPage: NextPage<Props> = ({ projects, seo }) => {
         <Header>
           <Title>Projects</Title>
 
-          <AllProjects href="/projects/all" colour="black">
-            <span>All Projects</span>
-          </AllProjects>
+          <Link href="/projects/all" passHref>
+            <UnderlineAnchor colour="black">
+              <span>All Projects</span>
+            </UnderlineAnchor>
+          </Link>
         </Header>
         <Subtitle>A selection of my best work to date, demonstrating some of my abilities</Subtitle>
 
@@ -43,6 +46,12 @@ const Header = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+
+  a {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
 `;
 
 const Title = styled.h1`
