@@ -11,7 +11,7 @@ interface Props {
 
 const Seo: FC<Props> = ({ title, description, noIndex }) => {
   const fullTitle = useMemo(() => {
-    if (!title || title.length === 0) {
+    if (!title || title.length === 0 || title === defaultPageTitle) {
       return defaultPageTitle;
     }
 
