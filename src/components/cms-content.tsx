@@ -3,13 +3,18 @@ import styled from "@emotion/styled";
 import { FC, useMemo } from "react";
 
 interface Props {
-  html: string;
+  type: "html" | "text";
+  content: string;
 }
 
-const CmsContent: FC<Props> = ({ html }) => {
-  const innerHtml = useMemo(() => ({ __html: html }), [html]);
+const CmsContent: FC<Props> = ({ type, content }) => {
+  const innerHtml = useMemo(() => ({ __html: content }), [content]);
 
-  return <HtmlContent dangerouslySetInnerHTML={innerHtml} colour="black" />;
+  if (type === "html") {
+    return <HtmlContent dangerouslySetInnerHTML={innerHtml} colour="black" />;
+  }
+
+  return <HtmlContent colour="black">{content}</HtmlContent>;
 };
 export default CmsContent;
 
@@ -64,6 +69,6 @@ const HtmlContent = styled.div<HtmlContentProps>`
   }
 
   a {
-    ${({ theme }) => theme.underlineAnchor("black")};
+    ${({ theme, colour }) => theme.underlineAnchor(colour)};
   }
 `;

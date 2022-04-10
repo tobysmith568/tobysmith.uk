@@ -23,11 +23,11 @@ const AboutPage: NextPage<Props> = ({ avatar, topText, mainText, tags, seo }) =>
       <main>
         <Intro>
           <Avatar src={avatar.url} draggable="false" alt="Profile picture of Toby" />
-          <CmsContent html={topText.html} />
+          <CmsContent type="html" content={topText.html} />
         </Intro>
 
         <AboutMe>
-          <CmsContent html={mainText.html} />
+          <CmsContent type="html" content={mainText.html} />
 
           <Tags>
             {tags.map(tag => (

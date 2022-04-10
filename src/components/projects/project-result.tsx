@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 import { FC } from "react";
-import { Project } from "../gql/projects";
-import CmsContent from "./cms-content";
-import HorizontalRule from "./horizontal-rule";
+import { Project } from "../../gql/projects";
+import CmsContent from "../cms-content";
+import HorizontalRule from "../horizontal-rule";
 
 interface Props {
   project: Project;
@@ -15,7 +15,7 @@ const ProjectResult: FC<Props> = ({ project }) => (
         <h2>{project.title}</h2>
         <h4>{project.subtitle}</h4>
       </header>
-      <CmsContent html={project.summary.html} />
+      <CmsContent type="html" content={project.summary.html} />
     </Project>
 
     <HorizontalRule />

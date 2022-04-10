@@ -34,7 +34,7 @@ const Anchor = styled.a`
   transition: 0.2s;
   font-size: 0.8em;
   text-decoration: none;
-  color: black;
+  color: ${({ theme }) => theme.colours.black};
   background-color: #edf7ff;
   margin-right: 0.75em;
   cursor: pointer;

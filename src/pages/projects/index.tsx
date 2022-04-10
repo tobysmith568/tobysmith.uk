@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { GetServerSideProps, NextPage } from "next";
-import ProjectResult from "../../components/project-result";
+import ProjectResult from "../../components/projects/project-result";
 import Seo from "../../components/seo";
 import UnderlineAnchor from "../../components/underline-anchor";
 import getProjectsPage, { ProjectsPage } from "../../gql/projects";

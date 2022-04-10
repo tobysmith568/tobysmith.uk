@@ -13,8 +13,18 @@ declare module "@emotion/react" {
   export interface Colours {
     white: string;
     black: string;
+
     blue: string;
     paleBlue: string;
+
+    ownerTag: string;
+    ownerTagBorder: string;
+
+    incompleteTag: string;
+    incompleteTagBorder: string;
+
+    abandonedTag: string;
+    abandonedTagBorder: string;
   }
 
   export interface Sizes {
@@ -30,8 +40,18 @@ const defaultTheme: Theme = {
   colours: {
     white: "#fff",
     black: "#000",
+
     blue: "dodgerblue",
-    paleBlue: "aliceblue"
+    paleBlue: "aliceblue",
+
+    ownerTag: "dodgerblue",
+    ownerTagBorder: "#0077ea",
+
+    incompleteTag: "#ff9844",
+    incompleteTagBorder: "#e67f2b",
+
+    abandonedTag: "#ff6944",
+    abandonedTagBorder: "#e6502b"
   },
   sizes: {
     mobileWidth: mobileWidthInPixels + "px",
@@ -42,6 +62,7 @@ const defaultTheme: Theme = {
     position: relative;
     color: ${colour};
     font-weight: bold;
+    cursor: pointer;
 
     &::after {
       content: "";
