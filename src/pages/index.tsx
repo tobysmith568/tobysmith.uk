@@ -1,8 +1,8 @@
 import { keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import type { NextPage } from "next";
-import Head from "next/head";
 import { useEffect, useState } from "react";
+import Seo from "../components/seo";
 
 const phrases = [
   "Full-stack developer",
@@ -25,14 +25,10 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Toby Smith</title>
-        <meta
-          name="description"
-          content="Toby Smith is a London-based software developer who likes to focus on web-based technologies. This website is a place to see his work and read his thoughts"
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <Seo
+        title="Toby Smith"
+        description="Toby Smith is a London-based software developer who likes to focus on web-based technologies. This website is a place to see his work and read his thoughts"
+      />
 
       <Main>
         <div>

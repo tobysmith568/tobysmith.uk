@@ -4,7 +4,13 @@
   "ignorePaths": ["public", "**.snap"],
   "dictionaryDefinitions": [],
   "dictionaries": ["en-gb", "html", "fullstack", "css"],
-  "words": ["tobysmith", "codecov", "fossas"],
+  "words": [
+    "codecov",
+    "fossas",
+    "tobysmith",
+    "zdnfztgnfgt", // Used as unique string to stop asset caching,
+    "lerp"
+  ],
   "ignoreWords": [],
   "import": [],
   "ignoreRegExpList": ["import .* from \".*\"", "(?:dev)?dependencies\"\\: \\{[\\s\\S]*?}"]
