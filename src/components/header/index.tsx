@@ -1,17 +1,16 @@
-import { css } from "@emotion/react";
 import styled from "@emotion/styled";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
-import UnderlineAnchor from "../underline-anchor";
+import NavbarAnchor from "./navbar-anchor";
 import Search from "./search";
 
 const defaultMobileTitle = "Toby Smith";
 
 const Header: FC = () => {
   const [mobileTitle, setMobileTitle] = useState(defaultMobileTitle);
-  const router = useRouter();
+
+  const { events, pathname } = useRouter();
 
   useEffect(() => {
     const onRouteChange = () => {
@@ -26,12 +25,12 @@ const Header: FC = () => {
       setMobileTitle(urlSegments[1]);
     };
 
-    router.events.on("routeChangeComplete", onRouteChange);
+    events.on("routeChangeComplete", onRouteChange);
 
     return () => {
-      router.events.off("routeChangeComplete", onRouteChange);
+      events.off("routeChangeComplete", onRouteChange);
     };
-  }, [router.events]);
+  }, [events]);
 
   return (
     <HeaderWrapper>
@@ -44,29 +43,18 @@ const Header: FC = () => {
       </MobileTitle>
 
       <MenuSide>
-        <Link href="/" passHref>
-          <NavbarAnchor colour="white">{defaultMobileTitle}</NavbarAnchor>
-        </Link>
+        <NavbarAnchor path="/" disableUnderline>
+          {defaultMobileTitle}
+        </NavbarAnchor>
       </MenuSide>
 
       <MenuSide>
-        {router.pathname.startsWith("/blog") && <Search />}
+        {pathname.startsWith("/blog") && <Search />}
 
-        <Link href="/about" passHref>
-          <NavbarAnchor colour="white">About</NavbarAnchor>
-        </Link>
-
-        <Link href="/projects" passHref>
-          <NavbarAnchor colour="white">Projects</NavbarAnchor>
-        </Link>
-
-        <Link href="/blog" passHref>
-          <NavbarAnchor colour="white">Blog</NavbarAnchor>
-        </Link>
-
-        <Link href="/contact" passHref>
-          <NavbarAnchor colour="white">Contact</NavbarAnchor>
-        </Link>
+        <NavbarAnchor path="/about">About</NavbarAnchor>
+        <NavbarAnchor path="/projects">Projects</NavbarAnchor>
+        <NavbarAnchor path="/blog">Blog</NavbarAnchor>
+        <NavbarAnchor path="/contact">Contact</NavbarAnchor>
       </MenuSide>
     </HeaderWrapper>
   );
@@ -90,26 +78,11 @@ const HeaderWrapper = styled.div`
   }
 `;
 
-const Menu = css`
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  height: 100%;
-`;
-
 const MobileMenu = styled.a`
-  ${Menu}
-
   display: none;
-  position: absolute;
-  height: 30px;
-  top: 15px;
-  left: 15px;
-  cursor: pointer;
-  padding: 0;
 
   @media only screen and (max-width: ${({ theme }) => theme.sizes.mobileWidth}) {
-    display: flex;
+    display: block;
   }
 
   img {
@@ -118,9 +91,10 @@ const MobileMenu = styled.a`
 `;
 
 const MobileTitle = styled.div`
-  ${Menu}
-
+  align-items: stretch;
+  height: 100%;
   display: none;
+  flex-direction: row;
   text-transform: capitalize;
 
   h1 {
@@ -134,19 +108,10 @@ const MobileTitle = styled.div`
 `;
 
 const MenuSide = styled.div`
-  ${Menu}
-
   display: flex;
+  height: 100%;
 
   @media only screen and (max-width: ${({ theme }) => theme.sizes.mobileWidth}) {
     display: none;
   }
-`;
-
-const NavbarAnchor = styled(UnderlineAnchor)`
-  padding: 0em 1em;
-  display: grid;
-  justify-content: center;
-  align-content: center;
-  font-weight: normal;
 `;
