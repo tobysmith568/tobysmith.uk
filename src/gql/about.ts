@@ -3,7 +3,7 @@ import Seo from "./seo";
 
 // cSpell:words abouts
 
-export interface About {
+export interface AboutPage {
   avatar: {
     url: string;
   };
@@ -24,10 +24,10 @@ export interface About {
 }
 
 interface GetAboutResponse {
-  abouts: About[];
+  abouts: AboutPage[];
 }
 
-const getAbout = async (): Promise<About> => {
+const getAboutPage = async (): Promise<AboutPage> => {
   const query = gql`
     query About {
       abouts(first: 1) {
@@ -56,12 +56,12 @@ const getAbout = async (): Promise<About> => {
     }
   `;
 
-  const { abouts } = await client.request<GetAboutResponse>(query);
+  const { abouts: aboutPages } = await client.request<GetAboutResponse>(query);
 
-  if (abouts.length !== 1) {
-    throw new Error(`Expected exactly one about but got ${abouts.length}`);
+  if (aboutPages.length !== 1) {
+    throw new Error(`Expected exactly one about page but got ${aboutPages.length}`);
   }
 
-  return abouts[0];
+  return aboutPages[0];
 };
-export default getAbout;
+export default getAboutPage;

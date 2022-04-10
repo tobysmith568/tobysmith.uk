@@ -3,15 +3,15 @@ import { GetServerSideProps, NextPage } from "next";
 import CmsContent from "../components/cms-content";
 import Seo from "../components/seo";
 import Tag from "../components/tag";
-import getAbout, { About } from "../gql/about";
+import getAboutPage, { AboutPage } from "../gql/about";
 
-type Props = About;
+type Props = AboutPage;
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  const about = await getAbout();
+  const aboutPage = await getAboutPage();
 
   return {
-    props: about
+    props: aboutPage
   };
 };
 
