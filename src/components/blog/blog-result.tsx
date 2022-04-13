@@ -1,33 +1,25 @@
 import styled from "@emotion/styled";
 import Link from "next/link";
-import { FC, useMemo } from "react";
+import { FC } from "react";
 import { Post } from "../../gql/blog";
 import CmsContent from "../cms-content";
+import FormattedDate from "../formatted-date";
 import HorizontalRule from "../horizontal-rule";
 
 interface Props {
   post: Post;
 }
 
-const dateFormatOptions: Intl.DateTimeFormatOptions = {
-  day: "2-digit",
-  month: "short",
-  year: "numeric"
-};
-
 const BlogResult: FC<Props> = ({ post }) => {
-  const formattedDate = useMemo(() => {
-    const date = new Date(post.date);
-    return date.toLocaleDateString(undefined, dateFormatOptions);
-  }, [post.date]);
-
   return (
     <article>
       <Link href={"/blog/" + post.slug} passHref>
         <BlogPost>
           <header>
             <h2>{post.title}</h2>
-            <h4>{formattedDate}</h4>
+            <h4>
+              <FormattedDate dateValue={post.date} />
+            </h4>
           </header>
 
           <CmsContent type="text" content={post.excerpt} />

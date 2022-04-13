@@ -25,7 +25,7 @@ export interface Blog {
 
 const getBlogPosts = async (): Promise<Blog> => {
   const query = gql`
-    query ProjectPage {
+    query Blog {
       posts(orderBy: date_DESC ${allowDevOnly()}) {
         slug
         title
