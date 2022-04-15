@@ -30,6 +30,11 @@ declare module "@emotion/react" {
   export interface Sizes {
     mobileWidth: string;
     tabletWidth: string;
+
+    contact: {
+      externalsBreak1: string;
+      externalsBreak2: string;
+    };
   }
 }
 
@@ -55,7 +60,12 @@ const defaultTheme: Theme = {
   },
   sizes: {
     mobileWidth: mobileWidthInPixels + "px",
-    tabletWidth: tabletWidthInPixels + "px"
+    tabletWidth: tabletWidthInPixels + "px",
+
+    contact: {
+      externalsBreak1: "1285px",
+      externalsBreak2: "1000px"
+    }
   },
   underlineAnchor: colour => css`
     text-decoration: none;
