@@ -3,7 +3,7 @@ import { GetServerSideProps, NextPage } from "next";
 import ExternalContactLink from "../components/contact/external-contact-link";
 import Form from "../components/contact/form";
 import Seo from "../components/seo";
-import { Contact, getEnv } from "../env";
+import { Contact, getEnv } from "../utils/api-only/env";
 
 interface Props {
   contact: Contact;

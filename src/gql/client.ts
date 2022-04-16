@@ -1,5 +1,5 @@
 import { GraphQLClient } from "graphql-request";
-import { getEnv } from "../env";
+import { getEnv } from "../utils/api-only/env";
 
 const { apiUrl } = getEnv();
 

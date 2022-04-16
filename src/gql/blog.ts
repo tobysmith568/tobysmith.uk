@@ -1,4 +1,4 @@
-import { getEnv } from "../env";
+import { getEnv } from "../utils/api-only/env";
 import { client, gql } from "./client";
 import Seo from "./seo";
 

@@ -2,6 +2,8 @@ import { css, Theme } from "@emotion/react";
 import styled from "@emotion/styled";
 import { CSSProperties, FC, SyntheticEvent, useCallback, useMemo, useRef, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
+import { SubmitRequest, SubmitResponse } from "../../pages/api/send-email";
+import { postJSON } from "../../utils/http-request";
 import RecaptchaTerms from "./recaptcha-terms";
 
 // cspell:words Reaptcha
@@ -40,13 +42,38 @@ const Form: FC<Props> = ({ clientKey }) => {
   const onSubmit = useCallback(
     (e: SyntheticEvent) => {
       e.preventDefault();
+
+      if (!recaptchaRef?.current?.executeAsync) {
+        setFormState("error");
+        return;
+      }
+
       setFormState("saving");
 
-      recaptchaRef?.current?.executeAsync().then(token => {
-        console.log({ token, name, email, message });
-      });
+      recaptchaRef.current
+        .executeAsync()
+        .then(token => {
+          if (!token) {
+            setFormState("error");
+            return;
+          }
+
+          const body: SubmitRequest = {
+            name,
+            email,
+            message,
+            recaptchaToken: token
+          };
+
+          postJSON<SubmitRequest, SubmitResponse>("/api/send-email", body)
+            .then(() => setFormState("sent"))
+            .catch(() => setFormState("error"));
+        })
+        .catch(e => {
+          console.error("Failed to get recaptcha token", { e });
+        });
     },
-    [email, message, name]
+    [name, email, message]
   );
 
   return (
@@ -97,7 +124,9 @@ const Form: FC<Props> = ({ clientKey }) => {
 
       {formState === "sent" && <h3>Sent!</h3>}
 
-      {formState === "error" && <input type="button" value="Error. Try Again?" onClick={reset} />}
+      {formState === "error" && (
+        <SubmitButton type="button" value="Error. Try Again?" onClick={reset} />
+      )}
 
       <ReCAPTCHA ref={recaptchaRef} size="invisible" sitekey={clientKey} style={recaptchaStyle} />
       <RecaptchaTerms />
@@ -105,10 +134,6 @@ const Form: FC<Props> = ({ clientKey }) => {
   );
 };
 export default Form;
-
-// Form is in but does nothing!
-// Need to add the onsubmit handler and then the server side endpoint
-// Make sure it works with visibility hidden
 
 const formInput = (props: { theme: Theme }) => css`
   font-size: 1em;

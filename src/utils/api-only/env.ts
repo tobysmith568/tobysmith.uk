@@ -8,6 +8,8 @@ interface Env {
     clientKey: string;
     secretKey: string;
   };
+
+  email: ContactEmail;
 }
 
 export interface Contact {
@@ -21,6 +23,15 @@ export interface Contact {
 
   facebookUsername: string;
   facebookUrl: string;
+}
+
+export interface ContactEmail {
+  host: string;
+  port: number;
+  user: string;
+  pass: string;
+  from: string;
+  to: string;
 }
 
 export const getEnv = (): Env => ({
@@ -43,5 +54,15 @@ export const getEnv = (): Env => ({
   recaptcha: {
     clientKey: process.env.RECAPTCHA_CLIENT_KEY ?? "",
     secretKey: process.env.RECAPTCHA_SECRET_KEY ?? ""
+  },
+
+  email: {
+    host: process.env.EMAIL_HOST ?? "",
+    port: Number(process.env.EMAIL_PORT ?? "465"),
+    user: process.env.EMAIL_USER ?? "",
+    pass: process.env.EMAIL_PASS ?? "",
+
+    to: process.env.EMAIL_TO ?? "",
+    from: process.env.EMAIL_FROM ?? ""
   }
 });
