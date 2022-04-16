@@ -1,7 +1,9 @@
 import { ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
 import type { AppProps } from "next/app";
+import { useRouter } from "next/router";
 import NextNProgress from "nextjs-progressbar";
+import { useEffect, useRef } from "react";
 import Footer from "../components/footer";
 import Header from "../components/header";
 import SideMenu from "../components/side-menu";
@@ -9,13 +11,33 @@ import "../styles/globals.css";
 import theme, { mobileWidthInPixels, tabletWidthInPixels } from "../theme";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const pageRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const eventHandler = () => {
+      console.log("on route finished");
+      pageRef.current?.scroll({
+        top: 0,
+        left: 0,
+        behavior: "auto"
+      });
+    };
+
+    router.events.on("routeChangeComplete", eventHandler);
+
+    return () => {
+      router.events.off("routeChangeComplete", eventHandler);
+    };
+  }, [router.events]);
+
   return (
     <ThemeProvider theme={theme}>
       <Layout>
         <Header />
         <NextNProgress />
         <SideMenu />
-        <Page>
+        <Page ref={pageRef}>
           <Content>
             <Component {...pageProps} />
           </Content>
