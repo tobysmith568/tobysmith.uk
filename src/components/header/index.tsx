@@ -35,7 +35,7 @@ const Header: FC = () => {
   return (
     <HeaderWrapper>
       <MobileMenu>
-        <Image src="/assets/img/menu.svg" layout="fill" alt="Mobile menu button" />
+        <Image src="/img/menu.svg" layout="fill" alt="Mobile menu button" />
       </MobileMenu>
 
       <MobileTitle>

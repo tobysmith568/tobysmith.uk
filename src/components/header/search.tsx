@@ -33,7 +33,7 @@ const SearchInput = styled.input`
   outline: none;
   box-sizing: content-box;
   font-size: 1em;
-  background: transparent url(/assets/img/search.svg) no-repeat 9px center;
+  background: transparent url(/img/search.svg) no-repeat 9px center;
   background-clip: padding-box;
   border: none;
   padding: 10px;

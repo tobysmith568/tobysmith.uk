@@ -29,7 +29,7 @@ const BlogPage: NextPage<Props> = ({ posts, seo }) => {
             <UnderlineAnchor target="_blank" colour="black">
               <span>RSS Feed</span>
               <span>
-                <Image src="/assets/img/rss.svg" height="21" width="21" alt="rss logo" />
+                <Image src="/img/rss.svg" height="21" width="21" alt="rss logo" />
               </span>
             </UnderlineAnchor>
           </Link>
