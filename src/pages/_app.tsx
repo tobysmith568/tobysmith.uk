@@ -35,9 +35,15 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ThemeProvider theme={theme}>
       <Layout>
         <Header />
-        <NextNProgress />
+        <NextNProgress
+          color="dodgerblue"
+          options={{
+            parent: "#page",
+            showSpinner: false
+          }}
+        />
         <SideMenu />
-        <Page ref={pageRef}>
+        <Page ref={pageRef} id="page">
           <Content>
             <Component {...pageProps} />
           </Content>
@@ -57,7 +63,8 @@ const Layout = styled.div`
 `;
 
 const Page = styled.div`
-  position: absolute;
+  position: absolute !important; // Important is to stop NProgress from overriding it
+  overflow-y: scroll !important; // Important is to stop NProgress from overriding it
   top: 3.5em;
   bottom: 0;
   display: flex;
@@ -66,7 +73,6 @@ const Page = styled.div`
   width: 100%;
   min-height: calc(100vh - 3.5em);
   padding-top: 2em;
-  overflow-y: scroll;
 `;
 
 /**
