@@ -53,16 +53,16 @@ const Tag = styled.span`
 `;
 
 const OwnerTag = styled(Tag)`
-  color: ${({ theme }) => theme.colours.ownerTag};
-  border-color: ${({ theme }) => theme.colours.ownerTagBorder};
+  color: ${({ theme }) => theme.colours.tags.owner.background};
+  border-color: ${({ theme }) => theme.colours.tags.owner.border};
 `;
 
 const IncompleteTag = styled(Tag)`
-  color: ${({ theme }) => theme.colours.incompleteTag};
-  border-color: ${({ theme }) => theme.colours.incompleteTagBorder};
+  color: ${({ theme }) => theme.colours.tags.incomplete.background};
+  border-color: ${({ theme }) => theme.colours.tags.incomplete.border};
 `;
 
 const AbandonedTag = styled(Tag)`
-  color: ${({ theme }) => theme.colours.abandonedTag};
-  border-color: ${({ theme }) => theme.colours.abandonedTagBorder};
+  color: ${({ theme }) => theme.colours.tags.abandoned.background};
+  border-color: ${({ theme }) => theme.colours.tags.abandoned.border};
 `;

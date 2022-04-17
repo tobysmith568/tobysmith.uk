@@ -17,15 +17,18 @@ declare module "@emotion/react" {
     blue: string;
     paleBlue: string;
 
-    ownerTag: string;
-    ownerTagBorder: string;
-
-    incompleteTag: string;
-    incompleteTagBorder: string;
-
-    abandonedTag: string;
-    abandonedTagBorder: string;
+    tags: TagColours;
   }
+
+  export type Tags = "owner" | "incomplete" | "abandoned";
+
+  export type TagColours = Record<
+    Tags,
+    {
+      background: string;
+      border: string;
+    }
+  >;
 
   export interface Sizes {
     mobileWidth: string;
@@ -55,14 +58,20 @@ const defaultTheme: Theme = {
     blue: "dodgerblue",
     paleBlue: "aliceblue",
 
-    ownerTag: "dodgerblue",
-    ownerTagBorder: "#0077ea",
-
-    incompleteTag: "#ff9844",
-    incompleteTagBorder: "#e67f2b",
-
-    abandonedTag: "#ff6944",
-    abandonedTagBorder: "#e6502b"
+    tags: {
+      owner: {
+        background: "dodgerblue",
+        border: "#0077ea"
+      },
+      incomplete: {
+        background: "#ff9844",
+        border: "#e67f2b"
+      },
+      abandoned: {
+        background: "#ff6944",
+        border: "#e6502b"
+      }
+    }
   },
   sizes: {
     mobileWidth: mobileWidthInPixels + "px",
