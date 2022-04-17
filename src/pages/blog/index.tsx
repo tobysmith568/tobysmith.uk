@@ -27,7 +27,7 @@ const BlogPage: NextPage<Props> = ({ posts, seo }) => {
 
           <Link href="/blog/rss" passHref>
             <UnderlineAnchor target="_blank">
-              <span>RSS Feed</span>
+              <RssFeedTitle>RSS Feed</RssFeedTitle>
               <span>
                 <Image src="/img/rss.svg" height="21" width="21" alt="rss logo" />
               </span>
@@ -62,4 +62,8 @@ const Title = styled.h1`
   @media only screen and (max-width: ${({ theme }) => theme.sizes.mobileWidth}) {
     margin-top: 0;
   }
+`;
+
+const RssFeedTitle = styled.span`
+  margin-right: 0.2em;
 `;
