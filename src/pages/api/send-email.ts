@@ -1,4 +1,5 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest } from "next";
+import { RouterBuilder } from "next-api-handler";
 import { getEnv } from "../../utils/api-only/env";
 import { verifyRecaptchaToken } from "../../utils/api-only/recaptcha";
 import { sendPlainTextEmail } from "../../utils/api-only/send-email";
@@ -14,18 +15,8 @@ export interface SubmitResponse {
   success: boolean;
 }
 
-const handler = async (req: NextApiRequest, res: NextApiResponse<SubmitResponse>) => {
-  try {
-    await handleRequest(req);
-    res.status(200).json({ success: true });
-  } catch (error) {
-    res.status(500).json({ success: false });
-  }
-};
-export default handler;
-
-const handleRequest = async (req: NextApiRequest) => {
-  const { name, email, message, recaptchaToken } = getBody(req);
+const postHandler = async (req: NextApiRequest) => {
+  const { name, email, message, recaptchaToken } = getPostBody(req);
   const { from, to } = getEnv().email;
 
   const subject = `New message from ${name} via tobysmith.uk`;
@@ -36,7 +27,7 @@ const handleRequest = async (req: NextApiRequest) => {
   await sendPlainTextEmail(to, name, from, subject, fullMessage);
 };
 
-const getBody = (req: NextApiRequest): SubmitRequest => {
+const getPostBody = (req: NextApiRequest): SubmitRequest => {
   const body = req.body as Partial<SubmitRequest>;
 
   if (!body?.name || typeof body.name !== "string") {
@@ -57,3 +48,7 @@ const getBody = (req: NextApiRequest): SubmitRequest => {
 
   return req.body;
 };
+
+const router = new RouterBuilder();
+router.post(postHandler);
+export default router.build();
