@@ -2,7 +2,7 @@ import { css, Theme } from "@emotion/react";
 import styled from "@emotion/styled";
 import { CSSProperties, FC, SyntheticEvent, useCallback, useMemo, useRef, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { SubmitRequest, SubmitResponse } from "../../pages/api/send-email";
+import { SendEmailRequest, SendEmailResponse } from "../../pages/api/send-email";
 import { postJSON } from "../../utils/http-request";
 import RecaptchaTerms from "./recaptcha-terms";
 
@@ -59,14 +59,14 @@ const Form: FC<Props> = ({ clientKey }) => {
             return;
           }
 
-          const body: SubmitRequest = {
+          const body: SendEmailRequest = {
             name,
             email,
             message,
             recaptchaToken: token
           };
 
-          postJSON<SubmitRequest, SubmitResponse>("/api/send-email", body)
+          postJSON<SendEmailRequest, SendEmailResponse>("/api/send-email", body)
             .then(() => setFormState("sent"))
             .catch(() => setFormState("error"));
         })

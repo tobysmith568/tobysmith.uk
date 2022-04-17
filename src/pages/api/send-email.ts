@@ -12,7 +12,9 @@ const postRequestValidator = z.object({
   recaptchaToken: z.string()
 });
 
-export type SubmitResponse = {
+export type SendEmailRequest = z.infer<typeof postRequestValidator>;
+
+export type SendEmailResponse = {
   success: boolean;
 };
 
