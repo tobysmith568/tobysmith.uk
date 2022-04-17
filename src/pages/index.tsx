@@ -65,7 +65,8 @@ const Cycle = keyframes`
 const Main = styled.main`
   display: grid;
   align-content: center;
-  justify-content: center;
+  justify-content: start;
+  height: 100%;
 `;
 
 const Title = styled.h1`
