@@ -75,4 +75,36 @@ const HtmlContent = styled.div`
       ${({ theme }) => theme.underline.afterOnHover()};
     }
   }
+
+  .code code,
+  .hljs-punctuation,
+  .hljs-attr,
+  .hljs-function .hljs-params,
+  .hljs-attribute {
+    color: #005cc5;
+  }
+
+  .hljs-comment {
+    color: #008021;
+  }
+
+  .hljs-string {
+    color: #a31515;
+  }
+
+  .hljs-keyword,
+  .hljs-function,
+  .hljs-selector-pseudo {
+    color: #b700db;
+  }
+
+  .hljs-title.function_ {
+    color: #145182;
+  }
+
+  .hljs-variable,
+  .hljs-meta,
+  .hljs-title.class_ {
+    color: #7b1fa2;
+  }
 `;

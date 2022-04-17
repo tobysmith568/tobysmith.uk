@@ -1,3 +1,4 @@
+import highlightCode from "../utils/api-only/highlight-code";
 import { client, gql } from "./client";
 import Seo from "./seo";
 
@@ -45,6 +46,8 @@ const getProject = async (slug: string): Promise<Project> => {
   if (!project) {
     throw new Error(`Could not find a project with the slug ${slug}`);
   }
+
+  project.content.html = highlightCode(project.content.html);
 
   return project;
 };

@@ -1,3 +1,4 @@
+import highlightCode from "../utils/api-only/highlight-code";
 import { client, gql } from "./client";
 import Seo from "./seo";
 
@@ -45,6 +46,8 @@ const getBlogPost = async (slug: string): Promise<BlogPost> => {
   if (!post) {
     throw new Error(`Could not find a blog post with the slug ${slug}`);
   }
+
+  post.content.html = highlightCode(post.content.html);
 
   return post;
 };

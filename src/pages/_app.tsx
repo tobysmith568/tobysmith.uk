@@ -16,7 +16,6 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     const eventHandler = () => {
-      console.log("on route finished");
       pageRef.current?.scroll({
         top: 0,
         left: 0,
