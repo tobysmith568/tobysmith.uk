@@ -36,6 +36,7 @@ const Form: FC<Props> = ({ clientKey }) => {
   const isDisabled = useMemo(() => formState !== "unsent", [formState]);
 
   const reset = useCallback(() => {
+    recaptchaRef.current?.reset();
     setFormState("unsent");
   }, []);
 
