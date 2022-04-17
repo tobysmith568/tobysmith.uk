@@ -41,8 +41,8 @@ declare module "@emotion/react" {
   }
 
   export interface Underline {
-    hoverTarget: (colour: keyof Colours) => SerializedStyles;
-    after: (colour: keyof Colours) => SerializedStyles;
+    hoverTarget: (colour?: keyof Colours) => SerializedStyles;
+    after: (colour?: keyof Colours) => SerializedStyles;
     afterOnHover: () => SerializedStyles;
   }
 }
@@ -87,7 +87,7 @@ const defaultTheme: Theme = {
     hoverTarget: colour => css`
       text-decoration: none;
       position: relative;
-      color: ${colour};
+      color: ${colour ?? "black"};
       font-weight: bold;
       cursor: pointer;
     `,
@@ -98,7 +98,7 @@ const defaultTheme: Theme = {
       left: 0;
       width: 100%;
       height: 2px;
-      background-color: ${colour};
+      background-color: ${colour ?? "black"};
       opacity: 0;
       transition: opacity 300ms, transform 300ms;
     `,

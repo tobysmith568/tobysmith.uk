@@ -26,7 +26,7 @@ const BlogPage: NextPage<Props> = ({ posts, seo }) => {
           <Title>Posts</Title>
 
           <Link href="/blog/rss" passHref>
-            <UnderlineAnchor target="_blank" colour="black">
+            <UnderlineAnchor target="_blank">
               <span>RSS Feed</span>
               <span>
                 <Image src="/img/rss.svg" height="21" width="21" alt="rss logo" />

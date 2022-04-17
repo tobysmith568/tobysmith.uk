@@ -11,7 +11,7 @@ const BackButton: FC = () => {
   }, [router]);
 
   return (
-    <UnderlineAnchor onClick={onClick} colour="black">
+    <UnderlineAnchor onClick={onClick}>
       <Arrow>⮜</Arrow>Back
     </UnderlineAnchor>
   );

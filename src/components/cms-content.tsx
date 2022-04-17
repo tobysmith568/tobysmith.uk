@@ -1,4 +1,3 @@
-import { Colours } from "@emotion/react";
 import styled from "@emotion/styled";
 import { FC, useMemo } from "react";
 
@@ -11,18 +10,14 @@ const CmsContent: FC<Props> = ({ type, content }) => {
   const innerHtml = useMemo(() => ({ __html: content }), [content]);
 
   if (type === "html") {
-    return <HtmlContent dangerouslySetInnerHTML={innerHtml} colour="black" />;
+    return <HtmlContent dangerouslySetInnerHTML={innerHtml} />;
   }
 
-  return <HtmlContent colour="black">{content}</HtmlContent>;
+  return <HtmlContent>{content}</HtmlContent>;
 };
 export default CmsContent;
 
-interface HtmlContentProps {
-  colour: keyof Colours;
-}
-
-const HtmlContent = styled.div<HtmlContentProps>`
+const HtmlContent = styled.div`
   img {
     display: block;
     width: 75%;
@@ -69,10 +64,10 @@ const HtmlContent = styled.div<HtmlContentProps>`
   }
 
   a {
-    ${({ theme, colour }) => theme.underline.hoverTarget(colour)};
+    ${({ theme }) => theme.underline.hoverTarget()};
 
     ::after {
-      ${({ theme, colour }) => theme.underline.after(colour)};
+      ${({ theme }) => theme.underline.after()};
     }
 
     &:hover::after,

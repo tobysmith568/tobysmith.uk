@@ -26,7 +26,7 @@ const ProjectsPage: NextPage<Props> = ({ projects, seo }) => {
           <Title>Projects</Title>
 
           <Link href="/projects/all" passHref>
-            <UnderlineAnchor colour="black">
+            <UnderlineAnchor>
               <span>All Projects</span>
             </UnderlineAnchor>
           </Link>

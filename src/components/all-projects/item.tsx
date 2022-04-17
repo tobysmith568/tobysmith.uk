@@ -15,7 +15,7 @@ const Item: FC<Props> = ({ item }) => {
     <Article>
       <header>
         <Title>
-          <UnderlineAnchor colour="black" href={url} target="_blank">
+          <UnderlineAnchor href={url} target="_blank">
             {title}
           </UnderlineAnchor>
 
