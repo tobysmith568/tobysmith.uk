@@ -69,6 +69,15 @@ const HtmlContent = styled.div<HtmlContentProps>`
   }
 
   a {
-    ${({ theme, colour }) => theme.underlineAnchor(colour)};
+    ${({ theme, colour }) => theme.underline.hoverTarget(colour)};
+
+    ::after {
+      ${({ theme, colour }) => theme.underline.after(colour)};
+    }
+
+    &:hover::after,
+    &:focus::after {
+      ${({ theme }) => theme.underline.afterOnHover()};
+    }
   }
 `;

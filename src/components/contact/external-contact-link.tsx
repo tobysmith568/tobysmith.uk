@@ -51,7 +51,22 @@ const Anchor = styled.a`
     flex-direction: row !important;
   }
 
-  ${({ theme }) => theme.underlineAnchor("black")}
+  ${({ theme }) => theme.underline.hoverTarget("black")}
+
+  h3 {
+    position: relative;
+    color: ${({ theme }) => theme.colours.black};
+    width: fit-content;
+
+    &::after {
+      ${({ theme }) => theme.underline.after("black")}
+    }
+  }
+
+  &:hover h3::after,
+  &:focus h3::after {
+    ${({ theme }) => theme.underline.afterOnHover()}
+  }
 `;
 
 const ImageWrapper = styled.div`

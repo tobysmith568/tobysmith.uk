@@ -7,7 +7,7 @@ declare module "@emotion/react" {
   export interface Theme {
     colours: Colours;
     sizes: Sizes;
-    underlineAnchor: (colour: keyof Colours) => SerializedStyles;
+    underline: Underline;
   }
 
   export interface Colours {
@@ -35,6 +35,12 @@ declare module "@emotion/react" {
       externalsBreak1: string;
       externalsBreak2: string;
     };
+  }
+
+  export interface Underline {
+    hoverTarget: (colour: keyof Colours) => SerializedStyles;
+    after: (colour: keyof Colours) => SerializedStyles;
+    afterOnHover: () => SerializedStyles;
   }
 }
 
@@ -67,30 +73,30 @@ const defaultTheme: Theme = {
       externalsBreak2: "1000px"
     }
   },
-  underlineAnchor: colour => css`
-    text-decoration: none;
-    position: relative;
-    color: ${colour};
-    font-weight: bold;
-    cursor: pointer;
 
-    &::after {
+  underline: {
+    hoverTarget: colour => css`
+      text-decoration: none;
+      position: relative;
+      color: ${colour};
+      font-weight: bold;
+      cursor: pointer;
+    `,
+    after: colour => css`
       content: "";
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 0.1em;
+      height: 2px;
       background-color: ${colour};
       opacity: 0;
       transition: opacity 300ms, transform 300ms;
-    }
-
-    &:hover::after,
-    &:focus::after {
+    `,
+    afterOnHover: () => css`
       opacity: 1;
-      transform: translate3d(0, 0.2em, 0);
-    }
-  `
+      transform: translate3d(0, 2px, 0);
+    `
+  }
 };
 export default defaultTheme;

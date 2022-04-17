@@ -6,6 +6,15 @@ interface Props {
 }
 
 const UnderlineAnchor = styled.a<Props>`
-  ${({ theme, colour }) => theme.underlineAnchor(colour)};
+  ${({ theme, colour }) => theme.underline.hoverTarget(colour)};
+
+  ::after {
+    ${({ theme, colour }) => theme.underline.after(colour)};
+  }
+
+  &:hover::after,
+  &:focus::after {
+    ${({ theme }) => theme.underline.afterOnHover()};
+  }
 `;
 export default UnderlineAnchor;
