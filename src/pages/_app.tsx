@@ -41,7 +41,9 @@ function MyApp({ Component, pageProps }: AppProps) {
             showSpinner: false
           }}
         />
+
         <SideMenu />
+
         <Page ref={pageRef} id="page">
           <Content>
             <Component {...pageProps} />

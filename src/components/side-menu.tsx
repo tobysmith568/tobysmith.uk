@@ -32,9 +32,9 @@ const SideMenu: FC = () => {
   }, [toggle]);
 
   return (
-    <SideMenuWrapper isOpen={isOpen}>
-      <Overlay onClick={overlayClick}></Overlay>
-      <Menu>
+    <SideMenuWrapper className={isOpen ? "open" : ""}>
+      <Overlay className="overlay" onClick={overlayClick}></Overlay>
+      <Menu className="menu">
         <MenuItem>
           <Link href="/" passHref>
             <UnderlineAnchor colour="white" tabIndex={-1} onClick={overlayClick}>
@@ -82,24 +82,20 @@ export default SideMenu;
 
 const transition = "0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28)";
 
-interface SideMenuWrapperProps {
-  isOpen: boolean;
-}
-
-const SideMenuWrapper = styled.div<SideMenuWrapperProps>`
+const SideMenuWrapper = styled.div`
   height: 100%;
   width: 100%;
 
   &.open {
     .overlay {
-      @media only screen and (max-width: $mobileWidth) {
+      @media only screen and (max-width: ${({ theme }) => theme.sizes.mobileWidth}) {
         background-color: #0000009e;
         pointer-events: all;
       }
     }
 
     .menu {
-      @media only screen and (max-width: $mobileWidth) {
+      @media only screen and (max-width: ${({ theme }) => theme.sizes.mobileWidth}) {
         left: -10%;
       }
     }
@@ -131,12 +127,12 @@ const MenuItem = styled.div`
   margin-top: 2em;
 
   a {
-    color: $white;
+    color: ${({ theme }) => theme.colours.white};
     font-size: 1.4em;
     font-weight: normal;
 
     &::after {
-      background-color: $white;
+      background-color: ${({ theme }) => theme.colours.white};
     }
   }
 `;

@@ -1,13 +1,15 @@
 import styled from "@emotion/styled";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { FC, useEffect, useState } from "react";
+import { FC, SyntheticEvent, useEffect, useState } from "react";
+import { useSideMenu } from "../side-menu";
 import NavbarAnchor from "./navbar-anchor";
 import Search from "./search";
 
 const defaultMobileTitle = "Toby Smith";
 
 const Header: FC = () => {
+  const { toggle } = useSideMenu();
   const [mobileTitle, setMobileTitle] = useState(defaultMobileTitle);
 
   const { events, pathname } = useRouter();
@@ -32,9 +34,14 @@ const Header: FC = () => {
     };
   }, [events]);
 
+  const onOpenMobileMenu = (e: SyntheticEvent) => {
+    e.preventDefault();
+    toggle();
+  };
+
   return (
     <HeaderWrapper>
-      <MobileMenu>
+      <MobileMenu onClick={onOpenMobileMenu}>
         <Image src="/img/menu.svg" layout="fill" alt="Mobile menu button" />
       </MobileMenu>
 
@@ -79,7 +86,14 @@ const HeaderWrapper = styled.div`
 `;
 
 const MobileMenu = styled.a`
+  cursor: pointer;
   display: none;
+  height: 30px;
+  width: 30px;
+  left: 15px;
+  padding: 0;
+  position: absolute;
+  top: 15px;
 
   @media only screen and (max-width: ${({ theme }) => theme.sizes.mobileWidth}) {
     display: block;
