@@ -58,7 +58,7 @@ export const getEnv = (): Env => ({
 
   email: {
     host: process.env.EMAIL_HOST ?? "",
-    port: Number(process.env.EMAIL_PORT ?? "465"),
+    port: parseNumber(process.env.EMAIL_PORT, 465),
     user: process.env.EMAIL_USER ?? "",
     pass: process.env.EMAIL_PASS ?? "",
 
@@ -66,3 +66,23 @@ export const getEnv = (): Env => ({
     from: process.env.EMAIL_FROM ?? ""
   }
 });
+
+const parseNumber = (value: string | undefined, fallback: number): number => {
+  if (!value) {
+    return fallback;
+  }
+
+  const trimmedInput = value.trim();
+
+  if (trimmedInput === "") {
+    return fallback;
+  }
+
+  const parsed = Number(trimmedInput);
+
+  if (Number.isNaN(parsed)) {
+    return fallback;
+  }
+
+  return parsed;
+};
