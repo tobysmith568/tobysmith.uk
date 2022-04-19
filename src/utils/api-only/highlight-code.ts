@@ -16,6 +16,9 @@ hljs.registerLanguage("json", json);
 hljs.registerLanguage("yaml", yaml);
 hljs.registerLanguage("bash", bash);
 
+const documentPrefix = "<html><head></head><body>";
+const documentSuffix = "</body></html>";
+
 const highlightCode = (html: string): string => {
   const $ = Cheerio.load(html);
 
@@ -35,7 +38,11 @@ const highlightCode = (html: string): string => {
     return $(this);
   });
 
-  return $.html();
+  const result = $.html();
+  const resultWithoutPrefix = removeDocumentPrefix(result);
+  const resultWithoutPrefixAndSuffix = removeDocumentSuffix(resultWithoutPrefix);
+
+  return resultWithoutPrefixAndSuffix;
 };
 export default highlightCode;
 
@@ -45,4 +52,20 @@ const format = (unformattedCode: string, language?: string) => {
   }
 
   return hljs.highlightAuto(unformattedCode).value;
+};
+
+const removeDocumentPrefix = (code: string): string => {
+  if (code.startsWith(documentPrefix)) {
+    return code.substring(documentPrefix.length);
+  }
+
+  return code;
+};
+
+const removeDocumentSuffix = (code: string): string => {
+  if (code.endsWith(documentSuffix)) {
+    return code.substring(0, code.length - documentSuffix.length);
+  }
+
+  return code;
 };
