@@ -1,12 +1,9 @@
 import { postJSON } from "../http-request";
 import { getEnv } from "./env";
 
-const secretKey = getEnv().recaptcha.secretKey;
+// cspell:words siteverify
 
-interface Request {
-  secret: string;
-  response: string;
-}
+const secretKey = getEnv().recaptcha.secretKey;
 
 interface Response {
   success: boolean;
@@ -20,12 +17,7 @@ export const verifyRecaptchaToken = async (token: string): Promise<void> => {
   url.searchParams.append("secret", secretKey);
   url.searchParams.append("response", token);
 
-  const request: Request = {
-    response: token,
-    secret: secretKey
-  };
-
-  const res = await postJSON<Request, Response>(url.href, request);
+  const res = await postJSON<undefined, Response>(url.href, undefined);
 
   if (!res.success) {
     const errorObj = { recaptchaErrorCodes: res["error-codes"] };
