@@ -57,7 +57,7 @@ const getAllProjectsPage = async (): Promise<AllProjectsPage> => {
   const { projectIndexPages } = await client.request<AllProjectsResponse>(query);
 
   if (projectIndexPages.length !== 1) {
-    throw new Error(`Expected exactly one project page but got ${projectIndexPages.length}`);
+    throw new Error(`Expected exactly one all projects page but got ${projectIndexPages.length}`);
   }
 
   return projectIndexPages[0];
