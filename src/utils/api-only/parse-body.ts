@@ -14,7 +14,7 @@ const parseBody = <TBody>(req: NextApiRequest, validator: ZodType<TBody>): TBody
   const allMessages: string[] = [];
 
   for (const formError of flatMessages.formErrors) {
-    allMessages.push("Form: " + formError);
+    allMessages.push("Request Body: " + formError);
   }
 
   for (const fieldName in flatMessages.fieldErrors) {

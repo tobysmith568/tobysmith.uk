@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import "@emotion/react";
 import { css, SerializedStyles, Theme } from "@emotion/react";
 

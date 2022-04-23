@@ -1,9 +1,8 @@
-import { Env, getEnv } from "../../../src/utils/api-only/env";
+import { defaultMockEnv } from "../../../src/utils/api-only/__mocks__/env";
 import { postJSON } from "../../../src/utils/http-request";
 
 // cspell:words siteverify
 
-const secretKey = "1234567890";
 const token = "abcdefg";
 
 jest.mock("../../../src/utils/http-request");
@@ -11,18 +10,11 @@ jest.mock("../../../src/utils/api-only/env");
 
 describe("recaptcha", () => {
   const mockedPostJSON = jest.mocked(postJSON);
-  const mockedGetEnv = jest.mocked(getEnv);
 
   beforeEach(() => jest.resetAllMocks());
   afterAll(() => jest.restoreAllMocks());
 
   describe("verifyRecaptchaToken", () => {
-    beforeEach(() => {
-      mockedGetEnv.mockReturnValue({
-        recaptcha: { secretKey }
-      } as Env);
-    });
-
     it("should post a request to the Google recaptcha endpoint", async () => {
       mockedPostJSON.mockResolvedValue({
         success: true
@@ -53,7 +45,7 @@ describe("recaptcha", () => {
       const urlPostedTo = new URL(urlStringPostedTo);
       const params = urlPostedTo.searchParams;
 
-      expect(params.get("secret")).toBe(secretKey);
+      expect(params.get("secret")).toBe(defaultMockEnv.recaptcha.secretKey);
     });
 
     it("should post a request to the Google recaptcha endpoint with the response token", async () => {

@@ -1,50 +1,32 @@
 import { createTransport, Transporter } from "nodemailer";
-import { Env, getEnv } from "../../../src/utils/api-only/env";
+import { getEnv } from "../../../src/utils/api-only/env";
+import { defaultMockEnv } from "../../../src/utils/api-only/__mocks__/env";
 
-jest.mock("../../../src/utils/api-only/env");
+jest.mock("../../../src/utils/api-only/env", () => ({
+  getEnv: jest.fn()
+}));
 jest.mock("nodemailer");
 
-describe("email", () => {
-  let host = "";
-  let port = 0;
-  let user = "";
-  let pass = "";
-  let from = "";
+describe("send-email", () => {
   let to = "";
-
   let fromName = "";
   let fromEmail = "";
   let subject = "";
   let text = "";
 
-  let mockedCreateTransport = jest.mocked(createTransport);
-  let mockedGetEnv = jest.mocked(getEnv);
+  const mockedCreateTransport = jest.mocked(createTransport);
+  const mockedGetEnv = jest.mocked(getEnv);
 
   beforeEach(() => {
     jest.resetAllMocks();
 
-    host = "host";
-    port = 465;
-    user = "user";
-    pass = "pass";
-    from = "from";
     to = "to";
-
     fromName = "from name";
     fromEmail = "from@email";
     subject = "email subject";
     text = "email content";
 
-    mockedGetEnv.mockReturnValue({
-      email: {
-        host,
-        port,
-        user,
-        pass,
-        from,
-        to
-      }
-    } as Env);
+    mockedGetEnv.mockReturnValue(defaultMockEnv);
   });
 
   afterAll(() => {
@@ -58,7 +40,7 @@ describe("email", () => {
       });
 
       const args = mockedCreateTransport.mock.calls[0] as any;
-      expect(args[0].host).toBe(host);
+      expect(args[0].host).toBe(defaultMockEnv.email.host);
     });
 
     it("should create a transport with the port", () => {
@@ -67,7 +49,7 @@ describe("email", () => {
       });
 
       const args = mockedCreateTransport.mock.calls[0] as any;
-      expect(args[0].port).toBe(port);
+      expect(args[0].port).toBe(defaultMockEnv.email.port);
     });
 
     it("should create a transport with the secure flag set to true when the port is 465", () => {
@@ -80,16 +62,10 @@ describe("email", () => {
     });
 
     it("should create a transport with the secure flag set to false when the port is not 465", () => {
-      mockedGetEnv.mockReturnValue({
-        email: {
-          host,
-          port: 123,
-          user,
-          pass,
-          from,
-          to
-        }
-      } as Env);
+      const envWithNonSecurePort = defaultMockEnv;
+      envWithNonSecurePort.email.port = 123;
+
+      mockedGetEnv.mockReturnValue(envWithNonSecurePort);
 
       jest.isolateModules(() => {
         require("../../../src/utils/api-only/send-email");
@@ -105,7 +81,7 @@ describe("email", () => {
       });
 
       const args = mockedCreateTransport.mock.calls[0] as any;
-      expect(args[0].auth.user).toBe(user);
+      expect(args[0].auth.user).toBe(defaultMockEnv.email.user);
     });
 
     it("should create a transport with the pass", () => {
@@ -114,7 +90,7 @@ describe("email", () => {
       });
 
       const args = mockedCreateTransport.mock.calls[0] as any;
-      expect(args[0].auth.pass).toBe(pass);
+      expect(args[0].auth.pass).toBe(defaultMockEnv.email.pass);
     });
   });
 

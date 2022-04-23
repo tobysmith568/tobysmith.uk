@@ -46,7 +46,7 @@ describe("parse-body", () => {
         body: input
       } as NextApiRequest;
 
-      expect(() => parseBody(req, validator)).toThrowError("Form: Required");
+      expect(() => parseBody(req, validator)).toThrowError("Request Body: Required");
     });
   });
 

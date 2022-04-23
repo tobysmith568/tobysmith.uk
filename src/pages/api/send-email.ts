@@ -1,10 +1,12 @@
-import { NextApiRequest } from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 import { RouterBuilder } from "next-api-handler";
 import { z } from "zod";
 import { getEnv } from "../../utils/api-only/env";
 import parseBody from "../../utils/api-only/parse-body";
 import { verifyRecaptchaToken } from "../../utils/api-only/recaptcha";
 import { sendPlainTextEmail } from "../../utils/api-only/send-email";
+
+const { from, to } = getEnv().email;
 
 const postRequestValidator = z.object({
   name: z.string(),
@@ -19,14 +21,13 @@ export type SendEmailResponse = {
   success: boolean;
 };
 
-const postHandler = async (req: NextApiRequest) => {
+const postHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { name, email, message, recaptchaToken } = parseBody(req, postRequestValidator);
-  const { from, to } = getEnv().email;
+
+  await verifyRecaptchaToken(recaptchaToken);
 
   const subject = `New message from ${name} via tobysmith.uk`;
   const fullMessage = `The following message is from ${name}, ${email}\n\n${message}`;
-
-  await verifyRecaptchaToken(recaptchaToken);
 
   await sendPlainTextEmail(to, name, from, subject, fullMessage);
 };
