@@ -1,4 +1,3 @@
-import { getEnv } from "../utils/api-only/env";
 import { client, gql } from "./client";
 import Seo from "./seo";
 
@@ -13,7 +12,7 @@ export interface Post {
   excerpt: string;
 }
 
-interface BlogResponse {
+export interface BlogResponse {
   postPages: PostPage[];
   posts: Post[];
 }
@@ -26,7 +25,7 @@ export interface Blog {
 const getBlogPosts = async (): Promise<Blog> => {
   const query = gql`
     query Blog {
-      posts(orderBy: date_DESC ${allowDevOnly()}) {
+      posts(orderBy: date_DESC, where: { OR: [{ devOnly: null }, { devOnly: false }] }) {
         slug
         title
         date
@@ -51,11 +50,3 @@ const getBlogPosts = async (): Promise<Blog> => {
   return { seo: postPages[0].seo, posts };
 };
 export default getBlogPosts;
-
-const allowDevOnly = (): string => {
-  if (getEnv().isDevelopment) {
-    return ", where: {OR: [{devOnly: null}, {devOnly: false}]}";
-  }
-
-  return "";
-};
