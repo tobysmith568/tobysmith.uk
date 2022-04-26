@@ -1,6 +1,6 @@
 import { client, gql } from "./client";
 
-interface RssFeedData {
+export interface RssFeedData {
   rss: Rss;
   posts: Post[];
 }

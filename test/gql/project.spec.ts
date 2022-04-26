@@ -1,5 +1,5 @@
-import getBlogPost, { BlogPost } from "../../src/gql/blog-post";
 import { client } from "../../src/gql/client";
+import getProject, { Project } from "../../src/gql/project";
 import highlightCode from "../../src/utils/api-only/highlight-code";
 
 jest.mock("../../src/gql/client");
@@ -7,18 +7,18 @@ jest.mock("../../src/utils/api-only/highlight-code");
 
 type ClientRequest = (query: string, variables?: any) => Promise<any>;
 
-describe("gql blog-post", () => {
+describe("gql project", () => {
   const mockedClientRequest = jest.mocked(client.request as ClientRequest);
   const mockedHighlightCode = jest.mocked(highlightCode);
 
-  const postSlugs = ["post-1", "post-2"];
+  const projectSlugs = ["project-1", "project-2"];
 
-  const createFakeBlogPostResult = (slug: string): BlogPost =>
+  const createFakeProjectResult = (slug: string): Project =>
     ({
       content: {
         html: `This is the main text for slug: ${slug}`
       }
-    } as BlogPost);
+    } as Project);
 
   beforeEach(() => {
     jest.resetAllMocks();
@@ -28,53 +28,53 @@ describe("gql blog-post", () => {
 
   afterAll(() => jest.restoreAllMocks());
 
-  postSlugs.forEach(postSlug =>
-    describe(`getBlogPost with slug "${postSlug}"`, () => {
+  projectSlugs.forEach(projectSlug =>
+    describe(`getProject with slug "${projectSlug}"`, () => {
       beforeEach(() => {
         mockedClientRequest.mockResolvedValue({
-          post: createFakeBlogPostResult(postSlug)
+          project: createFakeProjectResult(projectSlug)
         });
       });
 
       it("should call request with the correct gql", async () => {
-        await getBlogPost(postSlug);
+        await getProject(projectSlug);
 
         const actualGql = mockedClientRequest.mock.calls[0][0];
         expect(actualGql).toMatchSnapshot();
       });
 
       it("should call request with the correct variables", async () => {
-        await getBlogPost(postSlug);
+        await getProject(projectSlug);
 
         const actualVariables = mockedClientRequest.mock.calls[0][1];
         expect(actualVariables).toStrictEqual({
-          slug: postSlug
+          slug: projectSlug
         });
       });
 
-      it("should throw if the client returns an undefined blog post", async () => {
+      it("should throw if the client returns an undefined project", async () => {
         mockedClientRequest.mockResolvedValue({
           post: undefined
         });
 
-        await expect(getBlogPost(postSlug)).rejects.toThrowError(
-          `Could not find a blog post with the slug ${postSlug}`
+        await expect(getProject(projectSlug)).rejects.toThrowError(
+          `Could not find a project with the slug ${projectSlug}`
         );
       });
 
-      it("should highlight the html content of the returned post when the client returns exactly one", async () => {
-        await getBlogPost(postSlug);
+      it("should highlight the html content of the returned project when the client returns exactly one", async () => {
+        await getProject(projectSlug);
 
         expect(mockedHighlightCode).toHaveBeenCalledWith(
-          createFakeBlogPostResult(postSlug).content.html
+          createFakeProjectResult(projectSlug).content.html
         );
       });
 
-      it("should return the blog post with highlights when the client returns exactly one", async () => {
-        const expectedResult = createFakeBlogPostResult(postSlug);
+      it("should return the project with highlights when the client returns exactly one", async () => {
+        const expectedResult = createFakeProjectResult(projectSlug);
         expectedResult.content.html = `Highlighted:{${expectedResult.content.html}}`;
 
-        const blogPost = await getBlogPost(postSlug);
+        const blogPost = await getProject(projectSlug);
 
         expect(blogPost).toStrictEqual(expectedResult);
       });
