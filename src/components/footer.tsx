@@ -1,13 +1,15 @@
 import styled from "@emotion/styled";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 
-const year = new Date().getFullYear().toString();
+const Footer: FC = () => {
+  const year = useMemo(() => new Date().getFullYear().toString(), []);
 
-const Footer: FC = () => (
-  <FooterWrapper>
-    <p>Copyright Toby Smith {year}</p>
-  </FooterWrapper>
-);
+  return (
+    <FooterWrapper>
+      <p>Copyright Toby Smith {year}</p>
+    </FooterWrapper>
+  );
+};
 export default Footer;
 
 const FooterWrapper = styled.div`
