@@ -33,7 +33,7 @@ const SideMenu: FC = () => {
 
   return (
     <SideMenuWrapper className={isOpen ? "open" : ""}>
-      <Overlay className="overlay" onClick={overlayClick}></Overlay>
+      <Overlay className="overlay" onClick={overlayClick} role="presentation" />
       <Menu className="menu">
         <MenuItem>
           <Link href="/" passHref>
@@ -82,7 +82,7 @@ export default SideMenu;
 
 const transition = "0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28)";
 
-const SideMenuWrapper = styled.div`
+const SideMenuWrapper = styled.nav`
   height: 100%;
   width: 100%;
 

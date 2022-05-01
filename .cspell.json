@@ -9,7 +9,8 @@
     "fossas",
     "tobysmith",
     "zdnfztgnfgt", // Used as unique string to stop asset caching,
-    "lerp"
+    "lerp",
+    "data-testid"
   ],
   "ignoreWords": [],
   "import": [],
