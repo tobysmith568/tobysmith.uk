@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FC, useEffect, useState } from "react";
+import { FC, useMemo } from "react";
 
 interface Props {
   path: string;
@@ -9,19 +9,19 @@ interface Props {
 }
 
 const NavbarAnchor: FC<Props> = ({ children, path, disableUnderline }) => {
-  const [currentClassName, setCurrentClassName] = useState("");
-
   const { pathname } = useRouter();
 
-  useEffect(() => {
-    if (!disableUnderline) {
-      setCurrentClassName(pathname.startsWith(path) ? "current" : "");
+  const isCurrentClassName = useMemo(() => {
+    if (disableUnderline || !pathname.startsWith(path)) {
+      return "";
     }
+
+    return "current";
   }, [pathname, path, disableUnderline]);
 
   return (
     <Link href={path} passHref>
-      <InnerNavbarAnchor className={currentClassName}>{children}</InnerNavbarAnchor>
+      <InnerNavbarAnchor className={isCurrentClassName}>{children}</InnerNavbarAnchor>
     </Link>
   );
 };

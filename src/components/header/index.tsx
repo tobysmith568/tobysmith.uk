@@ -1,38 +1,23 @@
 import styled from "@emotion/styled";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { FC, SyntheticEvent, useEffect, useState } from "react";
+import { FC, SyntheticEvent, useMemo } from "react";
 import { useSideMenu } from "../side-menu";
 import NavbarAnchor from "./navbar-anchor";
 import Search from "./search";
 
-const defaultMobileTitle = "Toby Smith";
-
 const Header: FC = () => {
   const { toggle } = useSideMenu();
-  const [mobileTitle, setMobileTitle] = useState(defaultMobileTitle);
+  const { pathname } = useRouter();
 
-  const { events, pathname } = useRouter();
+  const mobileTitle = useMemo(() => {
+    if (pathname === "/") {
+      return "Toby Smith";
+    }
 
-  useEffect(() => {
-    const onRouteChange = () => {
-      const path = window?.location?.pathname ?? "/";
-      const urlSegments = path.split("/");
-
-      if (urlSegments.length < 2 || urlSegments[1] === "") {
-        setMobileTitle(defaultMobileTitle);
-        return;
-      }
-
-      setMobileTitle(urlSegments[1]);
-    };
-
-    events.on("routeChangeComplete", onRouteChange);
-
-    return () => {
-      events.off("routeChangeComplete", onRouteChange);
-    };
-  }, [events]);
+    const urlSegments = pathname.split("/");
+    return urlSegments[1];
+  }, [pathname]);
 
   const onOpenMobileMenu = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -51,7 +36,7 @@ const Header: FC = () => {
 
       <MenuSide>
         <NavbarAnchor path="/" disableUnderline>
-          {defaultMobileTitle}
+          Toby Smith
         </NavbarAnchor>
       </MenuSide>
 
