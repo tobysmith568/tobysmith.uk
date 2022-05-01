@@ -34,8 +34,6 @@ describe("category", () => {
 
     const items = screen.getAllByTestId("test-item");
 
-    screen.debug(items);
-
     expect(items).toHaveLength(category.items.length);
 
     items.forEach((item, i) => {
