@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import Image from "next/image";
 import { FC } from "react";
 
-interface Props {
+export interface Props {
   newTab?: boolean;
   isEmail?: boolean;
   href: string;
@@ -15,7 +15,7 @@ interface Props {
 const mailToPrefix = "mailto:";
 
 const ExternalContactLink: FC<Props> = ({ newTab, isEmail, href, img, imgAlt, name, username }) => {
-  const target = newTab ? "_blank" : "";
+  const target = newTab ? "_blank" : undefined;
 
   if (isEmail) {
     href = mailToPrefix + href;

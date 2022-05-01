@@ -6,8 +6,6 @@ import { SendEmailRequest, SendEmailResponse } from "../../pages/api/send-email"
 import { postJSON } from "../../utils/http-request";
 import RecaptchaTerms from "./recaptcha-terms";
 
-// cspell:words Reaptcha
-
 type State = "unsent" | "saving" | "sent" | "error";
 
 interface Props {
@@ -78,7 +76,7 @@ const Form: FC<Props> = ({ clientKey }) => {
   );
 
   return (
-    <form autoComplete="off" onSubmit={onSubmit}>
+    <form name="contact form" autoComplete="off" onSubmit={onSubmit}>
       <label htmlFor="name">Name</label>
       <br />
       <NameInput

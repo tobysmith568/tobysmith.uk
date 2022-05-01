@@ -9,9 +9,9 @@ const RecaptchaTerms = () => (
       </a>{" "}
       and{" "}
       <a href="https://policies.google.com/terms" rel="noopener noreferrer" target="_blank">
-        Terms of Service apply
+        Terms of Service
       </a>{" "}
-      .
+      apply.
     </span>
   </Wrapper>
 );
