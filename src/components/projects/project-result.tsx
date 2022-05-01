@@ -17,6 +17,7 @@ const ProjectResult: FC<Props> = ({ project }) => (
           <h2>{project.title}</h2>
           <h4>{project.subtitle}</h4>
         </header>
+
         <CmsContent type="html" content={project.summary.html} />
       </Project>
     </Link>
