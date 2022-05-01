@@ -5,7 +5,6 @@ import { sendPlainTextEmail } from "../../../src/utils/api-only/send-email";
 import { defaultMockEnv } from "../../../src/utils/api-only/__mocks__/env";
 
 jest.mock("../../../src/utils/api-only/env");
-// jest.mock("../../../src/utils/api-only/parse-body");
 jest.mock("../../../src/utils/api-only/recaptcha");
 jest.mock("../../../src/utils/api-only/send-email");
 

@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { FC, useMemo } from "react";
 
-interface Props {
+export interface Props {
   type: "html" | "text";
   content: string;
 }

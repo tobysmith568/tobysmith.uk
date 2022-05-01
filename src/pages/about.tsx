@@ -3,9 +3,9 @@ import { GetServerSideProps, NextPage } from "next";
 import CmsContent from "../components/cms-content";
 import Seo from "../components/seo";
 import Tag from "../components/tag";
-import getAboutPage, { AboutPage } from "../gql/about";
+import getAboutPage, { AboutPage as AboutPageType } from "../gql/about";
 
-type Props = AboutPage;
+type Props = AboutPageType;
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
   const aboutPage = await getAboutPage();

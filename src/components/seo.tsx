@@ -3,7 +3,7 @@ import { FC, useMemo } from "react";
 
 const defaultPageTitle = "Toby Smith";
 
-interface Props {
+export interface Props {
   title?: string;
   description?: string;
   noIndex?: boolean;

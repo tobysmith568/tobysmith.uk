@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import Image from "next/image";
 import { FC, useMemo } from "react";
 
-interface Props {
+export interface Props {
   label: string;
   url: string;
   iconUrl?: string;
