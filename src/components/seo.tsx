@@ -1,12 +1,13 @@
 import { NextSeo } from "next-seo";
 import { FC, useMemo } from "react";
+import { NoIndex } from "../gql/seo";
 
 const defaultPageTitle = "Toby Smith";
 
 export interface Props {
   title?: string;
   description?: string;
-  noIndex?: boolean;
+  noIndex?: NoIndex;
 }
 
 const Seo: FC<Props> = ({ title, description, noIndex }) => {

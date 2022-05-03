@@ -1,6 +1,6 @@
 import { screen } from "@testing-library/dom";
 import getAboutPage, { AboutPage as AboutPageType } from "../../src/gql/about";
-import Seo from "../../src/gql/seo";
+import Seo, { noIndexValues } from "../../src/gql/seo";
 import AboutPage, { getServerSideProps } from "../../src/pages/about";
 import renderWithTheme from "../test-helpers/render-with-theme";
 
@@ -12,8 +12,6 @@ jest.mock("../../src/gql/about", () => ({
   __esModule: true,
   default: jest.fn()
 }));
-
-const noIndexValues = [true, false, undefined];
 
 describe("about", () => {
   const mockedGetAboutPage = jest.mocked(getAboutPage);

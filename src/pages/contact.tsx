@@ -21,7 +21,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
   };
 };
 
-const AboutPage: NextPage<Props> = ({ contact, clientKey }) => {
+const ContactPage: NextPage<Props> = ({ contact, clientKey }) => {
   return (
     <>
       <Seo
@@ -79,7 +79,7 @@ const AboutPage: NextPage<Props> = ({ contact, clientKey }) => {
     </>
   );
 };
-export default AboutPage;
+export default ContactPage;
 
 const Title = styled.h1`
   @media only screen and (max-width: ${({ theme }) => theme.sizes.mobileWidth}) {
