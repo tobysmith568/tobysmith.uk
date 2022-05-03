@@ -13,7 +13,7 @@ const phrases = [
 
 const Home: NextPage = () => {
   const [phraseIndex, setPhraseIndex] = useState(0);
-  const [phrase, setPhrase] = useState("Full-stack developer");
+  const [phrase, setPhrase] = useState(phrases[0]);
 
   useEffect(() => {
     setTimeout(() => {
