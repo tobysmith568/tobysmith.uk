@@ -1,4 +1,3 @@
-import styled from "@emotion/styled";
 import { GetServerSideProps, NextPage } from "next";
 import Category from "../../components/all-projects/category";
 import BackButton from "../../components/back-button";
@@ -24,7 +23,7 @@ const AllProjectsPage: NextPage<Props> = ({ categories, seo }) => {
         <BackButton />
 
         <h1>All Projects</h1>
-        <Subtitle>A list of all my projects; no matter how big, small, or incomplete!</Subtitle>
+        <p>A list of all my projects; no matter how big, small, or incomplete!</p>
 
         {categories.map(category => (
           <Category key={category.name} category={category} />
@@ -34,5 +33,3 @@ const AllProjectsPage: NextPage<Props> = ({ categories, seo }) => {
   );
 };
 export default AllProjectsPage;
-
-const Subtitle = styled.p``;

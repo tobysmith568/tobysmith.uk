@@ -16,7 +16,7 @@ interface Rss {
   copyright: string;
 }
 
-interface Post {
+export interface Post {
   slug: string;
   title: string;
   date: string;
