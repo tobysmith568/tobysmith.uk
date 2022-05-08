@@ -6,6 +6,7 @@ import BlogResult from "../../components/blog/blog-result";
 import Seo from "../../components/seo";
 import UnderlineAnchor from "../../components/underline-anchor";
 import getBlogPosts, { Blog } from "../../gql/blog";
+
 type Props = Blog;
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
@@ -29,7 +30,7 @@ const BlogPage: NextPage<Props> = ({ posts, seo }) => {
             <UnderlineAnchor target="_blank">
               <RssFeedTitle>RSS Feed</RssFeedTitle>
               <span>
-                <Image src="/img/rss.svg" height="21" width="21" alt="rss logo" />
+                <Image src="/img/rss.svg" height="21" width="21" alt="" />
               </span>
             </UnderlineAnchor>
           </Link>

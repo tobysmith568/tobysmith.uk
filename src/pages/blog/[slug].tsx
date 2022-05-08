@@ -25,7 +25,7 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ pa
   }
 };
 
-const ProjectPage: NextPage<Props> = ({ title, date, content, seo }) => {
+const BlogPostPage: NextPage<Props> = ({ title, date, content, seo }) => {
   return (
     <>
       <Seo {...seo} />
@@ -47,7 +47,7 @@ const ProjectPage: NextPage<Props> = ({ title, date, content, seo }) => {
     </>
   );
 };
-export default ProjectPage;
+export default BlogPostPage;
 
 const Title = styled.h1`
   font-size: 2em;
