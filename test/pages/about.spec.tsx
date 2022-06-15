@@ -166,6 +166,19 @@ describe("about", () => {
         expect(tagIconUrls[0]).toHaveTextContent("" + tags[0].icon?.url);
         expect(tagIconUrls[1]).toHaveTextContent("" + tags[1].icon?.url);
       });
+
+      it("should render a tag with an undefined iconUrl if the tag icon data is undefined", () => {
+        const tag = tags[0];
+        tag.icon = undefined;
+        tags = [tag];
+
+        render();
+
+        const tagIconUrls = screen.getAllByTestId("tag-iconUrl");
+
+        expect(tagIconUrls).toHaveLength(1);
+        expect(tagIconUrls[0]).toHaveTextContent("undefined");
+      });
     });
   });
 });
