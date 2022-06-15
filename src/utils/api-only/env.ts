@@ -10,6 +10,11 @@ export interface Env {
   };
 
   email: ContactEmail;
+
+  disqus: {
+    shortName: string;
+    blogUrl: string;
+  };
 }
 
 export interface Contact {
@@ -64,6 +69,11 @@ export const getEnv = (): Env => ({
 
     to: process.env.EMAIL_TO ?? "",
     from: process.env.EMAIL_FROM ?? ""
+  },
+
+  disqus: {
+    shortName: process.env.DISQUS_SHORT_NAME ?? "",
+    blogUrl: process.env.DISQUS_BLOG_URL ?? ""
   }
 });
 

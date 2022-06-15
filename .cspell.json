@@ -10,7 +10,8 @@
     "tobysmith",
     "zdnfztgnfgt", // Used as unique string to stop asset caching,
     "lerp",
-    "data-testid"
+    "data-testid",
+    "disqus"
   ],
   "ignoreWords": [],
   "import": [],

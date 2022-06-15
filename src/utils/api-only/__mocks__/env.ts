@@ -29,6 +29,11 @@ export const defaultMockEnv: Env = {
     pass: "email pass",
     to: "email to",
     from: "email from"
+  },
+
+  disqus: {
+    shortName: "disqus shortname",
+    blogUrl: "https://blog.url"
   }
 };
 

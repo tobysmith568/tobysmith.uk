@@ -30,6 +30,8 @@ describe("env utils", () => {
       process.env.EMAIL_PASS = "pass";
       process.env.EMAIL_TO = "email to";
       process.env.EMAIL_FROM = "email from";
+      process.env.DISQUS_SHORT_NAME = "disqus short name";
+      process.env.DISQUS_BLOG_URL = "disqus blog url";
 
       const result = getEnv();
 
@@ -62,6 +64,11 @@ describe("env utils", () => {
           pass: "pass",
           to: "email to",
           from: "email from"
+        },
+
+        disqus: {
+          shortName: "disqus short name",
+          blogUrl: "disqus blog url"
         }
       };
 
@@ -86,6 +93,8 @@ describe("env utils", () => {
       process.env.EMAIL_PASS = "";
       process.env.EMAIL_TO = "";
       process.env.EMAIL_FROM = "";
+      process.env.DISQUS_SHORT_NAME = "";
+      process.env.DISQUS_BLOG_URL = "";
 
       const result = getEnv();
 
@@ -118,6 +127,11 @@ describe("env utils", () => {
           pass: "",
           to: "",
           from: ""
+        },
+
+        disqus: {
+          shortName: "",
+          blogUrl: ""
         }
       };
 
