@@ -1,18 +1,18 @@
 import { css, Theme } from "@emotion/react";
 import styled from "@emotion/styled";
-import { CSSProperties, FC, SyntheticEvent, useCallback, useMemo, useRef, useState } from "react";
+import { FC, SyntheticEvent, useCallback, useMemo, useRef, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { SendEmailRequest, SendEmailResponse } from "../../pages/api/send-email";
 import { postJSON } from "../../utils/http-request";
+import Recaptcha from "./Recaptcha";
 import RecaptchaTerms from "./recaptcha-terms";
+import { useIsFormValid } from "./useIsFormValid";
 
-type State = "unsent" | "saving" | "sent" | "error";
+type State = "unsent" | "sending" | "sent" | "error";
 
 interface Props {
   clientKey: string;
 }
-
-const recaptchaStyle: CSSProperties = { visibility: "hidden" };
 
 const Form: FC<Props> = ({ clientKey }) => {
   const recaptchaRef = useRef<ReCAPTCHA>(null);
@@ -23,56 +23,47 @@ const Form: FC<Props> = ({ clientKey }) => {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
 
-  const isValid = useMemo(() => {
-    const validName = !!name && name.length > 0;
-    const validEmail = !!email && !!email.match(/^\S+@\S+\.\S+$/);
-    const validMessage = !!message && message.length > 0;
-
-    return validName && validEmail && validMessage;
-  }, [name, email, message]);
+  const isValid = useIsFormValid(name, email, message);
 
   const isDisabled = useMemo(() => formState !== "unsent", [formState]);
 
   const reset = useCallback(() => {
     recaptchaRef.current?.reset();
     setFormState("unsent");
-  }, []);
+  }, [recaptchaRef]);
 
-  const onSubmit = useCallback(
-    (e: SyntheticEvent) => {
-      e.preventDefault();
-
-      if (!recaptchaRef?.current?.executeAsync) {
+  const onNewToken = useCallback(
+    (token: string | null) => {
+      if (!token) {
         setFormState("error");
         return;
       }
 
-      setFormState("saving");
+      const body: SendEmailRequest = {
+        name,
+        email,
+        message,
+        recaptchaToken: token
+      };
 
-      recaptchaRef.current
-        .executeAsync()
-        .then(token => {
-          if (!token) {
-            setFormState("error");
-            return;
-          }
-
-          const body: SendEmailRequest = {
-            name,
-            email,
-            message,
-            recaptchaToken: token
-          };
-
-          postJSON<SendEmailRequest, SendEmailResponse>("/api/send-email", body)
-            .then(() => setFormState("sent"))
-            .catch(() => setFormState("error"));
-        })
-        .catch(e => {
-          console.error("Failed to get recaptcha token", { e });
-        });
+      postJSON<SendEmailRequest, SendEmailResponse>("/api/send-email", body).then(() =>
+        setFormState("sent")
+      );
     },
     [name, email, message]
+  );
+
+  const onSubmit = useCallback(
+    (e: SyntheticEvent) => {
+      e.preventDefault();
+      setFormState("sending");
+
+      recaptchaRef.current
+        ?.executeAsync()
+        .then(onNewToken)
+        .catch(() => setFormState("error"));
+    },
+    [onNewToken]
   );
 
   return (
@@ -112,12 +103,12 @@ const Form: FC<Props> = ({ clientKey }) => {
         onChange={e => setMessage(e.target.value)}></MessageInput>
       <br />
 
-      {(formState === "unsent" || formState === "saving") && (
+      {(formState === "unsent" || formState === "sending") && (
         <SubmitButton
           type="submit"
           value="Send Message"
           className="submit"
-          disabled={!isValid || formState === "saving"}
+          disabled={!isValid || formState === "sending"}
         />
       )}
 
@@ -127,7 +118,7 @@ const Form: FC<Props> = ({ clientKey }) => {
         <SubmitButton type="button" value="Error. Try Again?" onClick={reset} />
       )}
 
-      <ReCAPTCHA ref={recaptchaRef} size="invisible" sitekey={clientKey} style={recaptchaStyle} />
+      <Recaptcha recaptchaRef={recaptchaRef} clientKey={clientKey} />
       <RecaptchaTerms />
     </form>
   );
