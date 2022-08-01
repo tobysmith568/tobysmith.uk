@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`generate-rss-feed getRssFeedText should generate an rss feed from the given parameters 1`] = `
+<?xml version="1.0"
+      encoding="UTF-8"
+?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/"
+     xmlns:content="http://purl.org/rss/1.0/modules/content/"
+     xmlns:atom="http://www.w3.org/2005/Atom"
+     version="2.0"
+>
+  <channel>
+    <title>
+      <!--[CDATA[Feed title]]-->
+    </title>
+    <description>
+      <!--[CDATA[Feed description]]-->
+    </description>
+    <link>
+    https://site.url
+    <generator>
+      RSS for Node
+    </generator>
+    <lastBuildDate>
+      Mon, 01 Aug 2022 21:30:00 GMT
+    </lastBuildDate>
+    <atom:link href="https://feed.url"
+               rel="self"
+               type="application/rss+xml"
+    >
+    </atom:link>
+    <copyright>
+      <!--[CDATA[Feed copyright]]-->
+    </copyright>
+    <language>
+      <!--[CDATA[Feed language]]-->
+    </language>
+    <webMaster>
+      <!--[CDATA[Feed webmaster]]-->
+    </webMaster>
+    <ttl>
+      7
+    </ttl>
+    <item>
+      <title>
+        <!--[CDATA[Item #1 title]]-->
+      </title>
+      <description>
+        <!--[CDATA[Item #1 description]]-->
+      </description>
+      <link>
+      https://item1.url
+      <guid ispermalink="true">
+        https://item1.url
+      </guid>
+      <pubDate>
+        Invalid Date
+      </pubDate>
+    </item>
+    <item>
+      <title>
+        <!--[CDATA[Item #2 title]]-->
+      </title>
+      <description>
+        <!--[CDATA[Item #2 description]]-->
+      </description>
+      <link>
+      https://item2.url
+      <guid ispermalink="true">
+        https://item2.url
+      </guid>
+      <pubDate>
+        Invalid Date
+      </pubDate>
+    </item>
+  </channel>
+</rss>
+`;
