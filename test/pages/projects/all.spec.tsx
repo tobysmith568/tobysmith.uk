@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/dom";
 import getAllProjects, { Category } from "../../../src/gql/all-projects";
 import Seo, { noIndexValues } from "../../../src/gql/seo";
-import AllProjectsPage from "../../../src/pages/projects/all";
+import AllProjectsPage, { getServerSideProps } from "../../../src/pages/projects/all";
 import renderWithTheme from "../../test-helpers/render-with-theme";
 
 jest.mock("../../../src/components/seo");
@@ -43,9 +43,9 @@ describe("all", () => {
     it("should return the projectPage returned from getAllProjectsPage", async () => {
       mockedGetAllProjects.mockResolvedValue({ categories, seo });
 
-      const result = await getAllProjects();
+      const result = await getServerSideProps(undefined!);
 
-      expect(result).toEqual({ categories, seo });
+      expect(result).toEqual({ props: { categories, seo } });
     });
   });
 
