@@ -1,9 +1,13 @@
-import { screen } from "@testing-library/dom";
+import { screen, waitFor } from "@testing-library/dom";
 import userEvent from "@testing-library/user-event";
 import { Component } from "react";
 import { ReCAPTCHAProps } from "react-google-recaptcha";
 import Form from "../../../src/components/contact/form";
+import { postJSON } from "../../../src/utils/http-request";
 import renderWithTheme from "../../test-helpers/render-with-theme";
+
+const mockedRecaptchaReset = jest.fn();
+const mockedRecaptchaExecuteAsync = jest.fn();
 
 jest.mock("react-google-recaptcha", () => ({
   __esModule: true,
@@ -17,8 +21,13 @@ jest.mock("react-google-recaptcha", () => ({
         </>
       );
     }
+
+    reset = mockedRecaptchaReset;
+    executeAsync = mockedRecaptchaExecuteAsync;
   }
 }));
+
+jest.mock("../../../src/utils/http-request");
 
 const whitespaceValues = [
   { name: "space", value: " " },
@@ -31,6 +40,8 @@ describe("form", () => {
   const validName = "John Doe";
   const validEmail = "test@email.com";
   const validMessage = "This is a test message.";
+
+  const mockedPostJSON = jest.mocked(postJSON);
 
   let clientKey: string;
 
@@ -154,141 +165,97 @@ describe("form", () => {
     it("should be enabled when the form is valid", async () => {
       render();
 
-      const nameInput = screen.getByLabelText("Name");
-      await userEvent.type(nameInput, validName);
-
-      const emailInput = screen.getByLabelText("Email");
-      await userEvent.type(emailInput, validEmail);
-
-      const messageInput = screen.getByLabelText("Message");
-      await userEvent.type(messageInput, validMessage);
+      await populateForm(validName, validEmail, validMessage);
 
       const button = screen.getByRole("button", { name: "Send Message" });
 
       expect(button).not.toBeDisabled();
     });
 
-    it("should be disabled when the form is valid except the name is empty", () => {
+    it("should be disabled when the form is valid except the name is empty", async () => {
       render();
 
-      const emailInput = screen.getByLabelText("Email");
-      userEvent.type(emailInput, validEmail);
-
-      const messageInput = screen.getByLabelText("Message");
-      userEvent.type(messageInput, validMessage);
+      await populateForm("", validEmail, validMessage);
 
       const button = screen.getByRole("button", { name: "Send Message" });
 
       expect(button).toBeDisabled();
     });
 
-    it("should be disabled when the form is valid except the email is empty", () => {
+    it("should be disabled when the form is valid except the email is empty", async () => {
       render();
 
-      const nameInput = screen.getByLabelText("Name");
-      userEvent.type(nameInput, validName);
-
-      const messageInput = screen.getByLabelText("Message");
-      userEvent.type(messageInput, validMessage);
+      await populateForm(validName, "", validMessage);
 
       const button = screen.getByRole("button", { name: "Send Message" });
 
       expect(button).toBeDisabled();
     });
 
-    it("should be disabled when the form is valid except the message is empty", () => {
+    it("should be disabled when the form is valid except the message is empty", async () => {
       render();
 
-      const nameInput = screen.getByLabelText("Name");
-      userEvent.type(nameInput, validName);
-
-      const emailInput = screen.getByLabelText("Email");
-      userEvent.type(emailInput, validEmail);
+      await populateForm(validName, validEmail, undefined);
 
       const button = screen.getByRole("button", { name: "Send Message" });
 
       expect(button).toBeDisabled();
     });
 
-    it("should be disabled when the form is valid except the email does not contain an @", () => {
+    it("should be disabled when the form is valid except the email does not contain an @", async () => {
       render();
 
-      const nameInput = screen.getByLabelText("Name");
-      userEvent.type(nameInput, validName);
+      const invalidEmail = "this.contains.no.at.symbol";
 
-      const emailInput = screen.getByLabelText("Email");
-      userEvent.type(emailInput, "this.contains.no.at.symbol");
-
-      const messageInput = screen.getByLabelText("Message");
-      userEvent.type(messageInput, validMessage);
+      await populateForm(validName, invalidEmail, validMessage);
 
       const button = screen.getByRole("button", { name: "Send Message" });
 
       expect(button).toBeDisabled();
     });
 
-    it("should be disabled when the form is valid except the email does not contain a . after the @", () => {
+    it("should be disabled when the form is valid except the email does not contain a . after the @", async () => {
       render();
 
-      const nameInput = screen.getByLabelText("Name");
-      userEvent.type(nameInput, validName);
+      const invalidEmail = "this.contains.no.dot.after.@symbol";
 
-      const emailInput = screen.getByLabelText("Email");
-      userEvent.type(emailInput, "this.contains.no.dot.after.@symbol");
-
-      const messageInput = screen.getByLabelText("Message");
-      userEvent.type(messageInput, validMessage);
+      await populateForm(validName, invalidEmail, validMessage);
 
       const button = screen.getByRole("button", { name: "Send Message" });
 
       expect(button).toBeDisabled();
     });
 
-    it("should be disabled when the form is valid except the email contains nothing before the @", () => {
+    it("should be disabled when the form is valid except the email contains nothing before the @", async () => {
       render();
 
-      const nameInput = screen.getByLabelText("Name");
-      userEvent.type(nameInput, validName);
+      const invalidEmail = "@this.contains.nothing.before.at.symbol";
 
-      const emailInput = screen.getByLabelText("Email");
-      userEvent.type(emailInput, "@this.contains.nothing.before.at.symbol");
-
-      const messageInput = screen.getByLabelText("Message");
-      userEvent.type(messageInput, validMessage);
+      await populateForm(validName, invalidEmail, validMessage);
 
       const button = screen.getByRole("button", { name: "Send Message" });
 
       expect(button).toBeDisabled();
     });
 
-    it("should be disabled when the form is valid except the email contains nothing after the .", () => {
+    it("should be disabled when the form is valid except the email contains nothing after the .", async () => {
       render();
 
-      const nameInput = screen.getByLabelText("Name");
-      userEvent.type(nameInput, validName);
+      const invalidEmail = "this@contains-nothing-after-dot-symbol.";
 
-      const emailInput = screen.getByLabelText("Email");
-      userEvent.type(emailInput, "this@contains-nothing-after-dot-symbol.");
-
-      const messageInput = screen.getByLabelText("Message");
-      userEvent.type(messageInput, validMessage);
+      await populateForm(validName, invalidEmail, validMessage);
 
       const button = screen.getByRole("button", { name: "Send Message" });
 
       expect(button).toBeDisabled();
     });
 
-    it("should be disabled when the form is valid except the email contains nothing between the @ and the .", () => {
+    it("should be disabled when the form is valid except the email contains nothing between the @ and the .", async () => {
       render();
 
-      const nameInput = screen.getByLabelText("Name");
-      userEvent.type(nameInput, validName);
+      const invalidEmail = "this-contains-nothing-between-@.-and-dot";
 
-      const emailInput = screen.getByLabelText("Email");
-      userEvent.type(emailInput, "this-contains-nothing-between-@.-and-dot");
-
-      const messageInput = screen.getByLabelText("Message");
-      userEvent.type(messageInput, validMessage);
+      await populateForm(validName, invalidEmail, validMessage);
 
       const button = screen.getByRole("button", { name: "Send Message" });
 
@@ -296,65 +263,352 @@ describe("form", () => {
     });
 
     whitespaceValues.forEach(whitespace => {
-      it(`should be disabled when the form is valid except the email contains a ${whitespace.name} before the @`, () => {
+      it(`should be disabled when the form is valid except the email contains a ${whitespace.name} before the @`, async () => {
         render();
 
-        const nameInput = screen.getByLabelText("Name");
-        userEvent.type(nameInput, validName);
+        const invalidEmail = `this-contains-a-${whitespace.name}-before-the${whitespace.value}@test.com`;
 
-        const emailInput = screen.getByLabelText("Email");
-        userEvent.type(
-          emailInput,
-          `this-contains-a-${whitespace.name}-before-the${whitespace.value}@test.com`
-        );
-
-        const messageInput = screen.getByLabelText("Message");
-        userEvent.type(messageInput, validMessage);
+        await populateForm(validName, invalidEmail, validMessage);
 
         const button = screen.getByRole("button", { name: "Send Message" });
 
         expect(button).toBeDisabled();
       });
 
-      it(`should be disabled when the form is valid except the email contains a ${whitespace.name} between the @ and the .`, () => {
+      it(`should be disabled when the form is valid except the email contains a ${whitespace.name} between the @ and the .`, async () => {
         render();
 
-        const nameInput = screen.getByLabelText("Name");
-        userEvent.type(nameInput, validName);
+        const invalidEmail = `this-contains-a-${whitespace.name}-after-the@test-${whitespace.value}-domain.com`;
 
-        const emailInput = screen.getByLabelText("Email");
-        userEvent.type(
-          emailInput,
-          `this-contains-a-${whitespace.name}-after-the@test-${whitespace.value}-domain.com`
-        );
-
-        const messageInput = screen.getByLabelText("Message");
-        userEvent.type(messageInput, validMessage);
+        await populateForm(validName, invalidEmail, validMessage);
 
         const button = screen.getByRole("button", { name: "Send Message" });
 
         expect(button).toBeDisabled();
       });
 
-      it(`should be disabled when the form is valid except the email contains a ${whitespace.name} after the .`, () => {
+      it(`should be disabled when the form is valid except the email contains a ${whitespace.name} after the .`, async () => {
         render();
 
-        const nameInput = screen.getByLabelText("Name");
-        userEvent.type(nameInput, validName);
+        const invalidEmail = `this@contains-a-${whitespace.name}-after-the.co${whitespace.value}m`;
 
-        const emailInput = screen.getByLabelText("Email");
-        userEvent.type(
-          emailInput,
-          `this@contains-a-${whitespace.name}-after-the.co${whitespace.value}m`
-        );
-
-        const messageInput = screen.getByLabelText("Message");
-        userEvent.type(messageInput, validMessage);
+        await populateForm(validName, invalidEmail, validMessage);
 
         const button = screen.getByRole("button", { name: "Send Message" });
 
         expect(button).toBeDisabled();
       });
     });
+
+    describe("onClick", () => {
+      it("should disable the name input", async () => {
+        mockedRecaptchaExecuteAsync.mockResolvedValue("token");
+
+        render();
+
+        await populateForm(validName, validEmail, validMessage);
+
+        await submitForm();
+
+        const nameInput = screen.getByLabelText("Name");
+        expect(nameInput).toBeDisabled();
+      });
+
+      it("should disable the email input", async () => {
+        mockedRecaptchaExecuteAsync.mockResolvedValue("token");
+
+        render();
+
+        await populateForm(validName, validEmail, validMessage);
+
+        await submitForm();
+
+        const nameInput = screen.getByLabelText("Email");
+        expect(nameInput).toBeDisabled();
+      });
+
+      it("should disable the message input", async () => {
+        mockedRecaptchaExecuteAsync.mockResolvedValue("token");
+
+        render();
+
+        await populateForm(validName, validEmail, validMessage);
+
+        await submitForm();
+
+        const nameInput = screen.getByLabelText("Message");
+        expect(nameInput).toBeDisabled();
+      });
+
+      it("should disable the submit button", async () => {
+        mockedRecaptchaExecuteAsync.mockResolvedValue("token");
+
+        render();
+
+        await populateForm(validName, validEmail, validMessage);
+
+        await submitForm();
+
+        const submitButton = screen.getByRole("button", { name: "Send Message" });
+        expect(submitButton).toBeDisabled();
+      });
+
+      it("should request a recaptcha token from the recaptcha ref", async () => {
+        mockedRecaptchaExecuteAsync.mockResolvedValue("token");
+
+        render();
+
+        await populateForm(validName, validEmail, validMessage);
+
+        await submitForm();
+
+        expect(mockedRecaptchaExecuteAsync).toBeCalledTimes(1);
+      });
+
+      [null, undefined].forEach(falsy =>
+        describe(`if the recaptcha token is falsy (${falsy})`, () => {
+          it("should show the try again button", async () => {
+            mockedRecaptchaExecuteAsync.mockResolvedValue(falsy);
+
+            render();
+
+            await populateForm(validName, validEmail, validMessage);
+
+            await submitForm();
+
+            await waitFor(() => {
+              const tryAgainButton = screen.getByRole("button", { name: "Error. Try Again?" });
+              expect(tryAgainButton).toBeInTheDocument();
+            });
+          });
+
+          it("should not show the submit button", async () => {
+            mockedRecaptchaExecuteAsync.mockResolvedValue(falsy);
+
+            render();
+
+            await populateForm(validName, validEmail, validMessage);
+
+            await submitForm();
+
+            await waitFor(() => {
+              const submitButton = screen.queryByRole("button", { name: "Send Message" });
+              expect(submitButton).toBe(null);
+            });
+          });
+
+          describe("the try again button", () => {
+            it("should enable the name input", async () => {
+              mockedRecaptchaExecuteAsync.mockResolvedValue(falsy);
+
+              render();
+
+              await populateForm(validName, validEmail, validMessage);
+
+              await submitForm();
+
+              await waitFor(async () => {
+                const tryAgainButton = screen.getByRole("button", { name: "Error. Try Again?" });
+                await userEvent.click(tryAgainButton);
+
+                const nameInput = screen.getByLabelText("Name");
+                expect(nameInput).not.toBeDisabled();
+              });
+            });
+
+            it("should enable the email input", async () => {
+              mockedRecaptchaExecuteAsync.mockResolvedValue(falsy);
+
+              render();
+
+              await populateForm(validName, validEmail, validMessage);
+
+              await submitForm();
+
+              await waitFor(async () => {
+                const tryAgainButton = screen.getByRole("button", { name: "Error. Try Again?" });
+                await userEvent.click(tryAgainButton);
+
+                const nameInput = screen.getByLabelText("Email");
+                expect(nameInput).not.toBeDisabled();
+              });
+            });
+
+            it("should enable the message input", async () => {
+              mockedRecaptchaExecuteAsync.mockResolvedValue(falsy);
+
+              render();
+
+              await populateForm(validName, validEmail, validMessage);
+
+              await submitForm();
+
+              await waitFor(async () => {
+                const tryAgainButton = screen.getByRole("button", { name: "Error. Try Again?" });
+                await userEvent.click(tryAgainButton);
+
+                const nameInput = screen.getByLabelText("Message");
+                expect(nameInput).not.toBeDisabled();
+              });
+            });
+
+            it("should re-show the submit button", async () => {
+              mockedRecaptchaExecuteAsync.mockResolvedValue(falsy);
+
+              render();
+
+              await populateForm(validName, validEmail, validMessage);
+
+              await submitForm();
+
+              await waitFor(() => {
+                const submitButton = screen.getByRole("button", { name: "Send Message" });
+                expect(submitButton).toBeInTheDocument();
+              });
+            });
+          });
+        })
+      );
+
+      describe("if the recaptcha token is not falsy", () => {
+        const recaptchaToken = "token";
+
+        beforeEach(() => mockedRecaptchaExecuteAsync.mockResolvedValue(recaptchaToken));
+
+        it("should post to the send email api", async () => {
+          render();
+
+          await populateForm(validName, validEmail, validMessage);
+
+          await submitForm();
+
+          expect(mockedPostJSON).toHaveBeenCalledTimes(1);
+          expect(mockedPostJSON).toHaveBeenCalledWith("/api/send-email", expect.anything());
+        });
+
+        it("should post the name to the send email api", async () => {
+          render();
+
+          await populateForm(validName, validEmail, validMessage);
+
+          await submitForm();
+
+          expect(mockedPostJSON).toHaveBeenCalledTimes(1);
+          expect(mockedPostJSON).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({ name: validName })
+          );
+        });
+
+        it("should post the email to the send email api", async () => {
+          render();
+
+          await populateForm(validName, validEmail, validMessage);
+
+          await submitForm();
+
+          expect(mockedPostJSON).toHaveBeenCalledTimes(1);
+          expect(mockedPostJSON).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({ email: validEmail })
+          );
+        });
+
+        it("should post the message to the send email api", async () => {
+          render();
+
+          await populateForm(validName, validEmail, validMessage);
+
+          await submitForm();
+
+          expect(mockedPostJSON).toHaveBeenCalledTimes(1);
+          expect(mockedPostJSON).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({ message: validMessage })
+          );
+        });
+
+        it("should post the recaptcha token to the send email api", async () => {
+          render();
+
+          await populateForm(validName, validEmail, validMessage);
+
+          await submitForm();
+
+          expect(mockedPostJSON).toHaveBeenCalledTimes(1);
+          expect(mockedPostJSON).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({ recaptchaToken })
+          );
+        });
+
+        describe("if the post does not throw", () => {
+          beforeEach(() => mockedPostJSON.mockResolvedValue(undefined));
+
+          it("should show a 'Sent!' title", async () => {
+            render();
+
+            await populateForm(validName, validEmail, validMessage);
+
+            await submitForm();
+
+            await waitFor(() => {
+              const sentTitle = screen.queryByRole("heading", { name: "Sent!" });
+              expect(sentTitle).toBeTruthy();
+            });
+          });
+
+          it("should not show the submit button", async () => {
+            render();
+
+            await populateForm(validName, validEmail, validMessage);
+
+            await submitForm();
+
+            await waitFor(() => {
+              const submitButton = screen.queryByRole("button", { name: "Send Message" });
+              expect(submitButton).toBe(null);
+            });
+          });
+
+          it("should not show the retry button", async () => {
+            render();
+
+            await populateForm(validName, validEmail, validMessage);
+
+            await submitForm();
+
+            await waitFor(() => {
+              const retryButton = screen.queryByRole("button", {
+                name: "Error. Try Again?"
+              });
+              expect(retryButton).toBe(null);
+            });
+          });
+        });
+      });
+    });
   });
 });
+
+const populateForm = async (validName?: string, validEmail?: string, validMessage?: string) => {
+  if (validName) {
+    const nameInput = screen.getByLabelText("Name");
+    await userEvent.type(nameInput, validName);
+  }
+
+  if (validEmail) {
+    const emailInput = screen.getByLabelText("Email");
+    await userEvent.type(emailInput, validEmail);
+  }
+
+  if (validMessage) {
+    const messageInput = screen.getByLabelText("Message");
+    await userEvent.type(messageInput, validMessage);
+  }
+};
+
+const submitForm = async () => {
+  const submitButton = screen.getByRole("button", { name: "Send Message" });
+  await userEvent.click(submitButton);
+};

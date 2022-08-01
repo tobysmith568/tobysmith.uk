@@ -1,7 +1,3 @@
-/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
-
-// cspell:words Serializers
-
 const nextJest = require("next/jest");
 
 const createJestConfig = nextJest({
@@ -14,7 +10,8 @@ const customJestConfig = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
   moduleDirectories: ["node_modules", "<rootDir>/"],
   testEnvironment: "jest-environment-jsdom",
-  testPathIgnorePatterns: ["/node_modules/", "/e2e/"]
+  testPathIgnorePatterns: ["/node_modules/", "/e2e/"],
+  collectCoverageFrom: ["<rootDir>/src/**/*.{ts,tsx}"]
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
