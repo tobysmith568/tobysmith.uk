@@ -137,5 +137,21 @@ describe("env utils", () => {
 
       expect(result).toEqual(expectedEnv);
     });
+
+    it("should return the default value for the email port when the env var is whitespace", () => {
+      process.env.EMAIL_PORT = "     ";
+
+      const result = getEnv();
+
+      expect(result.email.port).toBe(465);
+    });
+
+    it("should return the default value for the email port when the env var is not a number", () => {
+      process.env.EMAIL_PORT = "Not a number";
+
+      const result = getEnv();
+
+      expect(result.email.port).toBe(465);
+    });
   });
 });

@@ -8,12 +8,6 @@ describe("generate-rss-feed", () => {
 
   afterAll(() => jest.useRealTimers());
 
-  describe("Timezones", () => {
-    it("should always be UTC", () => {
-      expect(new Date().getTimezoneOffset()).toBe(0);
-    });
-  });
-
   describe("getRssFeedText", () => {
     it("should generate an rss feed from the given parameters", () => {
       const result = getRssFeedText({

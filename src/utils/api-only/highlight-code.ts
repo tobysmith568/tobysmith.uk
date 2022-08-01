@@ -59,6 +59,7 @@ const removeDocumentPrefix = (code: string): string => {
     return code.substring(documentPrefix.length);
   }
 
+  /* istanbul ignore next */
   return code;
 };
 
@@ -67,5 +68,6 @@ const removeDocumentSuffix = (code: string): string => {
     return code.substring(0, code.length - documentSuffix.length);
   }
 
+  /* istanbul ignore next */
   return code;
 };
