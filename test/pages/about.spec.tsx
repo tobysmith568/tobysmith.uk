@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/dom";
+import { screen } from "@testing-library/react";
 import getAboutPage, { AboutPage as AboutPageType } from "../../src/gql/about";
 import Seo, { noIndexValues } from "../../src/gql/seo";
 import AboutPage, { getServerSideProps } from "../../src/pages/about";

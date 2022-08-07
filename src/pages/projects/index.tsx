@@ -63,12 +63,6 @@ const Title = styled.h1`
   }
 `;
 
-const AllProjects = styled(UnderlineAnchor)`
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-`;
-
 const Subtitle = styled.p`
   margin-top: 0;
 `;

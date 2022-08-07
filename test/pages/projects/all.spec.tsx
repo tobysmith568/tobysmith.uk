@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/dom";
+import { screen } from "@testing-library/react";
 import getAllProjects, { Category } from "../../../src/gql/all-projects";
 import Seo, { noIndexValues } from "../../../src/gql/seo";
 import AllProjectsPage, { getServerSideProps } from "../../../src/pages/projects/all";

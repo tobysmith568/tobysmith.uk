@@ -17,7 +17,7 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ pa
   const term = params?.searchTerm;
 
   if (!term) {
-    return { redirect: { destination: "/blog" }, props: null! };
+    return { redirect: { destination: "/blog", permanent: false } };
   }
 
   const blog = await getBlogSearchPosts(term);

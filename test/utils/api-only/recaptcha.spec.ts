@@ -1,3 +1,4 @@
+// eslint-disable-next-line jest/no-mocks-import
 import { defaultMockEnv } from "../../../src/utils/api-only/__mocks__/env";
 import { postJSON } from "../../../src/utils/http-request";
 

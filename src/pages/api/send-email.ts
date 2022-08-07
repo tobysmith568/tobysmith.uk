@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest } from "next";
 import { RouterBuilder } from "next-api-handler";
 import { z } from "zod";
 import { getEnv } from "../../utils/api-only/env";
@@ -21,7 +21,7 @@ export type SendEmailResponse = {
   success: boolean;
 };
 
-const postHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+const postHandler = async (req: NextApiRequest) => {
   const { name, email, message, recaptchaToken } = parseBody(req, postRequestValidator);
 
   await verifyRecaptchaToken(recaptchaToken);

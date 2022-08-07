@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/dom";
+import { screen } from "@testing-library/react";
 import ExternalContactLink, { Props } from "../../../src/components/contact/external-contact-link";
 import renderWithTheme from "../../test-helpers/render-with-theme";
 

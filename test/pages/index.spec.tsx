@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/dom";
+import { screen } from "@testing-library/react";
 import Home from "../../src/pages";
 import renderWithTheme from "../test-helpers/render-with-theme";
 
@@ -30,7 +30,7 @@ describe("index", () => {
         );
       });
 
-      it("should not set the seo noIndex value ", () => {
+      it("should not set the seo noIndex value", () => {
         render();
 
         const seoNoIndex = screen.getByTestId("seo-noindex");

@@ -1,4 +1,4 @@
-import { screen, waitFor } from "@testing-library/dom";
+import { screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Component } from "react";
 import { ReCAPTCHAProps } from "react-google-recaptcha";
@@ -362,7 +362,7 @@ describe("form", () => {
 
         await submitForm();
 
-        expect(mockedRecaptchaExecuteAsync).toBeCalledTimes(1);
+        expect(mockedRecaptchaExecuteAsync).toHaveBeenCalledTimes(1);
       });
 
       [null, undefined].forEach(falsy =>
@@ -393,7 +393,7 @@ describe("form", () => {
 
             await waitFor(() => {
               const submitButton = screen.queryByRole("button", { name: "Send Message" });
-              expect(submitButton).toBe(null);
+              expect(submitButton).toBeNull();
             });
           });
 
@@ -567,7 +567,7 @@ describe("form", () => {
 
             await waitFor(() => {
               const submitButton = screen.queryByRole("button", { name: "Send Message" });
-              expect(submitButton).toBe(null);
+              expect(submitButton).toBeNull();
             });
           });
 
@@ -582,7 +582,7 @@ describe("form", () => {
               const retryButton = screen.queryByRole("button", {
                 name: "Error. Try Again?"
               });
-              expect(retryButton).toBe(null);
+              expect(retryButton).toBeNull();
             });
           });
         });

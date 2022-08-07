@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/dom";
+import { screen } from "@testing-library/react";
 import { NextRouter, useRouter } from "next/router";
 import NavbarAnchor from "../../../src/components/header/navbar-anchor";
 import renderWithTheme from "../../test-helpers/render-with-theme";

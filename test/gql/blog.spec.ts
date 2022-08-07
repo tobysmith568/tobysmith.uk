@@ -32,7 +32,7 @@ describe("gql blog", () => {
         postPages: []
       });
 
-      await expect(getBlogPosts()).rejects.toThrowError("Expected exactly one postPage but got 0");
+      await expect(getBlogPosts()).rejects.toThrow("Expected exactly one postPage but got 0");
     });
 
     it("should throw if the client returns more than one postPage", async () => {
@@ -40,7 +40,7 @@ describe("gql blog", () => {
         postPages: [fakeBlogResponse, fakeBlogResponse]
       });
 
-      await expect(getBlogPosts()).rejects.toThrowError("Expected exactly one postPage but got 2");
+      await expect(getBlogPosts()).rejects.toThrow("Expected exactly one postPage but got 2");
     });
 
     it("should return the seo of the postPage when the client returns exactly one", async () => {

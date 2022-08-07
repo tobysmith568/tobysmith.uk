@@ -31,7 +31,7 @@ describe("gql projects", () => {
       await getProjectsPage();
 
       const actualVariables = mockedClientRequest.mock.calls[0][1];
-      expect(actualVariables).toStrictEqual(undefined);
+      expect(actualVariables).toBeUndefined();
     });
 
     it("should throw if the client returns zero project pages", async () => {
@@ -39,7 +39,7 @@ describe("gql projects", () => {
         projectPages: []
       });
 
-      await expect(getProjectsPage()).rejects.toThrowError(
+      await expect(getProjectsPage()).rejects.toThrow(
         "Expected exactly one project page but got 0"
       );
     });
@@ -49,7 +49,7 @@ describe("gql projects", () => {
         projectPages: [{}, {}]
       });
 
-      await expect(getProjectsPage()).rejects.toThrowError(
+      await expect(getProjectsPage()).rejects.toThrow(
         "Expected exactly one project page but got 2"
       );
     });

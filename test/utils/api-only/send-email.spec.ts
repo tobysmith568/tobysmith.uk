@@ -1,5 +1,6 @@
 import { createTransport, Transporter } from "nodemailer";
 import { getEnv } from "../../../src/utils/api-only/env";
+// eslint-disable-next-line jest/no-mocks-import
 import { defaultMockEnv } from "../../../src/utils/api-only/__mocks__/env";
 
 jest.mock("../../../src/utils/api-only/env", () => ({
@@ -39,8 +40,12 @@ describe("send-email", () => {
         require("../../../src/utils/api-only/send-email");
       });
 
-      const args = mockedCreateTransport.mock.calls[0] as any;
-      expect(args[0].host).toBe(defaultMockEnv.email.host);
+      expect(mockedCreateTransport).toHaveBeenCalledTimes(1);
+      expect(mockedCreateTransport).toHaveBeenCalledWith(
+        expect.objectContaining({
+          host: defaultMockEnv.email.host
+        })
+      );
     });
 
     it("should create a transport with the port", () => {
@@ -48,8 +53,12 @@ describe("send-email", () => {
         require("../../../src/utils/api-only/send-email");
       });
 
-      const args = mockedCreateTransport.mock.calls[0] as any;
-      expect(args[0].port).toBe(defaultMockEnv.email.port);
+      expect(mockedCreateTransport).toHaveBeenCalledTimes(1);
+      expect(mockedCreateTransport).toHaveBeenCalledWith(
+        expect.objectContaining({
+          port: defaultMockEnv.email.port
+        })
+      );
     });
 
     it("should create a transport with the secure flag set to true when the port is 465", () => {
@@ -57,8 +66,12 @@ describe("send-email", () => {
         require("../../../src/utils/api-only/send-email");
       });
 
-      const args = mockedCreateTransport.mock.calls[0] as any;
-      expect(args[0].secure).toBe(true);
+      expect(mockedCreateTransport).toHaveBeenCalledTimes(1);
+      expect(mockedCreateTransport).toHaveBeenCalledWith(
+        expect.objectContaining({
+          secure: true
+        })
+      );
     });
 
     it("should create a transport with the secure flag set to false when the port is not 465", () => {
@@ -71,8 +84,12 @@ describe("send-email", () => {
         require("../../../src/utils/api-only/send-email");
       });
 
-      const args = mockedCreateTransport.mock.calls[0] as any;
-      expect(args[0].secure).toBe(false);
+      expect(mockedCreateTransport).toHaveBeenCalledTimes(1);
+      expect(mockedCreateTransport).toHaveBeenCalledWith(
+        expect.objectContaining({
+          secure: false
+        })
+      );
     });
 
     it("should create a transport with the user", () => {
@@ -80,8 +97,14 @@ describe("send-email", () => {
         require("../../../src/utils/api-only/send-email");
       });
 
-      const args = mockedCreateTransport.mock.calls[0] as any;
-      expect(args[0].auth.user).toBe(defaultMockEnv.email.user);
+      expect(mockedCreateTransport).toHaveBeenCalledTimes(1);
+      expect(mockedCreateTransport).toHaveBeenCalledWith(
+        expect.objectContaining({
+          auth: expect.objectContaining({
+            user: defaultMockEnv.email.user
+          })
+        })
+      );
     });
 
     it("should create a transport with the pass", () => {
@@ -89,8 +112,14 @@ describe("send-email", () => {
         require("../../../src/utils/api-only/send-email");
       });
 
-      const args = mockedCreateTransport.mock.calls[0] as any;
-      expect(args[0].auth.pass).toBe(defaultMockEnv.email.pass);
+      expect(mockedCreateTransport).toHaveBeenCalledTimes(1);
+      expect(mockedCreateTransport).toHaveBeenCalledWith(
+        expect.objectContaining({
+          auth: expect.objectContaining({
+            pass: defaultMockEnv.email.pass
+          })
+        })
+      );
     });
   });
 
@@ -102,12 +131,11 @@ describe("send-email", () => {
         sendMail: sendMailMock
       } as unknown as Transporter<unknown>);
 
-      let emailModule: any;
-      jest.isolateModules(() => {
-        emailModule = require("../../../src/utils/api-only/send-email");
-      });
+      jest.isolateModules(async () => {
+        const emailModule = require("../../../src/utils/api-only/send-email");
 
-      await emailModule.sendPlainTextEmail(to, fromName, fromEmail, subject, text);
+        await emailModule.sendPlainTextEmail(to, fromName, fromEmail, subject, text);
+      });
 
       const args = sendMailMock.mock.calls[0];
       expect(args[0].to).toBe(to);
@@ -120,12 +148,11 @@ describe("send-email", () => {
         sendMail: sendMailMock
       } as unknown as Transporter<unknown>);
 
-      let emailModule: any;
-      jest.isolateModules(() => {
-        emailModule = require("../../../src/utils/api-only/send-email");
-      });
+      jest.isolateModules(async () => {
+        const emailModule = require("../../../src/utils/api-only/send-email");
 
-      await emailModule.sendPlainTextEmail(to, fromName, fromEmail, subject, text);
+        await emailModule.sendPlainTextEmail(to, fromName, fromEmail, subject, text);
+      });
 
       const args = sendMailMock.mock.calls[0];
       expect(args[0].subject).toBe(subject);
@@ -138,12 +165,11 @@ describe("send-email", () => {
         sendMail: sendMailMock
       } as unknown as Transporter<unknown>);
 
-      let emailModule: any;
-      jest.isolateModules(() => {
-        emailModule = require("../../../src/utils/api-only/send-email");
-      });
+      jest.isolateModules(async () => {
+        const emailModule = require("../../../src/utils/api-only/send-email");
 
-      await emailModule.sendPlainTextEmail(to, fromName, fromEmail, subject, text);
+        await emailModule.sendPlainTextEmail(to, fromName, fromEmail, subject, text);
+      });
 
       const args = sendMailMock.mock.calls[0];
       expect(args[0].text).toBe(text);
@@ -156,12 +182,11 @@ describe("send-email", () => {
         sendMail: sendMailMock
       } as unknown as Transporter<unknown>);
 
-      let emailModule: any;
-      jest.isolateModules(() => {
-        emailModule = require("../../../src/utils/api-only/send-email");
-      });
+      jest.isolateModules(async () => {
+        const emailModule = require("../../../src/utils/api-only/send-email");
 
-      await emailModule.sendPlainTextEmail(to, fromName, fromEmail, subject, text);
+        await emailModule.sendPlainTextEmail(to, fromName, fromEmail, subject, text);
+      });
 
       const args = sendMailMock.mock.calls[0];
       expect(args[0].from).toBe(`${fromName} <${fromEmail}>`);

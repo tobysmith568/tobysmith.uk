@@ -1,6 +1,5 @@
-import { screen } from "@testing-library/dom";
+import { screen } from "@testing-library/react";
 import { GetServerSidePropsContext } from "next";
-import useSearchTerm from "../../../../src/components/header/useSearchTerm";
 import getBlogSearchPosts, { Blog, Post } from "../../../../src/gql/blog-search";
 import { noIndexValues } from "../../../../src/gql/seo";
 import SearchResultsPage, {
@@ -31,7 +30,6 @@ jest.mock("../../../../src/components/header/useSearchTerm", () => ({
 
 describe("[searchTerm]", () => {
   const mockedGetBlogSearchPosts = jest.mocked(getBlogSearchPosts);
-  const mockedSetUseSearchTerm = jest.mocked(useSearchTerm);
 
   const props: Props = {
     posts: [{ slug: "slug#1" }, { slug: "slug#2" }] as Post[],
@@ -54,6 +52,7 @@ describe("[searchTerm]", () => {
       const result = await getServerSideProps(context);
 
       expect(result).toHaveProperty("redirect.destination", "/blog");
+      expect(result).toHaveProperty("redirect.permanent", false);
     });
 
     it("should return null props if there's no params", async () => {
@@ -61,7 +60,7 @@ describe("[searchTerm]", () => {
 
       const result = await getServerSideProps(context);
 
-      expect(result).toHaveProperty("props", null);
+      expect(result).not.toHaveProperty("props");
     });
 
     it("should return a redirect to the blog if there's no search term param", async () => {
@@ -72,6 +71,7 @@ describe("[searchTerm]", () => {
       const result = await getServerSideProps(context);
 
       expect(result).toHaveProperty("redirect.destination", "/blog");
+      expect(result).toHaveProperty("redirect.permanent", false);
     });
 
     it("should return null props if there's no search term param", async () => {
@@ -81,7 +81,7 @@ describe("[searchTerm]", () => {
 
       const result = await getServerSideProps(context);
 
-      expect(result).toHaveProperty("props", null);
+      expect(result).not.toHaveProperty("props");
     });
 
     it("should call getBlogSearchPosts with the search term", async () => {

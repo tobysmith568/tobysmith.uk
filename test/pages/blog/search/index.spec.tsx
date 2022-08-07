@@ -9,17 +9,17 @@ describe("blog search", () => {
       expect(result).toHaveProperty("redirect.destination", "/blog");
     });
 
-    it("should always return null props", async () => {
+    it("should always return no props", async () => {
       const result = await getServerSideProps(null!);
 
-      expect(result).toHaveProperty("props", null);
+      expect(result).toHaveProperty("props", {});
     });
   });
 
   describe("Page", () => {
     it("should always render null", () => {
       const { container } = render(<Page />);
-      expect(container.children).toHaveLength(0);
+      expect(container.innerHTML).toHaveLength(0);
     });
   });
 });

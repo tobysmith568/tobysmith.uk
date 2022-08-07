@@ -34,7 +34,7 @@ describe("gql blog search", () => {
         postPages: []
       });
 
-      await expect(getBlogSearchPosts(searchTerm)).rejects.toThrowError(
+      await expect(getBlogSearchPosts(searchTerm)).rejects.toThrow(
         "Expected exactly one postPage but got 0"
       );
     });
@@ -44,7 +44,7 @@ describe("gql blog search", () => {
         postPages: [fakeBlogResponse, fakeBlogResponse]
       });
 
-      await expect(getBlogSearchPosts(searchTerm)).rejects.toThrowError(
+      await expect(getBlogSearchPosts(searchTerm)).rejects.toThrow(
         "Expected exactly one postPage but got 2"
       );
     });

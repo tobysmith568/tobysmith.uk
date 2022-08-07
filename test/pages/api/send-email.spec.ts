@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import sendEmail from "../../../src/pages/api/send-email";
 import { verifyRecaptchaToken } from "../../../src/utils/api-only/recaptcha";
 import { sendPlainTextEmail } from "../../../src/utils/api-only/send-email";
+// eslint-disable-next-line jest/no-mocks-import
 import { defaultMockEnv } from "../../../src/utils/api-only/__mocks__/env";
 
 jest.mock("../../../src/utils/api-only/env");

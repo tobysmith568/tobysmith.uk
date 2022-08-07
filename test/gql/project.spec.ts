@@ -57,7 +57,7 @@ describe("gql project", () => {
           post: undefined
         });
 
-        await expect(getProject(projectSlug)).rejects.toThrowError(
+        await expect(getProject(projectSlug)).rejects.toThrow(
           `Could not find a project with the slug ${projectSlug}`
         );
       });

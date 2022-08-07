@@ -25,7 +25,7 @@ describe("http request", () => {
     it("should call the axios post method once", async () => {
       await postJSON("/anything", {});
 
-      expect(mockedAxiosPost).toBeCalledTimes(1);
+      expect(mockedAxiosPost).toHaveBeenCalledTimes(1);
     });
 
     ["https://some.random/url/", "a/relative/path"].forEach(url =>
@@ -83,12 +83,7 @@ describe("http request", () => {
 
         mockedAxiosPost.mockResolvedValue(axiosResult);
 
-        try {
-          await postJSON("/anything", {});
-          fail("line above should have thrown");
-        } catch (e) {
-          expect(e).toBe(axiosResult);
-        }
+        await expect(postJSON("/anything", {})).rejects.toEqual(axiosResult);
       })
     );
 

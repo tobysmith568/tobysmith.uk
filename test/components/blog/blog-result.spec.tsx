@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/dom";
+import { screen } from "@testing-library/react";
 import BlogResult from "../../../src/components/blog/blog-result";
 import { Post } from "../../../src/gql/blog";
 import renderWithTheme from "../../test-helpers/render-with-theme";
@@ -38,31 +38,25 @@ describe("blog-result", () => {
     it("should include the post title in the link", () => {
       render();
 
-      const title = screen.getByText(post.title);
-      const nearestLink = title.closest("a");
+      const title = screen.getByRole("link");
 
-      expect(nearestLink).toBeInTheDocument();
-      expect(nearestLink).toHaveAttribute("href", `/blog/${post.slug}`);
+      expect(title).toHaveTextContent(new RegExp(post.title));
     });
 
     it("should include the post date in the link", () => {
       render();
 
-      const date = screen.getByText(post.date);
-      const nearestLink = date.closest("a");
+      const title = screen.getByRole("link");
 
-      expect(nearestLink).toBeInTheDocument();
-      expect(nearestLink).toHaveAttribute("href", `/blog/${post.slug}`);
+      expect(title).toHaveTextContent(new RegExp(post.date));
     });
 
     it("should include the post excerpt in the link", () => {
       render();
 
-      const excerpt = screen.getByText(post.excerpt);
-      const nearestLink = excerpt.closest("a");
+      const title = screen.getByRole("link");
 
-      expect(nearestLink).toBeInTheDocument();
-      expect(nearestLink).toHaveAttribute("href", `/blog/${post.slug}`);
+      expect(title).toHaveTextContent(new RegExp(post.excerpt));
     });
   });
 });

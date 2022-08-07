@@ -47,7 +47,7 @@ const highlightCode = (html: string): string => {
 export default highlightCode;
 
 const format = (unformattedCode: string, language?: string) => {
-  if (!!language) {
+  if (language) {
     return hljs.highlight(unformattedCode, { language }).value;
   }
 

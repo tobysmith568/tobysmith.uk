@@ -1,9 +1,9 @@
 import { GetServerSidePropsResult, Redirect } from "next";
 
-const isRedirectResult = <T>(
-  result: GetServerSidePropsResult<T>
-): result is { redirect: Redirect } => {
-  return !!(result as any).redirect;
+type RedirectResult = { redirect: Redirect };
+
+const isRedirectResult = <T>(result: GetServerSidePropsResult<T>): result is RedirectResult => {
+  return !!(result as RedirectResult).redirect;
 };
 
 export default isRedirectResult;

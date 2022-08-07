@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/dom";
+import { screen } from "@testing-library/react";
 import ProjectResult from "../../../src/components/projects/project-result";
 import { Project } from "../../../src/gql/projects";
 import renderWithTheme from "../../test-helpers/render-with-theme";
@@ -40,31 +40,25 @@ describe("project-result", () => {
     it("should include the project title in the link", () => {
       render();
 
-      const title = screen.getByText(project.title);
-      const nearestLink = title.closest("a");
+      const title = screen.getByRole("link");
 
-      expect(nearestLink).toBeInTheDocument();
-      expect(nearestLink).toHaveAttribute("href", `/projects/${project.slug}`);
+      expect(title).toHaveTextContent(new RegExp(project.title));
     });
 
     it("should include the project subtitle in the link", () => {
       render();
 
-      const date = screen.getByText(project.subtitle);
-      const nearestLink = date.closest("a");
+      const title = screen.getByRole("link");
 
-      expect(nearestLink).toBeInTheDocument();
-      expect(nearestLink).toHaveAttribute("href", `/projects/${project.slug}`);
+      expect(title).toHaveTextContent(new RegExp(project.subtitle));
     });
 
     it("should include the project summary in the link", () => {
       render();
 
-      const excerpt = screen.getByText(project.summary.html);
-      const nearestLink = excerpt.closest("a");
+      const title = screen.getByRole("link");
 
-      expect(nearestLink).toBeInTheDocument();
-      expect(nearestLink).toHaveAttribute("href", `/projects/${project.slug}`);
+      expect(title).toHaveTextContent(new RegExp(project.summary.html));
     });
   });
 });

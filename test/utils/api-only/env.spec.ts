@@ -1,7 +1,7 @@
 import { Env, getEnv } from "../../../src/utils/api-only/env";
 
 describe("env utils", () => {
-  let originalEnv: any;
+  let originalEnv: NodeJS.ProcessEnv;
 
   beforeAll(() => {
     originalEnv = process.env;

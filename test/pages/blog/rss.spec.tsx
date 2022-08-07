@@ -70,7 +70,7 @@ describe("rss", () => {
       const firstCallFirstArg = mockedGenerateRssFeed.mock.calls[0][0];
       const rssItems = firstCallFirstArg.items;
 
-      expect(rssItems.length).toBe(2);
+      expect(rssItems).toHaveLength(2);
       rssItems.forEach((r, i) => expect(r.title).toBe(rssData.posts[i].title));
     });
 
@@ -86,7 +86,7 @@ describe("rss", () => {
       const firstCallFirstArg = mockedGenerateRssFeed.mock.calls[0][0];
       const rssItems = firstCallFirstArg.items;
 
-      expect(rssItems.length).toBe(2);
+      expect(rssItems).toHaveLength(2);
       rssItems.forEach((r, i) => expect(r.description).toBe(rssData.posts[i].excerpt));
     });
 
@@ -103,7 +103,7 @@ describe("rss", () => {
       const firstCallFirstArg = mockedGenerateRssFeed.mock.calls[0][0];
       const rssItems = firstCallFirstArg.items;
 
-      expect(rssItems.length).toBe(2);
+      expect(rssItems).toHaveLength(2);
       rssItems.forEach((r, i) =>
         expect(r.url).toBe(`${rssData.rss.siteUrl}/${rssData.posts[i].slug}`)
       );
@@ -121,7 +121,7 @@ describe("rss", () => {
       const firstCallFirstArg = mockedGenerateRssFeed.mock.calls[0][0];
       const rssItems = firstCallFirstArg.items;
 
-      expect(rssItems.length).toBe(2);
+      expect(rssItems).toHaveLength(2);
       rssItems.forEach((r, i) => expect(r.date).toBe(rssData.posts[i].date));
     });
 
@@ -270,7 +270,7 @@ describe("rss", () => {
       const result = await getServerSideProps(context);
 
       if (isNotFoundResult(result) || isRedirectResult(result)) {
-        fail("Result should not be a not found or redirect result");
+        throw new Error("Result should not be a not found or redirect result");
       }
 
       expect(result.props).toEqual({});

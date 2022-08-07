@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/dom";
+import { screen } from "@testing-library/react";
 import ItemComponent from "../../../src/components/all-projects/item";
 import { Item } from "../../../src/gql/all-projects";
 import renderWithTheme from "../../test-helpers/render-with-theme";

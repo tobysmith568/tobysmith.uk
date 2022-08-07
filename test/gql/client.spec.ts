@@ -1,4 +1,5 @@
 import { GraphQLClient } from "graphql-request";
+// eslint-disable-next-line jest/no-mocks-import
 import { defaultMockEnv } from "../../src/utils/api-only/__mocks__/env";
 
 jest.mock("graphql-request");

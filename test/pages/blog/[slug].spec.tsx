@@ -1,9 +1,10 @@
-import { screen, within } from "@testing-library/dom";
+import { screen, within } from "@testing-library/react";
 import { DiscussionEmbed } from "disqus-react";
 import { GetServerSidePropsContext } from "next";
 import getBlogPost, { BlogPost } from "../../../src/gql/blog-post";
 import Seo, { noIndexValues } from "../../../src/gql/seo";
 import BlogPostPage, { getServerSideProps } from "../../../src/pages/blog/[slug]";
+// eslint-disable-next-line jest/no-mocks-import
 import { defaultMockEnv } from "../../../src/utils/api-only/__mocks__/env";
 import isNotFoundResult from "../../test-helpers/is-not-found-result";
 import isRedirectResult from "../../test-helpers/is-redirect-result";
@@ -122,7 +123,7 @@ describe("[slug]", () => {
       const result = await getServerSideProps(context);
 
       if (isNotFoundResult(result) || isRedirectResult(result)) {
-        fail("Result should not be a not found or redirect result");
+        throw new Error("Result should not be a not found or redirect result");
       }
 
       expect(result.props).toStrictEqual(expect.objectContaining({ slug }));
@@ -136,7 +137,7 @@ describe("[slug]", () => {
       const result = await getServerSideProps(context);
 
       if (isNotFoundResult(result) || isRedirectResult(result)) {
-        fail("Result should not be a not found or redirect result");
+        throw new Error("Result should not be a not found or redirect result");
       }
 
       expect(result.props).toStrictEqual(
@@ -154,7 +155,7 @@ describe("[slug]", () => {
       const result = await getServerSideProps(context);
 
       if (isNotFoundResult(result) || isRedirectResult(result)) {
-        fail("Result should not be a not found or redirect result");
+        throw new Error("Result should not be a not found or redirect result");
       }
 
       expect(result.props).toStrictEqual(

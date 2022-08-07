@@ -37,7 +37,7 @@ describe("gql about", () => {
         abouts: []
       });
 
-      await expect(getAboutPage()).rejects.toThrowError(
+      await expect(getAboutPage()).rejects.toThrow(
         "Expected exactly one about page but got 0"
       );
     });
@@ -47,7 +47,7 @@ describe("gql about", () => {
         abouts: [fakeAboutResult, fakeAboutResult]
       });
 
-      await expect(getAboutPage()).rejects.toThrowError(
+      await expect(getAboutPage()).rejects.toThrow(
         "Expected exactly one about page but got 2"
       );
     });

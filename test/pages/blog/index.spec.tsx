@@ -1,4 +1,4 @@
-import { screen, within } from "@testing-library/dom";
+import { screen, within } from "@testing-library/react";
 import getBlogPosts, { Post } from "../../../src/gql/blog";
 import Seo, { noIndexValues } from "../../../src/gql/seo";
 import BlogPage, { getServerSideProps } from "../../../src/pages/blog";

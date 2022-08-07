@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/dom";
+import { screen } from "@testing-library/react";
 import { act } from "@testing-library/react";
 import { FC } from "react";
 import SideMenu, { useSideMenu } from "../../src/components/side-menu";

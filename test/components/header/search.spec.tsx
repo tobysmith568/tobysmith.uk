@@ -76,7 +76,7 @@ describe("search", () => {
     render();
 
     expect(mockedRouterOn).toHaveBeenCalledTimes(1);
-    expect(mockedRouterOn).toBeCalledWith("routeChangeComplete", expect.any(Function));
+    expect(mockedRouterOn).toHaveBeenCalledWith("routeChangeComplete", expect.any(Function));
   });
 
   it("should clear the search term on route change to a non-search result page", async () => {
@@ -108,6 +108,6 @@ describe("search", () => {
     unmount();
 
     expect(mockedRouterOff).toHaveBeenCalledTimes(1);
-    expect(mockedRouterOff).toBeCalledWith("routeChangeComplete", subscribedRouteEventCallback);
+    expect(mockedRouterOff).toHaveBeenCalledWith("routeChangeComplete", subscribedRouteEventCallback);
   });
 });

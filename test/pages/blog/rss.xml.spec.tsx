@@ -22,4 +22,5 @@ describe("rss.xml", () => {
   });
 });
 
+// eslint-disable-next-line jest/no-export
 export {};

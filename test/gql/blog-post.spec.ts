@@ -57,7 +57,7 @@ describe("gql blog-post", () => {
           post: undefined
         });
 
-        await expect(getBlogPost(postSlug)).rejects.toThrowError(
+        await expect(getBlogPost(postSlug)).rejects.toThrow(
           `Could not find a blog post with the slug ${postSlug}`
         );
       });

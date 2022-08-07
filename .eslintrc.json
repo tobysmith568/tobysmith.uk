@@ -1,3 +1,16 @@
 {
-  "extends": ["next/core-web-vitals", "prettier"]
+  "extends": ["next/core-web-vitals", "@tobysmith568/eslint-config/configs/react"],
+  "ignorePatterns": ["out/**"],
+  "overrides": [
+    {
+      "files": ["**.spec.ts", "**.spec.tsx"],
+      "rules": {
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-non-null-asserted-optional-chain": "off",
+        "@typescript-eslint/no-var-requires": "off",
+        "jest/expect-expect": "off"
+      }
+    }
+  ]
 }

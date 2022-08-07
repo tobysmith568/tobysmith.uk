@@ -29,10 +29,10 @@ describe("gql rss", () => {
       expect(actualGql).toMatchSnapshot();
     });
 
-    it("should throw if the client returns undefined ", async () => {
+    it("should throw if the client returns undefined", async () => {
       mockedClient.request.mockResolvedValue(undefined);
 
-      await expect(getRssFeedData()).rejects.toThrowError("Unable to get RSS data");
+      await expect(getRssFeedData()).rejects.toThrow("Unable to get RSS data");
     });
 
     it("should return the rss data when the client returns it", async () => {

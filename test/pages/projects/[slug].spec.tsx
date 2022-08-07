@@ -1,4 +1,4 @@
-import { screen, within } from "@testing-library/dom";
+import { screen, within } from "@testing-library/react";
 import { GetServerSidePropsContext } from "next";
 import getProject, { Project } from "../../../src/gql/project";
 import Seo, { noIndexValues } from "../../../src/gql/seo";

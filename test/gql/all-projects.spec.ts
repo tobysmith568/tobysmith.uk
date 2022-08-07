@@ -36,7 +36,7 @@ describe("gql all-projects", () => {
         projectIndexPages: []
       });
 
-      await expect(getAllProjectsPage()).rejects.toThrowError(
+      await expect(getAllProjectsPage()).rejects.toThrow(
         "Expected exactly one all projects page but got 0"
       );
     });
@@ -46,7 +46,7 @@ describe("gql all-projects", () => {
         projectIndexPages: [fakeAllProjectsResult, fakeAllProjectsResult]
       });
 
-      await expect(getAllProjectsPage()).rejects.toThrowError(
+      await expect(getAllProjectsPage()).rejects.toThrow(
         "Expected exactly one all projects page but got 2"
       );
     });

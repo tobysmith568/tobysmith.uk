@@ -1,6 +1,7 @@
-import { screen, within } from "@testing-library/dom";
+import { screen, within } from "@testing-library/react";
 import { Props as ExternalContactLinkProps } from "../../src/components/contact/external-contact-link";
 import Contact, { getServerSideProps } from "../../src/pages/contact";
+// eslint-disable-next-line jest/no-mocks-import
 import { defaultMockEnv } from "../../src/utils/api-only/__mocks__/env";
 import renderWithTheme from "../test-helpers/render-with-theme";
 
@@ -74,7 +75,7 @@ describe("contact", () => {
         );
       });
 
-      it("should not set the seo noIndex value ", () => {
+      it("should not set the seo noIndex value", () => {
         render();
 
         const seoNoIndex = screen.getByTestId("seo-noindex");

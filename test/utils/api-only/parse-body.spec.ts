@@ -36,7 +36,7 @@ describe("parse-body", () => {
         body: input
       } as NextApiRequest;
 
-      expect(() => parseBody(req, validator)).toThrowError(BadRequestException);
+      expect(() => parseBody(req, validator)).toThrow(BadRequestException);
     });
 
     it("should throw with a descriptive message", () => {
@@ -46,7 +46,7 @@ describe("parse-body", () => {
         body: input
       } as NextApiRequest;
 
-      expect(() => parseBody(req, validator)).toThrowError("Request Body: Required");
+      expect(() => parseBody(req, validator)).toThrow("Request Body: Required");
     });
   });
 
@@ -58,7 +58,7 @@ describe("parse-body", () => {
         body: input
       } as NextApiRequest;
 
-      expect(() => parseBody(req, validator)).toThrowError(BadRequestException);
+      expect(() => parseBody(req, validator)).toThrow(BadRequestException);
     });
 
     it("should throw with a descriptive message", () => {
@@ -68,7 +68,7 @@ describe("parse-body", () => {
         body: input
       } as NextApiRequest;
 
-      expect(() => parseBody(req, validator)).toThrowError(
+      expect(() => parseBody(req, validator)).toThrow(
         "Field 'stringField': Required. Field 'numberField': Required. Field 'booleanField': Required"
       );
     });
@@ -86,7 +86,7 @@ describe("parse-body", () => {
         body: input
       } as NextApiRequest;
 
-      expect(() => parseBody(req, validator)).toThrowError(BadRequestException);
+      expect(() => parseBody(req, validator)).toThrow(BadRequestException);
     });
 
     it("should throw with a descriptive message", () => {
@@ -100,7 +100,7 @@ describe("parse-body", () => {
         body: input
       } as NextApiRequest;
 
-      expect(() => parseBody(req, validator)).toThrowError(
+      expect(() => parseBody(req, validator)).toThrow(
         "Field 'stringField': Expected string, received number"
       );
     });
@@ -118,7 +118,7 @@ describe("parse-body", () => {
         body: input
       } as NextApiRequest;
 
-      expect(() => parseBody(req, validator)).toThrowError(BadRequestException);
+      expect(() => parseBody(req, validator)).toThrow(BadRequestException);
     });
 
     it("should throw with a descriptive message", () => {
@@ -132,7 +132,7 @@ describe("parse-body", () => {
         body: input
       } as NextApiRequest;
 
-      expect(() => parseBody(req, validator)).toThrowError(
+      expect(() => parseBody(req, validator)).toThrow(
         "Field 'numberField': Expected number, received string"
       );
     });
@@ -150,7 +150,7 @@ describe("parse-body", () => {
         body: input
       } as NextApiRequest;
 
-      expect(() => parseBody(req, validator)).toThrowError(BadRequestException);
+      expect(() => parseBody(req, validator)).toThrow(BadRequestException);
     });
 
     it("should throw with a descriptive message", () => {
@@ -164,7 +164,7 @@ describe("parse-body", () => {
         body: input
       } as NextApiRequest;
 
-      expect(() => parseBody(req, validator)).toThrowError(
+      expect(() => parseBody(req, validator)).toThrow(
         "Field 'booleanField': Expected boolean, received string"
       );
     });

@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/dom";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NextRouter, useRouter } from "next/router";
 import Header from "../../../src/components/header";

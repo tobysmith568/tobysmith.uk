@@ -34,7 +34,7 @@ const Search: FC = () => {
     [setSearchTerm]
   );
 
-  const onSearchClassName = !!searchTerm ? "on-search" : "";
+  const onSearchClassName = searchTerm ? "on-search" : "";
 
   return (
     <SearchBar>
