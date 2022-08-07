@@ -1,11 +1,54 @@
 import styled from "@emotion/styled";
-import { FC } from "react";
+import { useRouter } from "next/router";
+import { ChangeEvent, FC, KeyboardEvent, useCallback, useEffect } from "react";
+import useSearchTerm from "./useSearchTerm";
 
-const Search: FC = () => (
-  <SearchBar>
-    <SearchInput type="search" placeholder="search" />
-  </SearchBar>
-);
+const Search: FC = () => {
+  const router = useRouter();
+  const [searchTerm, setSearchTerm] = useSearchTerm();
+
+  useEffect(() => {
+    const eventHandler = (path: string) => {
+      if (!path.startsWith("/blog/search/")) {
+        setSearchTerm("");
+      }
+    };
+
+    router.events.on("routeChangeComplete", eventHandler);
+
+    return () => {
+      router.events.off("routeChangeComplete", eventHandler);
+    };
+  }, [router.events, setSearchTerm]);
+
+  const onKeyup = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      router.push("/blog/search/" + encodeURIComponent(searchTerm));
+    }
+  };
+
+  const onChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setSearchTerm(e.target.value);
+    },
+    [setSearchTerm]
+  );
+
+  const onSearchClassName = !!searchTerm ? "on-search" : "";
+
+  return (
+    <SearchBar>
+      <SearchInput
+        type="search"
+        placeholder="search"
+        value={searchTerm}
+        className={onSearchClassName}
+        onKeyUp={onKeyup}
+        onChange={onChange}
+      />
+    </SearchBar>
+  );
+};
 export default Search;
 
 const SearchBar = styled.div`
