@@ -9,7 +9,7 @@ import SeoType from "../../../gql/seo";
 
 export type Props = Blog & { searchTerm: string };
 
-type Params = {
+export type Params = {
   searchTerm: string;
 };
 
@@ -17,7 +17,7 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ pa
   const term = params?.searchTerm;
 
   if (!term) {
-    return { redirect: { destination: "blog" }, props: null! };
+    return { redirect: { destination: "/blog" }, props: null! };
   }
 
   const blog = await getBlogSearchPosts(term);
@@ -36,7 +36,7 @@ export const getServerSideProps: GetServerSideProps<Props, Params> = async ({ pa
   };
 };
 
-const BlogPage: NextPage<Props> = ({ posts, seo, searchTerm }) => {
+const SearchResultsPage: NextPage<Props> = ({ posts, seo, searchTerm }) => {
   const [, setSearchTerm] = useSearchTerm();
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,7 +58,7 @@ const BlogPage: NextPage<Props> = ({ posts, seo, searchTerm }) => {
     </>
   );
 };
-export default BlogPage;
+export default SearchResultsPage;
 
 const Header = styled.div`
   display: flex;
