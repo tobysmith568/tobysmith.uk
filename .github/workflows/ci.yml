@@ -1,0 +1,89 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - renovate/*
+  pull_request:
+    branches:
+      - main
+  workflow_call:
+
+env:
+  IMAGE_NAME: gcr.io/tobysmith-uk/tobysmith-uk
+  ARCHIVE_NAME: Build
+  ARCHIVE_PATH: ./docker-build.tar
+  NODE_VERSION: 16
+
+jobs:
+  lint:
+    name: Lint
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npx eslint ./src --max-warnings 0
+
+      - name: Run Prettier
+        run: npx prettier --check .
+
+      - name: Run CSpell
+        run: npx cspell "**/*.*"
+
+  build:
+    name: Build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build . -t ${{ env.IMAGE_NAME }}
+
+      - name: Export Docker image
+        run: docker save --output ${{ env.ARCHIVE_PATH }} ${{ env.IMAGE_NAME }}
+
+      - name: Upload Docker image
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.ARCHIVE_NAME }}
+          path: ${{ env.ARCHIVE_PATH }}
+
+  test:
+    name: Test
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Unit Tests
+        run: npx jest --ci --coverage
+
+      - name: Codecov
+        uses: codecov/codecov-action@v3.1.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: coverage

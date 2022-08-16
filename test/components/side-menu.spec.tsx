@@ -1,5 +1,4 @@
-import { screen } from "@testing-library/react";
-import { act } from "@testing-library/react";
+import { act, screen } from "@testing-library/react";
 import { FC } from "react";
 import SideMenu, { useSideMenu } from "../../src/components/side-menu";
 import renderWithThemeAndNoState from "../test-helpers/render-with-theme-and-no-state";

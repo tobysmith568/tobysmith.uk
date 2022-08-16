@@ -37,9 +37,7 @@ describe("gql about", () => {
         abouts: []
       });
 
-      await expect(getAboutPage()).rejects.toThrow(
-        "Expected exactly one about page but got 0"
-      );
+      await expect(getAboutPage()).rejects.toThrow("Expected exactly one about page but got 0");
     });
 
     it("should throw if the client returns more than one about page", async () => {
@@ -47,9 +45,7 @@ describe("gql about", () => {
         abouts: [fakeAboutResult, fakeAboutResult]
       });
 
-      await expect(getAboutPage()).rejects.toThrow(
-        "Expected exactly one about page but got 2"
-      );
+      await expect(getAboutPage()).rejects.toThrow("Expected exactly one about page but got 2");
     });
 
     it("should return the about page when the client returns exactly one", async () => {

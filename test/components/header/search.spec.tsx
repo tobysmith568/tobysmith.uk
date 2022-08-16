@@ -108,6 +108,9 @@ describe("search", () => {
     unmount();
 
     expect(mockedRouterOff).toHaveBeenCalledTimes(1);
-    expect(mockedRouterOff).toHaveBeenCalledWith("routeChangeComplete", subscribedRouteEventCallback);
+    expect(mockedRouterOff).toHaveBeenCalledWith(
+      "routeChangeComplete",
+      subscribedRouteEventCallback
+    );
   });
 });

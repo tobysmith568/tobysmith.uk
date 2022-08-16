@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
   "version": "0.2",
-  "ignorePaths": ["public", "**.snap", "out", ".next", "dist"],
+  "ignorePaths": ["public", "**.snap", "out", ".next", "dist", "coverage"],
   "dictionaryDefinitions": [],
   "dictionaries": ["en-gb", "html", "fullstack", "css"],
   "words": [
@@ -11,7 +11,8 @@
     "zdnfztgnfgt", // Used as unique string to stop asset caching,
     "lerp",
     "data-testid",
-    "disqus"
+    "disqus",
+    "tobythe-dev"
   ],
   "ignoreWords": [],
   "import": [],
