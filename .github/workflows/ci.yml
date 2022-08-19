@@ -128,7 +128,6 @@ jobs:
           -d
           -p 3000:3000
           -e "API_URL=${{ secrets.API_URL }}"
-
           -e "CONTACT_EMAIL=${{ secrets.CONTACT_EMAIL }}"
           -e "CONTACT_GITHUB_USERNAME=${{ secrets.CONTACT_GITHUB_USERNAME }}"
           -e "CONTACT_GITHUB_URL=${{ secrets.CONTACT_GITHUB_URL }}"
@@ -136,20 +135,16 @@ jobs:
           -e "CONTACT_LINKEDIN_URL=${{ secrets.CONTACT_LINKEDIN_URL }}"
           -e "CONTACT_FACEBOOK_USERNAME=${{ secrets.CONTACT_FACEBOOK_USERNAME }}"
           -e "CONTACT_FACEBOOK_URL=${{ secrets.CONTACT_FACEBOOK_URL }}"
-
           -e "DISQUS_SHORT_NAME=${{ secrets.DISQUS_SHORT_NAME }}"
           -e "DISQUS_BLOG_URL=${{ secrets.DISQUS_BLOG_URL }}"
-
           -e "RECAPTCHA_CLIENT_KEY=${{ secrets.RECAPTCHA_CLIENT_KEY }}"
           -e "RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}"
-
           -e "EMAIL_HOST=${{ secrets.EMAIL_HOST }}"
           -e "EMAIL_PORT=${{ secrets.EMAIL_PORT }}"
           -e "EMAIL_USER=${{ secrets.EMAIL_USER }}"
           -e "EMAIL_PASS=${{ secrets.EMAIL_PASS }}"
           -e "EMAIL_FROM=${{ secrets.EMAIL_FROM }}"
           -e "EMAIL_TO=${{ secrets.EMAIL_TO }}"
-
           ${{ env.IMAGE_NAME }}
 
       - name: Run E2E tests
