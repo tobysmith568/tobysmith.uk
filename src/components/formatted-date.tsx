@@ -7,7 +7,7 @@ interface Props {
 const FormattedDate: FC<Props> = ({ dateValue }) => {
   const formattedDate = useMemo(() => {
     const date = new Date(dateValue);
-    return date.toLocaleDateString(undefined, dateFormatOptions);
+    return date.toLocaleDateString("en-gb", dateFormatOptions);
   }, [dateValue]);
 
   return <>{formattedDate}</>;
