@@ -5,6 +5,7 @@
   "dictionaryDefinitions": [],
   "dictionaries": ["en-gb", "html", "fullstack", "css"],
   "words": [
+    "chainable",
     "codecov",
     "data-testid",
     "disqus",

@@ -6,5 +6,5 @@
     "types": ["node", "cypress", "@testing-library/cypress"],
     "noEmit": false
   },
-  "include": ["e2e/**/*.ts"]
+  "include": ["**/*.cy.ts"]
 }

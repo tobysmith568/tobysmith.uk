@@ -15,14 +15,17 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "src/**/*.ts", "test/**/*.ts", "test/**/*.tsx"],
-  "exclude": ["node_modules"],
   "references": [
+    {
+      "path": "./tsconfig.lib.json"
+    },
     {
       "path": "./tsconfig.spec.json"
     },
     {
       "path": "./tsconfig.cy.json"
     }
-  ]
+  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }

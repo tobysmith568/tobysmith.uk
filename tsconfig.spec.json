@@ -2,9 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "composite": true,
-    "jsx": "react",
-    "types": ["jest"],
-    "noEmit": false
+    "noEmit": false,
+    "types": ["@types/jest", "@testing-library/react", "@testing-library/jest-dom"]
   },
-  "include": ["**/*.spec.ts", "**/*.spec.tsx"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "test/**/*.ts", "test/**/*.tsx"]
 }

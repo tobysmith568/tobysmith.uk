@@ -6,6 +6,9 @@ const nextConfig = {
   images: {
     dangerouslyAllowSVG: true,
     domains: ["media.graphassets.com"]
+  },
+  experimental: {
+    outputStandalone: true
   }
 };
 
