@@ -14,7 +14,7 @@ const setupPlugins = (on, config) => {
 
   on("task", {
     deleteLastEmail() {
-      console.log("Deleting the last sent email");
+      console.log("Deleting the last received email");
       lastEmailSent = null;
       return null;
     },
@@ -26,6 +26,7 @@ const setupPlugins = (on, config) => {
 
   mailServer.bind((addr, id, email) => {
     lastEmailSent = email;
+    console.log("New email received: ", email);
   });
 
   // Env Variables
