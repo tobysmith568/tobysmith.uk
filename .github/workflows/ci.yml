@@ -174,11 +174,15 @@ jobs:
           browser: ${{ matrix.browser }}
           wait-on: http://localhost:3000
 
+      - name: Dump container logs
+        if: always()
+        run: docker logs test_container
+
       - name: Upload E2E screenshots
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: Screenshots
+          name: E2E Screenshots
           path: e2e/screenshots/
           if-no-files-found: ignore
 
@@ -186,6 +190,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: Videos
+          name: E2E Videos
           path: e2e/videos/
           if-no-files-found: ignore
