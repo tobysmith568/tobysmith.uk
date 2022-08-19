@@ -7,8 +7,10 @@ const setupPlugins = (on, config) => {
   // SMTP Server
 
   const port = process.env.EMAIL_PORT;
+  console.log(`Starting mail server at port ${port}`);
+
   const mailServer = init(port);
-  console.log("mail server at port %d", port);
+  console.log(`Started mail server at port ${port}`);
 
   let lastEmailSent = null;
 

@@ -173,6 +173,9 @@ jobs:
         with:
           browser: ${{ matrix.browser }}
           wait-on: http://localhost:3000
+        env:
+          EMAIL_PORT: 2525
+          CONTACT_EMAIL: contact-email@tobysmith.uk
 
       - name: Dump container logs
         if: always()
