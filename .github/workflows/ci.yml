@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - renovate/*
+      - ts/v2
   pull_request:
     branches:
       - main
@@ -27,7 +28,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: ${{ env.NODE_VERSION }}
           cache: npm
 
       - name: Install dependencies
@@ -73,7 +74,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: ${{ env.NODE_VERSION }}
           cache: npm
 
       - name: Install dependencies
@@ -87,3 +88,84 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           directory: coverage
+
+  e2e:
+    needs:
+      - build
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser:
+          - chrome
+          - firefox
+
+    name: E2E test (${{ matrix.browser }})
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Download Docker image
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.ARCHIVE_NAME }}
+
+      - name: Load Docker image
+        run: docker load --input ${{ env.ARCHIVE_PATH }}
+
+      - name: Run Docker image
+        run: >
+          docker run
+          --name test_container
+          -d
+          -p 3000:3000
+          -e "API_URL=${{ secrets.API_URL }}"
+
+          -e "CONTACT_EMAIL=${{ secrets.CONTACT_EMAIL }}"
+          -e "CONTACT_GITHUB_USERNAME=${{ secrets.CONTACT_GITHUB_USERNAME }}"
+          -e "CONTACT_GITHUB_URL=${{ secrets.CONTACT_GITHUB_URL }}"
+          -e "CONTACT_LINKEDIN_USERNAME=${{ secrets.CONTACT_LINKEDIN_USERNAME }}"
+          -e "CONTACT_LINKEDIN_URL=${{ secrets.CONTACT_LINKEDIN_URL }}"
+          -e "CONTACT_FACEBOOK_USERNAME=${{ secrets.CONTACT_FACEBOOK_USERNAME }}"
+          -e "CONTACT_FACEBOOK_URL=${{ secrets.CONTACT_FACEBOOK_URL }}"
+
+          -e "DISQUS_SHORT_NAME=${{ secrets.DISQUS_SHORT_NAME }}"
+          -e "DISQUS_BLOG_URL=${{ secrets.DISQUS_BLOG_URL }}"
+
+          -e "RECAPTCHA_CLIENT_KEY=${{ secrets.RECAPTCHA_CLIENT_KEY }}"
+          -e "RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}"
+
+          -e "EMAIL_HOST=${{ secrets.EMAIL_HOST }}"
+          -e "EMAIL_PORT=${{ secrets.EMAIL_PORT }}"
+          -e "EMAIL_USER=${{ secrets.EMAIL_USER }}"
+          -e "EMAIL_PASS=${{ secrets.EMAIL_PASS }}"
+          -e "EMAIL_FROM=${{ secrets.EMAIL_FROM }}"
+          -e "EMAIL_TO=${{ secrets.EMAIL_TO }}"
+
+          ${{ env.IMAGE_NAME }}
+
+      - name: Run E2E tests
+        uses: cypress-io/github-action@v4
+        with:
+          browser: ${{ matrix.browser }}
+          wait-on: http://localhost:3000
+
+      - name: Upload E2E screenshots
+        uses: actions/upload-artifact@v3
+        with:
+          name: Screenshots
+          path: e2e/screenshots/**.png
+
+      - name: Upload E2E videos
+        uses: actions/upload-artifact@v3
+        with:
+          name: Videos
+          path: e2e/videos/**.mp4

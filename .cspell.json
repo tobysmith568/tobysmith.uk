@@ -6,13 +6,13 @@
   "dictionaries": ["en-gb", "html", "fullstack", "css"],
   "words": [
     "codecov",
-    "fossas",
-    "tobysmith",
-    "zdnfztgnfgt", // Used as unique string to stop asset caching,
-    "lerp",
     "data-testid",
     "disqus",
-    "tobythe-dev"
+    "fossas",
+    "lerp",
+    "tobysmith",
+    "tobythe-dev",
+    "zdnfztgnfgt" // Used as unique string to stop asset caching
   ],
   "ignoreWords": [],
   "import": [],

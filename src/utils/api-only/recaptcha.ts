@@ -1,3 +1,4 @@
+import { BadRequestException } from "next-api-handler";
 import { postJSON } from "../http-request";
 import { getEnv } from "./env";
 
@@ -23,6 +24,6 @@ export const verifyRecaptchaToken = async (token: string): Promise<void> => {
     const errorObj = { recaptchaErrorCodes: res["error-codes"] };
     const errorString = JSON.stringify(errorObj);
 
-    throw new Error(errorString);
+    throw new BadRequestException(errorString);
   }
 };

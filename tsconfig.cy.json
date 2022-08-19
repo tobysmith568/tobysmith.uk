@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "jsx": "react",
+    "types": ["node", "cypress", "@testing-library/cypress"],
+    "noEmit": false
+  },
+  "include": ["e2e/**/*.ts"]
+}

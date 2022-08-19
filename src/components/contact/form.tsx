@@ -46,9 +46,9 @@ const Form: FC<Props> = ({ clientKey }) => {
         recaptchaToken: token
       };
 
-      postJSON<SendEmailRequest, SendEmailResponse>("/api/send-email", body).then(() =>
-        setFormState("sent")
-      );
+      postJSON<SendEmailRequest, SendEmailResponse>("/api/send-email", body)
+        .then(() => setFormState("sent"))
+        .catch(() => setFormState("error"));
     },
     [name, email, message]
   );
