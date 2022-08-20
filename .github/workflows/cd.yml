@@ -5,6 +5,8 @@ on:
     branches:
       - main
 
+concurrency: deployments
+
 env:
   IMAGE_NAME: gcr.io/tobysmith-uk/tobysmith-uk
   ARCHIVE_NAME: Build
