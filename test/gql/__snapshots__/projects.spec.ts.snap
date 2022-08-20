@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`gql projects getProjects should call request with the correct gql 1`] = `
+"
+    query ProjectPage {
+      projectPages(first: 1) {
+        projects {
+          slug
+          title
+          subtitle
+          summary {
+            html
+          }
+        }
+        seo {
+          title
+          description
+          noIndex
+        }
+      }
+    }
+  "
+`;

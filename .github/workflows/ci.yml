@@ -1,0 +1,214 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - renovate/*
+  pull_request:
+    branches:
+      - main
+  workflow_call:
+
+env:
+  IMAGE_NAME: gcr.io/tobysmith-uk/tobysmith-uk
+  ARCHIVE_NAME: Build
+  ARCHIVE_PATH: ./docker-build.tar
+  NODE_VERSION: 16
+
+jobs:
+  lint:
+    name: Lint
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npx eslint ./src --max-warnings 0
+
+      - name: Run Prettier
+        run: npx prettier --check .
+
+      - name: Run CSpell
+        run: npx cspell "**/*.*"
+
+  build:
+    name: Build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build . -t ${{ env.IMAGE_NAME }}
+
+      - name: Export Docker image
+        run: docker save --output ${{ env.ARCHIVE_PATH }} ${{ env.IMAGE_NAME }}
+
+      - name: Upload Docker image
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.ARCHIVE_NAME }}
+          path: ${{ env.ARCHIVE_PATH }}
+
+  test:
+    name: Test
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Unit Tests
+        run: npx jest --ci --coverage
+
+      - name: Codecov
+        uses: codecov/codecov-action@v3.1.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: coverage
+
+  licence:
+    name: Check licences
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - uses: fossas/fossa-action@v1.3.1
+        with:
+          api-key: ${{ secrets.FOSSA_API_KEY }}
+
+  e2e:
+    needs:
+      - build
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser:
+          - chrome
+          - firefox
+
+    env:
+      API_URL: ${{ secrets.API_URL }}
+      CONTACT_EMAIL: contact-email@tobysmith.uk
+      CONTACT_GITHUB_USERNAME: tobysmith568
+      CONTACT_GITHUB_URL: https://github.com/tobysmith568
+      CONTACT_LINKEDIN_USERNAME: tobysmith568
+      CONTACT_LINKEDIN_URL: https://www.linkedin.com/in/tobysmith568
+      CONTACT_FACEBOOK_USERNAME: tobysmith.uk
+      CONTACT_FACEBOOK_URL: https://www.messenger.com/t/tobysmith.uk/
+      DISQUS_SHORT_NAME: ${{ secrets.DISQUS_SHORT_NAME }}
+      DISQUS_BLOG_URL: ${{ secrets.DISQUS_BLOG_URL }}
+      RECAPTCHA_CLIENT_KEY: ${{ secrets.RECAPTCHA_CLIENT_KEY }}
+      RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
+      EMAIL_HOST: 172.17.0.1
+      EMAIL_PORT: 2525
+      EMAIL_USER: email-user
+      EMAIL_PASS: email-pass
+      EMAIL_FROM: emails-from@tobysmith.uk
+      EMAIL_TO: emails-to@tobysmith.uk
+
+    name: E2E test (${{ matrix.browser }})
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Download Docker image
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ env.ARCHIVE_NAME }}
+
+      - name: Load Docker image
+        run: docker load --input ${{ env.ARCHIVE_PATH }}
+
+      - name: Run Docker image
+        run: >
+          docker run
+          --name test_container
+          -d
+          -p 3000:3000
+          -e "API_URL"
+          -e "CONTACT_EMAIL"
+          -e "CONTACT_GITHUB_USERNAME"
+          -e "CONTACT_GITHUB_URL"
+          -e "CONTACT_LINKEDIN_USERNAME"
+          -e "CONTACT_LINKEDIN_URL"
+          -e "CONTACT_FACEBOOK_USERNAME"
+          -e "CONTACT_FACEBOOK_URL"
+          -e "DISQUS_SHORT_NAME"
+          -e "DISQUS_BLOG_URL"
+          -e "RECAPTCHA_CLIENT_KEY"
+          -e "RECAPTCHA_SECRET_KEY"
+          -e "EMAIL_HOST"
+          -e "EMAIL_PORT"
+          -e "EMAIL_USER"
+          -e "EMAIL_PASS"
+          -e "EMAIL_FROM"
+          -e "EMAIL_TO"
+          ${{ env.IMAGE_NAME }}
+
+      - name: Run E2E tests
+        uses: cypress-io/github-action@v4
+        with:
+          browser: ${{ matrix.browser }}
+          wait-on: http://localhost:3000
+
+      - name: Dump container logs
+        if: always()
+        run: docker logs test_container
+
+      - name: Upload E2E screenshots
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: E2E Screenshots
+          path: e2e/screenshots/
+          if-no-files-found: ignore
+
+      - name: Upload E2E videos
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: E2E Videos
+          path: e2e/videos/
+          if-no-files-found: ignore

@@ -1,0 +1,4 @@
+{
+  "extends": ["next/core-web-vitals", "@tobysmith568/eslint-config/configs/react"],
+  "ignorePatterns": ["out/**"]
+}

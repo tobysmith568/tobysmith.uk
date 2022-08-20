@@ -1,16 +1,35 @@
-FROM node:16.7.0 AS compile
+FROM node:16-alpine AS deps
 
-WORKDIR /opt/ng
+WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
 
-ENV PATH="./node_modules/.bin:$PATH"
+FROM node:16-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 
-COPY . ./
-RUN npm run build:ssr
+RUN npm run build
 
-FROM node:16.7.0-alpine as run
-COPY --from=compile /opt/ng/dist/tobysmith-uk /dist/tobysmith-uk
+FROM node:16-alpine AS runner
+WORKDIR /app
 
-EXPOSE 4000
-CMD [ "node", "/dist/tobysmith-uk/server/main.js" ]
+ENV NODE_ENV production
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/next.config.js ./
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package.json ./package.json
+
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT 3000
+
+CMD ["node", "server.js"]

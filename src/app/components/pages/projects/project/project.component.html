@@ -1,8 +1,0 @@
-<app-back-button></app-back-button>
-<article *ngIf="project">
-  <header>
-    <h1>{{ project.title }}</h1>
-    <h3>{{ project.subtitle }}</h3>
-  </header>
-  <div class="cms-content" [innerHtml]="project.content.html | safeHtml"></div>
-</article>

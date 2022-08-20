@@ -1,0 +1,21 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "ignorePaths": ["public", "**.snap", "out", ".next", "dist", "coverage"],
+  "dictionaryDefinitions": [],
+  "dictionaries": ["en-gb", "html", "fullstack", "css"],
+  "words": [
+    "chainable",
+    "codecov",
+    "data-testid",
+    "disqus",
+    "fossas",
+    "lerp",
+    "tobysmith",
+    "tobythe-dev",
+    "zdnfztgnfgt" // Used as unique string to stop asset caching
+  ],
+  "ignoreWords": [],
+  "import": [],
+  "ignoreRegExpList": ["import .* from \".*\"", "(?:dev)?dependencies\"\\: \\{[\\s\\S]*?}"]
+}

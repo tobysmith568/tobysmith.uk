@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`gql blog search getBlogSearchPosts should call request with the correct gql 1`] = `
+"
+    query Search($term: String) {
+      posts(
+        orderBy: date_DESC
+        where: { AND: [{ _search: $term }, { OR: [{ devOnly: null }, { devOnly: false }] }] }
+      ) {
+        slug
+        title
+        date
+        excerpt
+      }
+      postPages(first: 1) {
+        seo {
+          title
+          description
+          noIndex
+        }
+      }
+    }
+  "
+`;
