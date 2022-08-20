@@ -121,6 +121,26 @@ jobs:
           - chrome
           - firefox
 
+    env:
+      API_URL: ${{ secrets.API_URL }}
+      CONTACT_EMAIL: contact-email@tobysmith.uk
+      CONTACT_GITHUB_USERNAME: tobysmith568
+      CONTACT_GITHUB_URL: https://github.com/tobysmith568
+      CONTACT_LINKEDIN_USERNAME: tobysmith568
+      CONTACT_LINKEDIN_URL: https://www.linkedin.com/in/tobysmith568
+      CONTACT_FACEBOOK_USERNAME: tobysmith.uk
+      CONTACT_FACEBOOK_URL: https://www.messenger.com/t/tobysmith.uk/
+      DISQUS_SHORT_NAME: ${{ secrets.DISQUS_SHORT_NAME }}
+      DISQUS_BLOG_URL: ${{ secrets.DISQUS_BLOG_URL }}
+      RECAPTCHA_CLIENT_KEY: ${{ secrets.RECAPTCHA_CLIENT_KEY }}
+      RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
+      EMAIL_HOST: 172.17.0.1
+      EMAIL_PORT: 2525
+      EMAIL_USER: email-user
+      EMAIL_PASS: email-pass
+      EMAIL_FROM: emails-from@tobysmith.uk
+      EMAIL_TO: emails-to@tobysmith.uk
+
     name: E2E test (${{ matrix.browser }})
 
     runs-on: ubuntu-latest
@@ -148,24 +168,24 @@ jobs:
           --name test_container
           -d
           -p 3000:3000
-          -e "API_URL=${{ secrets.API_URL }}"
-          -e "CONTACT_EMAIL=contact-email@tobysmith.uk"
-          -e "CONTACT_GITHUB_USERNAME=tobysmith568"
-          -e "CONTACT_GITHUB_URL=https://github.com/tobysmith568"
-          -e "CONTACT_LINKEDIN_USERNAME=tobysmith568"
-          -e "CONTACT_LINKEDIN_URL=https://www.linkedin.com/in/tobysmith568"
-          -e "CONTACT_FACEBOOK_USERNAME=tobysmith.uk"
-          -e "CONTACT_FACEBOOK_URL=https://www.messenger.com/t/tobysmith.uk/"
-          -e "DISQUS_SHORT_NAME=${{ secrets.DISQUS_SHORT_NAME }}"
-          -e "DISQUS_BLOG_URL=${{ secrets.DISQUS_BLOG_URL }}"
-          -e "RECAPTCHA_CLIENT_KEY=${{ secrets.RECAPTCHA_CLIENT_KEY }}"
-          -e "RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}"
-          -e "EMAIL_HOST=172.17.0.1"
-          -e "EMAIL_PORT=2525"
-          -e "EMAIL_USER=email-user"
-          -e "EMAIL_PASS=email-pass"
-          -e "EMAIL_FROM=emails-from@tobysmith.uk"
-          -e "EMAIL_TO=emails-to@tobysmith.uk"
+          -e "API_URL"
+          -e "CONTACT_EMAIL"
+          -e "CONTACT_GITHUB_USERNAME"
+          -e "CONTACT_GITHUB_URL"
+          -e "CONTACT_LINKEDIN_USERNAME"
+          -e "CONTACT_LINKEDIN_URL"
+          -e "CONTACT_FACEBOOK_USERNAME"
+          -e "CONTACT_FACEBOOK_URL"
+          -e "DISQUS_SHORT_NAME"
+          -e "DISQUS_BLOG_URL"
+          -e "RECAPTCHA_CLIENT_KEY"
+          -e "RECAPTCHA_SECRET_KEY"
+          -e "EMAIL_HOST"
+          -e "EMAIL_PORT"
+          -e "EMAIL_USER"
+          -e "EMAIL_PASS"
+          -e "EMAIL_FROM"
+          -e "EMAIL_TO"
           ${{ env.IMAGE_NAME }}
 
       - name: Run E2E tests
@@ -173,13 +193,6 @@ jobs:
         with:
           browser: ${{ matrix.browser }}
           wait-on: http://localhost:3000
-        env:
-          EMAIL_PORT: 2525
-          EMAIL_TO: emails-to@tobysmith.uk
-          CONTACT_EMAIL: contact-email@tobysmith.uk
-          CONTACT_GITHUB_URL: https://github.com/tobysmith568
-          CONTACT_LINKEDIN_URL: https://www.linkedin.com/in/tobysmith568
-          CONTACT_FACEBOOK_URL: https://www.messenger.com/t/tobysmith.uk/
 
       - name: Dump container logs
         if: always()
