@@ -160,7 +160,7 @@ jobs:
           -e "DISQUS_BLOG_URL=${{ secrets.DISQUS_BLOG_URL }}"
           -e "RECAPTCHA_CLIENT_KEY=${{ secrets.RECAPTCHA_CLIENT_KEY }}"
           -e "RECAPTCHA_SECRET_KEY=${{ secrets.RECAPTCHA_SECRET_KEY }}"
-          -e "EMAIL_HOST=localhost"
+          -e "EMAIL_HOST=172.17.0.1"
           -e "EMAIL_PORT=2525"
           -e "EMAIL_USER=email-user"
           -e "EMAIL_PASS=email-pass"
