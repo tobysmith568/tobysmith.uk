@@ -1,7 +1,5 @@
 describe("Contact page", () => {
   describe("Contact form", () => {
-    const recipientEmail = Cypress.env("contactEmail");
-
     const name = "Someone's Name";
     const email = "someone@tobysmith.uk";
     const message = "This is the message";
@@ -30,7 +28,7 @@ describe("Contact page", () => {
       cy.task<string>("getLastEmail")
         .should("be.an", "object")
         .its("headers.to")
-        .should("equal", recipientEmail);
+        .should("equal", Cypress.env("emailTo"));
     });
 
     it("Sends emails with the correct subject line", () => {
@@ -117,8 +115,7 @@ describe("Contact page", () => {
         .closest("a")
         .should("exist")
         .invoke("attr", "href")
-        .should("include", "tobysmith568")
-        .and("match", /^mailto:/);
+        .should("equal", `mailto:${Cypress.env("contactEmail")}`);
     });
 
     it("should link to my GitHub profile", () => {
@@ -129,7 +126,7 @@ describe("Contact page", () => {
         .closest("a")
         .should("exist")
         .invoke("attr", "href")
-        .should("include", "tobysmith568")
+        .should("equal", Cypress.env("contactGitHubUrl"))
         .then(href => {
           cy.origin("github.com", { args: { href } }, ({ href }) => {
             cy.visit(href as string);
@@ -145,7 +142,7 @@ describe("Contact page", () => {
         .closest("a")
         .should("exist")
         .invoke("attr", "href")
-        .should("include", "tobysmith568");
+        .should("equal", Cypress.env("contactLinkedInUrl"));
 
       // Cannot check that page exits because of the LinkedIn auth-wall always returning a 999 status code
     });
@@ -158,7 +155,7 @@ describe("Contact page", () => {
         .closest("a")
         .should("exist")
         .invoke("attr", "href")
-        .should("include", "tobysmith.uk")
+        .should("equal", Cypress.env("contactFacebookUrl"))
         .then(href => {
           cy.origin("messenger.com", { args: { href } }, ({ href }) => {
             cy.visit(href as string);

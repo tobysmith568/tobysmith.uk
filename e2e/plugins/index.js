@@ -33,7 +33,11 @@ const setupPlugins = (on, config) => {
 
   // Env Variables
 
+  config.env.emailTo = process.env.EMAIL_TO;
   config.env.contactEmail = process.env.CONTACT_EMAIL;
+  config.env.contactGitHubUrl = process.env.CONTACT_GITHUB_URL;
+  config.env.contactLinkedInUrl = process.env.CONTACT_LINKEDIN_URL;
+  config.env.contactFacebookUrl = process.env.CONTACT_FACEBOOK_URL;
   return config;
 };
 

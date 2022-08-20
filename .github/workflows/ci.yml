@@ -151,7 +151,7 @@ jobs:
           -e "API_URL=${{ secrets.API_URL }}"
           -e "CONTACT_EMAIL=contact-email@tobysmith.uk"
           -e "CONTACT_GITHUB_USERNAME=tobysmith568"
-          -e "CONTACT_GITHUB_URL=https://github.com/tobysmith"
+          -e "CONTACT_GITHUB_URL=https://github.com/tobysmith568"
           -e "CONTACT_LINKEDIN_USERNAME=tobysmith568"
           -e "CONTACT_LINKEDIN_URL=https://www.linkedin.com/in/tobysmith568"
           -e "CONTACT_FACEBOOK_USERNAME=tobysmith.uk"
@@ -175,7 +175,11 @@ jobs:
           wait-on: http://localhost:3000
         env:
           EMAIL_PORT: 2525
+          EMAIL_TO: emails-to@tobysmith.uk
           CONTACT_EMAIL: contact-email@tobysmith.uk
+          CONTACT_GITHUB_URL: https://github.com/tobysmith568
+          CONTACT_LINKEDIN_URL: https://www.linkedin.com/in/tobysmith568
+          CONTACT_FACEBOOK_URL: https://www.messenger.com/t/tobysmith.uk/
 
       - name: Dump container logs
         if: always()
