@@ -1,14 +1,14 @@
 import styled from "@emotion/styled";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { FC, useMemo } from "react";
+import { FC, PropsWithChildren, useMemo } from "react";
 
 interface Props {
   path: string;
   disableUnderline?: boolean;
 }
 
-const NavbarAnchor: FC<Props> = ({ children, path, disableUnderline }) => {
+const NavbarAnchor: FC<PropsWithChildren<Props>> = ({ children, path, disableUnderline }) => {
   const { pathname } = useRouter();
 
   const isCurrentClassName = useMemo(() => {
