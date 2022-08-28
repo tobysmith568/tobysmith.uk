@@ -3,7 +3,7 @@
 exports[`gql rss getRssFeedData should call request with the correct gql 1`] = `
 "
     query GetRss {
-      rss(where: { type: \\"blog\\" }) {
+      rss(where: { type: "blog" }) {
         title
         description
         siteUrl
