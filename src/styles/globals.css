@@ -15,6 +15,10 @@ body {
   overflow: hidden;
 }
 
+p {
+  font-size: 1.1em;
+}
+
 body,
 input {
   font-family: "Blinker", sans-serif;
