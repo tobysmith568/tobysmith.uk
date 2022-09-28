@@ -20,13 +20,18 @@ export default CmsContent;
 const HtmlContent = styled.div`
   img {
     display: block;
-    width: 75%;
+    max-width: 75%;
     height: auto;
-    margin-left: auto;
-    margin-right: auto;
 
     @media only screen and (max-width: ${({ theme }) => theme.sizes.mobileWidth}) {
       width: 100%;
+    }
+  }
+
+  .center {
+    img {
+      margin-left: auto;
+      margin-right: auto;
     }
   }
 
