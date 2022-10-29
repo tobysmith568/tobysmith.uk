@@ -13,7 +13,7 @@ env:
   IMAGE_NAME: gcr.io/tobysmith-uk/tobysmith-uk
   ARCHIVE_NAME: Build
   ARCHIVE_PATH: ./docker-build.tar
-  NODE_VERSION: 16
+  NODE_VERSION: 18
 
 jobs:
   lint:
