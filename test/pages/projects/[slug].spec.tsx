@@ -14,6 +14,8 @@ jest.mock("../../../src/gql/project", () => ({
   default: jest.fn()
 }));
 
+jest.mock("next/router", () => ({ useRouter: jest.fn() }));
+
 describe("[slug]", () => {
   const mockedGetProject = jest.mocked(getProject);
 

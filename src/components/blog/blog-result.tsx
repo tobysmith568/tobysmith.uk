@@ -13,7 +13,7 @@ interface Props {
 const BlogResult: FC<Props> = ({ post }) => {
   return (
     <article>
-      <Link href={"/blog/" + post.slug} passHref>
+      <Link href={"/blog/" + post.slug} passHref legacyBehavior>
         <BlogPost>
           <header>
             <h2>{post.title}</h2>

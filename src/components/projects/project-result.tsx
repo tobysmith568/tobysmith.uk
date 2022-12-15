@@ -11,7 +11,7 @@ interface Props {
 
 const ProjectResult: FC<Props> = ({ project }) => (
   <article>
-    <Link href={"/projects/" + project.slug} passHref>
+    <Link href={"/projects/" + project.slug} passHref legacyBehavior>
       <Project>
         <header>
           <h2>{project.title}</h2>
