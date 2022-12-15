@@ -18,30 +18,28 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
 };
 
 const BlogPage: NextPage<Props> = ({ posts, seo }) => {
-  return (
-    <>
-      <Seo {...seo} />
+  return <>
+    <Seo {...seo} />
 
-      <main>
-        <Header>
-          <Title>Posts</Title>
+    <main>
+      <Header>
+        <Title>Posts</Title>
 
-          <Link href="/blog/rss" passHref>
-            <UnderlineAnchor target="_blank">
-              <RssFeedTitle>RSS Feed</RssFeedTitle>
-              <span>
-                <Image src="/img/rss.svg" height="21" width="21" alt="" />
-              </span>
-            </UnderlineAnchor>
-          </Link>
-        </Header>
+        <Link href="/blog/rss" passHref legacyBehavior>
+          <UnderlineAnchor target="_blank">
+            <RssFeedTitle>RSS Feed</RssFeedTitle>
+            <span>
+              <Image src="/img/rss.svg" height="21" width="21" alt="" />
+            </span>
+          </UnderlineAnchor>
+        </Link>
+      </Header>
 
-        {posts.map(post => (
-          <BlogResult key={post.slug} post={post} />
-        ))}
-      </main>
-    </>
-  );
+      {posts.map(post => (
+        <BlogResult key={post.slug} post={post} />
+      ))}
+    </main>
+  </>;
 };
 export default BlogPage;
 

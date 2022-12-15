@@ -36,7 +36,7 @@ const SideMenu: FC = () => {
       <Overlay className="overlay" onClick={overlayClick} role="presentation" />
       <Menu className="menu">
         <MenuItem>
-          <Link href="/" passHref>
+          <Link href="/" passHref legacyBehavior>
             <UnderlineAnchor colour="white" tabIndex={-1} onClick={overlayClick}>
               Home
             </UnderlineAnchor>
@@ -44,7 +44,7 @@ const SideMenu: FC = () => {
         </MenuItem>
 
         <MenuItem>
-          <Link href="/about" passHref>
+          <Link href="/about" passHref legacyBehavior>
             <UnderlineAnchor colour="white" tabIndex={-1} onClick={overlayClick}>
               About
             </UnderlineAnchor>
@@ -52,7 +52,7 @@ const SideMenu: FC = () => {
         </MenuItem>
 
         <MenuItem>
-          <Link href="/projects" passHref>
+          <Link href="/projects" passHref legacyBehavior>
             <UnderlineAnchor colour="white" tabIndex={-1} onClick={overlayClick}>
               Projects
             </UnderlineAnchor>
@@ -60,7 +60,7 @@ const SideMenu: FC = () => {
         </MenuItem>
 
         <MenuItem>
-          <Link href="/blog" passHref>
+          <Link href="/blog" passHref legacyBehavior>
             <UnderlineAnchor colour="white" tabIndex={-1} onClick={overlayClick}>
               Blog
             </UnderlineAnchor>
@@ -68,7 +68,7 @@ const SideMenu: FC = () => {
         </MenuItem>
 
         <MenuItem>
-          <Link href="/contact" passHref>
+          <Link href="/contact" passHref legacyBehavior>
             <UnderlineAnchor colour="white" tabIndex={-1} onClick={overlayClick}>
               Contact
             </UnderlineAnchor>

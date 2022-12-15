@@ -20,7 +20,7 @@ const NavbarAnchor: FC<PropsWithChildren<Props>> = ({ children, path, disableUnd
   }, [pathname, path, disableUnderline]);
 
   return (
-    <Link href={path} passHref>
+    <Link href={path} passHref legacyBehavior>
       <InnerNavbarAnchor className={isCurrentClassName}>{children}</InnerNavbarAnchor>
     </Link>
   );

@@ -17,28 +17,26 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
 };
 
 const ProjectsPage: NextPage<Props> = ({ projects, seo }) => {
-  return (
-    <>
-      <Seo {...seo} />
+  return <>
+    <Seo {...seo} />
 
-      <main>
-        <Header>
-          <Title>Projects</Title>
+    <main>
+      <Header>
+        <Title>Projects</Title>
 
-          <Link href="/projects/all" passHref>
-            <UnderlineAnchor>
-              <span>All Projects</span>
-            </UnderlineAnchor>
-          </Link>
-        </Header>
-        <Subtitle>A selection of my best work to date, demonstrating some of my abilities</Subtitle>
+        <Link href="/projects/all" passHref legacyBehavior>
+          <UnderlineAnchor>
+            <span>All Projects</span>
+          </UnderlineAnchor>
+        </Link>
+      </Header>
+      <Subtitle>A selection of my best work to date, demonstrating some of my abilities</Subtitle>
 
-        {projects.map(project => (
-          <ProjectResult key={project.slug} project={project} />
-        ))}
-      </main>
-    </>
-  );
+      {projects.map(project => (
+        <ProjectResult key={project.slug} project={project} />
+      ))}
+    </main>
+  </>;
 };
 export default ProjectsPage;
 
