@@ -23,6 +23,8 @@ jest.mock("../../../src/gql/blog-post", () => ({
   default: jest.fn()
 }));
 
+jest.mock("next/router", () => ({ useRouter: jest.fn() }));
+
 describe("[slug]", () => {
   const mockedGetBlogPost = jest.mocked(getBlogPost);
   const mockedDiscussionEmbed = jest.mocked(DiscussionEmbed);
