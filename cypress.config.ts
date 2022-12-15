@@ -15,8 +15,6 @@ export default defineConfig({
 
     baseUrl: "http://localhost:3000/",
     specPattern: "e2e/integration/**/*.cy.{js,jsx,ts,tsx}",
-    supportFile: "e2e/support/e2e.ts",
-
-    experimentalSessionAndOrigin: true
+    supportFile: "e2e/support/e2e.ts"
   }
 });
