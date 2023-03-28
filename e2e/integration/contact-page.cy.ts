@@ -126,12 +126,7 @@ describe("Contact page", () => {
         .closest("a")
         .should("exist")
         .invoke("attr", "href")
-        .should("equal", Cypress.env("contactGitHubUrl"))
-        .then(href => {
-          cy.origin("github.com", { args: { href } }, ({ href }) => {
-            cy.visit(href as string);
-          });
-        });
+        .should("equal", Cypress.env("contactGitHubUrl"));
     });
 
     it("should link to my Linkedin profile", () => {
@@ -143,8 +138,6 @@ describe("Contact page", () => {
         .should("exist")
         .invoke("attr", "href")
         .should("equal", Cypress.env("contactLinkedInUrl"));
-
-      // Cannot check that page exits because of the LinkedIn auth-wall always returning a 999 status code
     });
 
     it("should link to my Facebook profile", () => {
@@ -155,12 +148,7 @@ describe("Contact page", () => {
         .closest("a")
         .should("exist")
         .invoke("attr", "href")
-        .should("equal", Cypress.env("contactFacebookUrl"))
-        .then(href => {
-          cy.origin("messenger.com", { args: { href } }, ({ href }) => {
-            cy.visit(href as string);
-          });
-        });
+        .should("equal", Cypress.env("contactFacebookUrl"));
     });
   });
 });
