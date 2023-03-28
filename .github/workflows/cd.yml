@@ -9,8 +9,7 @@ concurrency: deployments
 
 env:
   IMAGE_NAME: gcr.io/tobysmith-uk/tobysmith-uk
-  ARCHIVE_NAME: Build
-  ARCHIVE_PATH: ./docker-build.tar
+  ENVIRONMENT_NAME: Production
 
 jobs:
   ci:
@@ -26,31 +25,19 @@ jobs:
     needs:
       - ci
 
-    environment:
-      name: Production
-      url: https://tobysmith.uk
-
     steps:
       - name: Login to GCP
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Set up GCP SDK
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_email: ${{ secrets.GCP_EMAIL }}
-          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
 
       - name: Configure Docker
         run: gcloud auth configure-docker --quiet
-
-      - name: Download Docker image
-        uses: actions/download-artifact@v3
-        with:
-          name: ${{ env.ARCHIVE_NAME }}
-
-      - name: Load Docker image
-        run: docker load --input ${{ env.ARCHIVE_PATH }}
-
-      - name: Push Docker image
-        run: docker push ${{ env.IMAGE_NAME }}
 
       - name: Deploy Docker image
         run: >

@@ -10,10 +10,11 @@
     "data-testid",
     "disqus",
     "fossas",
+    "gcloud",
     "lerp",
     "tobysmith",
     "tobythe-dev",
-    "zdnfztgnfgt" // Used as unique string to stop asset caching
+    "zdnfztgnfgt"
   ],
   "ignoreWords": [],
   "import": [],

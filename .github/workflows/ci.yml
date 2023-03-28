@@ -8,11 +8,14 @@ on:
     branches:
       - main
   workflow_call:
+    inputs:
+      shouldPushImage:
+        default: true
+        required: false
+        type: boolean
 
 env:
   IMAGE_NAME: gcr.io/tobysmith-uk/tobysmith-uk
-  ARCHIVE_NAME: Build
-  ARCHIVE_PATH: ./docker-build.tar
   NODE_VERSION: 18
 
 jobs:
@@ -53,14 +56,25 @@ jobs:
       - name: Build Docker image
         run: docker build . -t ${{ env.IMAGE_NAME }}
 
-      - name: Export Docker image
-        run: docker save --output ${{ env.ARCHIVE_PATH }} ${{ env.IMAGE_NAME }}
-
-      - name: Upload Docker image
-        uses: actions/upload-artifact@v3
+      - name: Login to GCP
+        if: inputs.shouldPushImage
+        uses: google-github-actions/auth@v1
         with:
-          name: ${{ env.ARCHIVE_NAME }}
-          path: ${{ env.ARCHIVE_PATH }}
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+
+      - name: Set up GCP SDK
+        if: inputs.shouldPushImage
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Configure Docker
+        if: inputs.shouldPushImage
+        run: gcloud auth configure-docker --quiet
+
+      - name: Push Docker image
+        if: inputs.shouldPushImage
+        run: docker push ${{ env.IMAGE_NAME }}
 
   test:
     name: Test
@@ -110,9 +124,6 @@ jobs:
           api-key: ${{ secrets.FOSSA_API_KEY }}
 
   e2e:
-    needs:
-      - build
-
     strategy:
       fail-fast: false
       matrix:
@@ -142,7 +153,7 @@ jobs:
 
     name: E2E test (${{ matrix.browser }})
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -153,13 +164,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
 
-      - name: Download Docker image
-        uses: actions/download-artifact@v3
-        with:
-          name: ${{ env.ARCHIVE_NAME }}
-
-      - name: Load Docker image
-        run: docker load --input ${{ env.ARCHIVE_PATH }}
+      - name: Build Docker image
+        run: docker build . -t ${{ env.IMAGE_NAME }}
 
       - name: Run Docker image
         run: >
