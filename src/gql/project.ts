@@ -1,5 +1,5 @@
 import highlightCode from "../utils/api-only/highlight-code";
-import { client, gql } from "./client";
+import { client, gql, VariablesBase } from "./client";
 import Seo from "./seo";
 
 export interface Project {
@@ -15,7 +15,7 @@ interface ProjectResponse {
   project: Project;
 }
 
-interface Variables {
+interface Variables extends VariablesBase {
   slug: string;
 }
 
