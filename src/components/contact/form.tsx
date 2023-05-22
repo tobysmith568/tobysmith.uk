@@ -1,6 +1,6 @@
 import { css, Theme } from "@emotion/react";
 import styled from "@emotion/styled";
-import { FC, SyntheticEvent, useCallback, useMemo, useRef, useState } from "react";
+import { FC, SyntheticEvent, useCallback, useRef, useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { SendEmailRequest, SendEmailResponse } from "../../pages/api/send-email";
 import { postJSON } from "../../utils/http-request";
@@ -25,7 +25,7 @@ const Form: FC<Props> = ({ clientKey }) => {
 
   const isValid = useIsFormValid(name, email, message);
 
-  const isDisabled = useMemo(() => formState !== "unsent", [formState]);
+  const isDisabled = formState !== "unsent";
 
   const reset = useCallback(() => {
     recaptchaRef.current?.reset();

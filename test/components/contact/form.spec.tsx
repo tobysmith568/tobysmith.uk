@@ -347,10 +347,14 @@ describe("form", () => {
 
         await populateForm(validName, validEmail, validMessage);
 
-        await submitForm();
+        const submitPromise = submitForm();
 
-        const submitButton = screen.getByRole("button", { name: "Send Message" });
-        expect(submitButton).toBeDisabled();
+        await waitFor(() => {
+          const submitButton = screen.getByRole("button", { name: "Send Message" });
+          expect(submitButton).toBeDisabled();
+        });
+
+        await submitPromise;
       });
 
       it("should request a recaptcha token from the recaptcha ref", async () => {
@@ -407,10 +411,10 @@ describe("form", () => {
 
               await submitForm();
 
-              await waitFor(async () => {
-                const tryAgainButton = screen.getByRole("button", { name: "Error. Try Again?" });
-                await userEvent.click(tryAgainButton);
+              const tryAgainButton = screen.getByRole("button", { name: "Error. Try Again?" });
+              await userEvent.click(tryAgainButton);
 
+              await waitFor(async () => {
                 const nameInput = screen.getByLabelText("Name");
                 expect(nameInput).not.toBeDisabled();
               });
@@ -425,10 +429,10 @@ describe("form", () => {
 
               await submitForm();
 
-              await waitFor(async () => {
-                const tryAgainButton = screen.getByRole("button", { name: "Error. Try Again?" });
-                await userEvent.click(tryAgainButton);
+              const tryAgainButton = screen.getByRole("button", { name: "Error. Try Again?" });
+              await userEvent.click(tryAgainButton);
 
+              await waitFor(async () => {
                 const nameInput = screen.getByLabelText("Email");
                 expect(nameInput).not.toBeDisabled();
               });
@@ -443,10 +447,10 @@ describe("form", () => {
 
               await submitForm();
 
-              await waitFor(async () => {
-                const tryAgainButton = screen.getByRole("button", { name: "Error. Try Again?" });
-                await userEvent.click(tryAgainButton);
+              const tryAgainButton = screen.getByRole("button", { name: "Error. Try Again?" });
+              await userEvent.click(tryAgainButton);
 
+              await waitFor(async () => {
                 const nameInput = screen.getByLabelText("Message");
                 expect(nameInput).not.toBeDisabled();
               });
@@ -461,7 +465,10 @@ describe("form", () => {
 
               await submitForm();
 
-              await waitFor(() => {
+              const tryAgainButton = screen.getByRole("button", { name: "Error. Try Again?" });
+              await userEvent.click(tryAgainButton);
+
+              await waitFor(async () => {
                 const submitButton = screen.getByRole("button", { name: "Send Message" });
                 expect(submitButton).toBeInTheDocument();
               });
