@@ -1,4 +1,4 @@
-import { client, gql } from "./client";
+import { client, gql, VariablesBase } from "./client";
 import Seo from "./seo";
 
 interface PostPage {
@@ -22,7 +22,7 @@ export interface Blog {
   posts: Post[];
 }
 
-interface Variables {
+interface Variables extends VariablesBase {
   term: string;
 }
 
