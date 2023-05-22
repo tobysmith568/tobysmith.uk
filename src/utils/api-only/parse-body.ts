@@ -1,6 +1,6 @@
 import { NextApiRequest } from "next";
 import { BadRequestException } from "next-api-handler";
-import { ZodType } from "zod";
+import { ZodType, z } from "zod";
 
 const parseBody = <TBody>(req: NextApiRequest, validator: ZodType<TBody>): TBody => {
   const parseResult = validator.safeParse(req.body);
@@ -18,7 +18,13 @@ const parseBody = <TBody>(req: NextApiRequest, validator: ZodType<TBody>): TBody
   }
 
   for (const fieldName in flatMessages.fieldErrors) {
-    const fieldErrors = flatMessages.fieldErrors[fieldName];
+    type KeyType = keyof z.inferFlattenedErrors<ZodType<TBody>>["fieldErrors"];
+
+    const fieldErrors = flatMessages.fieldErrors[fieldName as KeyType];
+
+    if (!fieldErrors) {
+      continue;
+    }
 
     for (const fieldError of fieldErrors) {
       allMessages.push(`Field '${fieldName}': ${fieldError}`);
