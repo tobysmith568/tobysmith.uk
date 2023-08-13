@@ -42,7 +42,7 @@
     "@license-cop/permissive": "^1.1.0",
     "@testing-library/cypress": "^9.0.0",
     "@testing-library/dom": "^9.0.0",
-    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/jest-dom": "^6.0.0",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.1.1",
     "@tobysmith568/eslint-config": "^1.0.2",
