@@ -34,7 +34,7 @@
     "react-dom": "18.2.0",
     "react-google-recaptcha": "^3.0.0",
     "rss": "^1.2.2",
-    "zod": "^3.14.4"
+    "zod": "^3.22.3"
   },
   "devDependencies": {
     "@emotion/react": "^11.8.2",
