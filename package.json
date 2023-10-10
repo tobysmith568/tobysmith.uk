@@ -50,7 +50,7 @@
     "@types/jest": "^29.0.0",
     "@types/node": "18.18.4",
     "@types/nodemailer": "^6.4.4",
-    "@types/react": "18.2.27",
+    "@types/react": "18.2.28",
     "@types/react-dom": "18.2.12",
     "@types/react-google-recaptcha": "^2.1.5",
     "@types/rss": "^0.0.30",
