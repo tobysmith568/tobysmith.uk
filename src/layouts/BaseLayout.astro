@@ -1,11 +1,15 @@
 ---
+import "@fontsource/blinker";
 import Header from "../components/BaseLayout/Header.astro";
 
 interface Props {
 	title: string;
 }
 
-const { title } = Astro.props;
+const props = Astro.props;
+const { frontmatter } = Astro.props;
+
+const title = props.title ?? frontmatter.title;
 ---
 
 <!doctype html>
@@ -21,26 +25,59 @@ const { title } = Astro.props;
 
 	<body>
     <Header />
-		<slot />
+    <main>
+      <div class="content">
+		    <slot />
+      </div>
+    </main>
 	</body>
 </html>
 
-<style is:global>
+<style is:global lang="scss">
+  @use "sass:color";
+
+  $primary: dodgerblue;
+  $primary-text: white;
+
 	:root {
-    --primary: dodgerblue;
-    --primary-text: white;
+    --primary: #{$primary};
+    --primary-text: #{$primary-text};
+    --primary-light: #{lighten($primary, 30%)};
 	}
 
 	html {
 		font-family: Blinker, sans-serif;
 		background: #f8f8f8;
+    font-size: 1.1em;
 	}
 
   body {
     margin: 0;
     padding: 0;
+    height: 100vh;
 
     font-size: 1.1em;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    flex-grow: 1;
+    overflow-y: auto;
+
+    a {
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-color: var(--primary-light);
+      text-decoration-thickness: 2px;
+
+      transition: text-decoration-color 0.2s ease-in-out;
+
+      &:hover {
+        text-decoration-color: $primary;
+      }
+    }
   }
 
 	code {
@@ -54,4 +91,13 @@ const { title } = Astro.props;
 			Courier New,
 			monospace;
 	}
+</style>
+
+<style>
+  .content {
+    margin: 0 auto;
+    padding: 20px;
+    padding-top: 1.5em;
+    max-width: 800px;
+  }
 </style>

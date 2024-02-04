@@ -1,0 +1,49 @@
+﻿---
+import HeroContent from "./HeroContent.md";
+---
+
+<div class="hero">
+  <img src="https://github.com/tobysmith568.png?width=290" alt="Profile picture of Toby" />
+
+  <div class="hero-content">
+    <HeroContent />
+  </div>
+</div>
+
+<style>
+  .hero {
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 2em;
+
+    @media (max-width: 1024px) {
+      margin-top: 1em;
+      flex-direction: column;
+
+      img {
+        margin-right: 0;
+        width: 230px;
+        height: 230px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      img {
+        width: 170px;
+        height: 170px;
+      }
+    }
+  }
+
+  img {
+    width: 290px;
+    height: 290px;
+    border-radius: 50%;
+    margin-right: 2em;
+  }
+
+  .hero-content {
+    flex-grow: 1;
+  }
+</style>
