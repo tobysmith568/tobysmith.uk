@@ -1,4 +1,6 @@
 ---
+import Header from "../components/BaseLayout/Header.astro";
+
 interface Props {
 	title: string;
 }
@@ -16,27 +18,31 @@ const { title } = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
+
 	<body>
+    <Header />
 		<slot />
 	</body>
 </html>
+
 <style is:global>
 	:root {
-		--accent: 136, 58, 234;
-		--accent-light: 224, 204, 250;
-		--accent-dark: 49, 10, 101;
-		--accent-gradient: linear-gradient(
-			45deg,
-			rgb(var(--accent)),
-			rgb(var(--accent-light)) 30%,
-			white 60%
-		);
+    --primary: dodgerblue;
+    --primary-text: white;
 	}
+
 	html {
-		font-family: system-ui, sans-serif;
-		background: #13151a;
-		background-size: 224px;
+		font-family: Blinker, sans-serif;
+		background: #f8f8f8;
 	}
+
+  body {
+    margin: 0;
+    padding: 0;
+
+    font-size: 1.1em;
+  }
+
 	code {
 		font-family:
 			Menlo,

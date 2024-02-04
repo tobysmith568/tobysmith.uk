@@ -1,0 +1,48 @@
+﻿---
+export interface Props {
+  href: string;
+  label: string;
+}
+
+const {label, href} = Astro.props;
+---
+
+<a href={href}>
+  <div>
+    {label}
+  </div>
+</a>
+
+<style lang="scss">
+  a {
+    color: var(--primary-text);
+    text-decoration: none;
+    font-size: 1.1rem;
+
+    padding: 0 1em;
+    height: 100%;
+
+    display: grid;
+    align-items: center;
+    justify-content: center;
+
+    div::after {
+      content: "";
+      float: right;
+      width: 100%;
+      height: 2px;
+      transform: translateY(-100%);
+      background-color: var(--primary-text);
+      opacity: 0;
+      transition: opacity 300ms, transform 300ms;
+    }
+  }
+
+  a:hover,
+  a.current {
+    div::after {
+      opacity: 1;
+      transform: translate3d(0, 0.1em, 0);
+    }
+  }
+</style>
