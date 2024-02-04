@@ -9,7 +9,7 @@ interface Props {
 const props = Astro.props;
 const { frontmatter } = Astro.props;
 
-const title = props.title ?? frontmatter.title;
+const title = props?.title ?? frontmatter?.title;
 ---
 
 <!doctype html>
@@ -75,7 +75,7 @@ const title = props.title ?? frontmatter.title;
       transition: text-decoration-color 0.2s ease-in-out;
 
       &:hover {
-        text-decoration-color: $primary;
+        text-decoration-color: var(--primary);
       }
     }
   }

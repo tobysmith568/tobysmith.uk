@@ -2,6 +2,7 @@
   "name": "tobysmith.uk",
   "type": "module",
   "version": "0.0.1",
+  "prettier": "@tobysmith568/prettier-config",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -17,6 +18,7 @@
     "typescript": "^5.3.3"
   },
   "devDependencies": {
+    "@tobysmith568/prettier-config": "^2.0.2",
     "sass": "^1.70.0"
   }
 }

@@ -1,0 +1,82 @@
+﻿---
+import type { CollectionEntry } from "astro:content"
+import Hr from "../HR.astro"
+import { Image } from "astro:assets";
+
+export interface Props {
+  project: CollectionEntry<"projects">
+}
+
+const { project } = Astro.props;
+const { slug, data } = project;
+const { title, tagLine, description } = data;
+
+const projectImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/projects/*.{jpeg,jpg,png,gif,svg}');
+
+const projectImageFn = projectImages[`/src/assets/projects/${slug}.svg`];
+
+---
+
+<article>
+  <a href={"/projects/" + slug}>
+    <div class="image-container">
+      {!!projectImageFn && <Image src={projectImageFn()} alt={title + " logo"} />}
+    </div>
+
+    <header>
+      <h2>{title}</h2>
+      <h3>{tagLine}</h3>
+      <p>{description}</p>
+    </header>
+  </a>
+
+  <Hr />
+</article>
+
+<style lang="scss">
+  a {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    text-decoration: none;
+
+    h2 {
+      text-decoration: underline;
+      text-decoration-color: var(--primary-light);
+
+      transition: text-decoration-color 0.2s ease-in-out;
+    }
+
+    &:hover {
+      h2 {
+        text-decoration-color: var(--primary);
+      }
+    }
+  }
+
+  .image-container {
+    min-width: 100px;
+    height: 100px;
+    margin-right: 2em;
+
+    @media screen and (max-width: 600px) {
+      display: none;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  h2 {
+    margin-bottom: 0;
+  }
+
+  h3 {
+    margin-top: 0.4em;
+    font-size: 1em;
+  }
+</style>
