@@ -1,0 +1,44 @@
+﻿---
+---
+
+<div class="shadow">
+
+  <div class="mobile-nav">
+    <a href="/about">About</a>
+    <a href="/projects">Projects</a>
+  </div>
+
+</div>
+
+<style>
+  .shadow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    background-color: rgba(0, 0, 0, 0.6);
+  }
+
+  .mobile-nav {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    height: 100vh;
+    width: 40vw;
+    min-width: 350px;
+    right: 0;
+
+    background-color: var(--primary);
+    color: var(--primary-text);
+
+    a:first-of-type {
+      margin-top: 5em;
+    }
+  }
+
+  a {
+    color: inherit;
+  }
+</style>
