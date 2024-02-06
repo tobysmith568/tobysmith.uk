@@ -4,7 +4,7 @@ export interface Props {
   label: string;
 }
 
-const {label, href} = Astro.props;
+const { label, href } = Astro.props;
 ---
 
 <a href={href}>
@@ -33,7 +33,9 @@ const {label, href} = Astro.props;
       transform: translateY(-100%);
       background-color: var(--primary-text);
       opacity: 0;
-      transition: opacity 300ms, transform 300ms;
+      transition:
+        opacity 300ms,
+        transform 300ms;
     }
   }
 

@@ -1,20 +1,21 @@
 ﻿---
-import type { CollectionEntry } from "astro:content"
-import Hr from "../HR.astro"
+import type { CollectionEntry } from "astro:content";
+import Hr from "../HR.astro";
 import { Image } from "astro:assets";
 
 export interface Props {
-  project: CollectionEntry<"projects">
+  project: CollectionEntry<"projects">;
 }
 
 const { project } = Astro.props;
 const { slug, data } = project;
 const { title, tagLine, description } = data;
 
-const projectImages = import.meta.glob<{ default: ImageMetadata }>('/src/assets/projects/*.{jpeg,jpg,png,gif,svg}');
+const projectImages = import.meta.glob<{ default: ImageMetadata }>(
+  "/src/assets/projects/*.{jpeg,jpg,png,gif,svg}"
+);
 
 const projectImageFn = projectImages[`/src/assets/projects/${slug}.svg`];
-
 ---
 
 <article>

@@ -1,5 +1,5 @@
 ﻿---
-import Layout from "../../layouts/BaseLayout.astro"
+import Layout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 import ProjectListItem from "../../components/Projects/ProjectListItem.astro";
 
@@ -11,7 +11,5 @@ const sortedProjects = projects.sort((a, b) => a.data.sortWeight - b.data.sortWe
   <h1>My Projects</h1>
   <p>A selection of the projects I've been working on recently.</p>
 
-  {sortedProjects.map((project) => (
-      <ProjectListItem project={project} />
-  ))}
+  {sortedProjects.map(project => <ProjectListItem project={project} />)}
 </Layout>

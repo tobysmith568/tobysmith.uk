@@ -3,7 +3,7 @@ import "@fontsource/blinker";
 import Header from "../components/BaseLayout/Header.astro";
 
 interface Props {
-	title: string;
+  title: string;
 }
 
 const props = Astro.props;
@@ -14,23 +14,23 @@ const title = props?.title ?? frontmatter?.title;
 
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="description" content="Astro description" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
-	</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
 
-	<body>
+  <body>
     <Header />
     <main>
       <div class="content">
-		    <slot />
+        <slot />
       </div>
     </main>
-	</body>
+  </body>
 </html>
 
 <style is:global lang="scss">
@@ -39,17 +39,17 @@ const title = props?.title ?? frontmatter?.title;
   $primary: dodgerblue;
   $primary-text: white;
 
-	:root {
+  :root {
     --primary: #{$primary};
     --primary-text: #{$primary-text};
     --primary-light: #{lighten($primary, 30%)};
-	}
+  }
 
-	html {
-		font-family: Blinker, sans-serif;
-		background: #f8f8f8;
+  html {
+    font-family: Blinker, sans-serif;
+    background: #f8f8f8;
     font-size: 1.1em;
-	}
+  }
 
   body {
     margin: 0;
@@ -80,17 +80,17 @@ const title = props?.title ?? frontmatter?.title;
     }
   }
 
-	code {
-		font-family:
-			Menlo,
-			Monaco,
-			Lucida Console,
-			Liberation Mono,
-			DejaVu Sans Mono,
-			Bitstream Vera Sans Mono,
-			Courier New,
-			monospace;
-	}
+  code {
+    font-family:
+      Menlo,
+      Monaco,
+      Lucida Console,
+      Liberation Mono,
+      DejaVu Sans Mono,
+      Bitstream Vera Sans Mono,
+      Courier New,
+      monospace;
+  }
 </style>
 
 <style>
