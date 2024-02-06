@@ -1,0 +1,14 @@
+﻿---
+import Layout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import BlogListItem from "../../components/Blog/BlogListItem.astro";
+
+const blogPosts = await getCollection("blog");
+const sortedPosts = blogPosts.sort((a, b) => a.data.sortWeight - b.data.sortWeight);
+---
+
+<Layout title="Blog Posts">
+  <h1>Blog Posts</h1>
+
+  {sortedPosts.map(post => <BlogListItem post={post} />)}
+</Layout>

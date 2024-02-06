@@ -1,0 +1,47 @@
+﻿---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import dayjs from "dayjs";
+import chevronLeft from "../../assets/chevron-left.svg";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+
+  return posts.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry }
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const date = new Date(entry.data.date);
+
+const humanReadableDate = dayjs(date).format("DD MMM YYYY");
+const parseableDate = dayjs(date).format("YYYY-MM-DD");
+---
+
+<BaseLayout frontmatter={entry.data}>
+  <a href="/blog" class="back">
+    <img src={chevronLeft.src} alt="" />
+    Posts
+  </a>
+
+  <h1>{entry.data.title}</h1>
+  <p>
+    <time datetime={parseableDate}>{humanReadableDate}</time>
+  </p>
+  <Content />
+</BaseLayout>
+
+<style>
+  time {
+    font-weight: bold;
+    font-size: 1.17em;
+  }
+
+  .back {
+    display: flex;
+  }
+</style>

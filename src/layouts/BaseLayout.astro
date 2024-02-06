@@ -9,7 +9,11 @@ interface Props {
 const props = Astro.props;
 const { frontmatter } = Astro.props;
 
-const title = props?.title ?? frontmatter?.title;
+const defaultTitle = "Toby Smith";
+
+const pageTitle = props?.title ?? frontmatter?.title;
+const title =
+  pageTitle && pageTitle !== defaultTitle ? `${pageTitle} - ${defaultTitle}` : defaultTitle;
 ---
 
 <!doctype html>
