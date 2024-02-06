@@ -4,14 +4,14 @@ import Header from "../components/BaseLayout/Header.astro";
 
 interface Props {
   title: string;
+  frontmatter: any;
 }
 
-const props = Astro.props;
-const { frontmatter } = Astro.props;
+const props = Astro.props.frontmatter || Astro.props;
 
 const defaultTitle = "Toby Smith";
 
-const pageTitle = props?.title ?? frontmatter?.title;
+const pageTitle = props?.title;
 const title =
   pageTitle && pageTitle !== defaultTitle ? `${pageTitle} - ${defaultTitle}` : defaultTitle;
 ---
