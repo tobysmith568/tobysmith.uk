@@ -1,0 +1,24 @@
+---
+import Layout from "../layouts/BaseLayout.astro";
+import ContactForm from "../components/Contact/ContactForm.astro";
+---
+
+<Layout title="Contact Me" frontmatter={undefined}>
+  <h1>Contact Me</h1>
+  <p>Feel free to reach out me to via any of the methods below</p>
+  <div>
+    <ContactForm />
+  </div>
+</Layout>
+
+<style>
+  main {
+    margin: auto;
+    padding: 1rem;
+    width: 800px;
+    max-width: calc(100% - 2rem);
+    color: #000000;
+    font-size: 20px;
+    line-height: 1.6;
+  }
+</style>

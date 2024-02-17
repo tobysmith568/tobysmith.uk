@@ -1,0 +1,108 @@
+---
+function onSubmit() {
+  grecaptcha.execute();
+}
+---
+
+<script is:inline src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+<form id="contact-form" @submit.prevent={onSubmit}>
+  <h2>Message Form</h2>
+
+  <div class="fields" x-data="{ name: '', email: '', message: '', errorMessage: '' }">
+    <label for="name">Name</label>
+    <input id="name" x-model="name" type="text" minlength="1" name="name" placeholder="Name" />
+
+    <label for="email">Email</label>
+    <input id="email" x-model="email" type="email" name="email" placeholder="Email" />
+
+    <label for="message">Message</label>
+    <textarea id="message" x-model="message" name="message" minlength="1" placeholder="Your message"
+    ></textarea>
+
+    <button type="submit" disabled x-bind:disabled="!isValid(name, email, message)">
+      Send Message
+    </button>
+
+    <p x-text="errorMessage"></p>
+  </div>
+
+  <!-- TODO: Move sitekey to env var -->
+  <div
+    class="g-recaptcha"
+    data-sitekey="6Le-9NcaAAAAAOcFmN40meJWkOCTXUD7jW9A8STH"
+    data-callback="onGetRecaptchaToken"
+    data-size="invisible">
+  </div>
+</form>
+
+<script is:inline>
+  function isValid(name, email, message) {
+    return name && email && message;
+  }
+</script>
+
+<style is:global>
+  .grecaptcha-badge {
+    display: none !important;
+  }
+</style>
+
+<style lang="scss">
+  .fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 450px;
+
+    label {
+      margin-top: 0.5rem;
+    }
+
+    label,
+    #email,
+    #message,
+    button[type="submit"] {
+      grid-column: span 2;
+    }
+
+    input,
+    textarea,
+    button[type="submit"] {
+      font-size: 1em;
+      font-family: inherit;
+
+      padding: 0.2em;
+      margin: 0.4em 0px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button[type="submit"] {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+  }
+</style>
+
+<script>
+  import { parseFormData } from "../../scripts/contact/parseFormData";
+  import { sendContactEmail } from "../../scripts/contact/sendContactEmail";
+
+  const form = document.getElementById("contact-form") as HTMLFormElement | null;
+
+  form?.addEventListener("submit", function onSubmit(event) {
+    event.preventDefault();
+    grecaptcha.execute();
+  });
+
+  async function onGetRecaptchaToken(token: string) {
+    if (!form) return;
+
+    const formData = parseFormData(form);
+    await sendContactEmail(formData, token);
+  }
+
+  window.onGetRecaptchaToken = onGetRecaptchaToken;
+</script>
