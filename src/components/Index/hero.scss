@@ -1,0 +1,56 @@
+@use "sass:math";
+
+// Pseudo-randomness
+
+$seed: 397;
+
+@function getRandom($max) {
+  // https://codepen.io/Sphinxxxx/pen/Gpmmye
+  // &
+  // http://indiegamr.com/generate-repeatable-random-numbers-in-js/
+
+  // Note the "!global" flag:
+  // https://webdesign.tutsplus.com/articles/understanding-variable-scope-in-sass--cms-23498
+  $seed: ($seed * 9301 + 49297) % 233280 !global;
+  @return math.div($seed, 233280) * $max;
+}
+
+// Logo positioning
+
+$halfCircle: 180;
+
+$leftHalfStart: 50;
+$leftHalfEnd: 180;
+$degreesInLeftHalf: $leftHalfEnd - $leftHalfStart;
+
+$rightHalfStart: 180;
+$rightHalfEnd: 320;
+$degreesInRightHalf: $rightHalfEnd - $rightHalfStart;
+
+@function calcAngle($i, $logoCount) {
+  $logosPerHalf: math.floor(math.div($logoCount, 2));
+
+  $indexInHalf: $i % $logosPerHalf;
+  $isLeftHalf: $i < math.div($logoCount, 2);
+
+  $sideStart: if($isLeftHalf, $leftHalfStart, $rightHalfStart);
+  $degreesInTheHalf: if($isLeftHalf, $degreesInLeftHalf, $degreesInRightHalf);
+
+  $degreesThroughHalf: math.div($degreesInTheHalf, $logosPerHalf) * ($indexInHalf);
+  $angle: $sideStart + $degreesThroughHalf;
+
+  @return $angle;
+}
+
+@function calcDistanceFromOrigin() {
+  $distanceFromOrigin: 450px + (getRandom(50));
+  @return $distanceFromOrigin;
+}
+
+@function calcZIndex() {
+  @return math.floor(getRandom(50));
+}
+
+@function calcScale() {
+  @return getRandom(0.2) + 0.9;
+}

@@ -1,12 +1,10 @@
 ---
-function onSubmit() {
-  grecaptcha.execute();
-}
+
 ---
 
 <script is:inline src="https://www.google.com/recaptcha/api.js" async defer></script>
 
-<form id="contact-form" @submit.prevent={onSubmit}>
+<form id="contact-form">
   <h2>Message Form</h2>
 
   <div class="fields" x-data="{ name: '', email: '', message: '', errorMessage: '' }">

@@ -1,0 +1,137 @@
+---
+import TypeScriptLogo from "../../assets/index/typescript.svg";
+import ReactLogo from "../../assets/index/react.svg";
+import AstroLogo from "../../assets/index/astrojs.svg";
+import CSharpLogo from "../../assets/index/csharp.svg";
+import DotnetLogo from "../../assets/index/dotnet.svg";
+import NextJsLogo from "../../assets/index/nextjs.svg";
+import NodeJsLogo from "../../assets/index/nodejs.svg";
+import DockerLogo from "../../assets/index/docker.svg";
+import VsCodeLogo from "../../assets/index/vscode.svg";
+import RiderLogo from "../../assets/index/rider.svg";
+import GcpLogo from "../../assets/index/gcp.svg";
+
+interface Logo {
+  img: ImageMetadata;
+  alt: string;
+}
+
+const leftLogos: Logo[] = [
+  { img: TypeScriptLogo, alt: "TypeScript Logo" },
+  { img: VsCodeLogo, alt: "VSCode Logo" },
+  { img: CSharpLogo, alt: "C# Logo" },
+  { img: DockerLogo, alt: "Docker Logo" },
+  { img: GcpLogo, alt: "GCP Logo" },
+  { img: RiderLogo, alt: "Rider Logo" },
+  { img: NodeJsLogo, alt: "Node.JS Logo" },
+  { img: ReactLogo, alt: "React Logo" },
+  { img: DotnetLogo, alt: "DotNet Logo" },
+  { img: AstroLogo, alt: "Astro Logo" },
+  { img: NextJsLogo, alt: "Next.JS Logo" }
+];
+
+const rightLogos: Logo[] = [
+  { img: DockerLogo, alt: "Docker Logo" },
+  { img: TypeScriptLogo, alt: "TypeScript Logo" },
+  { img: RiderLogo, alt: "Rider Logo" },
+  { img: DotnetLogo, alt: "DotNet Logo" },
+  { img: AstroLogo, alt: "Astro Logo" },
+  { img: NextJsLogo, alt: "Next.JS Logo" },
+  { img: CSharpLogo, alt: "C# Logo" },
+  { img: GcpLogo, alt: "GCP Logo" },
+  { img: VsCodeLogo, alt: "VSCode Logo" },
+  { img: NodeJsLogo, alt: "Node.JS Logo" },
+  { img: ReactLogo, alt: "React Logo" }
+];
+
+const logos: Logo[] = [...leftLogos, ...rightLogos];
+---
+
+<div class="hero">
+  {
+    logos.map((logo, i) => (
+      <img class={`logo logo-${i}`} src={logo.img.src} alt={logo.alt} draggable="false" />
+    ))
+  }
+
+  <div>
+    <h1 class="name">
+      Toby Smith
+      <span class="tag">npm package author</span>
+    </h1>
+    <h2 class="tagline">Blog and Portfolio Website</h2>
+  </div>
+</div>
+
+<style lang="scss">
+  @use "./hero.scss" as *;
+
+  .hero {
+    // background-color: antiquewhite;
+    min-height: max(500px, 50vh);
+
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+
+    margin-top: 3em;
+
+    & > * {
+      grid-area: 1 / 1;
+      margin: auto;
+    }
+  }
+
+  .name {
+    font-size: 4rem;
+    margin: 0;
+
+    display: flex;
+    align-items: center;
+  }
+
+  .tag {
+    font-size: 2rem;
+    color: grey;
+    margin-left: 0.75em;
+
+    &::before {
+      content: "- ";
+    }
+  }
+
+  .tagline {
+    font-size: 2rem;
+    margin: 0;
+  }
+
+  $logoLength: 10vw;
+  $logoMaxLenth: 100px;
+
+  .logo {
+    width: $logoLength;
+    height: $logoLength;
+    max-height: $logoMaxLenth;
+    max-width: $logoMaxLenth;
+    user-select: none;
+  }
+
+  $logoCount: 22;
+  @for $i from 0 through $logoCount - 1 {
+    $angle: calcAngle($i, $logoCount);
+    $distanceFromOrigin: calcDistanceFromOrigin();
+    $zIndex: calcZIndex();
+    $scale: calcScale();
+
+    @debug scale $scale;
+
+    .logo-#{$i} {
+      z-index: $zIndex;
+      transform: rotate(#{$angle}deg)
+        translateY(-$distanceFromOrigin)
+        rotate(-#{$angle}deg)
+        scale($scale);
+    }
+  }
+</style>
