@@ -1,10 +1,11 @@
 ---
 import "@fontsource/blinker";
+import "@fontsource-variable/fira-code";
 import Header from "../components/BaseLayout/Header.astro";
 
 interface Props {
   title: string;
-  frontmatter: any;
+  frontmatter?: any;
 }
 
 const props = Astro.props.frontmatter || Astro.props;
@@ -51,7 +52,7 @@ const title =
 
   html {
     font-family: Blinker, sans-serif;
-    background: #f8f8f8;
+    background: #fff;
     font-size: 1.1em;
   }
 
@@ -85,15 +86,7 @@ const title =
   }
 
   code {
-    font-family:
-      Menlo,
-      Monaco,
-      Lucida Console,
-      Liberation Mono,
-      DejaVu Sans Mono,
-      Bitstream Vera Sans Mono,
-      Courier New,
-      monospace;
+    font-family: "Fira Code", monospace;
   }
 </style>
 

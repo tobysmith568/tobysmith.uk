@@ -1,0 +1,27 @@
+---
+
+---
+
+<div class="prose">
+  <slot />
+</div>
+
+<style>
+  .prose {
+    p {
+      text-align: justify;
+    }
+
+    code {
+      color: var(--primary);
+      font-size: 0.9rem;
+    }
+
+    :not(pre) {
+      code {
+        font-weight: bold;
+        margin: 0 0.2rem;
+      }
+    }
+  }
+</style>

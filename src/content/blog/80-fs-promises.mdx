@@ -1,0 +1,126 @@
+---
+sortWeight: 80
+slug: fs-promises
+title: "Late to the party: fs.promises"
+description: OK, I know I'm very late to the party on this, but I've only recently discovered fs.promises - and they're great!
+date: 2022-07-14
+---
+
+OK, I know I'm very late to the party on this, but I've only recently discovered fs.promises - and they are great!
+
+> In this article, I'm using `fs.readFile` as my example, but what I say applies to the whole family of "async" methods exported from `"fs"`.
+
+## The Traditional APIs
+
+For those who aren't aware, if you want to access the file system from within a Node.js app,
+you will want to use the functions provided from the `"fs"` import.
+This module exposes APIs to achieve tasks like writing & reading files, creating directories, and seeing if files exist.
+While there are usually synchronous versions of the exported methods, developers will often want to opt for the asynchronous versions.
+The traditional asynchronous APIs (the ones I've been using for the last few years) implement a design that relies on callbacks.
+To read in a file from disk, you have to write code that is similar to the following:
+
+```javascript
+import { readFile } from "fs";
+
+readFile("/my/file.path", (err, data) => {
+  if (err) throw err;
+  console.log(data);
+});
+```
+
+The snippet above passes a callback into `readFile` as the second argument.
+Once Node.js has finished reading the file from disk, it will call the callback with either an error in the first
+parameter or the file contents in the second parameter.
+This API works just fine, but it doesn't allow you to block the execution of the calling method out of the box.
+Any code written after the call to `readFile` gets executed immediately - before Node.js has finished reading the file.
+In other words, the callback will be called "out of order" relative to the code around it in the file.
+
+## The Two Traditional Solutions
+
+There are two different solutions to get around the issue of not being able to block the calling code:
+
+- Manually wrap `readFile` in a promise
+- Use the promisify API exported from `"util"`.
+
+### Wrapping with a Promise
+
+The constructor for a Promise takes in a single function;
+this is where you can write code that you want to await (block) from the calling method.
+The function can take up to two arguments, both of which are also functions.
+You should either call the first function on the success of your async code or the second function on failure.
+
+```javascript
+await new Promise((resolve, reject) => {
+  // Here you can do something that you want to await.
+  // Once you're done, call resolve. On failure, call reject.
+});
+```
+
+This pattern is perfect for wrapping a call to the `readFile` method exported from `"fs"`.
+
+```javascript
+await new Promise((resolve, reject) => {
+  readFile("/my/file.path", (err, data) => {
+    if (err) {
+      reject(err);
+      return;
+    }
+
+    resolve(data);
+  });
+});
+```
+
+Due to the use of the `await` keyword before the Promise constructor, the calling code will block until the Promise resolves.
+As the Promise's resolve function is only called in the `readFile` callback,
+the promise won't resolve until after the file has been read in full.
+
+Having to wrap the call to `readFile` in a Promise is _fine_.
+However, it's a fair bit of extra bulk, especially if you do it in multiple places throughout a codebase.
+I would typically create a "file utils" module containing functions that simply wrap fs functions with Promises...
+Which, again, is _fine_.
+
+### Promisify
+
+Another Node.js standard library import alongside `"fs"` is `"util"`;
+and one of the functions exported from `"util"` is called "`promisify`".
+Using `promisify` you can wrap any callback-based function to make it return a Promise that resolves to the intended result.
+The only conditions are that the last argument must be where you pass in the callback and that callback must
+have the `(err, result) => void` signature we explored above with `fs.readFile`.
+
+Usage of `promisify` might look like this:
+
+```javascript
+import { readFile } from "fs";
+import { promisify } from "util";
+
+const readFileAsync = promisify(readFile);
+
+export const myFunction = async () => {
+  const fileContent = await readFileAsync("/my/file.path");
+  return fileContent;
+};
+```
+
+Using `promisify`, you're able to call `readFile` while still blocking the calling code while the file is read from disk.
+There are some tradeoffs, however; `promisify` can struggle with TypeScript types.
+I've often had it infer that an argument needs to be a `Buffer` when there's also an overload that can take a `string`.
+It also still results in the extra code `const readFileAsync = promisify(readFile);`...
+Which isn't much, but is at best, only _fine_.
+
+## The 'new' Solution
+
+As I said at the beginning, I'm a little late to the party on this one, but there is now an alternative.
+As of Node.js version 10 (2018!), there's a 'new' standard library called "`fs.promises`".
+Using the functions imported from this module, you can perform all the same actions as you can from the `"fs"` import,
+except they have signatures that don't accept callback arguments and instead return promises!
+
+```javascript
+import { readFile } from "fs/promises";
+
+const fileContent = await readFile("/my/file.path");
+```
+
+And there you go! A simple way to interact with the filesystem using `await` out of the box.
+
+I wish I knew about this sooner...

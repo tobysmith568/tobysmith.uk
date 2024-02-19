@@ -5,7 +5,7 @@ import BlogListItem from "../../components/Blog/BlogListItem.astro";
 import RssLogo from "../../assets/rss.svg";
 
 const blogPosts = await getCollection("blog");
-const sortedPosts = blogPosts.sort((a, b) => a.data.sortWeight - b.data.sortWeight);
+const sortedPosts = blogPosts.sort((a, b) => a.data.sortWeight - b.data.sortWeight).reverse();
 ---
 
 <Layout title="Blog Posts">
