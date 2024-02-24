@@ -5,9 +5,11 @@ export interface Props {
 }
 
 const { label, href } = Astro.props;
+
+const isCurrentUrl = Astro.url.pathname === href;
 ---
 
-<a href={href}>
+<a href={href} class:list={{ current: isCurrentUrl }}>
   <div>
     {label}
   </div>
