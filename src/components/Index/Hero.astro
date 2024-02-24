@@ -1,137 +1,150 @@
 ---
-import TypeScriptLogo from "../../assets/index/typescript.svg";
-import ReactLogo from "../../assets/index/react.svg";
-import AstroLogo from "../../assets/index/astrojs.svg";
-import CSharpLogo from "../../assets/index/csharp.svg";
-import DotnetLogo from "../../assets/index/dotnet.svg";
-import NextJsLogo from "../../assets/index/nextjs.svg";
-import NodeJsLogo from "../../assets/index/nodejs.svg";
-import DockerLogo from "../../assets/index/docker.svg";
-import VsCodeLogo from "../../assets/index/vscode.svg";
-import RiderLogo from "../../assets/index/rider.svg";
-import GcpLogo from "../../assets/index/gcp.svg";
 
-interface Logo {
-  img: ImageMetadata;
-  alt: string;
-}
-
-const leftLogos: Logo[] = [
-  { img: TypeScriptLogo, alt: "TypeScript Logo" },
-  { img: VsCodeLogo, alt: "VSCode Logo" },
-  { img: CSharpLogo, alt: "C# Logo" },
-  { img: DockerLogo, alt: "Docker Logo" },
-  { img: GcpLogo, alt: "GCP Logo" },
-  { img: RiderLogo, alt: "Rider Logo" },
-  { img: NodeJsLogo, alt: "Node.JS Logo" },
-  { img: ReactLogo, alt: "React Logo" },
-  { img: DotnetLogo, alt: "DotNet Logo" },
-  { img: AstroLogo, alt: "Astro Logo" },
-  { img: NextJsLogo, alt: "Next.JS Logo" }
-];
-
-const rightLogos: Logo[] = [
-  { img: DockerLogo, alt: "Docker Logo" },
-  { img: TypeScriptLogo, alt: "TypeScript Logo" },
-  { img: RiderLogo, alt: "Rider Logo" },
-  { img: DotnetLogo, alt: "DotNet Logo" },
-  { img: AstroLogo, alt: "Astro Logo" },
-  { img: NextJsLogo, alt: "Next.JS Logo" },
-  { img: CSharpLogo, alt: "C# Logo" },
-  { img: GcpLogo, alt: "GCP Logo" },
-  { img: VsCodeLogo, alt: "VSCode Logo" },
-  { img: NodeJsLogo, alt: "Node.JS Logo" },
-  { img: ReactLogo, alt: "React Logo" }
-];
-
-const logos: Logo[] = [...leftLogos, ...rightLogos];
 ---
 
 <div class="hero">
-  {
-    logos.map((logo, i) => (
-      <img class={`logo logo-${i}`} src={logo.img.src} alt={logo.alt} draggable="false" />
-    ))
-  }
+  <img
+    src="https://github.com/tobysmith568.png?width=290"
+    alt="Profile picture of Toby"
+    class="profile-pic"
+  />
 
-  <div>
-    <h1 class="name">
-      Toby Smith
-      <span class="tag">npm package author</span>
-    </h1>
-    <h2 class="tagline">Blog and Portfolio Website</h2>
-  </div>
+  <h1 class="name">
+    <span>Toby Smith</span>
+    <span class="stack">
+      <span
+        id="tag"
+        aria-label="Full-stack developer, npm package author, TypeScript fanatic, & Burrito over-filler"
+        >Full-stack developer</span
+      >
+    </span>
+  </h1>
+  <h2 class="tagline">Blog and Portfolio Website</h2>
 </div>
 
 <style lang="scss">
-  @use "./hero.scss" as *;
-
   .hero {
-    // background-color: antiquewhite;
     min-height: max(500px, 50vh);
 
     display: grid;
     justify-content: center;
     align-content: center;
-    align-items: center;
 
     margin-top: 3em;
+  }
+
+  .stack {
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
 
     & > * {
       grid-area: 1 / 1;
-      margin: auto;
     }
+  }
+
+  .profile-pic {
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    display: block;
+
+    border: var(--primary) 6px solid;
+    filter: drop-shadow(0 0 0.75rem var(--primary));
   }
 
   .name {
     font-size: 4rem;
-    margin: 0;
+    margin: 2rem 0 0 0;
+    width: 700px;
 
     display: flex;
     align-items: center;
+
+    @media (max-width: 800px) {
+      width: auto;
+
+      flex-wrap: wrap;
+      align-items: flex-start;
+      flex-direction: column;
+
+      > span {
+        margin: auto;
+      }
+    }
   }
 
-  .tag {
+  @keyframes tagAnimation {
+    0% {
+      opacity: 0%;
+    }
+    15% {
+      opacity: 100%;
+    }
+    80% {
+      opacity: 100%;
+    }
+    95% {
+      opacity: 0%;
+    }
+    100% {
+      opacity: 0%;
+    }
+  }
+
+  #tag {
     font-size: 2rem;
     color: grey;
     margin-left: 0.75em;
+    opacity: 0%;
 
     &::before {
       content: "- ";
+    }
+
+    &.fade {
+      animation: tagAnimation 3s infinite;
+    }
+
+    @media (max-width: 800px) {
+      margin-left: 0;
+
+      &::before {
+        content: "";
+      }
     }
   }
 
   .tagline {
     font-size: 2rem;
+    text-align: center;
     margin: 0;
-  }
 
-  $logoLength: 10vw;
-  $logoMaxLenth: 100px;
-
-  .logo {
-    width: $logoLength;
-    height: $logoLength;
-    max-height: $logoMaxLenth;
-    max-width: $logoMaxLenth;
-    user-select: none;
-  }
-
-  $logoCount: 22;
-  @for $i from 0 through $logoCount - 1 {
-    $angle: calcAngle($i, $logoCount);
-    $distanceFromOrigin: calcDistanceFromOrigin();
-    $zIndex: calcZIndex();
-    $scale: calcScale();
-
-    @debug scale $scale;
-
-    .logo-#{$i} {
-      z-index: $zIndex;
-      transform: rotate(#{$angle}deg)
-        translateY(-$distanceFromOrigin)
-        rotate(-#{$angle}deg)
-        scale($scale);
+    @media (max-width: 800px) {
+      margin-top: 0.5em;
     }
   }
 </style>
+
+<script>
+  const tags = [
+    "npm package author",
+    "TypeScript fanatic",
+    "Burrito over-filler",
+    "Full-stack developer"
+  ];
+
+  const tagElement = document.getElementById("tag");
+  let tagIndex = 0;
+
+  if (tagElement) {
+    tagElement.classList.add("fade");
+
+    setInterval(() => {
+      tagElement.innerText = tags[tagIndex] ?? "";
+      tagIndex = (tagIndex + 1) % tags.length;
+    }, 3000);
+  }
+</script>
