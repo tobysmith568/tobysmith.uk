@@ -22,7 +22,7 @@ export const GET: APIRoute = async _context => {
       `<language>en-gb</language>`,
       `<copyright>${year} Toby Smith. All rights reserved.</copyright>`,
       `<lastBuildDate>${new Date()}</lastBuildDate>`,
-      `<webMaster>tobysmith568@hotmail.co.uk (Toby Smith)</webMaster>`,
+      `<webMaster>contact@tobythe.dev (Toby Smith)</webMaster>`,
       `<ttl>7200</ttl>`
     ].join("")
   });
