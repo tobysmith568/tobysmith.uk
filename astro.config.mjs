@@ -14,5 +14,10 @@ export default defineConfig({
   experimental: {
     clientPrerender: true
   },
-  integrations: [mdx(), alpinejs()]
+  integrations: [mdx(), alpinejs()],
+  markdown: {
+    shikiConfig: {
+      theme: "light-plus"
+    }
+  }
 });

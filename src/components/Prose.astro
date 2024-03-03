@@ -20,6 +20,27 @@
     :not(pre) code {
       font-weight: bold;
       margin: 0 0.2rem;
+      display: inline-block;
+    }
+
+    pre:has(code) {
+      margin: 0.6rem 2rem;
+      padding-left: 0.5rem;
+
+      @media screen and (max-width: 768px) {
+        margin: 0;
+      }
+
+      border-left: 3px solid var(--primary-light);
+      transition: border-left-color 0.3s ease-out;
+
+      &:hover {
+        border-left-color: var(--primary);
+      }
+
+      code {
+        font-weight: 500;
+      }
     }
 
     blockquote {
