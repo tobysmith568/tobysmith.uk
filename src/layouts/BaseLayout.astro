@@ -8,11 +8,11 @@ interface Props {
   frontmatter?: any;
 }
 
-const props = Astro.props.frontmatter || Astro.props;
+const props = (Astro.props.frontmatter || Astro.props) as Props;
 
 const defaultTitle = "Toby Smith";
 
-const pageTitle = props?.title;
+const pageTitle = props.title;
 const title =
   pageTitle && pageTitle !== defaultTitle ? `${pageTitle} - ${defaultTitle}` : defaultTitle;
 ---

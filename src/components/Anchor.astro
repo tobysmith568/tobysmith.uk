@@ -1,0 +1,26 @@
+---
+// A wrapper around an anchor tag that:
+//
+// - Adds "noopener noreferrer" to external links.
+// - Opens external links in a new tab.
+// - Uses the href as the innerText if no text is provided.
+//
+// Has the nice side-effect that it:
+//
+// - Stops Astro from automatically wrapping the innerText of an anchor tag in a second anchor
+//   tag when it's a valid URL.
+
+interface Props {
+  href: string;
+  text?: string;
+}
+
+const { href } = Astro.props;
+const text = Astro.props.text ?? href;
+
+const isExternal = href.startsWith("http");
+---
+
+<a href={href} target={isExternal ? "_blank" : null} rel={isExternal ? "noopener noreferrer" : null}
+  >{text}</a
+>

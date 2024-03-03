@@ -1,6 +1,7 @@
 ﻿---
 import type { CollectionEntry } from "astro:content";
 import Hr from "../HR.astro";
+import { resolveProjectImage } from "./resolveProjectImage";
 import { Image } from "astro:assets";
 
 export interface Props {
@@ -11,17 +12,13 @@ const { project } = Astro.props;
 const { slug, data } = project;
 const { title, tagLine, description } = data;
 
-const projectImages = import.meta.glob<{ default: ImageMetadata }>(
-  "/src/assets/projects/*.{jpeg,jpg,png,gif,svg}"
-);
-
-const projectImageFn = projectImages[`/src/assets/projects/${slug}.svg`];
+const projectImgSrcPromise = resolveProjectImage(slug);
 ---
 
 <article>
   <a href={"/projects/" + slug}>
     <div class="image-container">
-      {!!projectImageFn && <Image src={projectImageFn()} alt={title + " logo"} />}
+      {!!projectImgSrcPromise && <Image src={projectImgSrcPromise} alt={title + " logo"} />}
     </div>
 
     <header>

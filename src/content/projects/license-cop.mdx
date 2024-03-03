@@ -2,7 +2,72 @@
 sortWeight: 30
 title: License Cop
 tagLine: Yet another license checker tool for your dependencies; focused on simplicity.
-description: "TODO: A description of the project."
 ---
 
-# License Cop
+import Anchor from "../../components/Anchor.astro";
+
+As touched upon in my article about the tool I co-develop, generate-license-file, using software packages created by others gives developers a significant advantage over having to write everything themselves from scratch.
+
+While generate-license-file covers the issue of making sure a developer distributes the licenses of all the packages they use, it can't help them verify that they're only using software licenced with terms they understand and are willing to follow; that's what license-cop can help with.
+
+License-cop is a command line tool that analyses all of a developer's production npm dependencies, and it verifies that each one has a license type that the developer is happy to depend on.
+
+License-cop achieves this by inspecting the SPDX identifier defined in packages `package.json` files and matching it against a predefined list of identifiers the developer has said they're comfortable with.
+
+## Getting Started
+
+After you've installed license-cop with your package manager of choice, run the `init` command in the directory of your project where you keep your `package.json` file. For example, those using the npm package manager would run:
+
+```
+npx license-cop init
+
+```
+
+The command above will create a `.licenses.json` file, though you can <Anchor href="https://github.com/tobysmith568/license-cop?tab=readme-ov-file#config-file" text="use many different" /> file types, including YAML and JavaScript.
+
+To execute license-cop using this config file, simply run the following command from the same directory:
+
+```
+npx license-cop
+
+```
+
+## Licenses & Packages
+
+The license-cop config file contains two primary config options.
+
+The `licenses` option should have a string array as its value. These strings should be all of the <Anchor href="https://spdx.org/licenses" text="SPDX Identifiers" /> that you're allowing your dependencies to be licensed under. For example, if you're comfortable depending on packages that use either the `MIT` or `Apache-2.0` licenses, then your `licenses` option would look like this:
+
+```json
+{
+  "licenses": ["MIT", "Apache-2.0"]
+}
+```
+
+When using the configuration above, if all your dependencies use either the `MIT` or `Apache-2.0` license identifier, then license-cop will exit with a 0 exit code. If a dependency happened to be licensed under the `GPL-3.0-only` identifier then license-cop would exit with an exit code of 1.
+
+The `packages` config option, which is also a string array, is a place for you to list the specific npm packages that you're comfortable to depend on, no matter what their license is. While optional, it's suggested that you pin any packages to a specific version, e.g.:
+
+```json
+{
+  "packages": ["lodash", "axios@^2.0.0", "react@&lt;16"]
+}
+```
+
+## Config Inheritance
+
+If you wish to re-use the same license-cop configuration in multiple locations (perhaps across multiple repositories), then you can make use of the `extends` config option.
+
+Values can be:
+
+- The name of an installed npm package (optionally prefixed with `npm:`) that contains a license-cop config file.
+- The name of a public GitHub repository (prefixed with `github:`) that contains a license-cop config file. This currently only supports config files called exactly .licenses.json.
+- A URL to a license-cop config file. Currently, this only supports JSON-like config files.
+
+As a reasonable starting point and to help reduce boilerplate, license-cop also publishes the <Anchor href="https://www.npmjs.com/package/@license-cop/permissive" text="@license-cop/permissive" /> npm package. This package contains a base config that's a good starting point for both open-source and commercial products.
+
+## Tech Stack
+
+Generate-license-file is written in TypeScript. The code is kept in an <Anchor href="https://nx.dev" text="Nx Monorepo" />, allowing the website source to be co-located with the product itself. The CLI and programmatic APIs are fully unit-tested and end-to-end tested - as is the website.
+
+While the website is published using a continuous deployment strategy, the npm package uses ad-hoc deployments from a different pipeline, the latter of which leverages the npm Provenance feature for maximum user trust.
