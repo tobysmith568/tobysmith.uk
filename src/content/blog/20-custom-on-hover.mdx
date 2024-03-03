@@ -6,8 +6,7 @@ description: Through no fault of Angular, you can't set the CSS of pseudo-elemen
 date: 2021-02-16
 ---
 
-Through no fault of Angular, you can't set the CSS of pseudo-elements or pseudo-classes in-line in HTML.
-This means that the styling of pseudo selectors in Angular components needs to come from the CSS files, and can't be dynamically set from the component's TypeScript.
+Through no fault of Angular, you can't set the CSS of pseudo-elements or pseudo-classes in-line in HTML. This means that the styling of pseudo selectors in Angular components needs to come from the CSS files, and can't be dynamically set from the component's TypeScript.
 
 ### So how can you dynamically set CSS properties for pseudo-classes like on hover?
 
@@ -57,8 +56,8 @@ Rather than trying to set the hover colour, set the regular colour and then over
 
 ```html
 <a
-  \*ngFor="let icon of icons"
-  target="\_blank"
+  *ngFor="let icon of icons"
+  target="_blank"
   rel="noopener noreferer"
   href="{{ icon.url }}"
 

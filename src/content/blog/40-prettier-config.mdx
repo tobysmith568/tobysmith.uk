@@ -6,16 +6,14 @@ description: Use this technique to ensure that all your projects share the exact
 date: 2021-08-15
 ---
 
-I assume that most TypeScript/JavaScript developers are familiar with [Prettier](https://prettier.io/")?
-For those who aren't: in 15 words, it's a code formatter that runs in your IDE - usually on-save of each file.
+import Anchor from "../../components/Anchor.astro";
+import NoAnchor from "../../components/NoAnchor.astro";
 
-Typically each project needs to contain its own Prettier configuration which if you're not careful, can lead to each of your projects being configured differently!
-This isn't a \_real_problem - it's rather superficial, but hopefully I'm not the only person out there who prefers all their projects to be configured the same way?
+I assume that most TypeScript/JavaScript developers are familiar with <Anchor href="https://prettier.io" text="Prettier" />? For those who aren't: in 15 words, it's a code formatter that runs in your IDE - usually on-save of each file.
 
-The best way to ensure that all your projects use the same configuration is to literally make them share a single configuration file.
-One of the easiest ways to share a single configuration between multiple projects is to publish it in an npm package.
-(For spoilers, you can [find mine here](https://github.com/tobysmith568/prettier-config)!).
-This should work if you're using Yarn, but for this article, I'll be using npm as my package manager.
+Typically each project needs to contain its own Prettier configuration which if you're not careful, can lead to each of your projects being configured differently! This isn't a \_real_problem - it's rather superficial, but hopefully I'm not the only person out there who prefers all their projects to be configured the same way?
+
+The best way to ensure that all your projects use the same configuration is to literally make them share a single configuration file. One of the easiest ways to share a single configuration between multiple projects is to publish it in an npm package. (For spoilers, you can <Anchor href="https://github.com/tobysmith568/prettier-config" text="find mine here" />!). This should work if you're using Yarn, but for this article, I'll be using npm as my package manager.
 
 ## Creating a Shared Config
 
@@ -31,15 +29,11 @@ The simplest way to publish an npm package with a prettier config is to:
 
 When keeping it simple, it really is that easy.
 
-When deciding on a name for your package, you can use any available name you wish;
-however, seeing as it's a package for your personal use, it's usually seen as a good idea to prefix it with your npm username.
-This also allows you to use more generic, otherwise already taken names, e.g. `@tobysmith568/prettier-config`.
+When deciding on a name for your package, you can use any available name you wish; however, seeing as it's a package for your personal use, it's usually seen as a good idea to prefix it with your npm username. This also allows you to use more generic, otherwise already taken names, e.g. `@tobysmith568/prettier-config`.
 
 ## Using the Shared Config
 
-Once the Prettier config has been published to the npm registry (or whichever registry you use) it can be used in any other project you have which uses npm dependencies.
-To keep things clear, I'll be referring to npm projects which depend on your Prettier config package as 'child projects'.
-To use your shared config in a child project:
+Once the Prettier config has been published to the npm registry (or whichever registry you use) it can be used in any other project you have which uses npm dependencies. To keep things clear, I'll be referring to npm projects which depend on your Prettier config package as 'child projects'. To use your shared config in a child project:
 
 - npm install your new package in the child project, but make sure it's a devDependency (`npm i package-name@latest --save-dev`)
 - Add a `"prettier"` key to your `package.json` in the child project where the value is the name of your new Prettier npm package
@@ -47,18 +41,14 @@ To use your shared config in a child project:
 
 ## Extras!
 
-Technically you're done! All your projects can use the Prettier configuration you keep in this npm package,
-but I have some extra tips and advice for taking your config to the next level.
+Technically you're done! All your projects can use the Prettier configuration you keep in this npm package, but I have some extra tips and advice for taking your config to the next level.
 
 ### Use a JavaScript Configuration
 
 The Prettier documentation says that you can keep your config in many different file types including JSON, JavaScript, and YAML;
-however, JavaScript is slightly different from the rest as using it allows you to customise your configuration on a per-project basis when you have/need to.
-This relies on the JavaScript [spread syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax) and the use of it to spread one config into another.
+however, JavaScript is slightly different from the rest as using it allows you to customise your configuration on a per-project basis when you have/need to. This relies on the JavaScript <Anchor href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax" text="spread syntax" /> and the use of it to spread one config into another.
 
-You don't want to get to a point where all your projects are overriding your shared configuration otherwise you might as well not use a shared config,
-but being able to override your config (when you must) can be helpful.
-If you're not already using a JavaScript config and you want to overwrite fields in you config you'll need to:
+You don't want to get to a point where all your projects are overriding your shared configuration otherwise you might as well not use a shared config, but being able to override your config (when you must) can be helpful. If you're not already using a JavaScript config and you want to overwrite fields in you config you'll need to:
 
 - Update your Prettier configuration to be JavaScript file (`.js`) and ensure you reformat the content
 - Update the name of the file in the `package.json`'s `main` and `files` options
@@ -81,9 +71,7 @@ Doing the above means that you're using a local config in your child project (fi
 
 ### Plugins
 
-Prettier supports custom plugins, and it picks up on them automatically so long as their npm package name begins with "prettier-plugin-";
-this means that you can include prettier plugins in your shared config and have them be included in all your child projects automatically.
-(A personal favourite of mine is [prettier-plugin-organize-imports](https://www.npmjs.com/package/prettier-plugin-organize-imports "https://www.npmjs.com/package/prettier-plugin-organize-imports").)
+Prettier supports custom plugins, and it picks up on them automatically so long as their npm package name begins with "prettier-plugin-"; this means that you can include prettier plugins in your shared config and have them be included in all your child projects automatically. (A personal favourite of mine is <Anchor href="https://www.npmjs.com/package/prettier-plugin-organize-imports" text="prettier-plugin-organize-imports" />.)
 
 To do this, simply npm install the plugins you want into your shared config;
 however, you need to make sure that you install them as standard dependencies - not devDependencies.
@@ -93,7 +81,7 @@ Don't worry though, because you install the shared config as a devDependency in 
 ### Setup a GitHub Action
 
 Assuming your configuration is stored in a repository on GitHub,
-you can use a [GitHub Action](https://github.com/features/actions "https://github.com/features/actions") to automatically publish your package for you!
+you can use a <Anchor href="https://github.com/features/actions" text="GitHub Action" /> to automatically publish your package for you!
 
 I'm not going to go over the basics of GitHub Actions in this article, but it's as simple as using the config below:
 
@@ -119,7 +107,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 ```
 
-Note that you'll also need to make an npm Automation API key (https://www.npmjs.com/settings/YOUR_NPM_USERNAME/tokens) and save it in the repository settings as a secret called `npm_token`.
+Note that you'll also need to make an npm Automation API key <NoAnchor text="https://www.npmjs.com/settings/YOUR_NPM_USERNAME/tokens" /> and save it in the repository settings as a secret called `npm_token`.
 
 As you can see on line 4, this Action is triggered on the creation of a GitHub release, but you could just as easily have it trigger on push to the main branch if you'd rather.
 
@@ -157,5 +145,4 @@ If you now introduce a typo in your config, either in a key or a value, then you
 
 If you're using a GitHub action, then you'll need to add `- run: npm ci` and then `- run: npm run build` before the `npm publish`.
 
-Ok, that's it. I'm out of extras, but hopefully, you found these useful?
-And I hope you now enjoy having your projects keep in sync with each other as much as I do!
+Ok, that's it. I'm out of extras, but hopefully, you found these useful? And I hope you now enjoy having your projects keep in sync with each other as much as I do!

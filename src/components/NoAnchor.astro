@@ -1,0 +1,11 @@
+---
+// A wrapper around URL-like text that stops Astro from trying to parse it as a URL
+
+interface Props {
+  text: string;
+}
+
+const content = Astro.props.text;
+---
+
+<span>{content}</span>

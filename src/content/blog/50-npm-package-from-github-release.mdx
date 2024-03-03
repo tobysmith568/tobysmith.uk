@@ -6,16 +6,13 @@ description: A guide for automatically publishing npm packages from the creation
 date: 2021-11-12
 ---
 
-In all honesty, I don't think I've ever written the _perfect_ CI/CD pipeline - but I think my latest attempt for deploying npm packages using GitHub Actions has come pretty close without making the trade-off of being overly complex.
-I will paste the whole pipeline below and then go over each part individually so that you can have a better understanding of how it functions.
+import Anchor from "../../components/Anchor.astro";
 
-The general premise of this pipeline is that it is triggered by the creation of a release on GitHub.
-Each release is tied to a specific git tag; assuming that tag is named using a syntactically correct [SemVer](https://semver.org), that version is parsed and used for the version for the package.
-For example, creating a new release on GitHub for a tag called v1.4.6 builds the package and releases it as version 1.4.6.
+In all honesty, I don't think I've ever written the _perfect_ CI/CD pipeline - but I think my latest attempt for deploying npm packages using GitHub Actions has come pretty close without making the trade-off of being overly complex. I will paste the whole pipeline below and then go over each part individually so that you can have a better understanding of how it functions.
 
-GitHub Actions can have many different triggers; others include pushes to branches, the merging of PRs, and scheduling them with CRON syntax.
-You can find details on all of the GitHub Action triggers [here](https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows).
-Note, however, that this specific pipeline relies on being triggered from release creation.
+The general premise of this pipeline is that it is triggered by the creation of a release on GitHub. Each release is tied to a specific git tag; assuming that tag is named using a syntactically correct <Anchor href="https://semver.org" text="SemVer" />, that version is parsed and used for the version for the package. For example, creating a new release on GitHub for a tag called v1.4.6 builds the package and releases it as version 1.4.6.
+
+GitHub Actions can have many different triggers; others include pushes to branches, the merging of PRs, and scheduling them with CRON syntax. You can find details on all of the GitHub Action triggers <Anchor href="https://docs.github.com/en/actions/learn-github-actions/events-that-trigger-workflows" text="here" />. Note, however, that this specific pipeline relies on being triggered from release creation.
 
 # The Pipeline
 
@@ -67,9 +64,7 @@ on:
 
 This is how the pipeline is configured to run on the creation of a new GitHub release.
 
-Most typical setups trigger on-push to the main branch,
-either by merging features into a develop branch and then merging that into main when a release should be cut or by merging features into main directly and having that always create a new release.
-If that's what you're looking for, then you'll instead what your pipeline to use this:
+Most typical setups trigger on-push to the main branch, either by merging features into a develop branch and then merging that into main when a release should be cut or by merging features into main directly and having that always create a new release. If that's what you're looking for, then you'll instead what your pipeline to use this:
 
 ```yaml
 on:
@@ -86,10 +81,7 @@ jobs:
     runs-on: ubuntu-latest
 ```
 
-You can label your jobs whatever you like, though you should probably put a little bit of thought into which operating system you choose to run your pipeline on.
-You can choose between [different Windows, Linux, and macOS](https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#jobsjob_idruns-on) agents, however,
-I typically choose `ubuntu-latest` because I have found it to be consistently faster than any of the Windows or macOS options.
-As a person who develops on Windows, I also like that my CI tests run on a different OS to my dev machine. This gives an extra layer of confidence that my code will run in everyone's environment.
+You can label your jobs whatever you like, though you should probably put a little bit of thought into which operating system you choose to run your pipeline on. You can choose between <Anchor href="https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#jobsjob_idruns-on" text="different Windows, Linux, and macOS" /> agents, however, I typically choose `ubuntu-latest` because I have found it to be consistently faster than any of the Windows or macOS options. As a person who develops on Windows, I also like that my CI tests run on a different OS to my dev machine. This gives an extra layer of confidence that my code will run in everyone's environment.
 
 ## Checkout
 
@@ -108,10 +100,9 @@ This is a standard step maintained by GitHub; it will clone your code to the age
     registry-url: https://registry.npmjs.org/
 ```
 
-This is also a standard step, and it is used to configure node.js on the agent.
-In this case, I'm configuring node version 16. You should choose a version [that is still relevant](https://nodejs.org/en/about/releases/) at the time you're reading this article.
+This is also a standard step, and it is used to configure node.js on the agent. In this case, I'm configuring node version 16. You should choose a version <Anchor href="https://nodejs.org/en/about/releases" text="that is still relevant" /> at the time you're reading this article.
 
-> Side note: if your code relies on an API provided in a particular version of node you can [specify this in your package.json](https://docs.npmjs.com/cli/v7/configuring-npm/package-json#engines) file.
+> Side note: if your code relies on an API provided in a particular version of node you can <Anchor href="https://docs.npmjs.com/cli/v7/configuring-npm/package-json#engines" text="specify this in your package.json" /> file.
 
 I'm also specifying which npm registry I wish to target; if you use the default npmjs.com website then the value I have above is what you want to use.
 
@@ -122,10 +113,7 @@ I'm also specifying which npm registry I wish to target; if you use the default 
   uses: battila7/get-version-action@v2
 ```
 
-This is a third-party step created by the GitHub user [battila7](https://github.com/battila7), and I think it's simply fantastic despite how simple it is.
-Assuming your pipeline is triggered by the creation of a GitHub release, this action will parse the tag name used by the release and expose variables for you to use in other steps later on.
-In this pipeline, I use the `version-without-v` variable which takes the tag name and trims off any prefixing 'v' characters.
-In the snippet above, I assign this step an id so that I can reference the variables it outputs.
+This is a third-party step created by the GitHub user <Anchor href="https://github.com/battila7" text="battila7" />, and I think it's simply fantastic despite how simple it is. Assuming your pipeline is triggered by the creation of a GitHub release, this action will parse the tag name used by the release and expose variables for you to use in other steps later on. In this pipeline, I use the `version-without-v` variable which takes the tag name and trims off any prefixing 'v' characters. In the snippet above, I assign this step an id so that I can reference the variables it outputs.
 
 ## npm version
 
@@ -133,12 +121,7 @@ In the snippet above, I assign this step an id so that I can reference the varia
 - run: npm --no-git-tag-version version ${{ steps.get_version.outputs.version-without-v }}
 ```
 
-When an npm package is published, it uses the version found in the package.json file.
-While this functionality is fine for people who don't have deployment pipelines, it can make things a little more complex for those of us who do.
-Luckily, the npm CLI has a command called `npm version` that you can use to update the version value in the package.json.
-This step is where I consume the variables outputted by the step above.
-By passing `${{ steps.get_version.outputs.version-without-v }}` into the `npm version` command,
-I'm telling the npm CLI to update the version found in the package.json to the name of the git tag used for this pipeline (without the 'v' prefix).
+When an npm package is published, it uses the version found in the package.json file. While this functionality is fine for people who don't have deployment pipelines, it can make things a little more complex for those of us who do. Luckily, the npm CLI has a command called `npm version` that you can use to update the version value in the package.json. This step is where I consume the variables outputted by the step above. By passing `${{ steps.get_version.outputs.version-without-v }}` into the `npm version` command, I'm telling the npm CLI to update the version found in the package.json to the name of the git tag used for this pipeline (without the 'v' prefix).
 
 Note that using this approach means that the actual value for the version key in the package.json file always remains at 0.0.0 in source control and on developers machines; it's only a different value during CI/CD runs.
 
@@ -150,14 +133,9 @@ By default, the `npm version` command also creates a new git tag, so I pass in t
 - run: npm ci
 ```
 
-Developers who work with npm will be familiar with the `npm install` command, which downloads and installs all of their node modules locally into their project.
-Node modules are also needed in CI processes, so it makes sense to run `npm install`; however, `install` has some unwanted side-effects.
-If a dependency version in the package.json file is expressed with a prefixing caret (^) e.g. "^1.2.3", then the npm CLI can change the exact version installed whenever newer compatible versions are released.
-While minor version updates are usually fine during the development phase, a project should ideally use the same dependency versions in CI/CD that the developer used during development.
-`npm ci` solves this by only installing exact package versions found in lock files like `package-lock.json`, `npm-shrinkwrap.json`, and `yarn.lock`.
+Developers who work with npm will be familiar with the `npm install` command, which downloads and installs all of their node modules locally into their project. Node modules are also needed in CI processes, so it makes sense to run `npm install`; however, `install` has some unwanted side-effects. If a dependency version in the package.json file is expressed with a prefixing caret (^) e.g. "^1.2.3", then the npm CLI can change the exact version installed whenever newer compatible versions are released. While minor version updates are usually fine during the development phase, a project should ideally use the same dependency versions in CI/CD that the developer used during development. `npm ci` solves this by only installing exact package versions found in lock files like `package-lock.json`, `npm-shrinkwrap.json`, and `yarn.lock`.
 
-Another nice side-effect of using `ci` over `install` is that it's faster when the node_modules folder doesn't already exist.
-This is because it doesn't attempt to update or modify existing modules in the node_modules directory; it always overwrites everything.
+Another nice side-effect of using `ci` over `install` is that it's faster when the node_modules folder doesn't already exist. This is because it doesn't attempt to update or modify existing modules in the node_modules directory; it always overwrites everything.
 
 ## Building your code
 
@@ -165,10 +143,7 @@ This is because it doesn't attempt to update or modify existing modules in the n
 - run: npm run build
 ```
 
-This line will probably look different in everyone's project.
-Essentially this is the place in the pipeline where you want to build your project.
-If you've written your package in JavaScript, your build process might involve: minifying, removing comments, and/or bundling up the code.
-I always write my projects in TypeScript, so my build step is usually as simple as calling the TypeScript compiler (tsc).
+This line will probably look different in everyone's project. Essentially this is the place in the pipeline where you want to build your project. If you've written your package in JavaScript, your build process might involve: minifying, removing comments, and/or bundling up the code. I always write my projects in TypeScript, so my build step is usually as simple as calling the TypeScript compiler (tsc).
 
 ## Running tests
 
@@ -176,14 +151,9 @@ I always write my projects in TypeScript, so my build step is usually as simple 
 - run: npm run test:ci
 ```
 
-This is another part of the pipeline that will look different for everyone.
-If your project has tests (unit/integration/etc.), this is the place to run them.
-Note that in this instance, I'm running an npm script that is specifically for running tests in a CI environment (denoted by the `:ci` suffix).
-This is because most test runners have a CI flag which makes them behave slightly differently.
-In my case, I'm using jest as my test runner, which exposes a `--ci` flag to change how it runs snapshot tests.
+This is another part of the pipeline that will look different for everyone. If your project has tests (unit/integration/etc.), this is the place to run them. Note that in this instance, I'm running an npm script that is specifically for running tests in a CI environment (denoted by the `:ci` suffix). This is because most test runners have a CI flag which makes them behave slightly differently. In my case, I'm using jest as my test runner, which exposes a `--ci` flag to change how it runs snapshot tests.
 
-There's an argument to be made that this line could instead look like this `npx jest --ci --coverage` to avoid cluttering up the package.json file with scrips that will only be run in CI pipelines,
-but I prefer declaring my CI test script in the package.json - the choice is yours.
+There's an argument to be made that this line could instead look like this `npx jest --ci --coverage` to avoid cluttering up the package.json file with scrips that will only be run in CI pipelines, but I prefer declaring my CI test script in the package.json - the choice is yours.
 
 ## Publishing!
 
@@ -193,14 +163,10 @@ but I prefer declaring my CI test script in the package.json - the choice is you
     NODE_AUTH_TOKEN: ${{ secrets.npm_token }}
 ```
 
-Finally, we can publish the package!
-You do this by calling the `npm publish` command.
-For the publish command to authenticate with your npm account, you will need to configure the `NODE_AUTH_TOKEN` environment variable to contain a PAT for your npm account;
-you can create one via either the CLI or on the website by following [this guide](https://docs.npmjs.com/creating-and-viewing-access-tokens).
+Finally, we can publish the package! You do this by calling the `npm publish` command. For the publish command to authenticate with your npm account, you will need to configure the `NODE_AUTH_TOKEN` environment variable to contain a PAT for your npm account; you can create one via either the CLI or on the website by following <Anchor href="https://docs.npmjs.com/creating-and-viewing-access-tokens" text="this guide" />.
 
-For use in CD environments, it's best to use the "Automation" type of npm PAT;
-this token will be able to bypass any multifactor configured on your account, but that's necessary unless you're able to use something fancy like 1Password's [Secrets Automation](https://1password.com/secrets/) [SDK](https://www.npmjs.com/package/@1password/connect).
-Once you've created your token, you need to [add it to the secrets section of your repositories settings](https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository) under the name you use in your pipeline - in my case, that's `npm_token`
+For use in CD environments, it's best to use the "Automation" type of npm PAT; this token will be able to bypass any multifactor configured on your account, but that's necessary unless you're able to use something fancy like 1Password's <Anchor href="https://1password.com/secrets" text="Secrets Automation" /> <Anchor href="https://www.npmjs.com/package/@1password/connect" text="SDK" />.
+Once you've created your token, you need to <Anchor href="https://docs.github.com/en/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository" text="add it to the secrets section of your repositories settings" /> under the name you use in your pipeline - in my case, that's `npm_token`.
 
 ## Done!
 
@@ -208,10 +174,7 @@ Congratulations, you're done! Once this pipeline is committed and pushed to your
 
 ## Improvements for the future
 
-Like I said at the beginning, I don't think any CI/CD pipeline is perfect, and neither is this one.
-One known issue with it is that it doesn't support releasing packages that patch older major versions.
+Like I said at the beginning, I don't think any CI/CD pipeline is perfect, and neither is this one. One known issue with it is that it doesn't support releasing packages that patch older major versions.
 
-If you release version 1.0.0, and then later release 2.0.0, a further bugfix release of 1.1.0 will result in that release receiving the `latest` tag in the npm registry;
-this makes it the default version to be installed when a user doesn't specify a version.
-You can manually add and remove tags later, but this is not ideal.
-If you have any elegant solutions to this problem, please feel free to reach out to me with them!
+If you release version 1.0.0, and then later release 2.0.0, a further bugfix release of 1.1.0 will result in that release receiving the `latest` tag in the npm registry; this makes it the default version to be installed when a user doesn't specify a version.
+You can manually add and remove tags later, but this is not ideal. If you have any elegant solutions to this problem, please feel free to reach out to me with them!
