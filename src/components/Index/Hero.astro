@@ -76,7 +76,25 @@
     }
   }
 
-  @keyframes tagAnimation {
+  @keyframes tagAnimationOne {
+    0% {
+      opacity: 0%;
+    }
+    15% {
+      opacity: 100%;
+    }
+    80% {
+      opacity: 100%;
+    }
+    95% {
+      opacity: 0%;
+    }
+    100% {
+      opacity: 0%;
+    }
+  }
+
+  @keyframes tagAnimationTwo {
     0% {
       opacity: 0%;
     }
@@ -104,8 +122,12 @@
       content: "- ";
     }
 
-    &.fade {
-      animation: tagAnimation 3s infinite;
+    &.fade-one {
+      animation: tagAnimationOne 3s forwards;
+    }
+
+    &.fade-two {
+      animation: tagAnimationTwo 3s forwards;
     }
 
     @media (max-width: 800px) {
@@ -140,11 +162,18 @@
   let tagIndex = 0;
 
   if (tagElement) {
-    tagElement.classList.add("fade");
+    tagElement.classList.add("fade-one");
 
     setInterval(() => {
       tagElement.innerText = tags[tagIndex] ?? "";
       tagIndex = (tagIndex + 1) % tags.length;
+
+      const isCurrentlyOne = tagElement.classList.contains("fade-one");
+      const currentClass = isCurrentlyOne ? "fade-one" : "fade-two";
+      const nextClass = isCurrentlyOne ? "fade-two" : "fade-one";
+
+      tagElement.classList.remove(currentClass);
+      tagElement.classList.add(nextClass);
     }, 3000);
   }
 </script>
