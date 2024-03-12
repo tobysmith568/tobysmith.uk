@@ -5,8 +5,6 @@
 <script is:inline src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 <form id="contact-form">
-  <h2>Message Form</h2>
-
   <div class="fields" x-data="{ name: '', email: '', message: '', errorMessage: '' }">
     <label for="name">Name</label>
     <input id="name" x-model="name" type="text" minlength="1" name="name" placeholder="Name" />

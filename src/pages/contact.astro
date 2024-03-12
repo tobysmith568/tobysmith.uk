@@ -1,11 +1,19 @@
 ---
 import Layout from "../layouts/BaseLayout.astro";
 import ContactForm from "../components/Contact/ContactForm.astro";
+import Anchor from "../components/Anchor.astro";
 ---
 
 <Layout title="Contact Me" frontmatter={undefined}>
   <h1>Contact Me</h1>
-  <p>Feel free to reach out me to via any of the methods below</p>
+  <p>
+    Feel free to reach out me using the message form below.
+    <br />
+    Alternatively, you can also reach out to me on <Anchor
+      href="https://linkedin.com/in/tobysmith568"
+      text="LinkedIn"
+    />.
+  </p>
   <div>
     <ContactForm />
   </div>
