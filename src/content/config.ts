@@ -23,7 +23,13 @@ const blogCollection = defineCollection({
   })
 });
 
+const policiesCollection = defineCollection({
+  type: "content",
+  schema: z.object({})
+});
+
 export const collections = {
   projects: projectsCollection,
-  blog: blogCollection
+  blog: blogCollection,
+  policies: policiesCollection
 };
