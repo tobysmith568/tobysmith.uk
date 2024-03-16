@@ -5,7 +5,7 @@ import { getCollection } from "astro:content";
 export const GET: APIRoute = async _context => {
   const blogPosts = await getCollection("blog");
   const sortedPosts = blogPosts.sort((a, b) => a.data.sortWeight - b.data.sortWeight).reverse();
-  const year = new Date().getFullYear();
+  const year = new Date().getUTCFullYear();
 
   return rss({
     title: "Toby Smith's Blog",

@@ -2,6 +2,7 @@
 import "@fontsource/blinker";
 import "@fontsource-variable/fira-code";
 import Header from "../components/BaseLayout/Header.astro";
+import Footer from "../components/BaseLayout/Footer.astro";
 
 interface Props {
   title: string;
@@ -30,10 +31,13 @@ const title =
 
   <body>
     <Header />
+
     <main>
       <div class="content">
         <slot />
       </div>
+
+      <Footer />
     </main>
   </body>
 </html>
@@ -98,6 +102,8 @@ const title =
     margin: 0 auto;
     padding: 20px;
     padding-top: 1.5em;
+
     max-width: 800px;
+    min-height: 100%;
   }
 </style>

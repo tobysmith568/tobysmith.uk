@@ -1,0 +1,53 @@
+---
+import Anchor from "../Anchor.astro";
+const year = new Date().getUTCFullYear();
+---
+
+<div class="footer">
+  <div class="padding">
+    <div>
+      Copyright Toby Smith {year}
+    </div>
+
+    <div class="links">
+      <span>
+        <Anchor href="/terms" text="Terms" />
+      </span>
+
+      <span>
+        <Anchor href="/privacy" text="Privacy" />
+      </span>
+
+      <span>
+        <Anchor href="/cookies" text="Cookies" />
+      </span>
+
+      <span>
+        <Anchor href="/licenses" text="Licenses" />
+      </span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .footer {
+    display: flex;
+    justify-content: center;
+  }
+
+  .padding {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    min-height: 3rem;
+    width: 800px;
+
+    font-size: 0.8rem;
+  }
+
+  .links > * {
+    padding-right: 0.2rem;
+  }
+</style>
