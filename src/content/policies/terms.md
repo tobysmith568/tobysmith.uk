@@ -1,3 +1,0 @@
-# Terms and Conditions
-
-> TODO

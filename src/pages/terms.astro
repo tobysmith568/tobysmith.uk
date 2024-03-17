@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import ProseLayout from "../layouts/ProseLayout.astro";
+import PolicyLayout from "../layouts/PolicyLayout.astro";
 
 const policies = await getCollection("policies");
 const termPolicy = policies.find(p => p.slug === "terms");
@@ -12,6 +12,6 @@ if (!termPolicy) {
 const { Content } = await termPolicy.render();
 ---
 
-<ProseLayout title="Terms & Conditions">
+<PolicyLayout title="Terms & Conditions">
   <Content />
-</ProseLayout>
+</PolicyLayout>

@@ -1,0 +1,22 @@
+---
+import "@fontsource/blinker";
+import "@fontsource-variable/fira-code";
+import ProseLayout from "./ProseLayout.astro";
+
+interface Props {
+  title: string;
+  frontmatter?: any;
+}
+---
+
+<ProseLayout {...Astro.props}>
+  <div class="policy-wrapper">
+    <slot />
+  </div>
+</ProseLayout>
+
+<style>
+  .policy-wrapper {
+    font-size: 1rem;
+  }
+</style>
