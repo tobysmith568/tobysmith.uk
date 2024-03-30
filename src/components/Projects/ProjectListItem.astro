@@ -10,7 +10,7 @@ export interface Props {
 
 const { project } = Astro.props;
 const { slug, data } = project;
-const { title, tagLine, description } = data;
+const { title, tagLine } = data;
 
 const projectImgSrcPromise = resolveProjectImage(slug);
 ---
@@ -24,7 +24,6 @@ const projectImgSrcPromise = resolveProjectImage(slug);
     <header>
       <h2>{title}</h2>
       <h3>{tagLine}</h3>
-      <p>{description}</p>
     </header>
   </a>
 
