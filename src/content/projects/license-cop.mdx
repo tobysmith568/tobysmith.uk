@@ -6,7 +6,7 @@ tagLine: Yet another license checker tool for your dependencies; focused on simp
 
 import Anchor from "../../components/Anchor.astro";
 
-As touched upon in my article about the tool I co-develop, generate-license-file, using software packages created by others gives developers a significant advantage over having to write everything themselves from scratch.
+As touched upon in <Anchor href="./generate-license-file" text="my article" /> about the tool I co-develop, <Anchor href="https://generate-license-file.js.org" text="generate-license-file" />, using software packages created by others gives developers a significant advantage over having to write everything themselves from scratch.
 
 While generate-license-file covers the issue of making sure a developer distributes the licenses of all the packages they use, it can't help them verify that they're only using software licenced with terms they understand and are willing to follow; that's what license-cop can help with.
 
@@ -34,7 +34,7 @@ npx license-cop
 
 ## Licenses & Packages
 
-The license-cop config file contains two primary config options.
+The License-cop config file contains two primary config options.
 
 The `licenses` option should have a string array as its value. These strings should be all of the <Anchor href="https://spdx.org/licenses" text="SPDX Identifiers" /> that you're allowing your dependencies to be licensed under. For example, if you're comfortable depending on packages that use either the `MIT` or `Apache-2.0` licenses, then your `licenses` option would look like this:
 
@@ -68,6 +68,8 @@ As a reasonable starting point and to help reduce boilerplate, license-cop also 
 
 ## Tech Stack
 
-Generate-license-file is written in TypeScript. The code is kept in an <Anchor href="https://nx.dev" text="Nx Monorepo" />, allowing the website source to be co-located with the product itself. The CLI and programmatic APIs are fully unit-tested and end-to-end tested - as is the website.
+License-cop is written in TypeScript. The code is kept in an <Anchor href="https://nx.dev" text="Nx Monorepo" />, allowing the website source to be co-located with the product itself. The CLI and programmatic APIs are fully unit-tested and end-to-end tested - as is the website.
 
 While the website is published using a continuous deployment strategy, the npm package uses ad-hoc deployments from a different pipeline, the latter of which leverages the npm Provenance feature for maximum user trust.
+
+Thank you to the <Anchor href="https://js.org" /> project for supplying the domain for free.

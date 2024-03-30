@@ -4,4 +4,26 @@ title: Which Node.JS
 tagLine: An unofficial guide to which Node.js versions you should be using.
 ---
 
-# Which Node.JS
+import Anchor from "../../components/Anchor.astro";
+import ArticleImage from "../../components/ArticleImage.astro";
+
+Are you ever uncertain about which version of Node.JS you should be using locally or in your pipelines? <Anchor href="https://which-node.js.org" text="Which-node.js.org" /> exists to inform you as clearly as possible which versions of Node.JS you should be using and when you can use different versions depending on what you're trying to achieve.
+
+As seen in the image below, generally, Node.JS versions are the "Current" version for around six months. Long-term support (LTS) versions then go through a period of being "Active" followed by a longer "Maintainance" period; other versions (non-LTS versions) only go through a significantly shorter "Maintainance period".
+
+<ArticleImage
+  src="https://raw.githubusercontent.com/nodejs/Release/main/schedule.svg"
+  alt="Node.JS Release Schedule"
+  caption="Node.JS Release Schedule from https://nodejs.org/en/about/previous-releases"
+/>
+
+While the <Anchor href="https://nodejs.org" /> website does give some advice on who should be using which types of versions I find it to be somewhat unclear. This is why Which-Node.JS breaks down usages into two clear groups: "Library Maintainers" and "Website/Service Creators". The reasoning behind this divide is taken directly from the <Anchor href="https://nodejs.org/en/about/previous-releases" text="Node.JS Previous Releases" /> webpage where they suggest that "Library authors should use 'Current' versions to ensure their products
+can support them" and "'Active' status is ready for general use". The Which-Node.JS website sources its data directly from the <Anchor href="https://github.com/nodejs/Release" /> repository on page-load, so it's always up to date.
+
+## Tech Stack
+
+Which-Node.JS is written in TypeScript and leverages Next.JS & React to create a single-page application (SPA) experience. The build stage is configured to produce static assets only, which is what allows it to be hosted on GitHub Pages.
+
+The dependencies of the website are kept up to date using <Anchor href="https://www.mend.io/renovate" text="Renovate Bot" />; however, it's the combination of Renovate Bot's auto-merge strategy, a full suite of end-to-end tests, and a continuous deployment pipeline that allows the deployed version of the website to remain up to date at all times.
+
+Thank you to the <Anchor href="https://js.org" /> project for supplying the domain for free.

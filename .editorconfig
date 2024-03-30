@@ -11,5 +11,5 @@ trim_trailing_whitespace = true
 quote_type = double
 max_line_length = off
 
-[*.md]
+[*.md,*mdx]
 trim_trailing_whitespace = false
