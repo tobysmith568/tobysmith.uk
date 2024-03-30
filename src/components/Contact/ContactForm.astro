@@ -1,5 +1,5 @@
 ---
-
+import Anchor from "../Anchor.astro";
 ---
 
 <script is:inline src="https://www.google.com/recaptcha/api.js" async defer></script>
@@ -20,17 +20,25 @@
       Send Message
     </button>
 
-    <p x-text="errorMessage"></p>
+    <p class="recaptcha-terms">
+      This site is protected by reCAPTCHA and the Google
+      <Anchor href="https://policies.google.com/privacy" text="Privacy Policy" />
+      and
+      <Anchor href="https://policies.google.com/terms" text="Terms of Service" />
+      apply.
+    </p>
   </div>
 
-  <!-- TODO: Move sitekey to env var -->
-  <div
-    class="g-recaptcha"
-    data-sitekey="6Le-9NcaAAAAAOcFmN40meJWkOCTXUD7jW9A8STH"
-    data-callback="onGetRecaptchaToken"
-    data-size="invisible">
-  </div>
+  <p x-text="errorMessage"></p>
 </form>
+
+<!-- TODO: Move sitekey to env var -->
+<div
+  class="g-recaptcha"
+  data-sitekey="6Le-9NcaAAAAAOcFmN40meJWkOCTXUD7jW9A8STH"
+  data-callback="onGetRecaptchaToken"
+  data-size="invisible">
+</div>
 
 <script is:inline>
   function isValid(name, email, message) {
@@ -78,6 +86,11 @@
     button[type="submit"] {
       margin-top: 1rem;
       margin-bottom: 1rem;
+    }
+
+    .recaptcha-terms {
+      grid-column: span 2;
+      font-size: 0.6em;
     }
   }
 </style>
