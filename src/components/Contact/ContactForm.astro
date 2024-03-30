@@ -99,6 +99,16 @@ import Anchor from "../Anchor.astro";
   import { parseFormData } from "../../scripts/contact/parseFormData";
   import { sendContactEmail } from "../../scripts/contact/sendContactEmail";
 
+  declare global {
+    interface Window {
+      onGetRecaptchaToken: (token: string) => Promise<void>;
+    }
+
+    var grecaptcha: {
+      execute: () => void;
+    };
+  }
+
   const form = document.getElementById("contact-form") as HTMLFormElement | null;
 
   form?.addEventListener("submit", function onSubmit(event) {
