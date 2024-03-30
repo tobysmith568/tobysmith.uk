@@ -17,16 +17,32 @@ When hosting static content, nothing is as cheap, simple, and reliable as GitHub
 
 An example of a project I deploy and host this way is the website for my npm package <Anchor href="https://www.npmjs.com/package/license-cop" text="license-cop" />. The project is written within an <Anchor href="https://nx.dev" text="NX Monorepo" />, allowing me to easily co-locate the website in the same repository as the npm package; while deployments of the package itself are ad-hoc (rather than continuous), I use a GitHub Action called `website.yml` to handle continuous deployments (CD) of the website.
 
-After you've built your static artifacts, upload them using the `actions/upload-pages-artifact` Action <Anchor href="https://github.com/tobysmith568/license-cop/blob/b65221df595fc70d25f307047b3bc34a58b724bd/.github/workflows/website.yml#L50" text="like this" />:
+After you've built your static artifacts, upload them using the `actions/upload-pages-artifact` action step <Anchor href="https://github.com/tobysmith568/license-cop/blob/b65221df595fc70d25f307047b3bc34a58b724bd/.github/workflows/website.yml#L50" text="like this" />:
 
-```
-// TODO
+```yaml
+- name: Upload Build
+  uses: actions/upload-pages-artifact@v3
+  with:
+    path: ./dist
 ```
 
-Then, as soon as you're ready, deploy them <Anchor href="https://github.com/tobysmith568/license-cop/blob/b65221df595fc70d25f307047b3bc34a58b724bd/.github/workflows/website.yml#L110" text="like this" />:
+Then, as soon as you're ready, deploy them using a dedicated deploy job <Anchor href="https://github.com/tobysmith568/license-cop/blob/b65221df595fc70d25f307047b3bc34a58b724bd/.github/workflows/website.yml#L110" text="like this" />:
 
-```
-// TODO
+```yaml
+jobs:
+  deploy:
+    name: Deploy Website
+
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 ```
 
 Simple. I didn't feel like forking out for a whole domain just for this project, while GitHub Actions come with <NoAnchor text="<username>.github.io/<repo>" /> URIs for free, I'm a big fan of the <Anchor href="https://js.org" text="js.org project" /> where you can claim subdomains of js.org for free, provided you're using them for JavaScript-related content.
