@@ -1,3 +1,0 @@
-# Third-Party Licenses
-
-> TODO
