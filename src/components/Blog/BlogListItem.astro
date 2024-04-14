@@ -1,6 +1,7 @@
 ﻿---
 import type { CollectionEntry } from "astro:content";
 import Hr from "../HR.astro";
+import dayjs from "dayjs";
 
 export interface Props {
   post: CollectionEntry<"blog">;
@@ -8,13 +9,17 @@ export interface Props {
 
 const { post } = Astro.props;
 const { slug, data } = post;
-const { title, description } = data;
+const { title, description, date } = data;
+
+const humanReadableDate = dayjs(date).format("DD MMM YYYY");
+const parseableDate = dayjs(date).format("YYYY-MM-DD");
 ---
 
 <article>
   <a href={"/blog/" + slug}>
     <header>
       <h2>{title}</h2>
+      <time datetime={parseableDate}>{humanReadableDate}</time>
       <p>{description}</p>
     </header>
   </a>
