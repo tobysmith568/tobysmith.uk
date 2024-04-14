@@ -29,10 +29,18 @@ const year = new Date().getUTCFullYear();
   </div>
 </div>
 
-<style>
+<style lang="scss">
+  $noHoverTextColor: lightgray;
+
   .footer {
     display: flex;
     justify-content: center;
+
+    &:not(:hover) {
+      opacity: 40%;
+    }
+
+    transition: opacity 0.2s ease-in-out;
   }
 
   .padding {
