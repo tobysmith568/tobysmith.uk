@@ -5,7 +5,7 @@ import Anchor from "../Anchor.astro";
 <script is:inline src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 <form id="contact-form">
-  <div class="fields" x-data="{ name: '', email: '', message: '', errorMessage: '' }">
+  <div class="fields" x-data="{ name: '', email: '', message: '' }">
     <label for="name">Name</label>
     <input id="name" x-model="name" type="text" minlength="1" name="name" placeholder="Name" />
 
@@ -20,6 +20,8 @@ import Anchor from "../Anchor.astro";
       Send Message
     </button>
 
+    <p id="result-message" class="hidden"></p>
+
     <p class="recaptcha-terms">
       This site is protected by reCAPTCHA and the Google
       <Anchor href="https://policies.google.com/privacy" text="Privacy Policy" />
@@ -28,14 +30,11 @@ import Anchor from "../Anchor.astro";
       apply.
     </p>
   </div>
-
-  <p x-text="errorMessage"></p>
 </form>
 
-<!-- TODO: Move sitekey to env var -->
 <div
   class="g-recaptcha"
-  data-sitekey="6Le-9NcaAAAAAOcFmN40meJWkOCTXUD7jW9A8STH"
+  data-sitekey={import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY}
   data-callback="onGetRecaptchaToken"
   data-size="invisible">
 </div>
@@ -65,6 +64,7 @@ import Anchor from "../Anchor.astro";
     label,
     #email,
     #message,
+    #result-message,
     button[type="submit"] {
       grid-column: span 2;
     }
@@ -93,6 +93,10 @@ import Anchor from "../Anchor.astro";
       font-size: 0.6em;
     }
   }
+
+  .hidden {
+    display: none;
+  }
 </style>
 
 <script>
@@ -110,17 +114,52 @@ import Anchor from "../Anchor.astro";
   }
 
   const form = document.getElementById("contact-form") as HTMLFormElement | null;
+  const resultMessage = document.getElementById("result-message");
+
+  let formData: FormData | null = null;
 
   form?.addEventListener("submit", function onSubmit(event) {
     event.preventDefault();
+
+    formData = new FormData(event.target as HTMLFormElement);
+
+    const inputs = form.querySelectorAll("input, textarea");
+    for (const input of inputs) {
+      input.setAttribute("disabled", "true");
+    }
+
+    const submitButton = form.querySelector("button[type='submit']");
+    if (submitButton) {
+      submitButton.setAttribute("disabled", "true");
+    }
+
     grecaptcha.execute();
   });
 
   async function onGetRecaptchaToken(token: string) {
-    if (!form) return;
+    if (!formData) return;
 
-    const formData = parseFormData(form);
-    await sendContactEmail(formData, token);
+    console.log("inside onGetRecaptchaToken", formData);
+
+    try {
+      const validatedFormData = parseFormData(formData);
+      await sendContactEmail(validatedFormData, token);
+
+      if (resultMessage) {
+        resultMessage.textContent = "Message sent successfully!";
+        resultMessage.classList.remove("hidden");
+      }
+    } catch (error) {
+      console.error(error);
+
+      const errorMessage =
+        error instanceof Error ? error.message : error?.toString() ?? "Unknown error";
+
+      if (resultMessage) {
+        resultMessage.textContent = errorMessage;
+        resultMessage.classList.remove("hidden");
+      }
+    }
   }
 
   window.onGetRecaptchaToken = onGetRecaptchaToken;

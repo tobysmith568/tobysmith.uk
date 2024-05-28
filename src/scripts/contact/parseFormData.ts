@@ -8,9 +8,10 @@ const fieldsValidator = z.object({
 
 export type Fields = z.infer<typeof fieldsValidator>;
 
-export const parseFormData = (form: HTMLFormElement) => {
-  const formData = new FormData(form);
-  const fields = Object.fromEntries(formData.entries());
+export const parseFormData = (form: FormData) => {
+  const fields = Object.fromEntries(form.entries());
+
+  console.log({ fields });
 
   const parsedFields = fieldsValidator.safeParse(fields);
 
@@ -27,4 +28,4 @@ export const isFormValid = (form: HTMLFormElement) => {
   const fields = Object.fromEntries(formData.entries());
 
   return fieldsValidator.safeParse(fields).success;
-}
+};

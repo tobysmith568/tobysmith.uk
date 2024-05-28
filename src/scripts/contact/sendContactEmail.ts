@@ -9,9 +9,18 @@ export const sendContactEmail = async (fields: Fields, recaptchaToken: string) =
 
   const body = JSON.stringify({ name, email, message, recaptchaToken });
 
-  await fetch("https://email.tobysmith.uk", {
-    method: "POST",
-    headers,
-    body
-  });
+  try {
+    const response = await fetch("https://email.tobysmith.uk", {
+      method: "POST",
+      headers,
+      body
+    });
+
+    if (!response.ok) {
+      throw new Error("Message failed to send");
+    }
+  } catch (error) {
+    console.error(error);
+    throw new Error("Message failed to send");
+  }
 };
