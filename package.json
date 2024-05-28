@@ -2,7 +2,7 @@
   "private": true,
   "name": "tobysmith.uk",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "prettier": "@tobysmith568/prettier-config",
   "scripts": {
     "dev": "astro dev",
@@ -23,7 +23,7 @@
     "alpinejs": "^3.13.5",
     "astro": "^4.3.2",
     "dayjs": "^1.11.10",
-    "generate-license-file": "^3.0.1",
+    "generate-license-file": "^3.4.0",
     "typescript": "^5.3.3",
     "zod": "^3.22.4"
   },
