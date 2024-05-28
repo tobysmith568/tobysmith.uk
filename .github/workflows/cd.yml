@@ -5,11 +5,18 @@ on:
     branches:
       - main
 
-concurrency: deployments
+defaults:
+  run:
+    shell: pwsh
 
-env:
-  IMAGE_NAME: gcr.io/tobysmith-uk/tobysmith-uk
-  ENVIRONMENT_NAME: Production
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   ci:
@@ -18,30 +25,18 @@ jobs:
     secrets: inherit
 
   deploy:
-    name: Deploy
-
-    runs-on: ubuntu-latest
+    name: Deploy Website
 
     needs:
       - ci
 
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
-      - name: Login to GCP
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
-
-      - name: Set up GCP SDK
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-
-      - name: Configure Docker
-        run: gcloud auth configure-docker --quiet
-
-      - name: Deploy Docker image
-        run: >
-          gcloud run deploy ${{ secrets.GCP_APP_NAME }}
-          --image ${{ env.IMAGE_NAME }}
-          --region europe-west1
-          --platform managed
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -8,14 +8,8 @@ on:
     branches:
       - main
   workflow_call:
-    inputs:
-      shouldPushImage:
-        default: true
-        required: false
-        type: boolean
 
 env:
-  IMAGE_NAME: gcr.io/tobysmith-uk/tobysmith-uk
   NODE_VERSION: 18
 
 jobs:
@@ -27,23 +21,25 @@ jobs:
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install
 
       - name: Run ESLint
         run: npx eslint ./src --max-warnings 0
 
       - name: Run Prettier
         run: npx prettier --check .
-
-      - name: Run CSpell
-        run: npx cspell "**/*.*"
 
   build:
     name: Build
@@ -53,54 +49,27 @@ jobs:
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
-      - name: Build Docker image
-        run: docker build . -t ${{ env.IMAGE_NAME }}
-
-      - name: Login to GCP
-        if: inputs.shouldPushImage
-        uses: google-github-actions/auth@v1
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
         with:
-          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
-
-      - name: Set up GCP SDK
-        if: inputs.shouldPushImage
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-
-      - name: Configure Docker
-        if: inputs.shouldPushImage
-        run: gcloud auth configure-docker --quiet
-
-      - name: Push Docker image
-        if: inputs.shouldPushImage
-        run: docker push ${{ env.IMAGE_NAME }}
-
-  test:
-    name: Test
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+          version: 9
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install
 
-      - name: Run Unit Tests
-        run: npx jest --ci --coverage
+      - name: Build
+        run: pnpm run build
 
-      - name: Codecov
-        uses: codecov/codecov-action@v4.0.1
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          directory: coverage
+          path: ./dist
 
   licence:
     name: Check licences
@@ -110,14 +79,19 @@ jobs:
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
+          cache: pnpm
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install
 
       - name: Check Licenses
         run: npx license-cop
@@ -130,26 +104,6 @@ jobs:
           - chrome
           - firefox
 
-    env:
-      API_URL: ${{ secrets.API_URL }}
-      CONTACT_EMAIL: contact-email@tobysmith.uk
-      CONTACT_GITHUB_USERNAME: tobysmith568
-      CONTACT_GITHUB_URL: https://github.com/tobysmith568
-      CONTACT_LINKEDIN_USERNAME: tobysmith568
-      CONTACT_LINKEDIN_URL: https://www.linkedin.com/in/tobysmith568
-      CONTACT_FACEBOOK_USERNAME: tobysmith.uk
-      CONTACT_FACEBOOK_URL: https://www.messenger.com/t/tobysmith.uk/
-      DISQUS_SHORT_NAME: ${{ secrets.DISQUS_SHORT_NAME }}
-      DISQUS_BLOG_URL: ${{ secrets.DISQUS_BLOG_URL }}
-      RECAPTCHA_CLIENT_KEY: ${{ secrets.RECAPTCHA_CLIENT_KEY }}
-      RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
-      EMAIL_HOST: 172.17.0.1
-      EMAIL_PORT: 2525
-      EMAIL_USER: email-user
-      EMAIL_PASS: email-pass
-      EMAIL_FROM: emails-from@tobysmith.uk
-      EMAIL_TO: emails-to@tobysmith.uk
-
     name: E2E test (${{ matrix.browser }})
 
     runs-on: ubuntu-latest
@@ -157,57 +111,33 @@ jobs:
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: npm
+          cache: pnpm
 
-      - name: Build Docker image
-        run: docker build . -t ${{ env.IMAGE_NAME }}
-
-      - name: Run Docker image
-        run: >
-          docker run
-          --name test_container
-          -d
-          -p 3000:3000
-          -e "API_URL"
-          -e "CONTACT_EMAIL"
-          -e "CONTACT_GITHUB_USERNAME"
-          -e "CONTACT_GITHUB_URL"
-          -e "CONTACT_LINKEDIN_USERNAME"
-          -e "CONTACT_LINKEDIN_URL"
-          -e "CONTACT_FACEBOOK_USERNAME"
-          -e "CONTACT_FACEBOOK_URL"
-          -e "DISQUS_SHORT_NAME"
-          -e "DISQUS_BLOG_URL"
-          -e "RECAPTCHA_CLIENT_KEY"
-          -e "RECAPTCHA_SECRET_KEY"
-          -e "EMAIL_HOST"
-          -e "EMAIL_PORT"
-          -e "EMAIL_USER"
-          -e "EMAIL_PASS"
-          -e "EMAIL_FROM"
-          -e "EMAIL_TO"
-          ${{ env.IMAGE_NAME }}
+      - name: Install dependencies
+        run: pnpm install
 
       - name: Run E2E tests
         uses: cypress-io/github-action@v4
         with:
           browser: ${{ matrix.browser }}
-          wait-on: http://localhost:3000
-
-      - name: Dump container logs
-        if: always()
-        run: docker logs test_container
+          start: pnpm run dev
+          wait-on: http://localhost:4321
 
       - name: Upload E2E screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: E2E Screenshots
-          path: e2e/screenshots/
+          path: cypress/screenshots/
           if-no-files-found: ignore
 
       - name: Upload E2E videos
@@ -215,5 +145,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: E2E Videos
-          path: e2e/videos/
+          path: cypress/videos/
           if-no-files-found: ignore
