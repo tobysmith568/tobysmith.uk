@@ -104,7 +104,7 @@ jobs:
         run: pnpm exec astro build --mode development
 
       - name: Run E2E tests
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@v6
         with:
           browser: ${{ matrix.browser }}
           start: pnpm run preview
