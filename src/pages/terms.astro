@@ -2,6 +2,9 @@
 import { getCollection } from "astro:content";
 import PolicyLayout from "../layouts/PolicyLayout.astro";
 
+const title = "Terms & Conditions";
+const description = "The Terms & Conditions for tobysmith.uk";
+
 const policies = await getCollection("policies");
 const termPolicy = policies.find(p => p.slug === "terms");
 
@@ -12,6 +15,6 @@ if (!termPolicy) {
 const { Content } = await termPolicy.render();
 ---
 
-<PolicyLayout title="Terms & Conditions">
+<PolicyLayout title={title} description={description} noIndex>
   <Content />
 </PolicyLayout>

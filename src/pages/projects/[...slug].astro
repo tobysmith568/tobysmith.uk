@@ -23,7 +23,7 @@ const { title, tagLine } = entry.data;
 const projectImgSrcPromise = resolveProjectImage(entry.slug);
 ---
 
-<BaseLayout title={title}>
+<BaseLayout title={title} description={tagLine}>
   <a href="/projects" class="back">
     <img src={chevronLeft.src} alt="" />
     My Projects

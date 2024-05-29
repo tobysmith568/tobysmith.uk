@@ -4,11 +4,14 @@ import { getCollection } from "astro:content";
 import BlogListItem from "../../components/Blog/BlogListItem.astro";
 import RssLogo from "../../assets/rss.svg";
 
+const title = "Blog Posts";
+const description = "Blog posts written by Toby about things he creates or finds interesting.";
+
 const blogPosts = await getCollection("blog");
 const sortedPosts = blogPosts.sort((a, b) => a.data.sortWeight - b.data.sortWeight).reverse();
 ---
 
-<Layout title="Blog Posts">
+<Layout title={title} description={description}>
   <div class="header">
     <h1>Blog Posts</h1>
 

@@ -5,6 +5,9 @@ import { join } from "node:path";
 import Anchor from "../components/Anchor.astro";
 import { Code } from "astro:components";
 
+const title = "Third-Party Content";
+const description = "The Third-party content used by tobysmith.uk";
+
 const packageJsonPath = join(process.cwd(), "package.json");
 console.log("packageJsonPath", packageJsonPath);
 const licenses = await getProjectLicenses(packageJsonPath);
@@ -18,7 +21,7 @@ const getPackageUrl = (packageNameAndVersion: string) => {
 };
 ---
 
-<ProseLayout title="Third-Party Content">
+<ProseLayout title={title} description={description} noIndex>
   <h1>Third-party Content</h1>
 
   <h2>Licenses</h2>

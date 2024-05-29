@@ -1,9 +1,13 @@
 ---
 import Hero from "../components/Index/Hero.astro";
 import Layout from "../layouts/BaseLayout.astro";
+
+const title = "Toby Smith";
+const description =
+  "Toby Smith is a London-based software developer who enjoys focusing on web-based technologies.";
 ---
 
-<Layout title="Toby Smith">
+<Layout title={title} description={description}>
   <Hero />
 </Layout>
 

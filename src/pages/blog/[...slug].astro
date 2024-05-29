@@ -23,7 +23,7 @@ const humanReadableDate = dayjs(date).format("DD MMM YYYY");
 const parseableDate = dayjs(date).format("YYYY-MM-DD");
 ---
 
-<BaseLayout frontmatter={entry.data}>
+<BaseLayout {...entry.data}>
   <a href="/blog" class="back">
     <img src={chevronLeft.src} alt="" />
     Posts
