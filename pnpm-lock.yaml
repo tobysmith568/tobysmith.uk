@@ -40,7 +40,7 @@ importers:
         version: 1.11.10
       generate-license-file:
         specifier: ^3.4.0
-        version: 3.4.0(commander@6.2.1)(typescript@5.3.3)
+        version: 3.4.0(commander@12.1.0)(typescript@5.3.3)
       sharp:
         specifier: ^0.33.4
         version: 0.33.4
@@ -1160,6 +1160,10 @@ packages:
 
   comma-separated-tokens@2.0.3:
     resolution: {integrity: sha512-Fu4hJdvzeylCfQPp9SGWidpzrMs7tTrlu6Vb8XGaRGck8QSNZJJp538Wrb60Lax4fPwR64ViY468OIUTbRlGZg==}
+
+  commander@12.1.0:
+    resolution: {integrity: sha512-Vw8qHK3bZM9y/P10u3Vib8o/DdkvA2OtPtZvD871QKjy74Wj1WSKFILMPRPSdUSx5RFK1arlJzEtA4PkFgnbuA==}
+    engines: {node: '>=18'}
 
   commander@6.2.1:
     resolution: {integrity: sha512-U7VdrJFnJgo4xjrHpTzu0yrHPGImdsmD95ZlgYSEajAn2JKzDhDTPG9kBTefmObL2w/ngeZnilk+OV9CG3d7UA==}
@@ -3635,9 +3639,9 @@ snapshots:
   '@colors/colors@1.5.0':
     optional: true
 
-  '@commander-js/extra-typings@12.1.0(commander@6.2.1)':
+  '@commander-js/extra-typings@12.1.0(commander@12.1.0)':
     dependencies:
-      commander: 6.2.1
+      commander: 12.1.0
 
   '@cypress/request@3.0.1':
     dependencies:
@@ -4644,6 +4648,8 @@ snapshots:
 
   comma-separated-tokens@2.0.3: {}
 
+  commander@12.1.0: {}
+
   commander@6.2.1: {}
 
   common-ancestor-path@1.0.1: {}
@@ -5053,9 +5059,9 @@ snapshots:
       strip-ansi: 6.0.1
       wide-align: 1.1.5
 
-  generate-license-file@3.4.0(commander@6.2.1)(typescript@5.3.3):
+  generate-license-file@3.4.0(commander@12.1.0)(typescript@5.3.3):
     dependencies:
-      '@commander-js/extra-typings': 12.1.0(commander@6.2.1)
+      '@commander-js/extra-typings': 12.1.0(commander@12.1.0)
       '@npmcli/arborist': 7.4.0
       cli-spinners: 2.9.2
       cosmiconfig: 9.0.0(typescript@5.3.3)

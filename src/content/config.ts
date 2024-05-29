@@ -1,7 +1,7 @@
 ﻿import { defineCollection, z } from "astro:content";
 
 // Made a change to this file?
-// Run `npx astro sync` to update the type definitions
+// Run `pnpm exec astro sync` to update the type definitions
 
 const projectsCollection = defineCollection({
   type: "content",
