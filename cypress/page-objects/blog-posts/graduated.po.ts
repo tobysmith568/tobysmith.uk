@@ -1,4 +1,8 @@
+import { PageMetaObject } from "../meta.po";
+
 export class GraduatedBlogPostPageObject {
+  meta = new PageMetaObject();
+
   visit() {
     cy.visit("/blog/graduated");
   }

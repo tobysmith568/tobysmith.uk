@@ -1,4 +1,8 @@
+import { PageMetaObject } from "../meta.po";
+
 export class GenerateLicenseFileProjectPageObject {
+  meta = new PageMetaObject();
+
   visit() {
     cy.visit("/projects/generate-license-file");
   }

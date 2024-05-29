@@ -3,6 +3,15 @@ import { ProjectsPageObject } from "../page-objects/projects.po";
 describe("Projects Page", () => {
   const projectsPage = new ProjectsPageObject();
 
+  it("should have the correct meta tags", () => {
+    projectsPage.visit();
+
+    projectsPage.meta.getTitle().should("equal", "My Projects - Toby Smith");
+    projectsPage.meta
+      .getMetaDescription()
+      .should("equal", "A selection of the projects Toby has been working on recently.");
+  });
+
   it("should display the projects page", () => {
     projectsPage.visit();
 

@@ -3,6 +3,18 @@ import { GenerateLicenseFileProjectPageObject } from "../../page-objects/project
 describe("Generate License File Project", () => {
   const projectPage = new GenerateLicenseFileProjectPageObject();
 
+  it("should have the correct meta tags", () => {
+    projectPage.visit();
+
+    projectPage.meta.getTitle().should("equal", "Generate License File - Toby Smith");
+    projectPage.meta
+      .getMetaDescription()
+      .should(
+        "equal",
+        "Generate a text file containing all of the licences for your production, third-party dependencies."
+      );
+  });
+
   it("should display the back link", () => {
     projectPage.visit();
 

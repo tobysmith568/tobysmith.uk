@@ -4,6 +4,15 @@ import { BlogPageObject } from "../page-objects/blog.po";
 describe("Blog Page", () => {
   const blogPage = new BlogPageObject();
 
+  it("should have the correct meta tags", () => {
+    blogPage.visit();
+
+    blogPage.meta.getTitle().should("equal", "Blog Posts - Toby Smith");
+    blogPage.meta
+      .getMetaDescription()
+      .should("equal", "Blog posts written by Toby about things he creates or finds interesting.");
+  });
+
   it("should display the blog page", () => {
     blogPage.visit();
 

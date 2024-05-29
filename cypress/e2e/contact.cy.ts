@@ -3,6 +3,15 @@ import { ContactPageObject } from "../page-objects/contact.po";
 describe("Contact Page", () => {
   const contactPage = new ContactPageObject();
 
+  it("should have the correct meta tags", () => {
+    contactPage.visit();
+
+    contactPage.meta.getTitle().should("equal", "Contact Me - Toby Smith");
+    contactPage.meta
+      .getMetaDescription()
+      .should("equal", "Contact Toby Smith using the message form below or on LinkedIn.");
+  });
+
   it("should display the contact page", () => {
     contactPage.visit();
 

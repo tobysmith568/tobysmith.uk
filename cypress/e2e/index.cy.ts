@@ -3,6 +3,18 @@ import { IndexPageObject } from "../page-objects/index.po";
 describe("Index", () => {
   const indexPage = new IndexPageObject();
 
+  it("should have the correct meta tags", () => {
+    indexPage.visit();
+
+    indexPage.meta.getTitle().should("equal", "Toby Smith");
+    indexPage.meta
+      .getMetaDescription()
+      .should(
+        "equal",
+        "Toby Smith is a London-based software developer who enjoys focusing on web-based technologies."
+      );
+  });
+
   it("should render the home page", () => {
     indexPage.visit();
 

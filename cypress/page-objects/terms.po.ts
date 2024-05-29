@@ -1,4 +1,8 @@
+import { PageMetaObject } from "./meta.po";
+
 export class TermsPageObject {
+  meta = new PageMetaObject();
+
   visit() {
     cy.visit("/terms");
   }

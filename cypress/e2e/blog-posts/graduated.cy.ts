@@ -3,6 +3,18 @@ import { GraduatedBlogPostPageObject } from "../../page-objects/blog-posts/gradu
 describe("Graduated Blog Post", () => {
   const blogPostPage = new GraduatedBlogPostPageObject();
 
+  it("should have the correct meta tags", () => {
+    blogPostPage.visit();
+
+    blogPostPage.meta.getTitle().should("equal", "I Graduated! - Toby Smith");
+    blogPostPage.meta
+      .getMetaDescription()
+      .should(
+        "equal",
+        "After four years at The University of Plymouth, I have graduated with First-Class Honours!"
+      );
+  });
+
   it("should display the back link", () => {
     blogPostPage.visit();
 

@@ -1,4 +1,8 @@
+import { PageMetaObject } from "./meta.po";
+
 export class ThirdPartyPageObject {
+  meta = new PageMetaObject();
+
   visit() {
     cy.visit("/third-party");
   }

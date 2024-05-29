@@ -3,6 +3,18 @@ import { AboutPageObject } from "../page-objects/about.po";
 describe("About Page", () => {
   const aboutPage = new AboutPageObject();
 
+  it("should have the correct meta tags", () => {
+    aboutPage.visit();
+
+    aboutPage.meta.getTitle().should("equal", "About - Toby Smith");
+    aboutPage.meta
+      .getMetaDescription()
+      .should(
+        "equal",
+        "Toby Smith is a London-based software developer who enjoys focusing on web-based technologies."
+      );
+  });
+
   it("should display the about page", () => {
     aboutPage.visit();
 
