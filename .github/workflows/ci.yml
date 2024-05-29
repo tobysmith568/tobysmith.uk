@@ -125,11 +125,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Create development build
+        run: pnpm exec astro build --mode development
+
       - name: Run E2E tests
         uses: cypress-io/github-action@v4
         with:
           browser: ${{ matrix.browser }}
-          start: pnpm run dev
+          start: pnpm run preview
           wait-on: http://localhost:4321
 
       - name: Upload E2E screenshots
