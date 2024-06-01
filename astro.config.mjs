@@ -12,7 +12,8 @@ export default defineConfig({
     format: "file"
   },
   prefetch: {
-    prefetchAll: true
+    prefetchAll: true,
+    defaultStrategy: "viewport"
   },
   experimental: {
     clientPrerender: true
