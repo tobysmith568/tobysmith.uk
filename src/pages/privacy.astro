@@ -1,0 +1,20 @@
+---
+import { getCollection } from "astro:content";
+import PolicyLayout from "../layouts/PolicyLayout.astro";
+
+const title = "Privacy Policy";
+const description = "This privacy policy for tobysmith.uk";
+
+const policies = await getCollection("policies");
+const termPolicy = policies.find(p => p.slug === "privacy");
+
+if (!termPolicy) {
+  throw new Error("Cannot find the privacy policy");
+}
+
+const { Content } = await termPolicy.render();
+---
+
+<PolicyLayout title={title} description={description} noIndex>
+  <Content />
+</PolicyLayout>

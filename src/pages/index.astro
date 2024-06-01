@@ -1,0 +1,24 @@
+---
+import Hero from "../components/Index/Hero.astro";
+import Layout from "../layouts/BaseLayout.astro";
+
+const title = "Toby Smith";
+const description =
+  "Toby Smith is a London-based software developer who enjoys focusing on web-based technologies.";
+---
+
+<Layout title={title} description={description}>
+  <Hero />
+</Layout>
+
+<style>
+  main {
+    margin: auto;
+    padding: 1rem;
+    width: 800px;
+    max-width: calc(100% - 2rem);
+    color: #000000;
+    font-size: 20px;
+    line-height: 1.6;
+  }
+</style>

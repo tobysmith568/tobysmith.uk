@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="shape-rendering:geometricPrecision;text-rendering:geometricPrecision;image-rendering:optimizeQuality;fill-rule:evenodd;clip-rule:evenodd" viewBox="0 0 350 350">
+  <style>
+      .background {
+        fill-rule: nonzero;
+        stroke: #333;
+        stroke-width: 15px;
+        fill: #333;
+        fill-opacity: 0;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .background {
+          fill-opacity: 1;
+        }
+      }
+
+      .tick {
+        stroke: #000;
+        stroke-width: 0;
+        fill:#70a760;
+      }
+    </style>
+  <path class="background" d="M156.12 65.204q10.833-6.254 21.666 0l42.056 24.282q10.833 6.254 10.833 18.763v48.562q0 12.509-10.833 18.763l-42.056 24.282q-10.833 6.254-21.666 0l-42.056-24.282q-10.833-6.254-10.833-18.763V108.25q0-12.509 10.833-18.763Z" transform="matrix(2.13507 0 0 2.13507 -182.718 -109.54)"/>
+  <path class="tick" d="m122.181 141.678 14.576-18.656 21.209 16.571 38.862-41.674 17.315 16.146-54.147 58.066-6.007-5.602Z" transform="matrix(2.13507 0 0 2.13507 -182.718 -109.54)"/>
+</svg>

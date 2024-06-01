@@ -1,0 +1,178 @@
+---
+
+---
+
+<div class="hero">
+  <img
+    src="https://github.com/tobysmith568.png?width=290"
+    alt="Profile picture of Toby"
+    class="profile-pic"
+  />
+
+  <h1 class="name">
+    <span>Toby Smith</span>
+    <span class="stack">
+      <span
+        id="tag"
+        aria-label="Full-stack developer, npm package author, TypeScript fanatic, & Burrito over-filler"
+        >Full-stack developer</span
+      >
+    </span>
+  </h1>
+  <h2 class="tagline">Blog and Portfolio Website</h2>
+</div>
+
+<style lang="scss">
+  .hero {
+    min-height: max(500px, 50vh);
+
+    display: grid;
+    justify-content: center;
+    align-content: center;
+
+    margin-top: 3em;
+  }
+
+  .stack {
+    display: grid;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+
+    & > * {
+      grid-area: 1 / 1;
+    }
+  }
+
+  .profile-pic {
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    display: block;
+
+    border: var(--primary) 6px solid;
+  }
+
+  .name {
+    font-size: 4rem;
+    margin: 2rem 0 0 0;
+    width: 700px;
+
+    display: flex;
+    align-items: center;
+
+    @media (max-width: 800px) {
+      width: auto;
+
+      flex-wrap: wrap;
+      align-items: flex-start;
+      flex-direction: column;
+
+      > span {
+        margin: auto;
+      }
+    }
+  }
+
+  @keyframes tagAnimationOne {
+    0% {
+      opacity: 0%;
+    }
+    15% {
+      opacity: 100%;
+    }
+    80% {
+      opacity: 100%;
+    }
+    95% {
+      opacity: 0%;
+    }
+    100% {
+      opacity: 0%;
+    }
+  }
+
+  @keyframes tagAnimationTwo {
+    0% {
+      opacity: 0%;
+    }
+    15% {
+      opacity: 100%;
+    }
+    80% {
+      opacity: 100%;
+    }
+    95% {
+      opacity: 0%;
+    }
+    100% {
+      opacity: 0%;
+    }
+  }
+
+  #tag {
+    font-size: 2rem;
+    color: grey;
+    margin-left: 0.75em;
+    opacity: 0%;
+
+    &::before {
+      content: "- ";
+    }
+
+    &.fade-one {
+      animation: tagAnimationOne 3s forwards;
+    }
+
+    &.fade-two {
+      animation: tagAnimationTwo 3s forwards;
+    }
+
+    @media (max-width: 800px) {
+      margin-left: 0;
+
+      &::before {
+        content: "";
+      }
+    }
+  }
+
+  .tagline {
+    font-size: 2rem;
+    text-align: center;
+    margin: 0;
+
+    @media (max-width: 800px) {
+      margin-top: 0.5em;
+    }
+  }
+</style>
+
+<script>
+  const tags = [
+    "npm package author",
+    "TypeScript fanatic",
+    "Burrito over-filler",
+    "Full-stack developer"
+  ];
+
+  const tagElement = document.getElementById("tag");
+  let tagIndex = 0;
+
+  if (tagElement) {
+    tagElement.classList.add("fade-one");
+
+    setInterval(() => {
+      tagElement.innerText = tags[tagIndex] ?? "";
+      tagIndex = (tagIndex + 1) % tags.length;
+
+      const isCurrentlyOne = tagElement.classList.contains("fade-one");
+      const currentClass = isCurrentlyOne ? "fade-one" : "fade-two";
+      const nextClass = isCurrentlyOne ? "fade-two" : "fade-one";
+
+      tagElement.classList.remove(currentClass);
+      tagElement.classList.add(nextClass);
+    }, 3000);
+  }
+</script>

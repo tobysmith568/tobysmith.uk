@@ -1,3 +1,2 @@
-out
-.next
-coverage
+dist
+pnpm-lock.yaml

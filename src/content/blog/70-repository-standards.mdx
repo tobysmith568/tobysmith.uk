@@ -1,0 +1,50 @@
+---
+sortWeight: 70
+slug: repository-standards
+title: Standardising Your Repositories
+description: Saved in a repo in my GitHub account, I now have a markdown file containing all my preferences for producing a project of any type. Here's why, and why you should to!
+date: 2022-04-15
+---
+
+import Anchor from "../../components/Anchor.astro";
+
+> The concept written about in this article is an extension of an idea developed by a mentor of mine.
+
+The number of times I open one of my repositories that has laid dormant for a short while only to find that it's dreadfully outdated is staggering. When I say outdated, I'm not only talking about the version numbers of my dependencies or the security issues raised by <Anchor href="https://github.blog/2020-06-01-keep-all-your-packages-up-to-date-with-dependabot" text="Dependabot" />, but also the ways that I get things done. (Though dependencies are a genuine issue too).
+
+- Do I use Mocha for my unit tests, or do I now only work with Jest?
+- Do I prefer to licence my projects under the restrictive GPL3, or do I now favour the more permissive ISC licence?
+- Do I have my cloud provider of choice watch my repository via a webhook and pull code from it when needed, or do I run GitHub Actions to push code to that provider?
+
+All of these questions reflect genuine examples of how I've changed the way that I develop, release, and maintain my open-source projects.
+
+So when I open up an old project and find that its unit tests are written using Mocha, what should I do? Mocha isn't wrong or broken; in fact, it works just fine, and all unit tests written with it remain valid today. However, the context switch between testing frameworks is non-zero. It takes me _some amount of time_ to get back into a Mocha mindset, and then when I switch back to a newer project, it takes _some amount of time_ again to get back into a Jest mindset. If I open up an older project to find five, ten, or even fifteen subtle differences between it and my ideal way of working, then all those small _amounts of time_ add up.
+
+With this in mind, I decided that I will endeavour to keep all my non-archived repositories up to date with my current ways of working; and that to accomplish this, I needed to standardise things. <Anchor href="https://github.com/tobysmith568/repository-standards" text="Saved in a repository on my GitHub account" />, I now have a markdown file containing all my preferences for producing a project of any type. A link to the repository can also be found on my GitHub profile as one of my pinned projects.
+
+The document starts by outlining the use of formal language to be used within the document itself. I opted to use the standardisation of terms defined in <Anchor href="https://datatracker.ietf.org/doc/html/rfc2119" text="RFC 2119" />; if you've not read it, then it's probably worth giving it a quick read as it's not very long. The document then continues with sections for the following aspects of a project:
+
+- The repository itself
+- Specific files contained within the repository like `README.md`s and config files
+- GitHub Actions (CI/CD)
+- Implementation specifics for Node.JS and web frontend projects
+- Implementation specifics for C# projects
+
+Standardising the ways that I work has additional subtle benefits too. As well as aligning which test frameworks I use and how my CI/CD pipelines should operate, I also get to make formal decisions on slightly more superficial issues. For example, all my active repositories now use the same line endings, they have identical formatting rules, and they all use the same branching strategy - all of which are nice advantages.
+
+Starting new projects has also become much easier because most of the decisions are made for me. When creating a new project repository my Standards Repository almost becomes a checklist of things I should either set up or consider. On the face of it, you might think this introduces a weakness in my new projects in that they have to adhere to my potentially outdated opinions, but this isn't so. For example, if I start a new project and I want to try out <Anchor href="https://remix.run" text="one" /> of <Anchor href="https://www.solidjs.com" text="the" /> many <Anchor href="https://svelte.dev" text="new" /> web <Anchor href="https://stenciljs.com" text="frameworks" />, that's OK; the standards express a preference for Next.JS & React but they don't forbid others. If you're unsure of how this can be done, refer back to RFC2119 around the use of the keywords "SHOULD" and "MAY" in contrast to "MUST". If I try out a framework and decide that I prefer it to one mentioned in the standards, that's also OK; the standards are a living document and they can be updated to include new additions without introducing breaking changes.
+
+That being said, breaking changes can also be introduced. If in the future I decide that I actively dislike the use of Sass, I can update the standards to forbid it. This will forever remain a tough decision to make, however, because it means whenever I go back to an older project that happens to use Sass, all its styling needs to be re-written. In practice, I foresee breaking changes being introduced into the standards rarely.
+
+Notice that further up in this article I said:
+
+> I will endeavour to keep all my **non-archived** repositories up to date
+
+This is an important distinction. After initially writing the standards, I looked down the list of all my repositories
+and decided which ones were worth maintaining to adhere to these rules. I decided that anything that isn't worth the time isn't an active project and should therefore be archived. To me, archiving a repository is an important action; it signifies to others that they should not use the code or project in that repository. By choosing to archive projects that I decide I no longer want to keep up to date with my standards, I have a key marker in time for when a project of mine dies.
+
+I'll be not expecting contributors to my open-source projects to study the standards before making any changes, and I'll not be actively advertising the standards in the `README.md`s of my projects. They're purely for me when it comes to my administration of these projects. If I happen to get a pull request from a contributor that doesn't adhere to the standards then my response will
+simply be along the lines of "Can you please change X to be Y as I'm trying to always use Y in this repo". In practice, I doubt this will happen very often because one of the unwritten rules of open-source contributions is that you want your code to look like the project you're adding to.
+
+So far, having these standards has only brought clarity to my projects and the directions they're heading in. When I switch to working on an older project, there's still a _noticeable amount of time_ being spent before I can implement the changes I want to. But now it's being spent updating small bits here or there so that the repository is as up-to-date as anything else I maintain.
+Critically, there's not _an amount of time_ being spent when I then switch back to a newer project, and what remains afterwards is a project that used to be a little bit outdated but is now as clean and shiny as the rest of them!

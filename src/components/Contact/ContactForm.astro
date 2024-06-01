@@ -1,0 +1,166 @@
+---
+import Anchor from "../Anchor.astro";
+---
+
+<script is:inline src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+<form id="contact-form">
+  <div class="fields" x-data="{ name: '', email: '', message: '' }">
+    <label for="name">Name</label>
+    <input id="name" x-model="name" type="text" minlength="1" name="name" placeholder="Name" />
+
+    <label for="email">Email</label>
+    <input id="email" x-model="email" type="email" name="email" placeholder="Email" />
+
+    <label for="message">Message</label>
+    <textarea id="message" x-model="message" name="message" minlength="1" placeholder="Your message"
+    ></textarea>
+
+    <button type="submit" disabled x-bind:disabled="!isValid(name, email, message)">
+      Send Message
+    </button>
+
+    <p id="result-message" class="hidden"></p>
+
+    <p class="recaptcha-terms">
+      This site is protected by reCAPTCHA and the Google
+      <Anchor href="https://policies.google.com/privacy" text="Privacy Policy" />
+      and
+      <Anchor href="https://policies.google.com/terms" text="Terms of Service" />
+      apply.
+    </p>
+  </div>
+</form>
+
+<div
+  class="g-recaptcha"
+  data-sitekey={import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY}
+  data-callback="onGetRecaptchaToken"
+  data-size="invisible">
+</div>
+
+<script is:inline>
+  function isValid(name, email, message) {
+    return name && email && message;
+  }
+</script>
+
+<style is:global>
+  .grecaptcha-badge {
+    display: none !important;
+  }
+</style>
+
+<style lang="scss">
+  .fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 450px;
+
+    label {
+      margin-top: 0.5rem;
+    }
+
+    label,
+    #email,
+    #message,
+    #result-message,
+    button[type="submit"] {
+      grid-column: span 2;
+    }
+
+    input,
+    textarea,
+    button[type="submit"] {
+      font-size: 1em;
+      font-family: inherit;
+
+      padding: 0.2em;
+      margin: 0.4em 0px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button[type="submit"] {
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .recaptcha-terms {
+      grid-column: span 2;
+      font-size: 0.6em;
+    }
+  }
+
+  .hidden {
+    display: none;
+  }
+</style>
+
+<script>
+  import { parseFormData } from "../../scripts/contact/parseFormData";
+  import { sendContactEmail } from "../../scripts/contact/sendContactEmail";
+
+  declare global {
+    interface Window {
+      onGetRecaptchaToken: (token: string) => Promise<void>;
+    }
+
+    var grecaptcha: {
+      execute: () => void;
+    };
+  }
+
+  const form = document.getElementById("contact-form") as HTMLFormElement | null;
+  const resultMessage = document.getElementById("result-message");
+
+  let formData: FormData | null = null;
+
+  form?.addEventListener("submit", function onSubmit(event) {
+    event.preventDefault();
+
+    formData = new FormData(event.target as HTMLFormElement);
+
+    const inputs = form.querySelectorAll("input, textarea");
+    for (const input of inputs) {
+      input.setAttribute("disabled", "true");
+    }
+
+    const submitButton = form.querySelector("button[type='submit']");
+    if (submitButton) {
+      submitButton.setAttribute("disabled", "true");
+    }
+
+    grecaptcha.execute();
+  });
+
+  async function onGetRecaptchaToken(token: string) {
+    if (!formData) return;
+
+    console.log("inside onGetRecaptchaToken", formData);
+
+    try {
+      const validatedFormData = parseFormData(formData);
+      await sendContactEmail(validatedFormData, token);
+
+      if (resultMessage) {
+        resultMessage.textContent = "Message sent successfully!";
+        resultMessage.classList.remove("hidden");
+      }
+    } catch (error) {
+      console.error(error);
+
+      const errorMessage =
+        error instanceof Error ? error.message : error?.toString() ?? "Unknown error";
+
+      if (resultMessage) {
+        resultMessage.textContent = errorMessage;
+        resultMessage.classList.remove("hidden");
+      }
+    }
+  }
+
+  window.onGetRecaptchaToken = onGetRecaptchaToken;
+</script>

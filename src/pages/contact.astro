@@ -1,0 +1,35 @@
+---
+import Layout from "../layouts/BaseLayout.astro";
+import ContactForm from "../components/Contact/ContactForm.astro";
+import Anchor from "../components/Anchor.astro";
+
+const title = "Contact Me";
+const description = "Contact Toby Smith using the message form below or on LinkedIn.";
+---
+
+<Layout title={title} description={description}>
+  <h1>Contact Me</h1>
+  <p>
+    Feel free to reach out me using the message form below.
+    <br />
+    Alternatively, you can also reach out to me on <Anchor
+      href="https://linkedin.com/in/tobysmith568"
+      text="LinkedIn"
+    />.
+  </p>
+  <div>
+    <ContactForm />
+  </div>
+</Layout>
+
+<style>
+  main {
+    margin: auto;
+    padding: 1rem;
+    width: 800px;
+    max-width: calc(100% - 2rem);
+    color: #000000;
+    font-size: 20px;
+    line-height: 1.6;
+  }
+</style>

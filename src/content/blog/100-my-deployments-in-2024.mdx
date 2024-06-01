@@ -1,0 +1,70 @@
+---
+sortWeight: 100
+slug: my-deployments-in-2024
+title: Where and how am I hosting my projects in 2024?
+description: Now that 2024 is firmly underway, I thought I'd reflect on where and how I host (and deliver) my more modern projects and what I foresee going forward.
+date: 2024-01-26
+---
+
+import Anchor from "../../components/Anchor.astro";
+import NoAnchor from "../../components/NoAnchor.astro";
+
+It's been about eight years since I started hosting my web-based projects on the internet, and over that time, how I host them has changed dramatically. Now that 2024 is firmly underway, I thought I'd reflect on where and how I host (and deliver) my more modern projects and what I foresee going forward.
+
+## Static content
+
+When hosting static content, nothing is as cheap, simple, and reliable as GitHub Pages. Provided your repository is public, GitHub Pages is free, and when combined with their <Anchor href="https://github.com/actions/deploy-pages" text="GitHub Action" />, it's dead simple to have automated deployments whenever you wish.
+
+An example of a project I deploy and host this way is the website for my npm package <Anchor href="https://www.npmjs.com/package/license-cop" text="license-cop" />. The project is written within an <Anchor href="https://nx.dev" text="NX Monorepo" />, allowing me to easily co-locate the website in the same repository as the npm package; while deployments of the package itself are ad-hoc (rather than continuous), I use a GitHub Action called `website.yml` to handle continuous deployments (CD) of the website.
+
+After you've built your static artifacts, upload them using the `actions/upload-pages-artifact` action step <Anchor href="https://github.com/tobysmith568/license-cop/blob/b65221df595fc70d25f307047b3bc34a58b724bd/.github/workflows/website.yml#L50" text="like this" />:
+
+```yaml
+- name: Upload Build
+  uses: actions/upload-pages-artifact@v3
+  with:
+    path: ./dist
+```
+
+Then, as soon as you're ready, deploy them using a dedicated deploy job <Anchor href="https://github.com/tobysmith568/license-cop/blob/b65221df595fc70d25f307047b3bc34a58b724bd/.github/workflows/website.yml#L110" text="like this" />:
+
+```yaml
+jobs:
+  deploy:
+    name: Deploy Website
+
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+```
+
+Simple. I didn't feel like forking out for a whole domain just for this project, while GitHub Actions come with <NoAnchor text="<username>.github.io/<repo>" /> URIs for free, I'm a big fan of the <Anchor href="https://js.org" text="js.org project" /> where you can claim subdomains of js.org for free, provided you're using them for JavaScript-related content.
+
+### Static Content from Private Repositories
+
+Not all projects are open-source or source-available; in these instances, I've found myself really enjoying <Anchor href="https://pages.cloudflare.com" text="Cloudflare Pages" />.
+
+Since <Anchor href="https://support.google.com/domains/answer/13689670" text="the death of Google Domains" />, I've transferred all my domains over to Cloudflare, which has made using their Pages offering practically a one-click solution. When combined with their <Anchor href="https://github.com/cloudflare/pages-action" text="cloudflare/pages-action" /> GitHub Action, the deployment process for Cloudflare Pages is as simple as deploying to GitHub Pages.
+
+For projects deployed to Cloudflare Pages where you haven't purchased a specific domain, Cloudflare supplies you with a <NoAnchor text="<whatever>.pages.dev" /> domain - which is arguably better than GitHub's free URIs that are tied to your repository names.
+
+## Dynamic Content
+
+Gone are the days when I would purchase a VPS to host my server-side projects. For the last couple of years, I've been hosting my backends in Docker containers on <Anchor href="https://cloud.google.com" text="GCP" />, and honestly, I don't see that changing any time soon.
+
+Once a developer has wrapped their head around the Docker mental model, creating containers for their projects is a breeze. I won't show any snippets for how I tend to go about it because every project is different; however, once I've got my Dockerfiles in a buildable state, I tend to follow the same patterns for deployment.
+
+Continuing to use GitHub Actions, I push my built Docker images to <Anchor href="https://cloud.google.com/artifact-registry" text="GCP's Artifact Registry" />. The permissions and security models in place across all of GCP are far more complex than what is required for any individual's needs (what do you expect from an enterprise offering?); however, now that I've figured them out, I seem to reliably be able to set up the various secrets, roles, and permissions required to make their GitHub Actions perform the tasks that I need. In order I use <Anchor href="https://github.com/google-github-actions/auth" text="google-github-actions/auth" />, then <Anchor href="https://github.com/google-github-actions/setup-gcloud" text="google-github-actions/setup-gcloud" />. Once set up, running `gcloud auth configure-docker --quiet` enables me to run `docker push` to get my images up into Artifact Registry.
+
+There are multiple ways of running a Docker container from within GCP; I stick with <Anchor href="https://cloud.google.com/run" text="Cloud Run" /> for my projects. For projects (they call them 'apps') that only require server-to-server communication, they give you a gibberish URI per project, whereas, for user-facing projects, it's simple enough to get apps mapped to a domain no matter which registrar you use. Cloud Run apps can automatically scale horizontally to n-number of instances based on your needs and configuration, and it comes with basic metrics and log ingestion out of the box.
+
+Together, Artifact Registry and Cloud Run are very cheap, with Cloud Run, in particular, being one of the offerings under <Anchor href="https://cloud.google.com/free" text="GCP's Free Tier" />; this is why I say that I can't see myself moving to something else any time soon. As of Jan 2024, I can't find the same feature set for a lower price on any of the other prominent clouds.
+
+Which, I believe, is pretty much everything covered. The only thing not mentioned explicitly (but is heavily implied) is that I'm using GitHub for my repository hosting. While I'm confident in my current deployment and hosting strategies, there's always room for improvements, so I'll be sure to make any edits here as and when they happen.

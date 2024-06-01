@@ -1,0 +1,51 @@
+﻿---
+import HeaderMenuItem from "./HeaderMenuItem.astro";
+import MobileMenu from "./MobileMenu.astro";
+---
+
+<nav>
+  <div class="menu-items">
+    <HeaderMenuItem label="Toby Smith" href="/" />
+  </div>
+
+  <div class="menu-items desktop-only">
+    <HeaderMenuItem label="About" href="/about" />
+    <HeaderMenuItem label="Projects" href="/projects" />
+    <HeaderMenuItem label="Blog" href="/blog" />
+    <HeaderMenuItem label="Contact" href="/contact" />
+  </div>
+
+  <div class="mobile-only" style="display: none">
+    <!--TODO: Remove display none when mobile menu is ready-->
+    <MobileMenu />
+  </div>
+</nav>
+
+<style>
+  nav {
+    background-color: var(--primary);
+    color: var(--primary-text);
+
+    padding: 0 2em;
+    min-height: 3.5em;
+
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .menu-items {
+    display: flex;
+  }
+
+  .desktop-only {
+    @media (max-width: 600px) {
+      display: none;
+    }
+  }
+
+  .mobile-only {
+    @media (min-width: 601px) {
+      display: none;
+    }
+  }
+</style>

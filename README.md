@@ -1,6 +1,6 @@
 # https://tobysmith.uk
 
-Toby Smith's portfolio and blog website. Written in Typescript using Next.js.
+Toby Smith's portfolio and blog website. Written in Typescript using Astro.
 
 # License
 

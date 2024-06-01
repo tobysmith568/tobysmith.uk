@@ -1,0 +1,18 @@
+---
+import "@fontsource/blinker";
+import "@fontsource-variable/fira-code";
+import BaseLayout from "./BaseLayout.astro";
+import Prose from "../components/Prose.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  noIndex?: boolean;
+}
+---
+
+<BaseLayout {...Astro.props}>
+  <Prose>
+    <slot />
+  </Prose>
+</BaseLayout>

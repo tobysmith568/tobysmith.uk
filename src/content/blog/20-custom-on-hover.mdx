@@ -1,0 +1,77 @@
+---
+sortWeight: 20
+slug: custom-on-hover
+title: Dynamic on-hover colours in Angular
+description: Through no fault of Angular, you can't set the CSS of pseudo-elements or pseudo-classes in-line in HTML. So how can you set styles like on-hover colours dynamically?
+date: 2021-02-16
+---
+
+Through no fault of Angular, you can't set the CSS of pseudo-elements or pseudo-classes in-line in HTML. This means that the styling of pseudo selectors in Angular components needs to come from the CSS files, and can't be dynamically set from the component's TypeScript.
+
+### So how can you dynamically set CSS properties for pseudo-classes like on hover?
+
+Lets say that your component looks little like this:
+
+```typescript
+interface Icon {
+  icon: string;
+  url: string;
+  onHoverColour: string;
+}
+
+@Component({
+  ...
+})
+export class IconsComponent {
+  public icons: Icon[] = [
+    { icon: "linkedin.svg", onHoverColour: "#0a66c2", url: "https://..." },
+    { icon: "youtube.svg", onHoverColour: "#ff0000", url: "https://..." },
+    { icon: "github.svg", onHoverColour: "#24292e", url: "https://..." },
+  ]
+}
+```
+
+You have some social links that you want to display.
+Each icon is black by default but you want them to change colour on-hover to be the colour of that service - blue for LinkedIn and red for YouTube etc.
+
+In your template you `*ngFor` over each of the icons that you want to display but it's about this point that you realise that you can't set the on-hover colour in-line.
+
+```html
+<a
+  *ngFor="let icon of icons"
+  target="_blank"
+  rel="noopener noreferer"
+  href="{{ icon.url }}"
+
+  <!-- You can't do this -->
+  [style:hover.color]="icon.hoverColour">
+
+  <svg href="{{ icon.icon }}"></svg>
+</a>
+```
+
+### So what can you do?
+
+Rather than trying to set the hover colour, set the regular colour and then override it in the styles file using the `:not()` pseudo-class:
+
+```html
+<a
+  *ngFor="let icon of icons"
+  target="_blank"
+  rel="noopener noreferer"
+  href="{{ icon.url }}"
+
+  <!-- Set the regular colour -->
+  [style.color]="icon.hoverColour">
+
+  <svg href="{{ icon.icon }}"></svg>
+</a>
+```
+
+```css
+a:not(:hover) {
+  color: "black";
+}
+```
+
+And there you go! You now have some dynamically created html tags which all change to different colours on-hover without needing to use in-line pseudo-selectors.

@@ -1,0 +1,85 @@
+---
+
+---
+
+<div class="prose">
+  <slot />
+</div>
+
+<style>
+  .prose {
+    p {
+      text-align: justify;
+    }
+
+    code {
+      color: var(--primary);
+      font-size: 0.9rem;
+    }
+
+    :not(pre) code {
+      font-weight: bold;
+      margin: 0 0.2rem;
+      display: inline-block;
+    }
+
+    pre:has(code) {
+      margin: 0.6rem 2rem;
+      padding-left: 0.5rem;
+
+      @media screen and (max-width: 768px) {
+        margin: 0;
+      }
+
+      border-left: 3px solid var(--primary-light);
+      transition: border-left-color 0.3s ease-out;
+
+      &:hover {
+        border-left-color: var(--primary);
+      }
+
+      code {
+        font-weight: 500;
+      }
+    }
+
+    blockquote {
+      margin: 1rem 0rem;
+      padding: 1.5rem 2rem;
+      position: relative;
+      background: var(--primary-very-light);
+
+      p {
+        margin: 0;
+      }
+    }
+
+    blockquote::before {
+      content: "";
+
+      display: block;
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      top: 0;
+      left: 0;
+
+      border-top: var(--primary) 0.4rem solid;
+      border-left: var(--primary) 0.4rem solid;
+    }
+
+    blockquote::after {
+      content: "";
+
+      display: block;
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      bottom: 0;
+      right: 0;
+
+      border-bottom: var(--primary) 0.4rem solid;
+      border-right: var(--primary) 0.4rem solid;
+    }
+  }
+</style>

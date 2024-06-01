@@ -1,0 +1,113 @@
+---
+import "@fontsource/blinker";
+import "@fontsource-variable/fira-code";
+import Header from "../components/BaseLayout/Header.astro";
+import Footer from "../components/BaseLayout/Footer.astro";
+
+interface Props {
+  title: string | undefined;
+  description: string | undefined;
+  noIndex?: boolean;
+}
+
+const props = ((Astro.props as any).frontmatter || Astro.props) as Props;
+const { description, noIndex } = props;
+
+const defaultTitle = "Toby Smith";
+const pageTitle = props.title;
+const title =
+  pageTitle && pageTitle !== defaultTitle ? `${pageTitle} - ${defaultTitle}` : defaultTitle;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noIndex && <meta name="robots" content="noindex" />}
+  </head>
+
+  <body>
+    <Header />
+
+    <main>
+      <div class="content">
+        <slot />
+      </div>
+
+      <Footer />
+    </main>
+  </body>
+</html>
+
+<style is:global lang="scss">
+  @use "sass:color";
+
+  $primary: dodgerblue;
+  $primary-text: white;
+
+  :root {
+    --primary: #{$primary};
+    --primary-text: #{$primary-text};
+    --primary-light: #{lighten($primary, 30%)};
+    --primary-very-light: #{lighten($primary, 41%)};
+  }
+
+  html {
+    font-family: Blinker, sans-serif;
+    background: #fff;
+    font-size: 1.1em;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+
+    font-size: 1.1em;
+
+    display: flex;
+    flex-direction: column;
+  }
+
+  main {
+    flex-grow: 1;
+    overflow-y: auto;
+
+    font-size: 1.2rem;
+
+    a {
+      color: inherit;
+      text-decoration: underline;
+      text-decoration-color: var(--primary-light);
+      text-decoration-thickness: 2px;
+
+      transition: text-decoration-color 0.2s ease-in-out;
+
+      &:hover {
+        text-decoration-color: var(--primary);
+      }
+    }
+  }
+
+  code {
+    font-family: "Fira Code", monospace;
+  }
+</style>
+
+<style>
+  .content {
+    margin: 0 auto;
+    padding: 20px;
+    padding-top: 1.5em;
+
+    max-width: 800px;
+    min-height: 100%;
+  }
+</style>

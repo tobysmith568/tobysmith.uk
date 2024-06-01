@@ -1,0 +1,96 @@
+---
+sortWeight: 60
+slug: npm-publish-latest-tag
+title: A step closer to the perfect npm CD pipeline?
+description: In my last post, I detailed my typical CD pipeline for deploying npm packages. At the end of the article, I outlined a caveat to bear in mind when using it - now I think I've fixed it.
+date: 2022-01-06
+---
+
+import Anchor from "../../components/Anchor.astro";
+
+In my last post, I detailed my typical CD pipeline for deploying npm packages. At the end of the article, I outlined a caveat to bear in mind when using it: the newly published version will always have the `latest` tag. This is an issue because whenever someone installs a package without specifying a tag or version, the npm CLI will default to the `latest` tag.
+
+## The issue in depth
+
+This:
+
+```bash
+npm install awesome-package
+```
+
+Is shorthand for
+
+```bash
+npm install awesome-package@latest
+```
+
+If you publish version v1.0.0 and then v2.0.0, the `latest` tag will initially be attached to the v1.0.0 release but will later be reassigned to the v2.0.0 release. So far, this is desired behaviour.
+
+If/When a critical bug gets discovered in your v1.0.0 release, you might want to patch it with a v1.0.1 release, especially if many users are still on v1 and the migration to v2 is tricky. When your CD pipeline, as outlined in my previous post, runs, it will assign the `latest` tag to that v1.0.1 patch release; now, anyone who runs `npm install awesome-package` will get v1.0.1, rather than v2.0.0.
+
+> Note that the same can be said for releases that are done manually via the CLI or by any other CD process which doesn't factor in npm registry tags.
+
+## The manual fix
+
+The solution to this issue is to assign a tag to your new releases as you release them; if the `npm publish` command has a tag supplied to it with the `--tag` flag, then it won't automatically apply the `latest` tag.
+
+So what do you use for tags? Well, npm suggest you <Anchor href="https://docs.npmjs.com/adding-dist-tags-to-packages#:~:text=We%20recommend%20avoiding%20dist%2Dtags%20that%20start%20with%20a%20number%20or%20the%20letter%20%22v%22." text="don't use version numbers as tags" /> because they share the same domain as each other already when users install packages:
+
+```bash
+npm install awesome-package@my-tag
+npm install awesome-package@v1.0.0
+```
+
+My solution is to explicitly provide the `latest` tag for new releases to your current major version and apply a `latest-X` tag to patches of previous major versions, where 'X' is that major version number.
+
+For example, if you have a v2.0.0 already released and:
+
+- you're publishing v2.0.1: then you give it the tag `latest`
+- you're publishing v1.0.1: then you give it the tag `latest-1`
+
+Assuming you're following the SemVer specification, this approach has the added benefit that a consumer of your package can run `npm awesome-package@latest-X` with their current major version number and be confident that they'll get the latest and greatest version of your package without any breaking changes in it.
+
+## The Automatic GitHub Action fix
+
+For those of us who deploy our npm packages via CD pipelines, we're going to need a programmatic approach to apply this solution for us. I've written an npm package called <Anchor href="https://www.npmjs.com/package/npm-publish-latest-tag" text="npm-publish-latest-tag" /> that can be used to generate these tags when given the path to a package.json file.
+
+Internally, this package:
+
+1. Retrieves your version from your package.json file
+2. Retrieves your latest version from the supplied npm registry
+3. Compares the two to either return `latest` or `latest-X`
+
+This package is available on npmjs.com and you're welcome to use it, however, if you also use GitHub Actions then I've also wrapped this npm package in a <Anchor href="https://github.com/marketplace/actions/npm-publish-latest-tag" text="GitHub Action step" /> which I suggest you use instead.
+
+You can amend an existing GitHub Action file by running the Action step linked to above and then passing the outputted value into your `npm publish` command.
+
+```yaml
+steps:
+  - uses: actions/checkout@v2
+  # [ ... ]
+  - uses: tobysmith568/npm-publish-latest-tag@v1
+    id: latest_tag
+    with:
+      package-json: ./package.json
+  # [ ... ]
+  - run: npm publish --tag ${{ steps.latest_tag.outputs.latest-tag }}
+    env:
+      NODE_AUTH_TOKEN: ${{ secrets.npm_token }}
+```
+
+And there you go!
+
+Hopefully, we're now all one step closer to that perfect npm CD pipeline.
+
+## Extra benefits
+
+An extra benefit of using my npm package or GitHub Action step is that it handles pre-release sections of versions too. No matter if it's your current major version or not, if you publish a version that has a pre-release section then you'll get a tag that looks like `latest-X-Y` where 'X' is the major version and 'Y' is the pre-release type (alpha, beta, etc). Furthermore, build metadata will be ignored.
+
+For example, if you have a v2.0.0 already released:
+
+- Publishing v2.0.1-beta results in `latest-2-beta`
+- Publishing v3.0.0-alpha results in `latest-3-alpha`
+- Publishing v2.0.0+123 results in `latest`
+- Publishing v2.0.1-beta+123 results in `latest-2-beta`
+
+Users can now install `@latest` to get your latest stable major version release but can also optionally get the latest version of your `3.X.X-beta` if they wish to without needing to know the exact version.

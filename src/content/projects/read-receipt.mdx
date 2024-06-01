@@ -1,0 +1,66 @@
+﻿---
+sortWeight: 10
+title: Read Receipt
+tagLine: Emails can often use tricks to know when you open them; use Read Receipt to see it in action.
+---
+
+import Anchor from "../../components/Anchor.astro";
+import NoAnchor from "../../components/NoAnchor.astro";
+
+We're all told to never open spam emails, but lots of us don't see the harm. Surely so long as we don't click any links and we treat all information as untrustworthy then all should be OK?
+
+Well, it's not actually that simple.
+
+Read Receipt is a small web app which aims to demonstrate why simply opening a spam email can be harmful - and why opening any email at all might be giving away more personal information than you might initially consider.
+
+> Before this article continues, I want to reiterate that Read Receipt stores zero information about the people who use it. It has no cookies, no databases, no sessions, nothing; it's stateless. It's also fully open-source and the code can be viewed on <Anchor text="my GitHub profile" href="https://github.com/tobysmith568/read-receipt" />).
+
+## The Concept
+
+Users who navigate to <Anchor text="read-receipt.tobythe.dev" href="https://read-receipt.tobythe.dev" /> are presented with a form where they can submit their email addresses. On submission of the form they instantly receive an email which contains a special type of image known as a 'tracking pixel'. These images are invisible, and they're present in more day-to-day emails than you might think. When your email client loads the image it makes an HTTP request to the server which is hosting the image, this gives away exactly when you opened the email, just like a read receipt in social media apps.
+
+Using the Read Receipt web app, you can receive an email containing my implementation of a tracking pixel and when you open it, a second email detailing what information you just gave away!
+
+## How can opening emails be _dangerous_?
+
+As previously mentioned, opening an email containing a tracking pixel can inform the sender that you've opened their email. This is typically used in commercial settings where businesses can gauge the interaction levels with their marketing; however, it's also used by malicious actors for at least a couple of purposes.
+
+The first problem is that by telling a malicious actor that you've opened their email, you've informed them that your email address is active. This lets them know that they should continue sending you spammy and dangerous emails in the hopes that they're able to trick you.
+
+The second problem, which is arguably worse, is that when your email client makes the HTTP request to their server to load the pixel, it gives away personally identifiable information about yourself and your device.
+
+Using <Anchor text="Read Receipt" href="https://read-receipt.tobythe.dev" /> with your email address will demonstrate exactly what information you're giving away by opening emails, but in summary: the two pieces of information that my implementation relies on mostly are your IP address and your User Agent.
+
+### IP Address
+
+By giving away your IP Address you might be giving away more than you think. By using a third-party tool <Anchor text="ip-api.com" href="http://ip-api.com" /> in this case) Read Receipt can detect your approximate location and identify information about your connection like your ISP and if you're on a mobile connection or not. I once again suggest you use <Anchor text="Read Receipt" href="https://read-receipt.tobythe.dev" /> to see just how accurately email senders know your location. Opening emails from different devices and using different WIFI/cellular connections will generate results of varying precision.
+
+### User Agent
+
+Your user agent gives away information about the device you're using. Typically it can be used to determine which operating system your device runs and often which web browser you're viewing the email in. Armed with this information, hackers might be able to send you more targeted attacks that they know your devices are susceptible to.
+
+## If the app is truely stateless, how is it able to calculate how long it took me to open my email?
+
+Those who have opened the emails from Read Receipt know that at the top of the second email, it tells you:
+
+- When your first email was sent
+- When the second was sent
+- The time difference between the two
+
+This is achieved without storing state in the app by instead storing it in the first email that Read Receipt sends you.
+
+The URL for the tracking pixel in the first email looks like this:
+
+`https://read-receipt.tobythe.dev/api/open/<your email address>/<timestamp>`
+
+By storing this data in the URL within the email, I don't need to store anything myself and I'm still able to know who opened the email and when that email was sent.
+
+The metadata being stored in the URL like that also helps prevent the tracking pixel from being served from caches as everyone's emails will contain different URLs.
+
+## Don't all websites get that same information?
+
+Yes. There's nothing dangerous about _emails_ in particular which enables tracking pixels to work. All the information you give away by opening Read Receipts emails, you also give away every single time you visit any webpage. Just like you shouldn't open emails that you don't trust, you also shouldn't visit untrustworthy websites. The purpose of Read Receipt is simply to remind people what it is that they're giving away and to hopefully make some people more hesitant before opening emails from senders they don't recognise.
+
+## Tech Stack
+
+The website was originally built using Angular 11, however, I've since rewritten it from scratch in Next.JS when I was looking for an excuse to try it out. The app is server-side rendered for improved SEO and performance. The project is dockerised and hosted in Google's Cloud service _Cloud Run_ and gets automatically redeployed whenever there is a push to the main branch. The emails sent by the app are created using react-dom and are sent using Amazon's Cloud service <Anchor text="Simple Email Service" href="https://aws.amazon.com/ses" />.

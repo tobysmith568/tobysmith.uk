@@ -1,0 +1,77 @@
+---
+sortWeight: 30
+slug: top-level-assets
+title: Managing top-level assets in Angular
+description: An easy way to manage top-level assets in your Angular project like favicons and robot.txt files.
+date: 2021-05-01
+---
+
+import Anchor from "../../components/Anchor.astro";
+
+When you create brand-new Angular project the favicon sits directly in the `./src` directory.
+This is probably fine for small projects, but this doesn't scale very well for projects with more top-level assets.
+
+For example, if you use a tool like the awesome <Anchor href="https://realfavicongenerator.net" /> to generate favicons for you,
+then you might have 15 or more files just for your favicon!
+
+Clearly these files shouldn't all live in the top level of your `./src` directory, and they for sure shouldn't all be listed individually in your `angular.json` file like so:
+
+```json
+{
+  //...
+  "architect": {
+    "build": {
+      //...
+      "assets": [
+        // Don't do this!
+        "src/favicon.ico",
+        "src/favicon-16x16.png",
+        "src/favicon-32x32.png"
+        //etc, etc
+      ]
+    }
+  }
+}
+```
+
+Logic dictates that your favicon assets should probably live in the assets folder as they are after all, assets. The problem with this is that by default, when your website is running the assets folder gets hosted as `https://<domain>/assets/`.
+
+This isn't a total deal-breaker for favicons in particular as there are ways of making them work while being hosted from sub-directories but other files like `robots.txt` files need to be top-level.
+
+### The Solution
+
+In your assets folder, create a child folder called `__root__`. This is where you put all the assets that you want to be hosted at the root of your domain.
+
+In your `angular.json` file, remove the default asset configurations under the build section and replace them with the following:
+
+```json
+{
+  //...
+  "architect": {
+    "build": {
+      //...
+      "assets": [
+        {
+          "glob": "**",
+          "input": "src/app/assets",
+          "output": "./assets",
+          "ignore": ["__root__/**"]
+        },
+        {
+          "glob": "**",
+          "input": "src/app/assets/__root__",
+          "output": "./"
+        }
+      ]
+    }
+  }
+}
+```
+
+As you can see this configures two different groups of assets. Firstly, everything in the assets folder, except for things in the `__root__` folder, get hosted at`https://<domain>/assets/`. Secondly, everything inside the `__root__`folder gets hosted directly at the top-level of your domain.
+
+Now you have a home for all your top-level assets that scales no matter how many you have!
+
+### Possibilities for the future
+
+While not currently possible, I think a great addition to the `angular.json` could be the possibility of a `flatten` boolean option for assets. Enabling a flatten option for the second of the two configurations above would mean that you could structure your assets within the `__root__` folder into sub-folders while keeping them as top-level assets.
