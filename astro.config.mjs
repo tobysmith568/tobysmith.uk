@@ -1,7 +1,7 @@
-import mdx from "@astrojs/mdx";
-import { defineConfig } from "astro/config";
-
 import alpinejs from "@astrojs/alpinejs";
+import mdx from "@astrojs/mdx";
+import sitemap from "@astrojs/sitemap";
+import { defineConfig } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
@@ -14,7 +14,7 @@ export default defineConfig({
   experimental: {
     clientPrerender: true
   },
-  integrations: [mdx(), alpinejs()],
+  integrations: [mdx(), alpinejs(), sitemap()],
   markdown: {
     shikiConfig: {
       theme: "light-plus"
