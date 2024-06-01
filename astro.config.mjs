@@ -8,6 +8,9 @@ export default defineConfig({
   site: "https://tobysmith.uk",
   output: "static",
   trailingSlash: "never",
+  build: {
+    format: "file"
+  },
   prefetch: {
     prefetchAll: true
   },
