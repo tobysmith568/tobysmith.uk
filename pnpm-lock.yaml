@@ -61,8 +61,8 @@ importers:
         specifier: ^20.12.2
         version: 20.12.2
       cypress:
-        specifier: ^13.7.3
-        version: 13.7.3
+        specifier: ^13.15.0
+        version: 13.15.0
       sass:
         specifier: ^1.70.0
         version: 1.70.0
@@ -264,8 +264,8 @@ packages:
     peerDependencies:
       commander: ~12.1.0
 
-  '@cypress/request@3.0.1':
-    resolution: {integrity: sha512-TWivJlJi8ZDx2wGOw1dbLuHJKUYX7bWySw377nlnGOW3hP9/MUKIsEdXT/YngWxVdgNCHRBmFlBipE+5/2ZZlQ==}
+  '@cypress/request@3.0.5':
+    resolution: {integrity: sha512-v+XHd9XmWbufxF1/bTaVm2yhbxY+TB4YtWRqF2zaXBlDNMkls34KiATz0AVDLavL3iB6bQk9/7n3oY1EoLSWGA==}
     engines: {node: '>= 6'}
 
   '@cypress/xvfb@1.2.4':
@@ -1418,8 +1418,8 @@ packages:
     engines: {node: '>=4'}
     hasBin: true
 
-  cypress@13.7.3:
-    resolution: {integrity: sha512-uoecY6FTCAuIEqLUYkTrxamDBjMHTYak/1O7jtgwboHiTnS1NaMOoR08KcTrbRZFCBvYOiS4tEkQRmsV+xcrag==}
+  cypress@13.15.0:
+    resolution: {integrity: sha512-53aO7PwOfi604qzOkCSzNlWquCynLlKE/rmmpSPcziRH6LNfaDUAklQT6WJIsD8ywxlIy+uVZsnTMCCQVd2kTw==}
     engines: {node: ^16.0.0 || ^18.0.0 || >=20.0.0}
     hasBin: true
 
@@ -1672,9 +1672,9 @@ packages:
   forever-agent@0.6.1:
     resolution: {integrity: sha512-j0KLYPhm6zeac4lz3oJ3o65qvgQCcPubiyotZrXqEaG4hNagNYO8qdlUrX5vwqv9ohqeT/Z3j6+yW067yWWdUw==}
 
-  form-data@2.3.3:
-    resolution: {integrity: sha512-1lLKB2Mu3aGP1Q/2eCOx0fNbRMe7XdwktwOruhfqqd0rIJWwN4Dh+E3hrPSlDCXnSR7UtZ1N38rVXm+6+MEhJQ==}
-    engines: {node: '>= 0.12'}
+  form-data@4.0.1:
+    resolution: {integrity: sha512-tzN8e4TX8+kkxGPK8D5u0FNmjPUjw3lwC9lSLxxoB/+GtsJG91CO8bSWy73APlgAZzZbXEYZJuxjkHH2w+Ezhw==}
+    engines: {node: '>= 6'}
 
   fs-extra@9.1.0:
     resolution: {integrity: sha512-hcg3ZmepS30/7BSFqRvoo3DOMQu7IjqxO5nCDt+zM9XWjb33Wg7ziNT+Qvqbuc3+gWpzO02JubVyk2G4Zvo1OQ==}
@@ -1844,8 +1844,8 @@ packages:
     resolution: {integrity: sha512-T1gkAiYYDWYx3V5Bmyu7HcfcvL7mUrTWiM6yOfa3PIphViJ/gFPbvidQ+veqSOHci/PxBcDabeUNCzpOODJZig==}
     engines: {node: '>= 14'}
 
-  http-signature@1.3.6:
-    resolution: {integrity: sha512-3adrsD6zqo4GsTqtO7FyrejHNv+NgiIfAfv68+jVlFmSr9OGy7zrxONceFRLKvnnZA5jbxQBX1u9PpB6Wi32Gw==}
+  http-signature@1.4.0:
+    resolution: {integrity: sha512-G5akfn7eKbpDN+8nPS/cb57YeA1jLTVxjpCj7tmm3QKPdyDy7T+qSC40e9ptydSWvkwjSXw1VbkpyEm39ukeAg==}
     engines: {node: '>=0.10'}
 
   https-proxy-agent@7.0.4:
@@ -2737,8 +2737,8 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  qs@6.10.4:
-    resolution: {integrity: sha512-OQiU+C+Ds5qiH91qh/mg0w+8nwQuLjM4F4M/PbmhDOoYehPh+Fb0bDjtR1sOvy7YKxvj28Y/M0PhP5uVX0kB+g==}
+  qs@6.13.0:
+    resolution: {integrity: sha512-+38qI9SOr8tfZ4QmJNplMUxqjbe7LKvvZgWdExBOmd+egZTtjLB67Gu0HRX3u/XOq7UU2Nx6nsjvS16Z9uwfpg==}
     engines: {node: '>=0.6'}
 
   querystringify@2.2.0:
@@ -3817,7 +3817,7 @@ snapshots:
     dependencies:
       commander: 12.1.0
 
-  '@cypress/request@3.0.1':
+  '@cypress/request@3.0.5':
     dependencies:
       aws-sign2: 0.7.0
       aws4: 1.12.0
@@ -3825,14 +3825,14 @@ snapshots:
       combined-stream: 1.0.8
       extend: 3.0.2
       forever-agent: 0.6.1
-      form-data: 2.3.3
-      http-signature: 1.3.6
+      form-data: 4.0.1
+      http-signature: 1.4.0
       is-typedarray: 1.0.0
       isstream: 0.1.2
       json-stringify-safe: 5.0.1
       mime-types: 2.1.35
       performance-now: 2.1.0
-      qs: 6.10.4
+      qs: 6.13.0
       safe-buffer: 5.2.1
       tough-cookie: 4.1.3
       tunnel-agent: 0.6.0
@@ -4222,7 +4222,7 @@ snapshots:
 
   '@npmcli/fs@3.1.0':
     dependencies:
-      semver: 7.5.4
+      semver: 7.6.2
 
   '@npmcli/git@5.0.4':
     dependencies:
@@ -4254,7 +4254,7 @@ snapshots:
       cacache: 18.0.2
       json-parse-even-better-errors: 3.0.1
       pacote: 17.0.6
-      semver: 7.5.4
+      semver: 7.6.2
     transitivePeerDependencies:
       - bluebird
       - supports-color
@@ -4271,7 +4271,7 @@ snapshots:
       json-parse-even-better-errors: 3.0.1
       normalize-package-data: 6.0.0
       proc-log: 3.0.0
-      semver: 7.5.4
+      semver: 7.6.2
     transitivePeerDependencies:
       - bluebird
 
@@ -4971,9 +4971,9 @@ snapshots:
 
   cssesc@3.0.0: {}
 
-  cypress@13.7.3:
+  cypress@13.15.0:
     dependencies:
-      '@cypress/request': 3.0.1
+      '@cypress/request': 3.0.5
       '@cypress/xvfb': 1.2.4(supports-color@8.1.1)
       '@types/sinonjs__fake-timers': 8.1.1
       '@types/sizzle': 2.3.8
@@ -5010,7 +5010,7 @@ snapshots:
       process: 0.11.10
       proxy-from-env: 1.0.0
       request-progress: 3.0.0
-      semver: 7.5.4
+      semver: 7.6.2
       supports-color: 8.1.1
       tmp: 0.2.3
       untildify: 4.0.0
@@ -5314,7 +5314,7 @@ snapshots:
 
   forever-agent@0.6.1: {}
 
-  form-data@2.3.3:
+  form-data@4.0.1:
     dependencies:
       asynckit: 0.4.0
       combined-stream: 1.0.8
@@ -5594,7 +5594,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  http-signature@1.3.6:
+  http-signature@1.4.0:
     dependencies:
       assert-plus: 1.0.0
       jsprim: 2.0.2
@@ -6442,7 +6442,7 @@ snapshots:
 
   npm-install-checks@6.3.0:
     dependencies:
-      semver: 7.5.4
+      semver: 7.6.2
 
   npm-normalize-package-bin@3.0.1: {}
 
@@ -6450,7 +6450,7 @@ snapshots:
     dependencies:
       hosted-git-info: 7.0.1
       proc-log: 3.0.0
-      semver: 7.5.4
+      semver: 7.6.2
       validate-npm-package-name: 5.0.0
 
   npm-packlist@8.0.2:
@@ -6462,7 +6462,7 @@ snapshots:
       npm-install-checks: 6.3.0
       npm-normalize-package-bin: 3.0.1
       npm-package-arg: 11.0.1
-      semver: 7.5.4
+      semver: 7.6.2
 
   npm-registry-fetch@16.1.0:
     dependencies:
@@ -6742,7 +6742,7 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  qs@6.10.4:
+  qs@6.13.0:
     dependencies:
       side-channel: 1.0.6
 
