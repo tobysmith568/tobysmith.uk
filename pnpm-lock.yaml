@@ -1636,8 +1636,8 @@ packages:
     resolution: {integrity: sha512-oX2ruAFQwf/Orj8m737Y5adxDQO0LAB7/S5MnxCdTNDd4p6BsyIVsv9JQsATbTSq8KHRpLwIHbVlUNatxd+1Ow==}
     engines: {node: '>=8.6.0'}
 
-  fast-xml-parser@4.4.0:
-    resolution: {integrity: sha512-kLY3jFlwIYwBNDojclKsNAC12sfD6NwW74QB2CoNGPvtVxjliYehVunB3HYyNi+n4Tt1dAcgwYvmKF/Z18flqg==}
+  fast-xml-parser@4.5.0:
+    resolution: {integrity: sha512-/PlTQCI96+fZMAOLMZK4CWG1ItCbfZ/0jx7UIJFChPNrx7tcEgerUgWbeieCM9MfHInUDyK8DWYZ+YrywDJuTg==}
     hasBin: true
 
   fastq@1.17.0:
@@ -3637,7 +3637,7 @@ snapshots:
 
   '@astrojs/rss@4.0.6':
     dependencies:
-      fast-xml-parser: 4.4.0
+      fast-xml-parser: 4.5.0
       kleur: 4.1.5
 
   '@astrojs/sitemap@3.1.5':
@@ -5282,7 +5282,7 @@ snapshots:
       merge2: 1.4.1
       micromatch: 4.0.8
 
-  fast-xml-parser@4.4.0:
+  fast-xml-parser@4.5.0:
     dependencies:
       strnum: 1.0.5
 
