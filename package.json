@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@tobysmith568/prettier-config": "^2.1.0",
-    "@types/node": "^20.12.2",
+    "@types/node": "^22.0.0",
     "cypress": "^14.0.0",
     "sass": "^1.70.0"
   }
