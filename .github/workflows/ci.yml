@@ -10,7 +10,7 @@ on:
   workflow_call:
 
 env:
-  NODE_VERSION: 18
+  NODE_VERSION: 22
 
 jobs:
   lint:
@@ -19,21 +19,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install
+      - name: Checkout
+        uses: tobysmith568/actions/.github/actions/checkout-pnpm-project@main
 
       - name: Run Prettier
         run: pnpm exec prettier --check .
@@ -44,21 +31,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install
+      - name: Checkout
+        uses: tobysmith568/actions/.github/actions/checkout-pnpm-project@main
 
       - name: Build
         run: pnpm run build
@@ -81,21 +55,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install
+      - name: Checkout
+        uses: tobysmith568/actions/.github/actions/checkout-pnpm-project@main
 
       - name: Install Cypress
         run: pnpm exec cypress install
