@@ -23,7 +23,7 @@
     "@fontsource/blinker": "^5.0.18",
     "@types/alpinejs": "^3.13.6",
     "alpinejs": "^3.13.5",
-    "astro": "^4.16.18",
+    "astro": "^5.0.0",
     "dayjs": "^1.11.10",
     "generate-license-file": "^4.1.0",
     "sharp": "^0.34.0",
