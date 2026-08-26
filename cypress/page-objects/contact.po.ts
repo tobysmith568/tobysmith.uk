@@ -56,15 +56,22 @@ export class ContactFormPageObject {
   }
 
   interceptAndStubFormSubmission(statusCode: number) {
-    cy.intercept("POST", "https://email.tobysmith.uk", req => {
+    cy.intercept("POST", "/_actions/contact", req => {
       req.reply({ statusCode });
     }).as("emailSubmission");
   }
 
-  interceptAndAddCypressHeader(statusCode: number) {
-    cy.intercept("POST", "https://email.tobysmith.uk", req => {
-      req.headers["X-Test"] = statusCode.toString();
-      req.continue();
+  interceptAndStubFormSubmissionWithMessage(statusCode: number, message: string) {
+    cy.intercept("POST", "/_actions/contact", req => {
+      req.reply({
+        statusCode,
+        body: {
+          type: "AstroActionError",
+          code: "INTERNAL_SERVER_ERROR",
+          status: statusCode,
+          message
+        }
+      });
     }).as("emailSubmission");
   }
 

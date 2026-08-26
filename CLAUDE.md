@@ -47,10 +47,10 @@ job calls `astro build` directly rather than `bun run build`, so it has its own 
 - **Astro site on the Cloudflare adapter** (`@astrojs/cloudflare`, `output: "static"` — the
   default and Astro's own recommendation for a mostly-static site; adding an adapter does _not_
   itself switch to on-demand rendering), `build.format: "file"` (routes emit as `foo.html`, not
-  `foo/index.html`) — see `astro.config.mjs`. Every route today is prerendered (there are no
-  dynamic routes yet — Stage 4 adds the first one, the contact-form backend, via
-  `export const prerender = false` on just that route rather than a blanket `output: "server"`).
-  `dist/server/` is therefore empty in this stage's builds.
+  `foo/index.html`) — see `astro.config.mjs`. Every page route is still prerendered; the one
+  on-demand route is the `/_actions/*` endpoint Astro injects for the contact-form Action (see
+  below) — Astro registers it with `prerender: false` automatically, it isn't a file under
+  `src/pages`.
   `adapter: cloudflare({ imageService: "compile" })` — the adapter's default image service
   (`"cloudflare-binding"`) defers `<Image>` to a runtime Cloudflare Images binding via an
   on-demand `/_image` endpoint, which 404s since nothing provisions that binding; `"compile"`
@@ -75,11 +75,16 @@ job calls `astro build` directly rather than `bun run build`, so it has its own 
   and the `Prose.astro` component style long-form content (blog posts, policy pages).
   `PolicyLayout.astro` wraps the policy pages specifically.
 - **Contact form flow**: `Contact/ContactForm.astro` renders the form and loads Google reCAPTCHA
-  (invisible v2). On submit, `src/scripts/contact/parseFormData.ts` validates the `FormData`, then
-  `src/scripts/contact/sendContactEmail.ts` does a client-side `fetch` to a **separate**,
-  independently-deployed Cloudflare Worker at `https://email.tobysmith.uk` (a different repo,
-  `tobysmith568/email.tobysmith.uk`), which verifies the reCAPTCHA token and sends the email. This
-  site has no server-side code of its own today — the Worker is the only backend involved.
+  (invisible v2; Stage 5 swaps this for Turnstile). On submit, `src/scripts/contact/parseFormData.ts`
+  validates the `FormData` client-side, then `src/scripts/contact/sendContactEmail.ts` calls the
+  `contact` Astro Action (`src/actions/index.ts`, same-origin, no CORS needed) — Astro auto-injects
+  its RPC endpoint at `/_actions/contact`. The action re-validates input with its own Zod schema,
+  verifies the reCAPTCHA token server-side (`src/actions/contact/verifyRecaptchaToken.ts`), then
+  sends the email (`src/actions/contact/sendPlainTextEmail.ts`, via `mimetext` + the `SEB`
+  `send_email` binding declared in `wrangler.jsonc`). **This backend used to live in a separate
+  Cloudflare Worker repo (`tobysmith568/email.tobysmith.uk`) — folded into this repo in Stage 4.**
+  That old Worker is still deployed and still what production actually uses (GitHub Pages/its own
+  Worker) until Stage 10's cutover; don't decommission it yet.
 - **Images**: `astro:assets`'s `<Image>`/`Astro.assets` is used for project logos
   (`src/components/Projects/resolveProjectImage.ts`, `Projects/ProjectListItem.astro`,
   `projects/[...slug].astro`), which requires build-time (Sharp) image processing — see the
@@ -99,12 +104,23 @@ job calls `astro build` directly rather than `bun run build`, so it has its own 
   `cypress/page-objects/**/*.po.ts` — one page object per route, exposing selectors/actions rather
   than specs interacting with the DOM directly.
 - **Env vars**: `PUBLIC_RECAPTCHA_SITE_KEY` (`.env.development`, `.env.production`) is the only
-  client-exposed var; the reCAPTCHA secret key lives only in the separate `email.tobysmith.uk`
-  Worker, not this repo.
+  client-exposed var. Server-side, the contact Action reads bindings/secrets via
+  `import { env } from "cloudflare:workers"` (the current adapter's `Astro.locals.runtime.env` was
+  removed — using it now throws, pointing at this import instead). `RECAPTCHA_ENDPOINT` is a plain,
+  non-sensitive `vars` entry in `wrangler.jsonc`; `EMAIL_TO`/`EMAIL_FROM`/`RECAPTCHA_SECRET_KEY` are
+  real Worker secrets (`wrangler secret put`, never committed) and are typed by hand in
+  `src/env.d.ts` (augmenting `Cloudflare.Env`) since `wrangler types` only knows about bindings/vars
+  actually declared in `wrangler.jsonc`. Locally, `wrangler dev`/`astro dev`/`astro build` read
+  `.dev.vars` (gitignored) for these instead.
 - **Deployment**: `wrangler.jsonc` configures the Cloudflare Worker (`name: "tobysmith-uk"`,
   `main` pointing at the adapter's own generated server entrypoint, an `assets` binding at
-  `./dist`). `deployment.yml` builds via `integration.yml`, downloads that build artifact, then
-  deploys with `cloudflare/wrangler-action`. **This is still not what's live in production** —
+  `./dist`, a `send_email` binding named `SEB` with **no** `destination_address` — this repo is
+  public, so the real recipient only ever lives in the `EMAIL_TO` secret, never committed).
+  `deployment.yml` builds via `integration.yml`, downloads that build artifact, then deploys with
+  `cloudflare/wrangler-action`, which also pushes `EMAIL_TO`/`EMAIL_FROM`/`RECAPTCHA_SECRET_KEY` as
+  real Worker secrets (via its `secrets:` input, sourced from matching GitHub Actions secrets) —
+  those three don't exist as GitHub secrets yet, so this step is unexercised until Stage 10 anyway.
+  **This is still not what's live in production** —
   per the migration's big-bang ground rule, `tobysmith.uk` keeps being served by GitHub Pages
   unchanged until Stage 10 explicitly cuts over; `wrangler.jsonc` deliberately has no `routes`
   entry yet, so `wrangler deploy` only ever targets a harmless `*.workers.dev` preview URL until

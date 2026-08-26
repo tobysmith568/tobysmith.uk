@@ -508,7 +508,7 @@ dev` booting and serving real 200s under the Cloudflare adapter is the closest l
   known-broken `display: none` mobile nav was left exactly as broken as before (also Stage 6) —
   flagging explicitly so it doesn't read as something this stage missed.
 
-## Stage 4 — Fold the email-sending backend into this repo
+## Stage 4 — Fold the email-sending backend into this repo ✅ done
 
 **Depends on:** Stage 3 (needs a server context to run request-handling code in). Requires `gh`
 access to the private `tobysmith568/email.tobysmith.uk` repo to confirm nothing's changed there
@@ -662,6 +662,90 @@ into this repo; `@cloudflare/workers-types` should already be available via `@as
 **Exit criteria:** the new same-origin contact-form flow is confirmed working against a
 non-production preview; the old `email.tobysmith.uk` Worker is untouched and still what
 production actually uses.
+
+### Outcome / deviations from the plan above
+
+Confirmed (via `gh repo clone` of the private `email.tobysmith.uk` repo) that its live source
+matched this plan's inlined snapshot exactly, byte-for-byte logic — no drift to account for. Code
+landed close to plan, but the **exit criterion's live-delivery check is not done, and can't be
+done by an agent session**: it needs real Cloudflare Email Routing/Turnstile-adjacent secrets tied
+to Toby's account (`EMAIL_TO`, `EMAIL_FROM`, `RECAPTCHA_SECRET_KEY`) plus checking a real inbox,
+neither of which this session has access to. Everything short of that is done and verified:
+
+- **Chose Astro Actions over an API route**, per the plan's own preference. `src/actions/index.ts`
+  exports a single `contact` action; `src/actions/contact/{env,verifyRecaptchaToken,
+sendPlainTextEmail}.ts` are near-direct ports of the old worker's `env.ts`/
+  `validate-recaptcha-token.ts`/`send-email.ts`. `sendContactEmail.ts` now calls
+  `actions.contact(...)` instead of `fetch`-ing the external worker; `ContactForm.astro` itself
+  needed **zero** changes, since `sendContactEmail`'s signature was kept identical.
+- **Confirmed, not assumed, that Actions work under this repo's `output: "static"` + Cloudflare
+  adapter setup with zero other non-prerendered routes**: read Astro core's own
+  `actions/integration.js` — it injects the `/_actions/[...path]` route with `prerender: false`
+  unconditionally as long as `settings.config.adapter` is set (true here), so no `output: "server"`
+  change or `export const prerender = false` anywhere was needed. Verified for real: `bunx wrangler
+dev` against a full build, then `curl -X POST localhost:8788/_actions/contact` — got a real
+  `AstroActionInputError` for missing/invalid fields, and a real `AstroActionError`
+  (`BAD_REQUEST`) after Google's actual reCAPTCHA siteverify endpoint rejected a dummy token —
+  proving the whole pipeline (routing → Zod validation → live network call → structured error)
+  runs correctly end-to-end short of a real send.
+- **`Astro.locals.runtime.env` is gone as of this adapter major version — a real, adapter-specific
+  finding, not a guess.** Read `@astrojs/cloudflare`'s own `cf-helpers.js`: accessing
+  `locals.runtime.env`/`.cf`/`.caches`/`.ctx` now throws on purpose, pointing at
+  `import { env } from "cloudflare:workers"` instead (this is also what the adapter's own server
+  entrypoint uses internally to power `astro:env/server`). Used that import directly in
+  `src/actions/contact/env.ts` and `src/actions/index.ts` rather than the locals-based access the
+  old worker's shape (and this plan's Stage 3 notes) implied.
+- **Secret typing gap, solved without touching the generated file**: `EMAIL_TO`/`EMAIL_FROM`/
+  `RECAPTCHA_SECRET_KEY` are real secrets and so correctly can't live in `wrangler.jsonc` — but that
+  also means `wrangler types` doesn't know about them and won't type `env.EMAIL_TO` etc. Solved by
+  hand-augmenting `Cloudflare.Env` in `src/env.d.ts` (interface declaration merging with the
+  generated `worker-configuration.d.ts`) rather than writing untyped/`any`-cast access.
+  `RECAPTCHA_ENDPOINT`, by contrast, isn't actually sensitive (a public Google URL) — added it as a
+  plain `wrangler.jsonc` `vars` entry instead of a secret, a small deliberate deviation from
+  treating it as a secret the way the old worker did, since it needs no such protection and this
+  cuts the local/CI secret-provisioning list from four down to three.
+- **`send_email` binding added with no `destination_address`**, per the plan's own instruction —
+  `{ "name": "SEB" }` only. Confirmed via `wrangler dev`'s own binding summary output
+  (`env.SEB (unrestricted) ... Send Email ... local`) that this is accepted and treated as
+  unrestricted rather than broken/rejected.
+- **CORS logic wasn't ported** (nothing to remove in this repo — it only ever lived in the old
+  worker) and the old worker's `X-Test` mock-response header **wasn't ported either**, exactly as
+  the plan flagged. This had a knock-on effect the plan didn't call out: three existing
+  `cypress/e2e/contact.cy.ts` specs relied on intercepting `https://email.tobysmith.uk` (now
+  entirely unused — the client posts same-origin to `/_actions/contact`), and two of those three
+  specifically relied on the now-gone `X-Test` header trick, which worked previously because CI
+  was making a real network call to the live, separate worker during test runs. Fixed rather than
+  left broken, per the "no stage silently drops coverage" ground rule: retargeted the intercepts at
+  `/_actions/contact`, and replaced the `X-Test`-header/`req.continue()` pattern with full
+  `req.reply()` stubs (mirroring the pattern the third spec already used) — the success/error-path
+  specs no longer depend on any real network call at all, which is a strictly more hermetic test
+  than what existed before. Still unverified by an actual Cypress run in this sandbox (see below).
+- **`mimetext` added** (`^3.0.28` — checked npm directly for latest rather than copying the old
+  worker's `^3.0.16`) as a real dependency; `@cloudflare/workers-types`' ambient `SendEmail`/
+  `EmailMessage` types were already available for free via the adapter's generated
+  `worker-configuration.d.ts`, so no separate `@cloudflare/workers-types` install was needed.
+- **`deployment.yml`** now passes `EMAIL_TO`/`EMAIL_FROM`/`RECAPTCHA_SECRET_KEY` to
+  `cloudflare/wrangler-action`'s `secrets:` input (sourced from matching `env:` entries reading
+  GitHub Actions secrets of the same names) — confirmed this input exists and does exactly this
+  (`wrangler secret put` under the hood) by reading the action's own `action.yml` from its GitHub
+  repo directly, not from memory. These three GitHub secrets don't exist yet in the repo — adding
+  them is a manual step for whoever has Cloudflare/email access, not something this session could
+  do; harmless until then since `deployment.yml` doesn't run for real until Stage 10.
+- **Verified a fresh checkout won't break in CI**: rebuilt with `.dev.vars` deleted entirely (the
+  file is gitignored, so CI never has it) — `bun run build` still succeeds with 0 `astro check`
+  errors, since prerendering never invokes the action handler. `.dev.vars` was recreated afterward
+  for local dev convenience, seeded with Google's own published "always-testable" reCAPTCHA v2
+  test secret (paired with the test site key already sitting in `.env.development`) plus dummy
+  `EMAIL_TO`/`EMAIL_FROM` addresses — real secrets were never available to or handled by this
+  session.
+- **What's left, and needs Toby specifically:** (1) provision real `EMAIL_TO`/`EMAIL_FROM`/
+  `RECAPTCHA_SECRET_KEY` values — via `wrangler secret put` against the preview Worker for local/
+  manual verification now, and as the three GitHub Actions secrets named above for Stage 10's CI
+  path later; (2) with those in place, deploy to the `*.workers.dev` preview and submit one real
+  message through the actual page to confirm delivery — this is the specific exit-criterion step
+  no agent session can complete unsupervised, since it needs both account-scoped secrets and a
+  human checking a real inbox. Until that happens, treat this stage as code-complete but not yet
+  exit-criterion-clean.
 
 ## Stage 5 — reCAPTCHA → Cloudflare Turnstile
 

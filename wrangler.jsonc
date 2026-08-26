@@ -8,6 +8,12 @@
     "directory": "./dist",
     "binding": "ASSETS"
   },
+  "send_email": [{ "name": "SEB" }],
+  "vars": {
+    // Not sensitive - a public Google endpoint, safe to commit. The actual secret is
+    // RECAPTCHA_SECRET_KEY, set via `wrangler secret put` (never in this file).
+    "RECAPTCHA_ENDPOINT": "https://www.google.com/recaptcha/api/siteverify"
+  },
   "observability": {
     "enabled": true
   }

@@ -88,7 +88,7 @@ describe("Contact Page", () => {
   });
 
   it("should show a success message on successful form submission", () => {
-    contactPage.form.interceptAndAddCypressHeader(204);
+    contactPage.form.interceptAndStubFormSubmission(204);
 
     contactPage.visit();
 
@@ -109,7 +109,7 @@ describe("Contact Page", () => {
   });
 
   it("should show an error message on failed form submission", () => {
-    contactPage.form.interceptAndAddCypressHeader(500);
+    contactPage.form.interceptAndStubFormSubmissionWithMessage(500, "Message failed to send");
 
     contactPage.visit();
 
