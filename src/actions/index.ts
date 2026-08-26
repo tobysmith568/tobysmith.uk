@@ -3,7 +3,7 @@ import { env } from "cloudflare:workers";
 import { z } from "zod";
 import { getContactEnv } from "./contact/env";
 import { sendPlainTextEmail } from "./contact/sendPlainTextEmail";
-import { verifyRecaptchaToken } from "./contact/verifyRecaptchaToken";
+import { verifyTurnstileToken } from "./contact/verifyTurnstileToken";
 
 export const server = {
   contact: defineAction({
@@ -14,14 +14,14 @@ export const server = {
         .min(1, "The email field cannot be empty")
         .email("The email field must be a valid email address"),
       message: z.string().min(1, "The message field cannot be empty"),
-      recaptchaToken: z.string().min(1, "The recaptchaToken field is required")
+      turnstileToken: z.string().min(1, "The turnstileToken field is required")
     }),
-    handler: async ({ name, email, message, recaptchaToken }) => {
+    handler: async ({ name, email, message, turnstileToken }) => {
       const contactEnv = getContactEnv();
 
-      const recaptchaValidation = await verifyRecaptchaToken(recaptchaToken, contactEnv.recaptcha);
-      if (!recaptchaValidation.success) {
-        throw new ActionError({ code: "BAD_REQUEST", message: recaptchaValidation.error });
+      const turnstileValidation = await verifyTurnstileToken(turnstileToken, contactEnv.turnstile);
+      if (!turnstileValidation.success) {
+        throw new ActionError({ code: "BAD_REQUEST", message: turnstileValidation.error });
       }
 
       const subject = `New message from ${name} via tobysmith.uk`;

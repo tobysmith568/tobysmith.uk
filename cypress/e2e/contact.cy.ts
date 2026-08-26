@@ -78,12 +78,12 @@ describe("Contact Page", () => {
     submitButton.click();
 
     contactPage.form.getFormSubmission().then(({ request }) => {
-      const { name, email, message, recaptchaToken } = request.body;
+      const { name, email, message, turnstileToken } = request.body;
 
       expect(name).to.equal("My Name");
       expect(email).to.equal("my.name@test.com");
       expect(message).to.equal("Hello, this is a test message");
-      expect(recaptchaToken).to.exist;
+      expect(turnstileToken).to.exist;
     });
   });
 

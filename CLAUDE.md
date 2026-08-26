@@ -74,13 +74,16 @@ job calls `astro build` directly rather than `bun run build`, so it has its own 
 - **Layouts**: `BaseLayout.astro` wraps every page (header/nav/footer, `<head>`). `ProseLayout.astro`
   and the `Prose.astro` component style long-form content (blog posts, policy pages).
   `PolicyLayout.astro` wraps the policy pages specifically.
-- **Contact form flow**: `Contact/ContactForm.astro` renders the form and loads Google reCAPTCHA
-  (invisible v2; Stage 5 swaps this for Turnstile). On submit, `src/scripts/contact/parseFormData.ts`
-  validates the `FormData` client-side, then `src/scripts/contact/sendContactEmail.ts` calls the
-  `contact` Astro Action (`src/actions/index.ts`, same-origin, no CORS needed) — Astro auto-injects
-  its RPC endpoint at `/_actions/contact`. The action re-validates input with its own Zod schema,
-  verifies the reCAPTCHA token server-side (`src/actions/contact/verifyRecaptchaToken.ts`), then
-  sends the email (`src/actions/contact/sendPlainTextEmail.ts`, via `mimetext` + the `SEB`
+- **Contact form flow**: `Contact/ContactForm.astro` renders the form and loads Cloudflare
+  Turnstile (`managed` mode, explicit client-side rendering so the challenge can be deferred until
+  form submit — `turnstile.render()` with `execution: "execute"`, then `turnstile.execute()` on
+  submit, mirroring the old invisible-reCAPTCHA UX). On submit,
+  `src/scripts/contact/parseFormData.ts` validates the `FormData` client-side, then
+  `src/scripts/contact/sendContactEmail.ts` calls the `contact` Astro Action (`src/actions/index.ts`,
+  same-origin, no CORS needed) — Astro auto-injects its RPC endpoint at `/_actions/contact`. The
+  action re-validates input with its own Zod schema, verifies the Turnstile token server-side
+  (`src/actions/contact/verifyTurnstileToken.ts`, against Cloudflare's own siteverify endpoint),
+  then sends the email (`src/actions/contact/sendPlainTextEmail.ts`, via `mimetext` + the `SEB`
   `send_email` binding declared in `wrangler.jsonc`). **This backend used to live in a separate
   Cloudflare Worker repo (`tobysmith568/email.tobysmith.uk`) — folded into this repo in Stage 4.**
   That old Worker is still deployed and still what production actually uses (GitHub Pages/its own
@@ -103,21 +106,25 @@ job calls `astro build` directly rather than `bun run build`, so it has its own 
 - **E2E tests** (Cypress) follow a page-object pattern: `cypress/e2e/**/*.cy.ts` specs pair with
   `cypress/page-objects/**/*.po.ts` — one page object per route, exposing selectors/actions rather
   than specs interacting with the DOM directly.
-- **Env vars**: `PUBLIC_RECAPTCHA_SITE_KEY` (`.env.development`, `.env.production`) is the only
-  client-exposed var. Server-side, the contact Action reads bindings/secrets via
+- **Env vars**: `PUBLIC_TURNSTILE_SITE_KEY` (`.env.development`, `.env.production`) is the only
+  client-exposed var — `.env.development` uses Cloudflare's published "always passes" invisible
+  test sitekey; `.env.production` still has a `REPLACE_ME` placeholder pending Stage 5's one
+  Toby-only step (see migration.md). Server-side, the contact Action reads bindings/secrets via
   `import { env } from "cloudflare:workers"` (the current adapter's `Astro.locals.runtime.env` was
-  removed — using it now throws, pointing at this import instead). `RECAPTCHA_ENDPOINT` is a plain,
-  non-sensitive `vars` entry in `wrangler.jsonc`; `EMAIL_TO`/`EMAIL_FROM`/`RECAPTCHA_SECRET_KEY` are
+  removed — using it now throws, pointing at this import instead). `TURNSTILE_ENDPOINT` is a plain,
+  non-sensitive `vars` entry in `wrangler.jsonc`; `EMAIL_TO`/`EMAIL_FROM`/`TURNSTILE_SECRET_KEY` are
   real Worker secrets (`wrangler secret put`, never committed) and are typed by hand in
   `src/env.d.ts` (augmenting `Cloudflare.Env`) since `wrangler types` only knows about bindings/vars
   actually declared in `wrangler.jsonc`. Locally, `wrangler dev`/`astro dev`/`astro build` read
-  `.dev.vars` (gitignored) for these instead.
+  `.dev.vars` (gitignored) for these instead — seeded with Cloudflare's published "always passes"
+  Turnstile test secret. `scripts/setup-turnstile.ts` (run manually, not in CI) creates the real
+  widget via the Cloudflare API and prints the real sitekey/secret.
 - **Deployment**: `wrangler.jsonc` configures the Cloudflare Worker (`name: "tobysmith-uk"`,
   `main` pointing at the adapter's own generated server entrypoint, an `assets` binding at
   `./dist`, a `send_email` binding named `SEB` with **no** `destination_address` — this repo is
   public, so the real recipient only ever lives in the `EMAIL_TO` secret, never committed).
   `deployment.yml` builds via `integration.yml`, downloads that build artifact, then deploys with
-  `cloudflare/wrangler-action`, which also pushes `EMAIL_TO`/`EMAIL_FROM`/`RECAPTCHA_SECRET_KEY` as
+  `cloudflare/wrangler-action`, which also pushes `EMAIL_TO`/`EMAIL_FROM`/`TURNSTILE_SECRET_KEY` as
   real Worker secrets (via its `secrets:` input, sourced from matching GitHub Actions secrets) —
   those three don't exist as GitHub secrets yet, so this step is unexercised until Stage 10 anyway.
   **This is still not what's live in production** —

@@ -3,16 +3,16 @@ import { z } from "zod";
 
 const envValidator = z
   .object({
-    RECAPTCHA_SECRET_KEY: z.string().min(1),
-    RECAPTCHA_ENDPOINT: z.string().min(1),
+    TURNSTILE_SECRET_KEY: z.string().min(1),
+    TURNSTILE_ENDPOINT: z.string().min(1),
 
     EMAIL_TO: z.string().min(1).email(),
     EMAIL_FROM: z.string().min(1).email()
   })
   .transform(obj => ({
-    recaptcha: {
-      secretKey: obj.RECAPTCHA_SECRET_KEY,
-      endpoint: obj.RECAPTCHA_ENDPOINT
+    turnstile: {
+      secretKey: obj.TURNSTILE_SECRET_KEY,
+      endpoint: obj.TURNSTILE_ENDPOINT
     },
     email: {
       to: obj.EMAIL_TO,

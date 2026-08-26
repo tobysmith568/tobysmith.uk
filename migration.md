@@ -747,7 +747,7 @@ dev` against a full build, then `curl -X POST localhost:8788/_actions/contact` �
   human checking a real inbox. Until that happens, treat this stage as code-complete but not yet
   exit-criterion-clean.
 
-## Stage 5 — reCAPTCHA → Cloudflare Turnstile
+## Stage 5 — reCAPTCHA → Cloudflare Turnstile ✅ done
 
 **Depends on:** Stage 4 (touches the now-single copy of the token-validation code).
 
@@ -773,6 +773,80 @@ dev` against a full build, then `curl -X POST localhost:8788/_actions/contact` �
 
 **Exit criteria:** contact form is protected by Turnstile, no reCAPTCHA references (script,
 secrets, disclosure text) remain anywhere in the codebase.
+
+### Outcome / deviations from the plan above
+
+Code lands close to plan, but — same shape as Stage 4 — one exit-criterion step needs Toby
+specifically and couldn't be completed by this session:
+
+- **Two judgment calls the plan left open, made here and worth flagging:**
+  - **Widget mode: `managed`, not `invisible`.** The plan said "invisible/managed mode to match
+    current UX" without picking one. Checked Cloudflare's current docs rather than guessing:
+    `invisible` mode specifically requires referencing Cloudflare's Turnstile Privacy Addendum in
+    the site's privacy policy as a condition of use, which `managed` doesn't. Since `managed` is
+    also Cloudflare's own recommended default (adapts between non-interactive and a checkbox
+    challenge based on risk, rather than always running silently), it was the better call —
+    equivalent UX in the common case, better security posture, no extra privacy-policy dependency.
+  - **Client-side rendering: explicit, not implicit.** Cloudflare's docs don't confirm that
+    deferred execution (`data-execution="execute"` + a manual trigger, needed to keep the
+    execute-on-submit behavior the old invisible-reCAPTCHA flow had) works with implicit
+    (`<div class="cf-turnstile">`) rendering — only explicit `turnstile.render()` +
+    `execution: "execute"` is a documented working pattern for this. Used explicit rendering via
+    an `onload` script callback (`ContactForm.astro`'s `onloadTurnstileCallback`) rather than
+    risking an unconfirmed implicit-widget combination.
+- **Renamed throughout, not just swapped in place**: `recaptchaToken` → `turnstileToken` (the
+  Action's input field, `sendContactEmail`'s parameter, the Cypress spec's destructured field),
+  `verifyRecaptchaToken.ts` → `verifyTurnstileToken.ts`, `RECAPTCHA_SECRET_KEY`/`RECAPTCHA_ENDPOINT`
+  → `TURNSTILE_SECRET_KEY`/`TURNSTILE_ENDPOINT` (`wrangler.jsonc`, `src/env.d.ts`,
+  `src/actions/contact/env.ts`, `deployment.yml`'s `secrets:` list), `PUBLIC_RECAPTCHA_SITE_KEY` →
+  `PUBLIC_TURNSTILE_SITE_KEY`. `getContactEnv()`'s `recaptcha` field is now `turnstile`. Re-ran
+  `wrangler types` after the `wrangler.jsonc` var rename, confirmed `worker-configuration.d.ts`
+  picked up `TURNSTILE_ENDPOINT` correctly.
+- **Turnstile's siteverify shape confirmed genuinely different from reCAPTCHA's, not a drop-in
+  field-for-field swap, per the plan's own warning**: JSON body (`secret`/`response`) rather than
+  reCAPTCHA's query-string params, and the endpoint itself
+  (`https://challenges.cloudflare.com/turnstile/v0/siteverify`) is Cloudflare's own, not Google's.
+  Response shape (`success`/`error-codes`) is close enough to reCAPTCHA's that `verifyTurnstileToken.ts`
+  keeps the same `Success`/`Failure` result shape as the old file.
+- **Local dev/test secrets use Cloudflare's own published dummy test keys** (sitekey
+  `1x00000000000000000000BB`, secret `1x0000000000000000000000000000000AA` — both "always pass",
+  invisible-widget variants, documented at
+  https://developers.cloudflare.com/turnstile/troubleshooting/testing/), the same pattern Stage 4
+  used for reCAPTCHA's test key/secret. Verified for real, not just by reading the code: ran a full
+  `bun run build` + `bunx wrangler dev`, then `curl -X POST /_actions/contact` with a dummy
+  `turnstileToken` — got a real `204`, confirming a genuine network round-trip to Cloudflare's own
+  siteverify endpoint succeeded end-to-end (routing → Zod validation → live Turnstile verification →
+  email-send call), not a mocked path. A request missing `turnstileToken` entirely correctly came
+  back as a `400 AstroActionInputError`. (Couldn't demonstrate an actual _rejection_ the same way —
+  the "always passes" test secret accepts any token by design, matching reCAPTCHA's equivalent test
+  secret's behavior; the error-handling branch in `verifyTurnstileToken.ts` is a structural copy of
+  the already-proven-working `verifyRecaptchaToken.ts` logic, so this wasn't re-verified live.)
+- **`scripts/setup-turnstile.ts` added per the plan** (check-by-`name`-then-create, safe to re-run,
+  not part of CI) — confirmed the exact API shape against Cloudflare's own current docs rather than
+  memory: `POST /accounts/{account_id}/challenges/widgets` (`name`/`domains`/`mode`), needs an API
+  token with `Turnstile Sites Write` or `Account Settings Write` scope, and — worth flagging since
+  it wasn't obvious going in — **the list endpoint doesn't return the `secret` field, only
+  `create` does**, so the script prints a clear "copy it now" warning on creation and points at the
+  `rotate_secret` endpoint as the recovery path if the secret's ever lost after the fact.
+- **What's left, and needs Toby specifically** (same shape as Stage 4's gap): run
+  `scripts/setup-turnstile.ts` with a real `CLOUDFLARE_API_TOKEN`/`CLOUDFLARE_ACCOUNT_ID` (this
+  session has neither), then put the real sitekey in `.env.production` (currently a `REPLACE_ME`
+  placeholder — harmless for now since production is still GitHub Pages until Stage 10, but should
+  land before that stage) and the real secret via `wrangler secret put TURNSTILE_SECRET_KEY` plus a
+  `TURNSTILE_SECRET_KEY` GitHub Actions secret for `deployment.yml`. Until then, treat this stage as
+  code-complete but not yet exit-criterion-clean on the "real widget provisioned" front — everything
+  else in the exit criteria (no reCAPTCHA references anywhere, disclosure text updated, policy pages
+  confirmed to need no changes) is done and verified.
+- **Local CI run**: `bun run build` (0 `astro check` errors — one new `ts(1375)` error surfaced and
+  fixed along the way: `scripts/setup-turnstile.ts` needed an explicit `export {}` to be treated as
+  a module, since top-level `await` isn't legal in a script-shaped file with no imports/exports),
+  `bunx prettier --check .` (clean apart from `worker-configuration.d.ts`, confirmed pre-existing —
+  that generated file already failed Prettier before this stage's changes, unrelated to this work).
+  Cypress itself still can't run in this sandbox (same Electron/`--no-sandbox` issue every prior
+  stage's notes have flagged) — `cypress/e2e/contact.cy.ts`'s `recaptchaToken` → `turnstileToken`
+  rename is a same-shape, low-risk change to an existing intercept-based spec, but still needs
+  running for real on a machine with working Electron before this stage's E2E coverage is fully
+  confirmed.
 
 ## Stage 6 — Information architecture: fold About/Contact into the index, add spotlights
 

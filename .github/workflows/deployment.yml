@@ -51,8 +51,8 @@ jobs:
           secrets: |
             EMAIL_TO
             EMAIL_FROM
-            RECAPTCHA_SECRET_KEY
+            TURNSTILE_SECRET_KEY
         env:
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
-          RECAPTCHA_SECRET_KEY: ${{ secrets.RECAPTCHA_SECRET_KEY }}
+          TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}

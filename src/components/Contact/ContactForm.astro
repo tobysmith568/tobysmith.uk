@@ -2,7 +2,11 @@
 import Anchor from "../Anchor.astro";
 ---
 
-<script is:inline src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script
+  is:inline
+  src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback&render=explicit"
+  async
+  defer></script>
 
 <form id="contact-form">
   <div class="fields" x-data="{ name: '', email: '', message: '' }">
@@ -22,34 +26,23 @@ import Anchor from "../Anchor.astro";
 
     <p id="result-message" class="hidden"></p>
 
-    <p class="recaptcha-terms">
-      This site is protected by reCAPTCHA and the Google
-      <Anchor href="https://policies.google.com/privacy" text="Privacy Policy" />
+    <p class="turnstile-terms">
+      This site is protected by Cloudflare Turnstile and the Cloudflare
+      <Anchor href="https://www.cloudflare.com/privacypolicy/" text="Privacy Policy" />
       and
-      <Anchor href="https://policies.google.com/terms" text="Terms of Service" />
+      <Anchor href="https://www.cloudflare.com/website-terms/" text="Terms of Service" />
       apply.
     </p>
   </div>
 </form>
 
-<div
-  class="g-recaptcha"
-  data-sitekey={import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY}
-  data-callback="onGetRecaptchaToken"
-  data-size="invisible">
-</div>
+<div id="turnstile-widget" data-sitekey={import.meta.env.PUBLIC_TURNSTILE_SITE_KEY}></div>
 
 <script is:inline>
   function isValid(name, email, message) {
     return name && email && message;
   }
 </script>
-
-<style is:global>
-  .grecaptcha-badge {
-    display: none !important;
-  }
-</style>
 
 <style>
   .fields {
@@ -88,7 +81,7 @@ import Anchor from "../Anchor.astro";
       margin-bottom: 1rem;
     }
 
-    .recaptcha-terms {
+    .turnstile-terms {
       grid-column: span 2;
       font-size: 0.6em;
     }
@@ -103,18 +96,26 @@ import Anchor from "../Anchor.astro";
   import { parseFormData } from "../../scripts/contact/parseFormData";
   import { sendContactEmail } from "../../scripts/contact/sendContactEmail";
 
+  interface TurnstileRenderOptions {
+    sitekey: string;
+    callback: (token: string) => void;
+    execution?: "render" | "execute";
+  }
+
   declare global {
     interface Window {
-      onGetRecaptchaToken: (token: string) => Promise<void>;
+      onloadTurnstileCallback: () => void;
     }
 
-    var grecaptcha: {
-      execute: () => void;
+    var turnstile: {
+      render: (container: string | HTMLElement, options: TurnstileRenderOptions) => string;
+      execute: (container: string | HTMLElement) => void;
     };
   }
 
   const form = document.getElementById("contact-form") as HTMLFormElement | null;
   const resultMessage = document.getElementById("result-message");
+  const turnstileWidget = document.getElementById("turnstile-widget");
 
   let formData: FormData | null = null;
 
@@ -133,13 +134,11 @@ import Anchor from "../Anchor.astro";
       submitButton.setAttribute("disabled", "true");
     }
 
-    grecaptcha.execute();
+    turnstile.execute("#turnstile-widget");
   });
 
-  async function onGetRecaptchaToken(token: string) {
+  async function onGetTurnstileToken(token: string) {
     if (!formData) return;
-
-    console.log("inside onGetRecaptchaToken", formData);
 
     try {
       const validatedFormData = parseFormData(formData);
@@ -162,5 +161,14 @@ import Anchor from "../Anchor.astro";
     }
   }
 
-  window.onGetRecaptchaToken = onGetRecaptchaToken;
+  window.onloadTurnstileCallback = function onloadTurnstileCallback() {
+    const sitekey = turnstileWidget?.dataset.sitekey;
+    if (!turnstileWidget || !sitekey) return;
+
+    turnstile.render(turnstileWidget, {
+      sitekey,
+      callback: onGetTurnstileToken,
+      execution: "execute"
+    });
+  };
 </script>

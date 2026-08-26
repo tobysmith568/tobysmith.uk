@@ -11,6 +11,6 @@ declare namespace Cloudflare {
   interface Env {
     EMAIL_TO: string;
     EMAIL_FROM: string;
-    RECAPTCHA_SECRET_KEY: string;
+    TURNSTILE_SECRET_KEY: string;
   }
 }
