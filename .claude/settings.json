@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm install)",
+      "Bash(pnpm run dev)",
+      "Bash(pnpm run start)",
+      "Bash(pnpm run build)",
+      "Bash(pnpm run preview)",
+      "Bash(pnpm exec astro *)",
+      "Bash(pnpm exec prettier *)",
+      "Bash(pnpm exec cypress *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git branch)",
+      "Bash(git branch --list)",
+      "Bash(ls *)",
+      "Bash(find *)",
+      "Bash(cat *)"
+    ]
+  }
+}

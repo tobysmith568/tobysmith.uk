@@ -14,8 +14,8 @@ nothing that matters for continuing the work should live only in a conversation.
   against.
 - **After finishing a stage:** mark its heading `✅ done`, and add an
   **`Outcome / deviations from the plan above:`** subsection immediately under its `Exit
-  criteria` line, documenting: what actually happened, anything that deviated from the plan as
-  written, bugs/gotchas found along the way, and anything the *next* stage needs to know that
+criteria` line, documenting: what actually happened, anything that deviated from the plan as
+  written, bugs/gotchas found along the way, and anything the _next_ stage needs to know that
   wasn't obvious when this plan was drafted. Follow the pattern already used in the
   [read-receipt modernization plan](https://github.com/tobysmith568/read-receipt/blob/ts/modernisation/docs/modernization-plan.md)
   this document was modeled on.
@@ -33,7 +33,7 @@ nothing that matters for continuing the work should live only in a conversation.
   one and only deploy this migration triggers. That final merge/deploy is watched closely by
   hand rather than trusted to automation.
 - **Local CI after every stage.** Since nothing runs through GitHub Actions until the final PR,
-  each stage ends with running, locally, whatever the *current* equivalent of lint/build/test is
+  each stage ends with running, locally, whatever the _current_ equivalent of lint/build/test is
   at that point in the migration (e.g. `pnpm exec prettier --check .` early on, `bun run lint`/
   `oxfmt --check` later; `astro check`/`astro build` or `wrangler deploy --dry-run` depending on
   the stage; the current e2e suite, Cypress or Playwright). Treat this as a manual gate exactly
@@ -108,7 +108,7 @@ nothing that matters for continuing the work should live only in a conversation.
   than kept as a separate deployed service.
 - **reCAPTCHA → Turnstile**: confirmed free for this site's traffic level.
 
-## Stage 1 — AI tooling (`CLAUDE.md` + `.claude/`)
+## Stage 1 — AI tooling (`CLAUDE.md` + `.claude/`) ✅ done
 
 **Depends on:** nothing. Do this first for agent context on every later stage.
 
@@ -121,6 +121,21 @@ nothing that matters for continuing the work should live only in a conversation.
 
 **Exit criteria:** `CLAUDE.md` accurately describes the current (pre-migration) stack;
 `.claude/settings.json` committed.
+
+### Outcome / deviations from the plan above
+
+Both files landed as planned, no deviations.
+`CLAUDE.md` documents commands, the content-collection/routing/contact-form architecture, and
+flags itself + `migration.md` as living documents to revisit each stage.
+`.claude/settings.json` pre-approves the pnpm scripts (`install`/`dev`/`start`/`build`/`preview`,
+plus `exec astro`/`exec prettier`/`exec cypress`), read-only git commands, and a few common
+read-only shell commands (`ls`/`find`/`cat`) — no hooks or other config were needed for this
+stage. One thing worth flagging for whoever picks up Stage 2 next: neither `.claude/` nor
+`CLAUDE.md` existed before this stage, and running `pnpm install`/`pnpm exec prettier --check .`
+as the local-CI gate surfaced that `migration.md` itself wasn't Prettier-clean (mixed
+`*emphasis*`/`_emphasis_` markdown and a couple of mis-indented lines, from whatever generated
+the original plan) — fixed here with `prettier --write` since it was purely cosmetic
+(no wording changed); flagging in case that's surprising to see in this stage's diff.
 
 ## Stage 2 — Bun as package manager
 
@@ -136,7 +151,7 @@ nothing that matters for continuing the work should live only in a conversation.
   swap it for inline `oven-sh/setup-bun` + `actions/checkout` steps in this repo rather than
   assuming a bun equivalent exists (it doesn't today).
 - Rename `ci.yml` → `integration.yml` and `cd.yml` → `deployment.yml` (Toby's current naming
-  convention), and restyle both to match how his repos write these *now*, not the shape this
+  convention), and restyle both to match how his repos write these _now_, not the shape this
   repo's copies were written in. Confirmed via `gh search code` across his account — most repos
   (e.g. `tobythe.dev`, and notably `email.tobysmith.uk` itself, since it's already a Cloudflare
   Worker deploy — the closest existing reference for what Stage 3/10 need) share:
@@ -230,7 +245,7 @@ preview.
   jump, bigger than the adapter swap itself, so don't let it hide inside "port the content
   across":** `src/content/config.ts`'s `defineCollection({ type: "content", schema })` shape was
   replaced by the Content Layer API's `loader`-based collections (e.g. `defineCollection({
-  loader: glob({ pattern: "**/*.mdx", base: "./src/content/blog" }), schema })`) starting in
+loader: glob({ pattern: "**/*.mdx", base: "./src/content/blog" }), schema })`) starting in
   Astro 5. This touches more than the config file:
   - `entry.render()` (instance method) → a standalone `render(entry)` function imported from
     `astro:content` — affects `blog/[...slug].astro` and `projects/[...slug].astro`.
@@ -246,7 +261,7 @@ preview.
     schema shape changes, to regenerate types before relying on them.
 - `astro:assets`'s `<Image>` component is used for project logos (`projects/[...slug].astro`,
   `Projects/ProjectListItem.astro`). Sharp-based image transforms don't run inside the deployed
-  Workers runtime itself, but they *do* still run at `astro build` time (a real Node process) for
+  Workers runtime itself, but they _do_ still run at `astro build` time (a real Node process) for
   any route that's prerendered — which the bullet above already puts these routes under. Confirm
   this holds (build succeeds, images render) rather than assuming prerendering alone is a
   complete answer; if any image-bearing route is ever made non-prerendered later, Sharp would
@@ -281,7 +296,7 @@ preview.
 
 **Depends on:** Stage 3 (needs a server context to run request-handling code in). Requires `gh`
 access to the private `tobysmith568/email.tobysmith.uk` repo to confirm nothing's changed there
-since this plan was written — but shouldn't *require* it: the logic is small enough to inline
+since this plan was written — but shouldn't _require_ it: the logic is small enough to inline
 below so this stage is executable even for an agent/session without access to that repo. Treat
 the snapshot below as a starting point to verify against the live repo, not a substitute for
 checking it if access is available.
@@ -308,10 +323,10 @@ send_email = [
 > Per [Cloudflare's send-binding docs](https://developers.cloudflare.com/email-service/configuration/send-bindings/),
 > if a `send_email` binding declares **no** `destination_address`/`allowed_destination_addresses`
 > at all, it can still only send to addresses already verified under the account's Email Routing
-> setup — the restriction fields are an *extra* narrowing, not what makes an address usable in the
+> setup — the restriction fields are an _extra_ narrowing, not what makes an address usable in the
 > first place. So in this repo's `wrangler.jsonc`, declare the binding with **no destination
 > field whatsoever** (`{ "name": "SEB" }`), and keep the real address only in the `EMAIL_TO`
-> Worker *secret* (`wrangler secret put`, never committed) — which the plan already has the
+> Worker _secret_ (`wrangler secret put`, never committed) — which the plan already has the
 > recipient coming from at runtime anyway (see `src/index.ts` below). Confirm this behaviour
 > against the actual current docs before relying on it, per the ground rules, since this is
 > exactly the kind of detail worth not taking on faith.
@@ -329,11 +344,14 @@ const envValidator = z
     EMAIL_FROM: z.string().min(1).email(),
     SEB: z.object({ send: z.function(z.tuple([z.any()]), z.void()) })
   })
-  .transform(obj => ({
-    recaptcha: { secretKey: obj.RECAPTCHA_SECRET_KEY, endpoint: obj.RECAPTCHA_ENDPOINT },
-    email: { to: obj.EMAIL_TO, from: obj.EMAIL_FROM },
-    SEB: obj.SEB
-  } as const));
+  .transform(
+    obj =>
+      ({
+        recaptcha: { secretKey: obj.RECAPTCHA_SECRET_KEY, endpoint: obj.RECAPTCHA_ENDPOINT },
+        email: { to: obj.EMAIL_TO, from: obj.EMAIL_FROM },
+        SEB: obj.SEB
+      }) as const
+  );
 
 export type Env = z.infer<typeof envValidator>;
 export const getEnv = (env: unknown): Env => envValidator.parse(env);
@@ -348,7 +366,8 @@ const allowedOrigins = ["https://tobysmith.com", "http://localhost:4321"]; // no
 
 export default {
   async fetch(request, unparsedEnv, _ctx) {
-    if (request.method === "GET") return new Response("Welcome to email.tobysmith.uk", { status: 200 });
+    if (request.method === "GET")
+      return new Response("Welcome to email.tobysmith.uk", { status: 200 });
 
     const origin = request.headers.get("Origin");
     const accessControlAllowOrigin = !!origin && allowedOrigins.includes(origin) ? origin : "null";
@@ -364,11 +383,13 @@ export default {
 
     const env = getEnv(unparsedEnv);
     const parsedBody = parseRequestBody(await request.json());
-    if (!parsedBody.success) return new Response(JSON.stringify(parsedBody.errors, null, 2), { status: 400 });
+    if (!parsedBody.success)
+      return new Response(JSON.stringify(parsedBody.errors, null, 2), { status: 400 });
 
     const { name, email, message, recaptchaToken } = parsedBody.data;
     const recaptchaValidation = await verifyRecaptchaToken(recaptchaToken, env);
-    if (!recaptchaValidation.success) return new Response(recaptchaValidation.error, { status: 400 });
+    if (!recaptchaValidation.success)
+      return new Response(recaptchaValidation.error, { status: 400 });
 
     const subject = `New message from ${name} via tobysmith.uk`;
     const text = `The following message is from ${name}, ${email}\n\n${message}`;
@@ -575,7 +596,7 @@ entirety of what's left manual, and both are inherently one-time.
 - Add `routes: [{ "pattern": "tobysmith.uk", "custom_domain": true }]` to `wrangler.jsonc` — this
   is the actual cutover action, expressed as a one-line config change rather than a dashboard
   click, per the Stage 3 finding that Wrangler provisions the DNS record and TLS certificate for
-  a custom domain automatically on deploy. This is deliberately the *only* thing that changes in
+  a custom domain automatically on deploy. This is deliberately the _only_ thing that changes in
   this stage that couldn't have been done earlier.
 - Re-run the full local verification suite one final time immediately before merging (lint,
   build, typecheck, Playwright) — the same "local CI" discipline as every stage, but as a last
@@ -592,7 +613,7 @@ entirety of what's left manual, and both are inherently one-time.
   via the Cloudflare dashboard directly, faster in an emergency) — this repoints `tobysmith.uk`'s
   DNS back at nothing-changed, and GitHub Pages, deliberately left untouched at this point (see
   below), immediately starts serving the domain again exactly as it did before this stage. This
-  is *why* GitHub Pages retirement is the last thing this stage does, not an early one — don't
+  is _why_ GitHub Pages retirement is the last thing this stage does, not an early one — don't
   reorder that without preserving an equivalent rollback path.
 - Keep a closer eye than usual on the live site for a while after cutover (errors, delivery
   failures) before treating it as done — this window is what the rollback path above exists for.
