@@ -1,9 +1,11 @@
-name: CD
+name: Continuous Deployment
+run-name: Continuous Deployment for ${{ github.ref_name }}
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 defaults:
   run:
@@ -15,20 +17,20 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: Continuous Deployment
   cancel-in-progress: false
 
 jobs:
-  ci:
-    name: Run CI
-    uses: ./.github/workflows/ci.yml
+  integration:
+    name: Run Continuous Integration
+    uses: ./.github/workflows/integration.yml
     secrets: inherit
 
   deploy:
     name: Deploy Website
 
     needs:
-      - ci
+      - integration
 
     runs-on: ubuntu-latest
 

@@ -137,7 +137,7 @@ as the local-CI gate surfaced that `migration.md` itself wasn't Prettier-clean (
 the original plan) — fixed here with `prettier --write` since it was purely cosmetic
 (no wording changed); flagging in case that's surprising to see in this stage's diff.
 
-## Stage 2 — Bun as package manager
+## Stage 2 — Bun as package manager ✅ done
 
 **Depends on:** nothing, but do early since every later stage's CI/local commands run through it.
 
@@ -172,6 +172,76 @@ the original plan) — fixed here with `prettier --write` since it was purely co
   handle `bun.lock`, or does the shared config need updating? Don't assume.
 
 **Exit criteria:** local build/dev/test scripts all run cleanly via Bun; no behavior change.
+
+### Outcome / deviations from the plan above
+
+Landed close to plan, with a few real findings worth flagging for later stages:
+
+- **Stale `pnpm-lock.yaml` masked dependency drift.** The old lockfile had pinned resolutions
+  (e.g. `@astrojs/sitemap@3.1.5`, `zod@4.1.3`, `typescript@5.3.3`) well behind what `package.json`'s
+  own `^` ranges actually allow. A first `bun install` with no prior `bun.lock` naturally resolves
+  to the newest version matching each range — for most packages this was harmless, but
+  `@astrojs/sitemap` jumped 3.1.5 → 3.7.3 and crashed `astro build` (`Cannot read properties of
+undefined (reading 'reduce')` in its `astro:build:done` hook — an incompatibility with Astro
+  4.16's older build-hook shape, not a Bun bug). Pinned `@astrojs/sitemap` back to the exact
+  `3.1.5` that was actually validated working (no caret) rather than debugging a newer major-ish
+  jump that's out of scope for this stage — Stage 3's fresh Astro 7 scaffold replaces this
+  dependency wholesale anyway, so this pin is expected to be revisited/dropped there, not carried
+  forever.
+- **Prettier version drift, same root cause, different outcome.** `@tobysmith568/prettier-config`
+  similarly drifted forward (2.1.0 → 2.2.1) and its newer bundled Prettier reformatted one file
+  (`ContactForm.astro`, added parens around a `??`-inside-ternary expression). Unlike the sitemap
+  case this was purely cosmetic, so — mirroring exactly how Stage 1 handled `migration.md`'s own
+  Prettier drift — fixed with `prettier --write .` rather than pinning the config version.
+- **`bunfig.toml` wasn't needed.** The plan anticipated `sharp`/`esbuild` postinstall scripts
+  needing `trustedDependencies`; in practice those two are already on Bun's built-in default-trust
+  list. The one package Bun actually blocked was `@parcel/watcher` (a transitive Vite/Astro dep,
+  needed for file-watching in dev mode) — approved via `bun pm trust @parcel/watcher`. Also worth
+  noting: Bun's `trustedDependencies` mechanism lives in `package.json` itself (`bun pm trust`
+  writes it there directly), not in a separate `bunfig.toml` — the plan's phrasing implied the
+  latter; no `bunfig.toml` file was added at all.
+- **No bun-equivalent composite action existed**, confirming the plan's assumption —
+  `tobysmith568/actions` only has `checkout-pnpm-project`. `integration.yml`/`deployment.yml` use
+  inline `actions/checkout@v7` + `oven-sh/setup-bun@v2` instead. Both new workflow files were
+  modeled on `email.tobysmith.uk`'s and `tobythe.dev`'s current `integration.yml`/`deployment.yml`
+  (fetched live via `gh api`, not from memory) — naming, `run-name`, job titles, and the
+  `pull_request` trigger's `renovate/*` exclusion / `workflow_dispatch` addition all match. Actual
+  action version pins were checked against each action's own GitHub releases at implementation
+  time (`actions/checkout@v7`, `oven-sh/setup-bun@v2`, `actions/upload-pages-artifact@v5`,
+  `actions/upload-artifact@v7`, `actions/deploy-pages@v5`, `cypress-io/github-action@v7` — the
+  last one bumped from the prior `@v6` since the workflow file was being rewritten wholesale
+  anyway). Also gave the E2E job's per-browser artifact uploads distinct names
+  (`E2E Screenshots (Chrome)` vs `(Firefox)`) — the old `ci.yml` gave both matrix legs the same
+  artifact name, which is a latent conflict under `actions/upload-artifact@v4+`'s uniqueness
+  requirement (silently never triggered before, since nothing uploads unless a test actually
+  fails in both browsers in the same run).
+- **`README.md` had no dev-setup instructions to update** — it's just project description +
+  license notice today, no `pnpm install`-style section existed. Plan bullet was a no-op here.
+- **Renovate**: confirmed (via `gh api` on the live `tobysmith568/renovate-config` repo, plus a
+  web check of Renovate's own docs/issue tracker) that Renovate's `npm` manager does support
+  `bun.lock` natively (text-format lockfile support landed upstream a while back; known gaps are
+  workspace/monorepo-specific and don't apply here now that `pnpm-workspace.yaml` is gone) — so
+  no shared-config change is needed for ordinary dependency-bump lockfile maintenance. One real
+  gap found, left as a follow-up rather than fixed here (it's a shared repo used by other
+  projects too, not this one): the shared config's "Package Managers" `packageRule` only matches
+  `matchPackagePatterns: ["^pnpm$"]` for automerging `packageManager`-field version bumps, so
+  future `packageManager: "bun@…"` bumps in this repo will still get individual Renovate PRs, just
+  ungrouped/not-automerged, until that pattern is widened (or a `bun` rule added) in
+  `tobysmith568/renovate-config` directly.
+- **Local verification gap, not a regression:** the full Cypress E2E suite couldn't be run in this
+  particular sandboxed session — its Electron-based test runner fails to launch here
+  (`bad option: --no-sandbox` — Chromium's sandbox failing to initialize under this container's
+  restrictions, falling back to a bare-Node arg parser that rejects Electron's own flags). This
+  reproduces with or without Bun and is unrelated to this stage; `cypress install`/`cypress
+version` both succeed under Bun, confirming the package itself resolves and installs correctly.
+  The actual browser-driven run still needs verifying in an environment with full Electron/Chromium
+  support (a real GitHub Actions runner, or a non-sandboxed machine) before this stage's E2E
+  exit criterion is fully confirmed — flagging explicitly per the "no stage silently drops test
+  coverage" ground rule, since this isn't the same as having run and passed it.
+- `bun run build`, `bunx prettier --check .`, and `bun run dev` all verified clean locally.
+  `astro.config.mjs` needed no changes — Astro's own script resolution (`astro`, `cypress` as
+  binary names in `package.json`'s `scripts`) works unchanged under `bun run`/`bunx`, confirming
+  the plan's assumption that no `bunx`-prefix rewiring was needed there.
 
 ## Stage 3 — Astro SSR + Cloudflare Worker hosting
 

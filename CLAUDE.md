@@ -14,21 +14,21 @@ generated and deployed to GitHub Pages.
 
 ## Commands
 
-- `pnpm install` — install dependencies
-- `pnpm run dev` / `pnpm run start` — start the Astro dev server
-- `pnpm run build` — type-check (`astro check`) then build the static site to `dist/`
-- `pnpm run preview` — serve the built `dist/` output locally
-- `pnpm exec prettier --check .` — lint/format check (no linter is configured, only Prettier via
-  `@tobysmith568/prettier-config`); use `pnpm exec prettier --write .` to fix
-- `pnpm exec astro sync` — regenerate content collection types after editing
+- `bun install` — install dependencies
+- `bun run dev` / `bun run start` — start the Astro dev server
+- `bun run build` — type-check (`astro check`) then build the static site to `dist/`
+- `bun run preview` — serve the built `dist/` output locally
+- `bunx prettier --check .` — lint/format check (no linter is configured, only Prettier via
+  `@tobysmith568/prettier-config`); use `bunx prettier --write .` to fix
+- `bunx astro sync` — regenerate content collection types after editing
   `src/content/config.ts`
-- `pnpm exec cypress open` (`pnpm run cypress`) — open the Cypress UI for interactive E2E runs
-- `pnpm exec cypress run --spec cypress/e2e/<file>.cy.ts` — run a single E2E spec headlessly
-  (requires the site running locally first, e.g. `pnpm run preview` at `http://localhost:4321`,
+- `bunx cypress open` (`bun run cypress`) — open the Cypress UI for interactive E2E runs
+- `bunx cypress run --spec cypress/e2e/<file>.cy.ts` — run a single E2E spec headlessly
+  (requires the site running locally first, e.g. `bun run preview` at `http://localhost:4321`,
   matching `cypress.config.ts`'s `baseUrl`)
 
-CI (`.github/workflows/ci.yml`) runs Prettier, `pnpm run build`, and the Cypress suite (Chrome +
-Firefox) against a `--mode development` build served via `pnpm run preview`.
+CI (`.github/workflows/integration.yml`) runs Prettier, `bun run build`, and the Cypress suite
+(Chrome + Firefox) against a `--mode development` build served via `bun run preview`.
 
 ## Architecture
 
@@ -69,7 +69,11 @@ Firefox) against a `--mode development` build served via `pnpm run preview`.
   client-exposed var; the reCAPTCHA secret key lives only in the separate `email.tobysmith.uk`
   Worker, not this repo.
 - **Deployment** (current, pre-migration): GitHub Actions builds the static site and deploys it to
-  GitHub Pages (`.github/workflows/cd.yml` → `ci.yml` → `actions/deploy-pages`), custom domain
-  `tobysmith.uk`. This is the stage-appropriate description for pre-Stage-3 work only — Stage 3
-  moves the site to SSR on a Cloudflare Worker, and Stage 10 is the actual production cutover; see
-  migration.md.
+  GitHub Pages (`.github/workflows/deployment.yml` → `integration.yml` → `actions/deploy-pages`),
+  custom domain `tobysmith.uk`. This is the stage-appropriate description for pre-Stage-3 work
+  only — Stage 3 moves the site to SSR on a Cloudflare Worker, and Stage 10 is the actual
+  production cutover; see migration.md.
+- **Package manager**: Bun (`bun.lock`), since Stage 2 of the migration. `astro`/`cypress` are
+  invoked directly via `bunx` (or `bun run <script>` for the `package.json` script aliases) —
+  there's no `bunx`-equivalent-of-`pnpm exec` distinction to worry about, both resolve the same
+  local binaries.

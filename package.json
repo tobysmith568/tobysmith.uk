@@ -4,7 +4,7 @@
   "type": "module",
   "version": "0.0.0",
   "prettier": "@tobysmith568/prettier-config",
-  "packageManager": "pnpm@10.34.5+sha512.a4ee05f2f73658255bd6a89859c065a45c28a57daefae2c893a168ee2b73168c37b91e83e57ea67654ad03f03031746430e8bce38e362e042605fb8abc80192e",
+  "packageManager": "bun@1.4.0",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
@@ -18,7 +18,7 @@
     "@astrojs/check": "^0.9.0",
     "@astrojs/mdx": "^3.1.9",
     "@astrojs/rss": "^4.0.6",
-    "@astrojs/sitemap": "^3.1.5",
+    "@astrojs/sitemap": "3.1.5",
     "@fontsource-variable/fira-code": "^5.0.16",
     "@fontsource/blinker": "^5.0.18",
     "@types/alpinejs": "^3.13.6",
@@ -35,5 +35,8 @@
     "@types/node": "^24.0.0",
     "cypress": "^15.0.0",
     "sass": "^1.70.0"
-  }
+  },
+  "trustedDependencies": [
+    "@parcel/watcher"
+  ]
 }

@@ -1,14 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(pnpm install)",
-      "Bash(pnpm run dev)",
-      "Bash(pnpm run start)",
-      "Bash(pnpm run build)",
-      "Bash(pnpm run preview)",
-      "Bash(pnpm exec astro *)",
-      "Bash(pnpm exec prettier *)",
-      "Bash(pnpm exec cypress *)",
+      "Bash(bun install)",
+      "Bash(bun run dev)",
+      "Bash(bun run start)",
+      "Bash(bun run build)",
+      "Bash(bun run preview)",
+      "Bash(bunx astro *)",
+      "Bash(bunx prettier *)",
+      "Bash(bunx cypress *)",
       "Bash(git status)",
       "Bash(git diff *)",
       "Bash(git log *)",

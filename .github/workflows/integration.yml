@@ -1,0 +1,112 @@
+name: Continuous Integration
+run-name: Continuous Integration for ${{ (github.event.pull_request.number && format('PR {0}', github.event.pull_request.number)) || github.ref_name }}
+
+on:
+  push:
+    branches:
+      - renovate/*
+  pull_request:
+    branches:
+      - main
+      - "!renovate/*"
+  workflow_call:
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: pwsh
+
+jobs:
+  lint:
+    name: Lint
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run Prettier
+        run: bunx prettier --check .
+
+  build:
+    name: Build
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build
+        run: bun run build
+
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: ./dist
+
+  e2e:
+    strategy:
+      fail-fast: false
+      matrix:
+        browser:
+          - name: Chrome
+            value: chrome
+          - name: Firefox
+            value: firefox
+
+    name: E2E Test (${{ matrix.browser.name }})
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Install Cypress
+        run: bunx cypress install
+
+      - name: Create development build
+        run: bunx astro build --mode development
+
+      - name: Run E2E Tests
+        uses: cypress-io/github-action@v7
+        with:
+          browser: ${{ matrix.browser.value }}
+          start: bun run preview
+          wait-on: http://localhost:4321
+
+      - name: Upload E2E Screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: E2E Screenshots (${{ matrix.browser.name }})
+          path: cypress/screenshots/
+          if-no-files-found: ignore
+
+      - name: Upload E2E Videos
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: E2E Videos (${{ matrix.browser.name }})
+          path: cypress/videos/
+          if-no-files-found: ignore

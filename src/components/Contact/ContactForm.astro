@@ -153,7 +153,7 @@ import Anchor from "../Anchor.astro";
       console.error(error);
 
       const errorMessage =
-        error instanceof Error ? error.message : error?.toString() ?? "Unknown error";
+        error instanceof Error ? error.message : (error?.toString() ?? "Unknown error");
 
       if (resultMessage) {
         resultMessage.textContent = errorMessage;
