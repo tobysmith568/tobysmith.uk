@@ -4,6 +4,13 @@ dist/
 # generated types
 .astro/
 
+# generated at build/dev time, see scripts/generate-licenses.mjs
+src/data/licenses.generated.json
+
+# wrangler local dev state and secrets
+.wrangler/
+.dev.vars
+
 # dependencies
 node_modules/
 

@@ -243,7 +243,7 @@ version` both succeed under Bun, confirming the package itself resolves and inst
   binary names in `package.json`'s `scripts`) works unchanged under `bun run`/`bunx`, confirming
   the plan's assumption that no `bunx`-prefix rewiring was needed there.
 
-## Stage 3 — Astro SSR + Cloudflare Worker hosting
+## Stage 3 — Astro SSR + Cloudflare Worker hosting ✅ done
 
 **Depends on:** Stage 2 (Bun). This is the biggest/riskiest stage — it changes the deployment
 model, not just a tool — so it's done early, before stages that need to target the final shape.
@@ -361,6 +361,152 @@ loader: glob({ pattern: "**/*.mdx", base: "./src/content/blog" }), schema })`) s
 **Exit criteria:** the Astro-7-on-Cloudflare-adapter setup builds and runs correctly under
 `wrangler dev`/a `*.workers.dev` preview deploy, all existing pages render correctly under SSR —
 **while `tobysmith.uk` itself keeps being served by GitHub Pages, unchanged, until Stage 10.**
+
+### Outcome / deviations from the plan above
+
+Landed close to plan overall, but with several real findings the plan explicitly flagged as
+"confirm, don't assume" — worth reading closely since more than one of them contradicts what the
+plan expected:
+
+- **`output: "static"` kept, not `output: "server"`.** The plan assumed the fresh scaffold would
+  land on `"server"` with per-route `prerender = true` opt-outs. It doesn't: `astro add
+cloudflare` left `output: "static"` untouched, and Astro's own current docs explicitly recommend
+  starting with `"static"` (the default) plus per-route `export const prerender = false` unless
+  _most_ routes need on-demand rendering — which isn't remotely true here (zero dynamic routes
+  exist yet; Stage 4 adds the first). So **no `prerender` flags were added anywhere in this
+  stage** — every route is already prerendered by default, and `dist/server/` builds empty
+  (confirmed by inspecting it after a build). Stage 4's contact-form route will be the first
+  place `export const prerender = false` actually appears. This also means Stage 4's "needs a
+  server context" dependency note still holds — `output: "static"` + an adapter still lets
+  individual routes opt into on-demand rendering, it just isn't the default for all of them.
+- **Content config had to move to `src/content.config.ts`.** Astro 6 removed support for
+  `src/content/config.ts` entirely (`[LegacyContentConfigError]`, fails `astro sync`/`astro
+build` outright) even with a `loader` already defined — the plan didn't call this filename
+  change out explicitly. Moved via `git mv`; the `glob()` `base` paths didn't need touching since
+  they're already relative to the project root, not the config file.
+- **The `generateId`-vs-schema-field decision didn't end up mattering much.** Confirmed with Toby
+  up front: kept `slug` as a plain schema field, referenced `entry.data.slug` everywhere for
+  `blog`. Turns out moot either way for `blog` specifically — Astro's built-in `glob()` loader
+  default `generateId` already checks `data.slug` first and uses it verbatim if present, so
+  `entry.id` and `entry.data.slug` are identical for blog posts regardless. Where the choice
+  _did_ matter: `projects` and `policies` have no `slug` field at all (never did — the old
+  `entry.slug` for those was always filename-derived), so those now use `entry.id` instead
+  (verified via a `dist/` diff of the old build: `p.slug === "privacy"` → `p.id === "privacy"`,
+  `resolveProjectImage(entry.slug)` → `resolveProjectImage(entry.id)`, etc.). Also had to swap
+  `entry.render()` (instance method, removed) for the standalone `render(entry)` import from
+  `astro:content` everywhere, per the plan.
+- **`astro add cloudflare`'s own `tsconfig.json` patch silently broke type-checking almost
+  entirely — caught this one late, via the IDE showing `getCollection` typed as
+  `(...args: any[]) => any` instead of its real signature.** The patch set
+  `"include": ["./worker-configuration.d.ts"]`. TypeScript's `extends` does **not** merge
+  `include`/`exclude` arrays — a child's `include` fully replaces whatever the base config
+  declares, and `astro/tsconfigs/base.json` (extended transitively via `strictest.json` →
+  `strict.json` → `base.json`) declares `"include": ["${configDir}/.astro/types.d.ts",
+"${configDir}/**/*"]`. So the patch didn't just drop the ambient `astro:content` module types
+  (hence `getCollection`'s type falling back to `any`) — it dropped `**/*` too, meaning
+  `astro check` was barely checking anything. The tell was in plain sight the whole time and got
+  missed: `astro check`'s own output said `Result (1 file)` on every run in this stage, on a repo
+  with 60+ source files, and "0 errors" from checking essentially nothing read as a clean pass.
+  Fixed by writing out the full include list explicitly:
+  `"include": [".astro/types.d.ts", "**/*", "./worker-configuration.d.ts"]` (matching what a
+  fresh `astro add cloudflare` scaffold's tsconfig looks like once merged by hand). Re-running
+  `astro check` after the fix reports `Result (66 files)`, still 0 errors (15 pre-existing Zod v4
+  deprecation hints, unrelated). **Flagging this pattern specifically because `astro add`'s
+  config patches aren't guaranteed to compose safely with an existing custom `tsconfig.json`** —
+  worth double-checking the file count in `astro check`'s own output after any future `astro add`
+  run, not just trusting "0 errors".
+- **The Cloudflare adapter's default image service silently breaks `<Image>` — this is the
+  single biggest finding of this stage.** The plan's assumption ("Sharp still runs at build time
+  for prerendered routes, confirm rather than assume") turned out to be half right: prerendering
+  itself is fine, but `@astrojs/cloudflare` (v14.x) defaults `imageService` to
+  `"cloudflare-binding"` _regardless of prerender status_, which makes `<Image>` emit a
+  runtime-only `/_image?href=...` on-demand URL instead of a static file — confirmed by building,
+  running `wrangler dev`, and getting a real `404` fetching that URL (no `IMAGES` binding is
+  provisioned, nor should one be for a project with no runtime image needs). Fixed by passing
+  `adapter: cloudflare({ imageService: "compile" })`, which restores Sharp-based build-time
+  optimization for prerendered routes (verified: `astro build` logs "generating optimized
+  images" again, and the built HTML references a static `/_astro/*.svg` file, which 200s under
+  `wrangler dev`). Anyone hitting broken project-logo images after a future Astro/adapter bump
+  should check this setting first.
+- **`generate-license-file` can't run inside `third-party.astro` anymore.** The plan flagged this
+  as needing confirmation ("no local filesystem/`package.json` access inside a Worker") and
+  offered a fallback ("move it to a build-time step that bakes the license list into a static
+  import instead") — needed it. The failure mode wasn't filesystem access (that page is
+  prerendered, so it still runs in real Node at build time) but `ReferenceError: __dirname is not
+defined`: the Cloudflare adapter's prerenderer bundles prerendered pages' server code into ESM
+  chunks via rolldown, and something in `generate-license-file`'s dependency chain relies on CJS's
+  `__dirname`, which isn't defined in that bundled context. Took the plan's fallback: added
+  `scripts/generate-licenses.mjs` (run via `bun`, never bundled by Astro at all) that writes
+  `src/data/licenses.generated.json` (gitignored), wired in via `predev`/`prestart`/`prebuild`
+  `package.json` script hooks (confirmed Bun honours npm-style `pre*`/`post*` script lifecycle
+  hooks) — `third-party.astro` now does a static `import licenses from
+"../data/licenses.generated.json"`. One gap this created: the CI `e2e` job calls `bunx astro
+build --mode development` directly rather than `bun run build`, so it doesn't get the `prebuild`
+  hook — added an explicit `generate:licenses` step there too, otherwise that build would fail on
+  a missing import.
+- **`wrangler.jsonc`'s auto-generated `name` needed a manual fix.** `astro add cloudflare`
+  defaulted it to `"tobysmith.uk"` (from `package.json`'s `name`), but Cloudflare Worker names
+  can't contain dots — changed to `"tobysmith-uk"`, matching the existing
+  `email-tobysmith-uk` convention. Confirmed the rest of the generated config (`main`,
+  `assets.directory: "./dist"`, `compatibility_flags: ["global_fetch_strictly_public"]` rather
+  than the plan's assumed `nodejs_compat`, which isn't needed since nothing in the deployed worker
+  bundle uses Node builtins — `third-party.astro`'s `node:path` import is gone now anyway, see
+  above) works as-is — verified end to end with a real `wrangler dev` run (see below), not just a
+  build. Also confirmed (by directly testing, not assuming) that Wrangler auto-detects and
+  redirects to the `dist/client/wrangler.json` snapshot Astro's build writes ("Using redirected
+  Wrangler configuration") — the root `wrangler.jsonc`'s `assets.directory: "./dist"` is correct
+  as-is even though the actual static files land in `dist/client/`, because that redirect layer
+  handles the resolution. No hand-editing needed there, despite the client/server split being a
+  visible surprise the first time `bun run build` ran (old Astro 4 output was flat `dist/`, this
+  is `dist/client/` + `dist/server/`).
+- **SCSS→CSS conversion touched 7 files, not the 4 the plan named as examples** (`BaseLayout`,
+  `ContactForm`, `Footer`, `Index/Hero` were explicit; `Blog/BlogListItem`,
+  `BaseLayout/HeaderMenuItem`, `Projects/ProjectListItem` also had `lang="scss"` and needed the
+  same treatment). Only `BaseLayout.astro` used an actual Sass-only feature (`lighten($primary,
+30%)`/`lighten($primary, 41%)` for the `--primary-light`/`--primary-very-light` custom
+  properties) — replaced with `color-mix(in srgb, dodgerblue 70%, white)` /
+  `color-mix(in srgb, dodgerblue 59%, white)` respectively (the plan's own suggested formula,
+  `100 - lighten%`, extended to the second shade it didn't spell out). Everything else was
+  already native-CSS-compatible nesting (`&:hover` etc.), so just needed `lang="scss"` dropped.
+  One genuine dead-code find along the way: `Footer.astro` declared `$noHoverTextColor: lightgray;`
+  but never referenced it anywhere, even in the original Sass — deleted rather than ported, since
+  plain CSS has no `$variable` syntax to translate it into and it did nothing before either.
+- **Action version pins, checked live per the ground rules, not copied from the plan**:
+  `cloudflare/wrangler-action` is at a new major, `v4.0.0` (the plan assumed `v3`) —
+  `actions/download-artifact` similarly jumped to `v8` (its GitHub _Releases_ list is stale/
+  incomplete for some reason and undersells this — had to check its _tags_ instead to find the
+  real latest). `actions/checkout@v7` and `actions/upload-artifact@v7`, already pinned from Stage
+  2, were already current and untouched.
+- **Fetched `email.tobysmith.uk`'s live workflow files via `gh api`** (the plan's suggested
+  closest reference for this exact wrangler-action move) to confirm the checkout →
+  download-artifact → wrangler-action shape, and adapted it to this repo's Bun/`wrangler.jsonc`
+  conventions rather than that repo's still-pnpm/`wrangler.toml` ones. Incidentally saw that
+  repo's real (private) `EMAIL_TO`-equivalent destination address in its `wrangler.toml` while
+  doing so — not used or stored anywhere in this repo, consistent with Stage 4's own explicit
+  instruction to never commit that literal address here.
+- **Local CI, run for real this stage, not just `astro build`**: `bun run build`, `astro check`
+  (0 errors), `bunx prettier --check .`, `bun run dev`, `bun run preview`, and a real `bunx
+wrangler dev` all verified — including hitting every route (`/`, `/blog`, a blog post, `/projects`,
+  a project with a logo image and one without, `/third-party`, all three policy pages, `/about`,
+  `/contact`, the RSS feed, the sitemap) and confirming 200s, not just that the process boots.
+  Cypress itself still can't run in this sandbox (same Electron/`--no-sandbox` issue Stage 2's
+  notes already flagged as unrelated to any particular stage) — not a new gap, but still means the
+  actual E2E suite needs running on a real machine/CI runner before this stage's coverage is fully
+  confirmed, per the "no stage silently drops test coverage" ground rule. `astro preview`/`astro
+dev` booting and serving real 200s under the Cloudflare adapter is the closest local proxy
+  available here.
+- **Dependency versions**: `astro` → `^7.2.7`; `@astrojs/mdx` → `^7.0.8` (tracks Astro's major in
+  lockstep, not the plan-era `^4.x`); `@astrojs/sitemap` → `^3.7.3`, **unpinning** the exact
+  `3.1.5` Stage 2 had pinned after it crashed under Astro 4.16 — Stage 2's own notes predicted
+  this pin would be "revisited/dropped" once Stage 3's fresh Astro 7 base landed, and it works
+  cleanly now; `@astrojs/alpinejs` → `^1.0.0`; `@astrojs/check` → `^0.9.10`; `@astrojs/rss` →
+  `^4.0.19`; added `@astrojs/cloudflare` `^14.2.5` and `wrangler` `^4.126.0`; removed `sass`
+  entirely. `dayjs`/`zod`/`sharp`/`generate-license-file`/`typescript` untouched (not
+  Astro-version-coupled).
+- **Scope held at the stage boundary**: `about.astro`/`contact.astro` were ported as standalone
+  routes unchanged (folding them into the index is Stage 6's job), and `MobileMenu.astro`'s
+  known-broken `display: none` mobile nav was left exactly as broken as before (also Stage 6) —
+  flagging explicitly so it doesn't read as something this stage missed.
 
 ## Stage 4 — Fold the email-sending backend into this repo
 

@@ -9,7 +9,7 @@ export interface Props {
 }
 
 const { project } = Astro.props;
-const { slug, data } = project;
+const { id: slug, data } = project;
 const { title, tagLine } = data;
 
 const projectImgSrcPromise = resolveProjectImage(slug);
@@ -30,7 +30,7 @@ const projectImgSrcPromise = resolveProjectImage(slug);
   <Hr />
 </article>
 
-<style lang="scss">
+<style>
   a {
     display: flex;
     flex-direction: row;

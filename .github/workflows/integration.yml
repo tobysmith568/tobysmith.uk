@@ -53,10 +53,12 @@ jobs:
       - name: Build
         run: bun run build
 
-      - name: Upload pages artifact
-        uses: actions/upload-pages-artifact@v5
+      - name: Upload Build
+        uses: actions/upload-artifact@v7
         with:
+          name: Build
           path: ./dist
+          retention-days: 1
 
   e2e:
     strategy:
@@ -84,6 +86,9 @@ jobs:
 
       - name: Install Cypress
         run: bunx cypress install
+
+      - name: Generate license list
+        run: bun run generate:licenses
 
       - name: Create development build
         run: bunx astro build --mode development

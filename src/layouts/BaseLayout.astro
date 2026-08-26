@@ -48,17 +48,12 @@ const title =
   </body>
 </html>
 
-<style is:global lang="scss">
-  @use "sass:color";
-
-  $primary: dodgerblue;
-  $primary-text: white;
-
+<style is:global>
   :root {
-    --primary: #{$primary};
-    --primary-text: #{$primary-text};
-    --primary-light: #{lighten($primary, 30%)};
-    --primary-very-light: #{lighten($primary, 41%)};
+    --primary: dodgerblue;
+    --primary-text: white;
+    --primary-light: color-mix(in srgb, dodgerblue 70%, white);
+    --primary-very-light: color-mix(in srgb, dodgerblue 59%, white);
   }
 
   html {

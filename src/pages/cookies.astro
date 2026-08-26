@@ -1,18 +1,18 @@
 ---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import PolicyLayout from "../layouts/PolicyLayout.astro";
 
 const title = "Cookies Policy";
 const description = "The cookies policy for tobysmith.uk";
 
 const policies = await getCollection("policies");
-const termPolicy = policies.find(p => p.slug === "cookies");
+const termPolicy = policies.find(p => p.id === "cookies");
 
 if (!termPolicy) {
   throw new Error("Cannot find the cookies policy");
 }
 
-const { Content } = await termPolicy.render();
+const { Content } = await render(termPolicy);
 ---
 
 <PolicyLayout title={title} description={description} noIndex>

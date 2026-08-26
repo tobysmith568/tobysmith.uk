@@ -8,8 +8,8 @@ export interface Props {
 }
 
 const { post } = Astro.props;
-const { slug, data } = post;
-const { title, description, date } = data;
+const { data } = post;
+const { slug, title, description, date } = data;
 
 const humanReadableDate = dayjs(date).format("DD MMM YYYY");
 const parseableDate = dayjs(date).format("YYYY-MM-DD");
@@ -27,7 +27,7 @@ const parseableDate = dayjs(date).format("YYYY-MM-DD");
   <Hr />
 </article>
 
-<style lang="scss">
+<style>
   a {
     display: flex;
     flex-direction: row;

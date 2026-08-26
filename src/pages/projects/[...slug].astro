@@ -1,6 +1,6 @@
 ﻿---
 import chevronLeft from "../../assets/chevron-left.svg";
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Prose from "../../components/Prose.astro";
 import { resolveProjectImage } from "../../components/Projects/resolveProjectImage";
@@ -10,17 +10,17 @@ export async function getStaticPaths() {
   const projects = await getCollection("projects");
 
   return projects.map(entry => ({
-    params: { slug: entry.slug },
+    params: { slug: entry.id },
     props: { entry }
   }));
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 
 const { title, tagLine } = entry.data;
 
-const projectImgSrcPromise = resolveProjectImage(entry.slug);
+const projectImgSrcPromise = resolveProjectImage(entry.id);
 ---
 
 <BaseLayout title={title} description={tagLine}>

@@ -1,16 +1,11 @@
 ---
-import { getProjectLicenses } from "generate-license-file";
 import ProseLayout from "../layouts/ProseLayout.astro";
-import { join } from "node:path";
 import Anchor from "../components/Anchor.astro";
 import { Code } from "astro:components";
+import licenses from "../data/licenses.generated.json";
 
 const title = "Third-Party Content";
 const description = "The Third-party content used by tobysmith.uk";
-
-const packageJsonPath = join(process.cwd(), "package.json");
-console.log("packageJsonPath", packageJsonPath);
-const licenses = await getProjectLicenses(packageJsonPath);
 
 const getPackageUrl = (packageNameAndVersion: string) => {
   const indexOfLastAt = packageNameAndVersion.lastIndexOf("@");

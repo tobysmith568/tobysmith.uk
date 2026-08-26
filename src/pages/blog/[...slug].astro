@@ -1,5 +1,5 @@
 ﻿---
-import { getCollection } from "astro:content";
+import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import dayjs from "dayjs";
 import chevronLeft from "../../assets/chevron-left.svg";
@@ -9,13 +9,13 @@ export async function getStaticPaths() {
   const posts = await getCollection("blog");
 
   return posts.map(entry => ({
-    params: { slug: entry.slug },
+    params: { slug: entry.data.slug },
     props: { entry }
   }));
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 
 const date = new Date(entry.data.date);
 
