@@ -1,24 +1,31 @@
-﻿---
+---
 import HeaderMenuItem from "./HeaderMenuItem.astro";
 import MobileMenu from "./MobileMenu.astro";
 ---
 
-<nav>
+<nav x-data="{ mobileMenuOpen: false }">
   <div class="menu-items">
     <HeaderMenuItem label="Toby Smith" href="/" />
   </div>
 
   <div class="menu-items desktop-only">
-    <HeaderMenuItem label="About" href="/about" />
     <HeaderMenuItem label="Projects" href="/projects" />
     <HeaderMenuItem label="Blog" href="/blog" />
-    <HeaderMenuItem label="Contact" href="/contact" />
+    <HeaderMenuItem label="Contact" href="/#contact" />
   </div>
 
-  <div class="mobile-only" style="display: none">
-    <!--TODO: Remove display none when mobile menu is ready-->
-    <MobileMenu />
-  </div>
+  <button
+    type="button"
+    class="menu-toggle mobile-only"
+    aria-label="Toggle menu"
+    x-bind:aria-expanded="mobileMenuOpen.toString()"
+    @click="mobileMenuOpen = !mobileMenuOpen">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <MobileMenu />
 </nav>
 
 <style>
@@ -46,6 +53,29 @@ import MobileMenu from "./MobileMenu.astro";
   .mobile-only {
     @media (min-width: 601px) {
       display: none;
+    }
+  }
+
+  .menu-toggle {
+    align-self: center;
+    width: 2em;
+    height: 2em;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.3em;
+
+    span {
+      display: block;
+      width: 1.6em;
+      height: 2px;
+      background-color: var(--primary-text);
     }
   }
 </style>

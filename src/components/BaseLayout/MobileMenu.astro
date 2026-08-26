@@ -1,11 +1,17 @@
-﻿---
+---
 
 ---
 
-<div class="shadow">
-  <div class="mobile-nav">
-    <a href="/about">About</a>
+<div
+  class="shadow"
+  x-show="mobileMenuOpen"
+  x-cloak
+  x-transition.opacity
+  @click.self="mobileMenuOpen = false">
+  <div class="mobile-nav" @click="mobileMenuOpen = false">
     <a href="/projects">Projects</a>
+    <a href="/blog">Blog</a>
+    <a href="/#contact">Contact</a>
   </div>
 </div>
 
@@ -39,5 +45,7 @@
 
   a {
     color: inherit;
+    padding: 1em 2em;
+    text-decoration: none;
   }
 </style>

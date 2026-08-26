@@ -1,0 +1,25 @@
+---
+import ContactForm from "../Contact/ContactForm.astro";
+import Anchor from "../Anchor.astro";
+---
+
+<section id="contact">
+  <h2>Contact Me</h2>
+  <p>
+    Feel free to reach out me using the message form below.
+    <br />
+    Alternatively, you can also reach out to me on <Anchor
+      href="https://linkedin.com/in/tobysmith568"
+      text="LinkedIn"
+    />.
+  </p>
+
+  <ContactForm />
+</section>
+
+<style>
+  section {
+    margin-top: 3rem;
+    scroll-margin-top: 2rem;
+  }
+</style>

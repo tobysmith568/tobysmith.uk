@@ -1,0 +1,29 @@
+---
+import { getCollection } from "astro:content";
+import ProjectListItem from "../Projects/ProjectListItem.astro";
+
+const featuredProjects = await getCollection("projects", ({ data }) => data.featured);
+const sortedProjects = featuredProjects
+  .sort((a, b) => a.data.sortWeight - b.data.sortWeight)
+  .reverse();
+---
+
+<section id="projects">
+  <h2>Projects</h2>
+
+  {sortedProjects.map(project => <ProjectListItem project={project} />)}
+
+  <a class="more" href="/projects">More projects →</a>
+</section>
+
+<style>
+  section {
+    margin-top: 3rem;
+  }
+
+  .more {
+    display: inline-block;
+    margin-top: 1rem;
+    font-weight: bold;
+  }
+</style>

@@ -848,7 +848,7 @@ specifically and couldn't be completed by this session:
   running for real on a machine with working Electron before this stage's E2E coverage is fully
   confirmed.
 
-## Stage 6 — Information architecture: fold About/Contact into the index, add spotlights
+## Stage 6 — Information architecture: fold About/Contact into the index, add spotlights ✅ done
 
 **Depends on:** Stage 5 (contact form's final shape/location should be settled before it's
 moved into the index, rather than moved twice).
@@ -875,6 +875,105 @@ moved into the index, rather than moved twice).
 **Exit criteria:** `/about` and `/contact` no longer exist as standalone pages; `/contact`
 redirects and lands the visitor on a working form; index page has working Projects/Blog
 spotlights; mobile nav actually works.
+
+### Outcome / deviations from the plan above
+
+The two decisions the plan explicitly deferred to Toby ("Contact's nav treatment" and the initial
+`featured` set — see "Open items") were made up front this time, before implementation started,
+rather than left as a judgment call mid-stage: **Contact keeps its own nav link** (`/#contact`,
+desktop and mobile), and **`read-receipt`/`generate-license-file` are the initial `featured: true`
+projects** (`which-node-js`/`license-cop` are `featured: false`). Both are recorded directly in the
+code (`Header.astro`'s nav items, the four projects' frontmatter) rather than only here. Landed
+close to plan otherwise, with several real findings:
+
+- **`featured` was made a required schema field, not optional/defaulted.** The plan just said "add
+  `featured: boolean`"; made it required (no `.default(false)`) so a future new project can't
+  silently end up unfeatured by omission — `astro check`/`astro sync` now force an explicit
+  editorial choice on every project going forward, which seemed better than a silent default given
+  the whole point of the field is manual curation. All four existing projects' frontmatter updated
+  accordingly.
+- **`/contact`'s redirect needed `export const prerender = false` to actually be a redirect, not
+  just `Astro.redirect()` alone.** The plan named `Astro.redirect()` as the mechanism without
+  flagging this: under this repo's `output: "static"`, a prerendered page calling `Astro.redirect()`
+  can't set real response headers (there's no request to respond to at build time), so Astro
+  emits a static HTML page with a `<meta http-equiv="refresh" content="2;url=...">` instead — a
+  real redirect, but a 2-second-delayed one, which reads badly against the exit criterion's "lands
+  the visitor on a working form" (verified this was the actual initial behavior via a real build's
+  `dist/client/contact.html` before fixing it). Adding `export const prerender = false` opts this
+  one route into on-demand rendering (the same mechanism already used for the `/_actions/contact`
+  Action route since Stage 4), which lets `Astro.redirect()` issue a real HTTP redirect instead —
+  confirmed via `wrangler dev`: `curl -I /contact` now returns a real `302` with
+  `Location: /#contact`, no delay. `/contact` is now the second on-demand route in the whole site,
+  after the Actions endpoint.
+- **About's content folded in without its old duplicate photo.** `about.mdx` rendered its own
+  `About/Hero.astro` (a second profile picture + a short "Hey, I'm Toby!" intro from
+  `About/HeroContent.md`) above the Experience/My Code markdown body. Since the index page already
+  has its own Hero with a profile picture and name directly above where the About section now
+  sits, carrying a second photo across would have been visibly redundant on one page in a way it
+  wasn't across two separate pages. Kept the actual sentences from `HeroContent.md` (folded in as
+  an unheaded intro paragraph ahead of "Experience"/"My Code", dropping only the "Hey, I'm Toby!"
+  greeting heading itself, which is redundant once it's a subsection under an already-introduced
+  name) so none of the actual written content was lost, and deleted `About/Hero.astro` +
+  `About/HeroContent.md` (nothing else referenced them once `about.mdx` was gone). Fixed the two
+  typos named in the plan ("arocss" → "across", "peronal" → "personal") while porting the text
+  across, and left the contact section's own pre-existing "reach out me" phrasing untouched since
+  the plan's typo list didn't name it and it's out of scope for an IA-only stage.
+- **`MobileMenu.astro` needed a real rebuild, not just added links, confirming the plan's own
+  warning.** Beyond missing Blog/Contact links and the hard `display: none`, there was no toggle
+  control _at all_ — no hamburger button, no open/close state, nothing wiring visibility to user
+  interaction; simply removing the inline `display: none` would have made the full-screen overlay
+  permanently block the page on every mobile viewport. Rebuilt using Alpine.js (already an
+  integration in this repo, already used for `ContactForm.astro`'s `x-model` fields — no new
+  dependency needed): `Header.astro`'s `<nav>` carries `x-data="{ mobileMenuOpen: false }"`, a new
+  hamburger `<button>` toggles it, and `MobileMenu.astro`'s root uses `x-show`/`x-cloak`/
+  `x-transition.opacity` plus a click-outside-to-close handler — confirmed this works across the
+  Astro component boundary (Alpine scopes by DOM nesting in the final rendered HTML, not by Astro
+  component identity, so `x-show` inside the child component's template correctly sees the parent's
+  `x-data` state). Added `[x-cloak] { display: none !important; }` to `BaseLayout.astro`'s global
+  styles — Alpine needs this convention to hide the drawer before it hydrates, and nothing in the
+  codebase had needed it before now. Mobile nav now links to Projects/Blog/Contact (no About, per
+  the header change above).
+- **Two dead `<style>` blocks removed while rewriting `index.astro`/`contact.astro`.** Both files
+  had a `<style>` block targeting a bare `main` selector — but neither file renders a `<main>`
+  element itself (that lives in `BaseLayout.astro`), and Astro's scoped-style attribute only
+  applies to elements a component actually renders in its own template, not to a parent/slotted
+  layout's markup. So this CSS never matched anything in either file, before or after this stage's
+  changes — confirmed by inspecting the built HTML's `data-astro-cid-*` attributes. Left out of the
+  rewritten files as inert dead code rather than ported forward.
+- **Cypress specs updated, not just left to Stage 8.** The plan flagged this as a "don't leave
+  broken specs mid-stage" bullet, and it mattered here since the new index page changes what
+  selectors resolve to, not just which URLs exist: `cypress/e2e/about.cy.ts` +
+  `page-objects/about.po.ts` deleted outright (no replacement page exists); `contact.cy.ts` now
+  tests only the `/contact` → `/#contact` redirect (`cy.location("pathname"/"hash")`); its old
+  page-driving tests (form fields, submit/success/error flows) moved into `index.cy.ts` against
+  the index page instead, reusing the same `ContactFormPageObject` (trimmed down from
+  `contact.po.ts`'s old file, which also exported a page-level `ContactPageObject` that no longer
+  has a page to describe). One real bug this surfaced: `index.cy.ts`'s existing `getSubtitle()`
+  (`cy.get("h2")`, expecting "Blog and Portfolio Website") would have gone from unambiguous (one
+  `h2` on the old index) to matching nine different elements once the About/Projects/Blog/Contact
+  section headings and each spotlighted item's own `h2` all landed on the same page — fixed by
+  scoping it to the tagline's existing `.tagline` class (`h2.tagline`) rather than leaving it to
+  resolve against a jQuery-concatenated set of nine elements' text by accident. Added lightweight
+  new assertions for the About and Contact section headings too, since `about.cy.ts`'s "should
+  display the about page" test (asserting the old "Hey, I'm Toby" heading) had no direct successor
+  otherwise — this is a deliberate content-shape change (that heading is gone by design, see the
+  About bullet above), not a silently dropped check, so the replacement asserts the new "About Me"/
+  "Contact Me" section headings exist instead of trying to preserve the exact old wording.
+  **Still unverified by an actual Cypress run in this sandbox** — same Electron/`--no-sandbox`
+  limitation every prior stage's notes have already flagged as unrelated to any particular stage's
+  own changes; needs running for real on a machine with working Electron before this stage's E2E
+  coverage is fully confirmed, per the "no stage silently drops test coverage" ground rule.
+- **Local CI run**: `bunx astro sync` (schema change picked up cleanly), `bun run build` (0 `astro
+check` errors, 72 files — a sensible file count given `about.mdx`/`About/Hero.astro`/
+  `About/HeroContent.md` were deleted and four new `Index/*.astro` components were added), `bunx
+prettier --check .` (clean apart from the same pre-existing `worker-configuration.d.ts` gap Stage
+  5's notes already flagged), and a real `wrangler dev` run confirming: `/` 200s with exactly one
+  `h1`, the expected nine `h2`s, one `.profile-pic` image, an `id="contact"` target, and the mobile
+  toggle button's markup present; `/contact` returns a real `302` to `/#contact` as described
+  above. Alpine's actual open/close interaction on the mobile drawer couldn't be exercised the same
+  way (that needs a real browser executing JS, which is exactly what Cypress can't do in this
+  sandbox) — code-reviewed against the same `x-data`/`x-show` pattern already proven working in
+  `ContactForm.astro`, but not independently click-tested here.
 
 ## Stage 7 — oxlint + oxfmt instead of no-linting/Prettier
 
@@ -1038,8 +1137,13 @@ with the new design in front of us.
 - **Blog per-post curation** (keep/rewrite/drop each of the 10 posts) — do this as its own pass,
   whenever it's convenient; not gated on any stage above.
 - **Exact spotlight count** on the index (2 vs 3 projects/posts) — a layout call, decide during
-  Stage 11.
-- **Contact's nav treatment** (own link vs. anchor-only) — Toby's call during Stage 6.
-- **Initial `featured: true` project set** — Toby's call during Stage 6.
+  Stage 11. Currently hardcoded to 2 in both `Index/ProjectsSpotlight.astro` (2 of 4 projects
+  marked `featured: true`) and `Index/BlogSpotlight.astro` (`SPOTLIGHT_COUNT = 2`) as of Stage 6 —
+  a placeholder, not a final decision.
+- ~~**Contact's nav treatment** (own link vs. anchor-only) — Toby's call during Stage 6.~~
+  **Decided in Stage 6: kept as its own nav link**, pointing at `/#contact` (desktop and mobile).
+- ~~**Initial `featured: true` project set** — Toby's call during Stage 6.~~ **Decided in Stage 6:
+  `read-receipt` and `generate-license-file`** (`which-node-js`/`license-cop` are
+  `featured: false`).
 - **Archiving `email.tobysmith.uk`** — confirm with Toby immediately before archiving, during
   Stage 10, only after the new setup is confirmed stable in production.

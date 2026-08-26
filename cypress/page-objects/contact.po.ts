@@ -1,23 +1,3 @@
-import { PageMetaObject } from "./meta.po";
-
-export class ContactPageObject {
-  meta = new PageMetaObject();
-
-  visit() {
-    cy.visit("/contact");
-  }
-
-  getTitle() {
-    return cy.get("h1");
-  }
-
-  getContactMessage() {
-    return cy.get("p");
-  }
-
-  form = new ContactFormPageObject();
-}
-
 type FormData = {
   name?: string;
   email?: string;

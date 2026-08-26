@@ -1,0 +1,73 @@
+---
+import Prose from "../Prose.astro";
+import Footnote from "../Footnote.astro";
+import Anchor from "../Anchor.astro";
+---
+
+<section id="about">
+  <h2>About Me</h2>
+
+  <Prose>
+    <p>I'm a London-based software developer who enjoys focusing on web-based technologies.</p>
+
+    <p>
+      Most of the time, I work with TypeScript and C# (with a hint of Rust) on projects like
+      websites, APIs, apps, and command line tools.
+    </p>
+
+    <p>This website is a place for me to share cool things I find or create.</p>
+
+    <h3>Experience</h3>
+
+    <p>
+      By day I'm a Senior Software Developer for <Anchor
+        href="https://trayport.com"
+        text="Trayport Ltd."
+      /> in their London office. I spend my time working on React frontends and C# backends across various
+      parts of the organization.
+    </p>
+
+    <p>
+      In the past, I've worked with technologies such as Java Spring and Angular, creating web-based
+      mobile apps in the commerce sector.
+    </p>
+
+    <p>
+      My education has roots in video game development, which means I also have experience creating
+      projects using both the Unity Game Engine and OpenGL.
+    </p>
+
+    <Footnote>
+      All opinions and views expressed on this site are my own and do not represent those of my
+      employers.
+    </Footnote>
+
+    <h3>My Code</h3>
+
+    <p>
+      I keep all my personal code on my GitHub profile, <Anchor
+        href="https://github.com/tobysmith568"
+        text="tobysmith568"
+      />. My projects are usually public, so feel free to look around.
+    </p>
+
+    <p>
+      Projects created as part of my university degree have been moved over to a separate archive
+      account, which can be found at <Anchor
+        href="https://github.com/tobysmith568-university"
+        text="tobysmith568-university"
+      />.
+    </p>
+
+    <p>
+      Projects where I collaborate with others are usually kept in their own GitHub organizations,
+      which can also be found on my profile.
+    </p>
+  </Prose>
+</section>
+
+<style>
+  section {
+    margin-top: 3rem;
+  }
+</style>

@@ -48,9 +48,10 @@ job calls `astro build` directly rather than `bun run build`, so it has its own 
   default and Astro's own recommendation for a mostly-static site; adding an adapter does _not_
   itself switch to on-demand rendering), `build.format: "file"` (routes emit as `foo.html`, not
   `foo/index.html`) — see `astro.config.mjs`. Every page route is still prerendered; the one
-  on-demand route is the `/_actions/*` endpoint Astro injects for the contact-form Action (see
+  on-demand routes are the `/_actions/*` endpoint Astro injects for the contact-form Action (see
   below) — Astro registers it with `prerender: false` automatically, it isn't a file under
-  `src/pages`.
+  `src/pages` — and `contact.astro`'s own explicit `export const prerender = false` (Stage 6, see
+  the Routing bullet below).
   `adapter: cloudflare({ imageService: "compile" })` — the adapter's default image service
   (`"cloudflare-binding"`) defers `<Image>` to a runtime Cloudflare Images binding via an
   on-demand `/_image` endpoint, which 404s since nothing provisions that binding; `"compile"`
@@ -63,18 +64,47 @@ job calls `astro build` directly rather than `bun run build`, so it has its own 
   `slug` field (e.g. `src/content/blog/10-graduated.mdx` → `slug: graduated`) — routing/links use
   `entry.data.slug`, not `entry.id`. `projects` and `policies` have no such field, so
   `entry.id` (the filename, extension stripped) is the routing key instead — e.g.
-  `policies/privacy.mdx` → `entry.id === "privacy"`.
+  `policies/privacy.mdx` → `entry.id === "privacy"`. `projects` also has a required `featured`
+  boolean (added in Stage 6) — an explicit editorial flag driving the index page's Projects
+  spotlight, independent of `sortWeight`; two of the four projects are currently `featured: true`.
 - **Routing**: `src/pages/blog/[...slug].astro` and `src/pages/projects/[...slug].astro` are
   `getStaticPaths()`-driven detail pages reading from the collections above; `blog/index.astro`
   and `projects/index.astro` are their listings. `blog/rss.xml.ts` builds the RSS feed from the
   `blog` collection (via `@astrojs/rss`); `blog/rss.ts` just re-exports its `GET` handler so
   `/blog/rss` and `/blog/rss.xml` both work.
-  `about.astro`/`contact.astro`/`cookies.astro`/`privacy.astro`/`terms.astro`/`third-party.astro`
-  are standalone one-off pages.
+  `cookies.astro`/`privacy.astro`/`terms.astro`/`third-party.astro` are standalone one-off pages.
+  `about.astro` no longer exists (Stage 6 folded its content into `index.astro`, see below) and
+  `contact.astro` is now a redirect-only route (`export const prerender = false` + a bare
+  `return Astro.redirect("/#contact")` in its frontmatter) — the only on-demand page route besides
+  Astro's own injected `/_actions/*` endpoint; making it on-demand gets a real `302`, not the
+  2-second client-side meta-refresh a prerendered `Astro.redirect()` would otherwise emit for a
+  static route.
+- **Index page** (`src/pages/index.astro`) composes five sections from `src/components/Index/`:
+  `Hero.astro` (name/tagline, pre-existing), `About.astro` (Stage 6 — folded in from the old
+  `/about` page's content, typos fixed), `ProjectsSpotlight.astro` (featured projects, reusing
+  `Projects/ProjectListItem.astro`, "More projects →" link to `/projects`), `BlogSpotlight.astro`
+  (most recent posts by `sortWeight` — count currently hardcoded to 2, an explicit placeholder
+  deferred to Stage 11's design pass per migration.md's "Open items"; "More posts →" link to
+  `/blog`), and `ContactSection.astro` (wraps `Contact/ContactForm.astro`, `id="contact"` — the
+  target of `contact.astro`'s redirect above).
 - **Layouts**: `BaseLayout.astro` wraps every page (header/nav/footer, `<head>`). `ProseLayout.astro`
-  and the `Prose.astro` component style long-form content (blog posts, policy pages).
+  and the `Prose.astro` component style long-form content (blog posts, policy pages); `Index/About.astro`
+  also wraps its prose in `Prose.astro` directly (it isn't itself a full page, so it doesn't go
+  through `ProseLayout`).
   `PolicyLayout.astro` wraps the policy pages specifically.
-- **Contact form flow**: `Contact/ContactForm.astro` renders the form and loads Cloudflare
+- **Header/nav** (`BaseLayout/Header.astro`): desktop nav links to `/projects`, `/blog`, and
+  `/#contact` (no `/about` link — that page is gone). Mobile nav (`BaseLayout/MobileMenu.astro`)
+  was fixed in Stage 6 — it used to be hard-disabled (`display: none`) with no Blog/Contact links
+  and no toggle at all, meaning mobile visitors had no working navigation. It now uses Alpine.js
+  (`x-data="{ mobileMenuOpen: false }"` on the `<nav>`, already used elsewhere for `ContactForm.astro`)
+  to drive a hamburger `<button>` that shows/hides a slide-in drawer (`x-show`/`x-cloak`/`x-transition`
+  on `MobileMenu.astro`'s root, which relies on being nested inside `Header.astro`'s `x-data` scope
+  in the rendered DOM — Alpine scoping works across Astro component boundaries this way).
+  `[x-cloak] { display: none !important; }` lives in `BaseLayout.astro`'s global styles to prevent
+  a flash of the unhydrated drawer.
+- **Contact form flow**: `Contact/ContactForm.astro` (rendered on the index page inside
+  `Index/ContactSection.astro` since Stage 6 — see the Index page bullet above) renders the form
+  and loads Cloudflare
   Turnstile (`managed` mode, explicit client-side rendering so the challenge can be deferred until
   form submit — `turnstile.render()` with `execution: "execute"`, then `turnstile.execute()` on
   submit, mirroring the old invisible-reCAPTCHA UX). On submit,
