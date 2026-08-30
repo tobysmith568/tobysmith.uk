@@ -5,10 +5,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 > **A migration is in progress.** See [migration.md](./migration.md) at the repo root for the full
 > plan; it is kept current as work lands, so check it before assuming anything below is still
 > accurate, and keep this file in step with it. The technical rework (framework, hosting, tooling,
-> tests, backend) is code-complete and on this branch; what remains is the general cleanup pass,
-> the **production cutover** (the one real deploy — flip DNS, retire GitHub Pages, decommission
-> the old email Worker), and a later collaborative visual redesign. Delete this blockquote and
-> the GitHub-Pages / old-Worker caveats below once the cutover has landed.
+> tests, backend) plus the general cleanup pass are code-complete and on this branch; what
+> remains is the **collaborative visual redesign** and then the **production cutover** (the one
+> real deploy — flip DNS, retire GitHub Pages, decommission the old email Worker). The redesign
+> was deliberately moved ahead of the cutover so the site goes live once, already looking the way
+> it should — see migration.md. Delete this blockquote and the GitHub-Pages / old-Worker caveats
+> below once the cutover has landed.
 
 ## Project
 

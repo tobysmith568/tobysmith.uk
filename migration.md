@@ -249,7 +249,7 @@ version` both succeed under Bun, confirming the package itself resolves and inst
 model, not just a tool — so it's done early, before stages that need to target the final shape.
 **Nothing in this stage touches the live `tobysmith.uk` domain or retires GitHub Pages** — per
 the big-bang ground rule, the actual production cutover is deliberately deferred to the final
-Stage 10; this stage only needs the new setup working locally/in a non-production Cloudflare
+Stage 11; this stage only needs the new setup working locally/in a non-production Cloudflare
 preview.
 
 - Rather than hand-patching `astro.config.mjs`/`package.json` forward across three major Astro
@@ -297,12 +297,12 @@ preview.
   regardless of which git branch or CI run triggers it, so adding the `tobysmith.uk` route now
   and running `wrangler deploy` — even manually, outside CI — would immediately repoint
   production at the still-incomplete Worker. Leave `routes` out of `wrangler.jsonc` entirely
-  until Stage 10; without it, `wrangler deploy` targets a harmless `*.workers.dev` preview URL by
+  until Stage 11; without it, `wrangler deploy` targets a harmless `*.workers.dev` preview URL by
   default, which is what this stage validates against (`wrangler dev` locally, or a real deploy
   to that preview URL). Local preview deploys can authenticate via `wrangler login` (personal
   OAuth) without needing a stored API token at all — the `CLOUDFLARE_API_TOKEN`/
   `CLOUDFLARE_ACCOUNT_ID` GitHub secrets are only strictly needed once `deployment.yml` actually
-  runs for real, in Stage 10.
+  runs for real, in Stage 11.
 - Confirm existing static pages (privacy/terms/cookies/third-party, project & blog detail pages)
   don't need per-request dynamic behaviour — mark them `export const prerender = true` where
   Astro's SSR mode would otherwise render them per-request for no benefit (mirrors how the
@@ -353,14 +353,14 @@ loader: glob({ pattern: "**/*.mdx", base: "./src/content/blog" }), schema })`) s
   `--primary-very-light` custom properties (`color-mix(in srgb, var(--primary) 70%, white)` does
   the same job natively). Convert these files to plain `<style>` (dropping `lang="scss"` and the
   `@use "sass:color"` import) while porting them across, rather than reinstating a preprocessor
-  dependency for a feature set that no longer needs one. Also means Stage 11's design overhaul
+  dependency for a feature set that no longer needs one. Also means Stage 10's design overhaul
   isn't inheriting `lighten()`-derived shades it'll likely replace anyway, and narrows Stage 7's
   oxfmt spike to plain CSS-in-`.astro`, not SCSS-in-`.astro`.
 - Revisit `CLAUDE.md` — deployment path and architecture both change here.
 
 **Exit criteria:** the Astro-7-on-Cloudflare-adapter setup builds and runs correctly under
 `wrangler dev`/a `*.workers.dev` preview deploy, all existing pages render correctly under SSR —
-**while `tobysmith.uk` itself keeps being served by GitHub Pages, unchanged, until Stage 10.**
+**while `tobysmith.uk` itself keeps being served by GitHub Pages, unchanged, until Stage 11.**
 
 ### Outcome / deviations from the plan above
 
@@ -656,7 +656,7 @@ into this repo; `@cloudflare/workers-types` should already be available via `@as
 - Confirm working end-to-end (submit a real message, confirm delivery) against the non-production
   preview deploy from Stage 3 — **do not** decommission the live `email.tobysmith.uk` Worker or
   archive its repo yet. The old worker keeps serving the still-live production site until
-  Stage 10's cutover confirms the new setup is stable in production; only then is it safe to
+  Stage 11's cutover confirms the new setup is stable in production; only then is it safe to
   decommission/archive without a rollback path disappearing mid-migration.
 
 **Exit criteria:** the new same-origin contact-form flow is confirmed working against a
@@ -730,7 +730,7 @@ dev` against a full build, then `curl -X POST localhost:8788/_actions/contact` �
   (`wrangler secret put` under the hood) by reading the action's own `action.yml` from its GitHub
   repo directly, not from memory. These three GitHub secrets don't exist yet in the repo — adding
   them is a manual step for whoever has Cloudflare/email access, not something this session could
-  do; harmless until then since `deployment.yml` doesn't run for real until Stage 10.
+  do; harmless until then since `deployment.yml` doesn't run for real until Stage 11.
 - **Verified a fresh checkout won't break in CI**: rebuilt with `.dev.vars` deleted entirely (the
   file is gitignored, so CI never has it) — `bun run build` still succeeds with 0 `astro check`
   errors, since prerendering never invokes the action handler. `.dev.vars` was recreated afterward
@@ -740,7 +740,7 @@ dev` against a full build, then `curl -X POST localhost:8788/_actions/contact` �
   session.
 - **What's left, and needs Toby specifically:** (1) provision real `EMAIL_TO`/`EMAIL_FROM`/
   `RECAPTCHA_SECRET_KEY` values — via `wrangler secret put` against the preview Worker for local/
-  manual verification now, and as the three GitHub Actions secrets named above for Stage 10's CI
+  manual verification now, and as the three GitHub Actions secrets named above for Stage 11's CI
   path later; (2) with those in place, deploy to the `*.workers.dev` preview and submit one real
   message through the actual page to confirm delivery — this is the specific exit-criterion step
   no agent session can complete unsupervised, since it needs both account-scoped secrets and a
@@ -760,7 +760,7 @@ dev` against a full build, then `curl -X POST localhost:8788/_actions/contact` �
   once, not part of CI) — check-then-create by widget `name` so it's safe to re-run rather than
   creating duplicates. This is the "light IaC" version of what read-receipt's `infra/` package
   did for GCP, scaled to what this actually needs: one API call, not a resource-class package —
-  see the note in Stage 10 about why a full `infra/`-style package isn't proportionate here.
+  see the note in Stage 11 about why a full `infra/`-style package isn't proportionate here.
 - Swap `ContactForm.astro`: replace the reCAPTCHA script tag/widget div with Turnstile's
   equivalent (invisible/managed mode to match current UX), update the disclosure text and links
   currently pointing at Google's Privacy Policy/Terms.
@@ -831,7 +831,7 @@ specifically and couldn't be completed by this session:
 - **What's left, and needs Toby specifically** (same shape as Stage 4's gap): run
   `scripts/setup-turnstile.ts` with a real `CLOUDFLARE_API_TOKEN`/`CLOUDFLARE_ACCOUNT_ID` (this
   session has neither), then put the real sitekey in `.env.production` (currently a `REPLACE_ME`
-  placeholder — harmless for now since production is still GitHub Pages until Stage 10, but should
+  placeholder — harmless for now since production is still GitHub Pages until Stage 11, but should
   land before that stage) and the real secret via `wrangler secret put TURNSTILE_SECRET_KEY` plus a
   `TURNSTILE_SECRET_KEY` GitHub Actions secret for `deployment.yml`. Until then, treat this stage as
   code-complete but not yet exit-criterion-clean on the "real widget provisioned" front — everything
@@ -1180,7 +1180,7 @@ locally on both browsers, run repeatedly, with **zero flakes** once the Turnstil
 was stubbed (see below). Unlike every prior stage, the E2E suite **did run for real in this
 session** — Playwright's bundled Chromium/Firefox work in this sandbox where Cypress's Electron
 never could, so the "unverified by an actual run" caveat every stage since Stage 2 carried is
-finally cleared. CI itself is still unexercised until the Stage 10 PR (the big-bang ground rule),
+finally cleared. CI itself is still unexercised until the Stage 11 PR (the big-bang ground rule),
 but the suite is no longer unrun.
 
 - **Test layout**: `e2e/**/*.spec.ts` + `e2e/page-objects/**/*.po.ts` (Playwright POM: constructor
@@ -1249,7 +1249,7 @@ development` (the `--mode development` matters: it's what bakes in the always-pa
 - **`.vscode/extensions.json`** gained `ms-playwright.playwright`. `.claude/settings.json`'s
   `bunx cypress *` permission swapped for `bunx playwright *` + the two `e2e` scripts.
 - **Not done (needs CI or Toby):** the suite has not run on a real GitHub Actions runner — the
-  workflow changes are staged and ready per the ground rules but won't execute until the Stage 10
+  workflow changes are staged and ready per the ground rules but won't execute until the Stage 11
   PR. Worth watching on that first run: `wrangler dev` booting cleanly in Actions (added
   `WRANGLER_SEND_METRICS: "false"` to the job to avoid any first-run telemetry prompt) and the
   `bunx playwright install --with-deps` step's apt dependency install.
@@ -1361,15 +1361,65 @@ hints), `bun run build`, and the full 96-case Playwright suite (chromium + firef
 
 - **Not done — needs a real CI run or Toby** (unchanged from every prior stage): the Playwright
   suite has still only run locally, never on a GitHub Actions runner — that first happens on
-  the Stage 10 PR. Locally the full suite is green but load-sensitive in a constrained sandbox
+  the Stage 11 PR. Locally the full suite is green but load-sensitive in a constrained sandbox
   (Firefox `page.goto` timeouts under high parallelism); it passes cleanly at `--workers=2` or
   on an unloaded machine, and CI runs with `retries: 2`.
 
-## Stage 10 — Production cutover
+## Stage 10 — Visual redesign
 
-**Depends on:** Stages 1–9 all complete and locally verified. This is the single point in the
-whole migration where anything actually goes live — the big-bang merge the ground rules describe,
-watched by hand rather than trusted to automation.
+**Depends on:** Stage 9 (the technical rework is code-complete and cleaned up). Designed and
+built against the `*.workers.dev` preview / `wrangler dev`, not the live domain — production is
+still GitHub Pages at this point, and that's fine, a preview URL is a perfectly good surface to
+design against.
+
+**Why this now runs _before_ the cutover (this used to be Stage 11, after it):** the migration's
+big-bang rule is about making the switch to the new stack a single, deliberate, watched event.
+The branch as it stands is technically sound but its look is neither the old production site nor
+where the site is meant to end up — an interim state nobody chose. Cutting over first would put
+that interim look live for however long the redesign takes (realistically a week or two, maybe
+more, since it's collaborative and open-ended), then change the public face again when it lands.
+There's no urgency to cut over — DNS is already on Cloudflare, GitHub Pages keeps working
+untouched, the old email Worker keeps serving prod — so the site goes live once, already looking
+the way it should.
+
+**Cost of the reorder, accepted deliberately:**
+
+- The single long-lived migration branch lives longer, and the redesign happens on it (or on
+  branches stacked on it) rather than under normal continuous deployment in small PRs — that
+  "back to normal CD" benefit is now deferred to _after_ Stage 11, for redesign polish rather
+  than the redesign itself.
+- The first real GitHub Actions run (the Stage 11 PR) is pushed out further. Everything staged
+  in `integration.yml`/`deployment.yml` stays unexercised until then, as it has all along.
+- `main` must stay effectively frozen for the whole extended window (it already is for the
+  migration; this just extends it).
+
+**Bar for moving on to Stage 11:** the redesign only needs to clear "this is the public face I
+want the site to launch with" — not 100% done. Anything left is small, safe, layout-level
+polish that can ship as ordinary small PRs under normal CD _after_ the cutover. Define that bar
+explicitly with Toby when the stage starts so the cutover doesn't slip indefinitely behind an
+ever-growing design wishlist.
+
+Deliberately unscoped otherwise — this is a collaborative design pass done together, not a solo
+technical stage. Keeps the dodger-blue identity but reworks it beyond the current plain look;
+also the point at which the deferred spotlight-count (2 vs 3 cards) and any remaining blog-post
+curation calls (see "Open items") get made, since they're layout/content decisions best made
+with the new design in front of us.
+
+- Revisit `CLAUDE.md` — the architecture/styling notes change here; also drop the "current plain
+  look" framing once the redesign lands.
+- Local CI gate after, as every stage: `bun run lint`, `bun run format:check`, `bun run build`
+  (`astro check`), the Playwright suite.
+
+**Exit criteria:** the site, under the preview deploy, looks the way it should launch — Toby's
+call — with the spotlight-count and blog-curation decisions resolved into the relevant notes;
+lint/build/typecheck/Playwright all green locally.
+
+## Stage 11 — Production cutover
+
+**Depends on:** Stages 1–10 all complete and locally verified — including the visual redesign,
+which is now on the branch and part of what goes live in this one merge. This is the single
+point in the whole migration where anything actually goes live — the big-bang merge the ground
+rules describe, watched by hand rather than trusted to automation.
 
 **On IaC scope:** unlike read-receipt's Stage 8 (a bespoke `infra/` TypeScript package wrapping
 `gcloud`), this migration doesn't need one. That stage existed because of real, serious GCP
@@ -1424,18 +1474,6 @@ entirety of what's left manual, and both are inherently one-time.
 GitHub Pages fully retired; the old email worker decommissioned and its repo archived; a real
 contact-form submission confirmed delivered end-to-end on the live domain.
 
-## Stage 11 — Visual redesign
-
-**Depends on:** Stage 10 (design against what's actually live, not a preview). Unlike every
-stage above, this one runs under normal continuous deployment again, in its own small PRs —
-the big-bang/single-branch approach was specifically about the technical rewrite, not this.
-
-Deliberately unscoped here — this is a collaborative design pass done together, not a solo
-technical stage. Keeps the dodger-blue identity but reworks it beyond the current plain look;
-also the point at which the deferred spotlight-count (2 vs 3 cards) and any remaining blog-post
-curation calls (see "Open items") get made, since they're layout/content decisions best made
-with the new design in front of us.
-
 ## Suggested order
 
 1. AI tooling — context for every stage after this
@@ -1451,16 +1489,18 @@ with the new design in front of us.
    final file layout after Stage 6's page changes
 8. Playwright — specs written once, against the fully-settled shape
 9. General code review — final technical pass
-10. **Production cutover** — the one and only real deploy: DNS flip, GitHub Pages retirement,
-    old email worker decommissioned, watched closely by hand
-11. Visual redesign — collaborative, back to normal continuous deployment
+10. Visual redesign — collaborative, still on the migration branch (moved ahead of the cutover so
+    the site goes live once, already looking the way it should; see the stage's own rationale)
+11. **Production cutover** — the one and only real deploy: DNS flip, GitHub Pages retirement,
+    old email worker decommissioned, watched closely by hand; back to normal continuous
+    deployment (redesign polish included) afterwards
 
 ## Open items (intentionally deferred, not blocking)
 
 - **Blog per-post curation** (keep/rewrite/drop each of the 10 posts) — do this as its own pass,
   whenever it's convenient; not gated on any stage above.
 - **Exact spotlight count** on the index (2 vs 3 projects/posts) — a layout call, decide during
-  Stage 11. Currently hardcoded to 2 in both `Index/ProjectsSpotlight.astro` (2 of 4 projects
+  Stage 10. Currently hardcoded to 2 in both `Index/ProjectsSpotlight.astro` (2 of 4 projects
   marked `featured: true`) and `Index/BlogSpotlight.astro` (`SPOTLIGHT_COUNT = 2`) as of Stage 6 —
   a placeholder, not a final decision.
 - ~~**Contact's nav treatment** (own link vs. anchor-only) — Toby's call during Stage 6.~~
@@ -1469,7 +1509,7 @@ with the new design in front of us.
   `read-receipt` and `generate-license-file`** (`which-node-js`/`license-cop` are
   `featured: false`).
 - **Archiving `email.tobysmith.uk`** — confirm with Toby immediately before archiving, during
-  Stage 10, only after the new setup is confirmed stable in production.
+  Stage 11, only after the new setup is confirmed stable in production.
 - ~~**`.astro` template-level accessibility linting**~~ **Resolved within Stage 7**: oxlint was
   replaced with ESLint (`eslint-plugin-astro` + `eslint-plugin-jsx-a11y`) specifically because
   neither oxlint nor oxfmt could see inside `.astro` markup, only the frontmatter script — see
