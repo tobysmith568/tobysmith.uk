@@ -17,6 +17,6 @@ export class CookiesPageObject {
   }
 
   get updateSentence(): Locator {
-    return this.page.getByText("Our Cookies Policy was last updated on 17th March 2024.");
+    return this.page.getByText("Our Cookies Policy was last updated on 30th August 2026.");
   }
 }

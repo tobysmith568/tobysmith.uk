@@ -2,8 +2,8 @@
 import { getCollection } from "astro:content";
 import BlogListItem from "../Blog/BlogListItem.astro";
 
-// Deferred to Stage 11 (visual redesign) per migration.md's "Open items" - a layout call, not a
-// technical one.
+// Placeholder count - the final number is a layout call deferred to the visual redesign, see
+// migration.md's "Open items".
 const SPOTLIGHT_COUNT = 2;
 
 const blogPosts = await getCollection("blog");

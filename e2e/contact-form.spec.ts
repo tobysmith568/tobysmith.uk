@@ -54,7 +54,11 @@ test.describe("Contact form submission", () => {
     await indexPage.form.submit();
 
     await expect(indexPage.form.resultMessage).toBeVisible({ timeout: resultTimeout });
-    await expect(indexPage.form.resultMessage).toHaveText("E2E forced email failure");
+    // The action maps any send failure to a generic message - the stub's real error string
+    // ("E2E forced email failure") is logged server-side, never shown to the browser.
+    await expect(indexPage.form.resultMessage).toHaveText(
+      "Something went wrong while sending your message. Please try again later."
+    );
   });
 
   test("should show an error when Turnstile rejects the token", async ({ page }) => {

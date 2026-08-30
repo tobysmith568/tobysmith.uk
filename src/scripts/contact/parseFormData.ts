@@ -11,8 +11,6 @@ export type Fields = z.infer<typeof fieldsValidator>;
 export const parseFormData = (form: FormData) => {
   const fields = Object.fromEntries(form.entries());
 
-  console.log({ fields });
-
   const parsedFields = fieldsValidator.safeParse(fields);
 
   if (!parsedFields.success) {

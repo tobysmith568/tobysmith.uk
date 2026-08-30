@@ -1254,7 +1254,7 @@ development` (the `--mode development` matters: it's what bakes in the always-pa
   `WRANGLER_SEND_METRICS: "false"` to the job to avoid any first-run telemetry prompt) and the
   `bunx playwright install --with-deps` step's apt dependency install.
 
-## Stage 9 — General cleanup / code review pass
+## Stage 9 — General cleanup / code review pass ✅ done
 
 **Depends on:** all above stages.
 
@@ -1278,6 +1278,92 @@ development` (the `--mode development` matters: it's what bakes in the always-pa
 
 **Exit criteria:** clean `/code-review` and `/security-review` passes; no orphaned deps/config/
 references from earlier stages; policy pages describe the site as it actually behaves.
+
+### Outcome / deviations from the plan above
+
+Landed close to plan. Every cleanup item is done and the full local CI gate is green —
+`bun run lint`, `bun run format:check`, `astro check` (0 errors, 19 pre-existing Zod-deprecation
+hints), `bun run build`, and the full 96-case Playwright suite (chromium + firefox).
+
+- **`console.log` sweep.** Only one real stray remained: `console.log({ fields })` in
+  `src/scripts/contact/parseFormData.ts`, which dumped the visitor's name/email/message to the
+  browser console on every submit. Removed. The contact-form inline-script `console.log` the
+  plan named was already gone (removed in the Stage 5/6 `ContactForm.astro` rewrites). The
+  remaining `console.error` calls in `parseFormData.ts` / `ContactForm.astro` are deliberate
+  client-side error reporting and were left; the new server-side `console.error` in
+  `src/actions/index.ts` is intentional (see the security fix below), not debug cruft.
+
+- **Policy pages — trimmed all three, not just `privacy`/`cookies`.** The TermsFeed boilerplate
+  asserted a pile of things this site has never done: analytics and advertising partners,
+  third-party tracking/performance cookies, a cookie-consent banner, user accounts + passwords,
+  payment processing, email marketing/newsletters, user-posted content + a DMCA takedown agent,
+  a CCPA "we may have sold your personal information in the last 12 months" disclosure, and
+  interest-based-ad / mobile-ad-tracking opt-out sections. Toby's call (asked up front) was
+  **targeted removal + include `terms.mdx`** (the plan named only `privacy`/`cookies`). Result:
+  - **cookies.mdx + privacy.mdx cookie sections**: one cookie category only — Cloudflare's
+    security/Turnstile cookies — plus an explicit "no analytics, advertising, or tracking
+    cookies" line. Web-beacon language dropped.
+  - **privacy.mdx**: "Use of Your Personal Data" and the data-sharing list cut to reality
+    (reply to contact-form messages; Cloudflare as hosting/email/bot-protection processor;
+    legal disclosure; consent). "Analytics"/"Email Marketing"/"Payments" subsections replaced
+    with a single "Hosting and Bot Protection" one. CCPA "Sale" / "Share" / "Do Not Sell"
+    sections now state plainly that nothing is sold or shared for behavioural advertising and
+    nothing has been in the preceding 12 months; category-collection flags corrected
+    (Categories B and D → "Collected: No"); account-settings/account-email references removed.
+  - **terms.mdx**: dropped "User Accounts", the whole "Content" section (posting rights /
+    restrictions / backups — no UGC mechanism exists), and the "Copyright Policy / DMCA"
+    apparatus (replaced with a one-paragraph "email us if something infringes your copyright").
+    Termination reworded off "Your Account"; liability cap "$100 or the amount paid through the
+    Service" → "$100"; two stray "the Application" references scrubbed.
+  - All three "last updated" dates bumped to **30th August 2026**; the matching e2e page-object
+    assertions (`e2e/page-objects/{cookies,privacy,terms}.po.ts`) updated to match.
+  - The Turnstile third-party disclosure needed no change — `managed` mode requires no
+    privacy-policy addendum and Stage 5 already confirmed the policy pages carried no reCAPTCHA
+    references.
+  - **Not a full rewrite**: the GDPR/CCPA scaffolding (definitions, rights sections, contact
+    blocks) is kept. The pages are more accurate, not minimal.
+
+- **`generate-license-file` + `bun.lock`: verified, no change needed.** Current version `4.2.4`.
+  Its `resolvePackageManager` only tells `pnpm` (via a `pnpm-lock.yaml` probe) from an "npm"
+  fallback — there is no `bun.lock` branch. The fallback resolves the dependency tree from the
+  physical `node_modules` via `@npmcli/arborist`, not from a lockfile, so Bun's node-compatible
+  layout works: a fresh `bun run generate:licenses` produced 265 license entries / 601
+  dependencies with real license text, exit 0. The only precondition is that `bun install` has
+  populated `node_modules` first, which every path that calls the script already guarantees.
+  Opposite failure mode from the read-receipt migration's license tool (which parsed the
+  lockfile directly). Noted in CLAUDE.md's "License list" bullet.
+
+- **Leftover-reference sweep.** `pnpm` / `Cypress` / `reCAPTCHA` now appear only in this file
+  (the historical plan) and in legitimate blog/project content (`generate-license-file.mdx`
+  comparing itself to pnpm's built-in command; `100-my-deployments-in-2024.mdx` /
+  `which-node-js.mdx` citing GitHub Pages as real history). Removed `public/.nojekyll` — a
+  GitHub-Pages-only artifact the Cloudflare / `wrangler-action` deploy path never needs. In
+  parallel, "Stage N" numbering was stripped from code comments and CLAUDE.md's blockquote
+  (`.env.production`, `Index/BlogSpotlight.astro`) so nothing shipped references this temporary
+  plan by stage number.
+
+- **`/code-review` (high effort): no findings.** Two non-blocking notes, neither a Stage 9
+  regression: `e2e/blog.spec.ts`'s "posts in time order" test is effectively a no-op with the
+  current post set and reads visible `<time>` text rather than the `datetime` attribute; and a
+  pre-existing dangling "the Application" reference in `terms.mdx` (fixed here anyway).
+
+- **`/security-review`: one LOW, fixed; no HIGH/MEDIUM.** On an email-send failure the `contact`
+  action threw `ActionError({ code: "INTERNAL_SERVER_ERROR", message: emailResult.error })`,
+  forwarding the raw `SEB`-binding error string to the browser (potential internal-detail
+  exposure; inherited from the old worker). Fixed in `src/actions/index.ts`: the real error is
+  now `console.error`'d server-side (Worker tail logs) and the client gets a fixed generic
+  message. The Turnstile-rejection path was left as-is (only surfaces non-sensitive Turnstile
+  `error-codes`). `e2e/contact-form.spec.ts`'s forced-send-failure assertion updated. The
+  review also confirmed the `e2e-contact-stubs` mechanism is safe: the Vite plugin only
+  registers when `process.env.E2E === "true"` (build-time, not attacker-controllable), the
+  stubs tree-shake out of a normal build, and even if present they delegate to the real
+  implementation for everything but two hard-coded sentinel strings.
+
+- **Not done — needs a real CI run or Toby** (unchanged from every prior stage): the Playwright
+  suite has still only run locally, never on a GitHub Actions runner — that first happens on
+  the Stage 10 PR. Locally the full suite is green but load-sensitive in a constrained sandbox
+  (Firefox `page.goto` timeouts under high parallelism); it passes cleanly at `--workers=2` or
+  on an unloaded machine, and CI runs with `retries: 2`.
 
 ## Stage 10 — Production cutover
 

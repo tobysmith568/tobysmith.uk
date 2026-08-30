@@ -17,6 +17,6 @@ export class TermsPageObject {
   }
 
   get updateSentence(): Locator {
-    return this.page.getByText("Our Terms and Conditions were last updated on 17th March 2024.");
+    return this.page.getByText("Our Terms and Conditions were last updated on 30th August 2026.");
   }
 }

@@ -29,7 +29,13 @@ export const server = {
 
       const emailResult = await sendPlainTextEmail(name, subject, text, contactEnv.email, env.SEB);
       if (!emailResult.success) {
-        throw new ActionError({ code: "INTERNAL_SERVER_ERROR", message: emailResult.error });
+        // Log the underlying failure server-side (Worker tail logs); never surface the raw
+        // error string - which can carry internal binding detail - to the browser.
+        console.error("Contact form email send failed:", emailResult.error);
+        throw new ActionError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Something went wrong while sending your message. Please try again later."
+        });
       }
     }
   })
