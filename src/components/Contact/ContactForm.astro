@@ -39,6 +39,9 @@ import Anchor from "../Anchor.astro";
 <div id="turnstile-widget" data-sitekey={import.meta.env.PUBLIC_TURNSTILE_SITE_KEY}></div>
 
 <script is:inline>
+  // Only referenced from the `x-bind:disabled` directive string on the submit button above -
+  // invisible to static analysis, so ESLint sees this as unused.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function isValid(name, email, message) {
     return name && email && message;
   }

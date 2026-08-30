@@ -35,9 +35,9 @@ criteria` line, documenting: what actually happened, anything that deviated from
 - **Local CI after every stage.** Since nothing runs through GitHub Actions until the final PR,
   each stage ends with running, locally, whatever the _current_ equivalent of lint/build/test is
   at that point in the migration (e.g. `pnpm exec prettier --check .` early on, `bun run lint`/
-  `oxfmt --check` later; `astro check`/`astro build` or `wrangler deploy --dry-run` depending on
-  the stage; the current e2e suite, Cypress or Playwright). Treat this as a manual gate exactly
-  as strict as CI would be — don't move to the next stage on a red result.
+  `bun run format:check` later; `astro check`/`astro build` or `wrangler deploy --dry-run`
+  depending on the stage; the current e2e suite, Cypress or Playwright). Treat this as a manual
+  gate exactly as strict as CI would be — don't move to the next stage on a red result.
 - CI/CD workflow files (`integration.yml`/`deployment.yml`, once Stage 2 renames them) are still
   updated in the same stage that changes the
   tool/pipeline they invoke, so they're correct and ready to actually run the moment the final
@@ -975,7 +975,7 @@ prettier --check .` (clean apart from the same pre-existing `worker-configuratio
   sandbox) — code-reviewed against the same `x-data`/`x-show` pattern already proven working in
   `ContactForm.astro`, but not independently click-tested here.
 
-## Stage 7 — oxlint + oxfmt instead of no-linting/Prettier
+## Stage 7 — ESLint + Prettier instead of no-linting/Prettier ✅ done
 
 **Depends on:** Stage 6 — target the final file layout once, not before/after an IA change that
 touches which files exist.
@@ -996,6 +996,161 @@ touches which files exist.
 
 **Exit criteria:** lint/format run in CI via oxlint/oxfmt (or the documented scoped-Prettier
 fallback); no stale ESLint references anywhere.
+
+### Outcome / deviations from the plan above
+
+**This stage went through three passes, not one, and ended up somewhere the plan didn't name at
+all.** Final state: **ESLint** lints the whole repo (including real `.astro` **template**
+accessibility linting, not just frontmatter) and **Prettier** formats the whole repo — no oxc
+tooling remains in this stage at all. That's not what was originally shipped:
+
+1. oxlint + oxfmt were adopted first, exactly as the plan describes. The bullets below document
+   that real work faithfully, including the genuine spike findings on oxfmt's/oxlint's `.astro`/
+   `.mdx` support — those findings are still accurate history even though neither tool is in the
+   final stack; they're why the fallback shape below was needed at all.
+2. A follow-up discussion (see
+   [`docs/adrs/0001-eslint-over-oxlint-and-biome.md`](./docs/adrs/0001-eslint-over-oxlint-and-biome.md))
+   established that oxlint's frontmatter-only view of `.astro` was a bigger gap than it looked, and
+   **oxlint was replaced with ESLint** — oxfmt/Prettier's formatting split was untouched at this
+   point.
+3. A second follow-up (see
+   [`docs/adrs/0002-prettier-over-oxfmt.md`](./docs/adrs/0002-prettier-over-oxfmt.md)) then
+   dropped oxfmt too, in favor of Prettier for the whole repo — reasoning explicitly checked for
+   consistency against step 2's own "speed alone doesn't justify a tool at this project's size"
+   conclusion, since unlike the linter swap, oxfmt never had a capability gap backing it up.
+
+Read the `.oxlintrc.json`/`.oxfmtrc.json`-specific bullets below as **superseded history, kept
+because the reasoning in them carried forward** (why oxlint's `-D all` was rejected and why those
+two overrides existed both carried directly into ESLint's config; the oxfmt/`.astro`/`.mdx` spike
+findings are why Prettier ever needed scoping to `.astro` in the first place, before that scoping
+was itself removed in step 3) — not as a description of anything still on disk.
+
+Landed on the plan's own anticipated fallback shape at first, but only found out exactly where the
+line sits by spiking both tools against this repo's real files rather than trusting their docs
+(which turned out to be accurate but incomplete on specifics) — worth reading closely since the
+answer is "partial for both tools, in different ways per file type":
+
+- **oxfmt: zero `.astro` support, confirmed by direct test, not just by reading docs.** Running
+  `oxfmt --check` against an explicit `.astro` path (not a glob, not relying on ignore files)
+  returns "Expected at least one target file. All matched files may have been excluded by ignore
+  rules" — it doesn't error on the extension, it silently treats every `.astro` file as
+  unmatched. `oxfmt --check .` across the whole repo confirms this at scale: it reports "Finished
+  ... on 73 files" (matching every non-`.astro` tracked file) with the `.astro` files simply
+  absent from its own `--debug`-free run, no error, no mention. Cross-checked against
+  `oxc-project/oxc`'s own GitHub issues (#19273, closed as a duplicate of #19715 — "bundle
+  prettier-plugin-astro into oxfmt", unimplemented as of this stage) and `oxc.rs/compatibility.html`
+  (Astro formatting: "Requires Prettier plugin support (not yet available)") — the plan's own
+  anticipated fallback path is exactly what's needed here, not a surprise once tested, but the
+  plan couldn't have known in advance exactly how oxfmt fails (silent exclusion, not an error) or
+  that this is being tracked upstream already.
+- **oxfmt: real, working support for everything else it claims — `.mdx` included.** Spiked this
+  specifically since MDX is newer surface area than plain `.ts`/`.json`: ran `oxfmt` against
+  `src/content/blog/40-prettier-config.mdx` and got a real, sensible diff (added a trailing comma
+  inside a fenced code block) — not a crash, not a no-op, an actual working MDX formatter.
+  `oxfmt --migrate=prettier` (run once, not part of CI) correctly read
+  `@tobysmith568/prettier-config`'s settings out of `package.json` and translated all of them
+  (`printWidth`/`tabWidth`/`arrowParens`/`singleQuote`/`trailingComma`/`bracketSameLine`/
+  `endOfLine`) into `.oxfmtrc.json`, flagging (not silently dropping) the three Prettier plugins it
+  can't carry forward (`prettier-plugin-organize-imports`, `prettier-plugin-astro`,
+  `prettier-plugin-ignored`) as "not supported, skipping". With that migrated config in place,
+  `oxfmt --check .` reports **zero** formatting diffs across the whole non-`.astro` tree on the
+  first run — the existing Prettier-formatted content already matches oxfmt's output byte-for-byte
+  once configured with the same style options, meaning this migration needed no forced reformat.
+- **oxlint: real, partial `.astro` support, also confirmed by direct test.** Deliberately injected
+  a `debugger;` statement into `src/components/Anchor.astro`'s frontmatter and confirmed oxlint
+  actually caught it (`eslint(no-debugger)`) before reverting — proving it genuinely parses and
+  lints the frontmatter/script block, not just passively listing `.astro` files without acting on
+  them. Confirmed the flip side too: `.mdx` files never appear in oxlint's own file list at all
+  (0 matched), so there's no `.mdx` linting to speak of — moot in practice since this repo's `.mdx`
+  is prose content with no embedded logic worth linting.
+- **`.oxlintrc.json` kept at oxlint's own `--init` default scope (`correctness` category only),
+  a deliberate choice made after comparing against the alternative, not by default inertia.**
+  Tested `-D all` (every category including `pedantic`/`restriction`/`style`) against the whole
+  repo as a due-diligence check before committing to a scope: 512 findings, dominated by opinions
+  this repo has never held (`no-magic-numbers` on a literal `0`, `no-optional-chaining` banning a
+  language feature used throughout, `no-explicit-any`) — adopting that wholesale would have turned
+  "add a linter" into "impose a new opinionated style regime," well outside this stage's scope.
+  The `correctness`-only default surfaced exactly two findings repo-wide, both handled via targeted
+  `overrides` rather than blanket category suppression or silently fixing them as "real" bugs:
+  `src/env.d.ts`'s two `/// <reference .../>` directives (Astro's own idiomatic convention for
+  wiring up `.astro/types.d.ts` and `astro/client` ambient types — not something `import` can
+  replace) tripped `typescript/triple-slash-reference`, and `cypress/e2e/index.cy.ts`'s
+  `expect(turnstileToken).to.exist` tripped `no-unused-expressions` (a known false-positive pattern
+  with Chai's getter-style assertions, which the rule can't distinguish from a genuinely
+  side-effect-free expression statement) — scoped that override to all of `cypress/**` rather than
+  just this one line, since the same pattern will keep recurring in Chai-based specs until Stage 8
+  replaces them with Playwright.
+- **Both tools' generated-file blind spot: `worker-configuration.d.ts`.** Running `oxfmt .`
+  (write mode) once during the spike reformatted this `wrangler types`-generated file (tabs → 2
+  spaces, matching the migrated Prettier-derived config) — reverted immediately, then excluded it
+  via `ignorePatterns` in both `.oxfmtrc.json` and `.oxlintrc.json`. This file was already a known,
+  flagged pre-existing Prettier-check failure as far back as Stage 5's notes (never fixed, since
+  it's regenerated by `wrangler types` and would just drift back out of style on the next run) —
+  same treatment carried forward rather than re-litigated.
+- **A real, flagged trade-off, not a silent regression: import-organizing is gone for every file
+  type except `.astro`.** `@tobysmith568/prettier-config` bundles `prettier-plugin-organize-imports`
+  globally (not scoped to any extension), which the migrate step correctly reported as unsupported
+  and dropped rather than silently ignoring. Neither oxlint nor oxfmt have an import-sorting
+  equivalent (`bunx oxlint --rules` has nothing matching `sort`/`order`) — checked before accepting
+  this rather than assuming. In practice this was already a no-op today (a full `prettier --check .`
+  before this stage passed cleanly on every `.ts` file, meaning nothing currently relies on
+  reformatting to stay import-sorted), but it's a real capability this repo had and no longer does
+  outside `.astro` — flagging explicitly rather than letting it disappear unnoticed, per the "no
+  stage silently drops X" spirit even though that ground rule was written about test coverage
+  specifically.
+- **VS Code config, revised three times across this stage's three passes.** Pass 1 (oxlint +
+  oxfmt): `dbaeumer.vscode-eslint` dropped from `extensions.json` (no ESLint config existed yet)
+  and `esbenp.prettier-vscode` dropped too — checked Astro's own docs first rather than assuming:
+  the Astro VS Code extension (`astro-build.astro-vscode`, recommended throughout) bundles
+  Prettier + `prettier-plugin-astro` formatting for `.astro` internally, so the separate Prettier
+  extension was never needed in-editor even then. Added `oxc.oxc-vscode`. Pass 2 (ESLint replaces
+  oxlint): `dbaeumer.vscode-eslint` came back, `oxc.oxc-vscode`'s linter half was switched off
+  in-editor (`"oxc.enable.oxlint": false`, its formatter half stayed on), and `"eslint.validate"`
+  was added listing `astro` explicitly — per `eslint-plugin-astro`'s own documented VS Code setup,
+  the extension only targets `.js`/`.jsx` by default and silently won't check `.astro` without it.
+  Pass 3 (Prettier replaces oxfmt): `oxc.oxc-vscode` removed entirely (nothing left for it to do),
+  `esbenp.prettier-vscode` came back as `editor.defaultFormatter` repo-wide, `"oxc.enable.oxlint"`
+  removed (moot with the extension gone), `"eslint.validate"` kept as-is.
+- **`.prettierignore`**: `pnpm-lock.yaml` entry removed (stale since Stage 2 replaced pnpm with
+  Bun); `worker-configuration.d.ts` added once Prettier became the sole formatter (a known,
+  pre-existing check failure on this generated file, flagged as far back as Stage 5's notes — was
+  previously moot while oxfmt/oxlint's own `ignorePatterns` covered it instead).
+- **Local CI run, final state**: `bun run lint` (`eslint .`, 0 findings), `bun run format:check`
+  (`prettier --check .`, clean across the whole repo — no `.astro`-specific step left to run),
+  `bunx astro check` (0 errors, 0 warnings, 19 pre-existing Zod-deprecation hints — same count as
+  before this stage), `bun run build` (succeeds, same output shape as prior stages). Cypress itself
+  still can't run in this sandbox (same Electron/`--no-sandbox` limitation every prior stage has
+  flagged) — this stage's `no-unused-expressions` override (now in `eslint.config.mjs`) changes
+  lint behavior, not runtime behavior, so no new E2E risk was introduced, but the suite still
+  hasn't been run for real since Stage 4's CORS-removal changes. Both tool swaps were timed against
+  their oxc predecessors for the record: oxlint ~0.09s vs ESLint ~1.6s; oxfmt ~1.2s vs Prettier
+  ~6.1s — see the two ADRs for why neither gap mattered enough to keep the oxc tool in each case.
+- **Two real, small bugs found and fixed while spiking the linter decision, not left as findings**:
+  `Hero.astro`'s alt text said "Profile picture of Toby" (redundant, screen readers already
+  announce `<img>` as an image) — now `"Toby"`. `third-party.astro` had `target="_blank"` with no
+  `rel="noopener"` on the license-package links — now has it. Neither is caught by the final
+  ESLint setup itself (the first is — `jsx-a11y/img-redundant-alt`; the second is a security
+  concern outside `jsx-a11y`'s scope, only ever caught by a rejected Biome spike) — fixed anyway
+  since both were small and safe. See `docs/adrs/0001-eslint-over-oxlint-and-biome.md` for the
+  full, honest coverage comparison against Biome — it isn't a clean win either way.
+- **`package.json` scripts, final state**: `lint` (`eslint .`), `format` (`prettier --write .`),
+  `format:check` (`prettier --check .`). These existed in an intermediate, now-superseded shape
+  (`format`/`format:check` running oxfmt, plus a separate `format:astro:check` running Prettier
+  scoped to `.astro`) between passes 2 and 3 above; collapsed back to one formatter/one script pair
+  once oxfmt was dropped. `integration.yml`'s `Lint` job calls `bun run lint`/`bun run format:check`
+  rather than the tools directly, matching how `build`/`e2e` already call `bun run build`.
+- **Dependencies, final state**: `oxlint` and `oxfmt` were both added, then both removed — see the
+  two ADRs. Final stack: `eslint@^10.9.1`, `eslint-plugin-astro@^3.1.0`,
+  `eslint-plugin-jsx-a11y@^6.10.2`, `typescript-eslint@^8.68.0` (all versions checked live against
+  npm at implementation time, per the ground rules; `astro-eslint-parser` is a transitive
+  dependency of `eslint-plugin-astro`, not a direct one — nothing in `eslint.config.mjs` imports it
+  directly), plus the pre-existing `@tobysmith568/prettier-config`/`prettier`. One real risk worth
+  carrying forward, confirmed by `bun add` itself rather than a stale search result: installing
+  flagged `warn: incorrect peer dependency "eslint@10.9.1"` — `eslint-plugin-astro@3.1.0` requires
+  `eslint >=10.0.0`, but `eslint-plugin-jsx-a11y@6.10.2` (the exact version astro's plugin depends
+  on) only declares peer support up to `eslint@^9`. Works today (verified extensively), but a
+  future bump of either package could break this without warning — worth checking first if
+  `bun install` ever starts failing here.
 
 ## Stage 8 — Cypress → Playwright
 
@@ -1125,7 +1280,8 @@ with the new design in front of us.
 5. Turnstile — touches the token-validation code Stage 4 just consolidated
 6. IA overhaul (About/Contact into index, spotlights, mobile nav fix) — needs Stage 5's
    settled contact-form shape
-7. oxlint/oxfmt — targets the final file layout after Stage 6's page changes
+7. ESLint/Prettier (started as oxlint/oxfmt, see the stage's own outcome notes) — targets the
+   final file layout after Stage 6's page changes
 8. Playwright — specs written once, against the fully-settled shape
 9. General code review — final technical pass
 10. **Production cutover** — the one and only real deploy: DNS flip, GitHub Pages retirement,
@@ -1147,3 +1303,15 @@ with the new design in front of us.
   `featured: false`).
 - **Archiving `email.tobysmith.uk`** — confirm with Toby immediately before archiving, during
   Stage 10, only after the new setup is confirmed stable in production.
+- ~~**`.astro` template-level accessibility linting**~~ **Resolved within Stage 7**: oxlint was
+  replaced with ESLint (`eslint-plugin-astro` + `eslint-plugin-jsx-a11y`) specifically because
+  neither oxlint nor oxfmt could see inside `.astro` markup, only the frontmatter script — see
+  [`docs/adrs/0001-eslint-over-oxlint-and-biome.md`](./docs/adrs/0001-eslint-over-oxlint-and-biome.md).
+  One real bug this surfaced (`Hero.astro`'s redundant "picture" in alt text) is fixed; a second,
+  found via a rejected Biome spike rather than this stack (a missing `rel="noopener"` on
+  `third-party.astro`'s `target="_blank"` link — outside `jsx-a11y`'s scope, so still uncaught by
+  the chosen tooling), is also fixed directly, since it was small and safe to. The ADR is explicit
+  that coverage still isn't 100% (a security-category rule like that one, or the debatable
+  `aria-label`-on-`<span>` case Biome separately flagged) — not every future issue in this class is
+  guaranteed to be caught, but the structural gap (nothing at all reaching `.astro` templates) is
+  closed.

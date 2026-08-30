@@ -37,7 +37,7 @@ const getPackageUrl = (packageNameAndVersion: string) => {
           <ul class="packages">
             {license.dependencies.map(pkg => (
               <li>
-                <a href={getPackageUrl(pkg)} target="_blank">
+                <a href={getPackageUrl(pkg)} target="_blank" rel="noopener">
                   {pkg}
                 </a>
               </li>

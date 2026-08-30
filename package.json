@@ -15,6 +15,9 @@
     "preview": "astro preview",
     "astro": "astro",
     "cypress": "cypress open",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "generate-types": "wrangler types",
     "generate:licenses": "bun scripts/generate-licenses.mjs"
   },
@@ -41,7 +44,11 @@
   "devDependencies": {
     "@tobysmith568/prettier-config": "^2.1.0",
     "@types/node": "^24.0.0",
-    "cypress": "^15.0.0"
+    "cypress": "^15.0.0",
+    "eslint": "^10.9.1",
+    "eslint-plugin-astro": "^3.1.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "typescript-eslint": "^8.68.0"
   },
   "trustedDependencies": [
     "@parcel/watcher"

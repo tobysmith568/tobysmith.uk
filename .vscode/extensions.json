@@ -1,8 +1,8 @@
 {
   "recommendations": [
     "streetsidesoftware.code-spell-checker",
-    "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
     "editorconfig.editorconfig",
     "GraphQL.vscode-graphql"
   ]
