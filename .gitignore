@@ -26,6 +26,8 @@ bun-debug.log*
 # macOS-specific files
 .DS_Store
 
-# Cypress
-cypress/videos/
-cypress/screenshots/
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

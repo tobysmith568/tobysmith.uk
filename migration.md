@@ -1152,7 +1152,7 @@ answer is "partial for both tools, in different ways per file type":
   future bump of either package could break this without warning — worth checking first if
   `bun install` ever starts failing here.
 
-## Stage 8 — Cypress → Playwright
+## Stage 8 — Cypress → Playwright ✅ done
 
 **Depends on:** Stage 6 (final routes/markup) and Stage 5 (final contact-form flow) — specs
 should be written once against the finished shape.
@@ -1172,6 +1172,87 @@ should be written once against the finished shape.
 
 **Exit criteria:** full e2e coverage (including the real contact-form submission path) passing
 under Playwright in CI; Cypress fully removed.
+
+### Outcome / deviations from the plan above
+
+Landed close to plan. All 48 test cases (96 runs across the chromium + firefox projects) pass
+locally on both browsers, run repeatedly, with **zero flakes** once the Turnstile client script
+was stubbed (see below). Unlike every prior stage, the E2E suite **did run for real in this
+session** — Playwright's bundled Chromium/Firefox work in this sandbox where Cypress's Electron
+never could, so the "unverified by an actual run" caveat every stage since Stage 2 carried is
+finally cleared. CI itself is still unexercised until the Stage 10 PR (the big-bang ground rule),
+but the suite is no longer unrun.
+
+- **Test layout**: `e2e/**/*.spec.ts` + `e2e/page-objects/**/*.po.ts` (Playwright POM: constructor
+  takes `Page`, getters return `Locator`), `testDir: "./e2e"`, `testMatch: "**/*.spec.ts"` so the
+  `.po.ts` files aren't picked up as specs. `playwright.config.ts` has `chromium` + `firefox`
+  **projects** (not a GitHub matrix, per the plan), `retries: 2` in CI, `webServer` running
+  `bun run e2e:serve` on port 8788 with `reuseExistingServer: !CI`.
+- **Ran against `wrangler dev`, not `astro preview`** — the contact-form Action needs the real
+  workerd request path + bindings + `cloudflare:workers` env; `astro preview` doesn't give a
+  faithful `/_actions/*` path. `e2e:serve` = `generate:licenses` → `astro build --mode
+development` (the `--mode development` matters: it's what bakes in the always-passes
+  `PUBLIC_TURNSTILE_SITE_KEY` from `.env.development`; a plain `astro build` would use
+  `.env.production`'s `REPLACE_ME`) → `wrangler dev --port 8788`.
+- **Contact-form path: real end-to-end, with only the two external boundaries stubbed, both
+  input-driven** (this is what the plan left open — "hit a real email destination or stub the
+  binding"; the answer is neither/both):
+  - Confirmed by direct test that under `wrangler dev` **local mode** the `send_email` binding
+    doesn't relay mail — it writes a real `.eml` to `.wrangler/tmp/email/` and resolves. So the
+    happy path needs no send stub at all: real route → real Zod → real Turnstile siteverify
+    (always-passes secret) → real MIME construction → real local `SEB` send.
+  - `astro.config.mjs` gained a small `e2e-contact-stubs` Vite plugin, active only when
+    `E2E=true` (set via `playwright.config.ts`'s `webServer.env`). It redirects
+    `src/actions/contact/{verifyTurnstileToken,sendPlainTextEmail}` imports to sibling stubs in
+    `src/actions/contact/testing/`, which **delegate to the real implementation** unless the
+    token is exactly `e2e-turnstile-fail` or the message contains `[e2e:send-fail]` — those
+    force the `BAD_REQUEST` / `INTERNAL_SERVER_ERROR` branches respectively. Verified the stubs
+    tree-shake out of a normal (non-`E2E`) build — `grep` of `dist/` finds nothing.
+  - The Turnstile **browser** script is faked by `e2e/support/turnstile.ts`: `page.route` serves
+    the real `challenges.cloudflare.com/turnstile/*` script as an empty no-op, and
+    `page.addInitScript` installs a real (type-checked, lint-checked) fake `window.turnstile`
+    keeping the exact `render`/`execute`/`execution: "execute"` contract `ContactForm.astro`
+    depends on. It hooks `window.onloadTurnstileCallback` via a property setter so the
+    component's render call fires deterministically rather than on a poll. The first full run
+    was flaky (3/96 failing, different ones each time — the real invisible widget's challenge
+    callback fires on its own schedule and sometimes not at all headless); after stubbing it:
+    0 flakes across repeated full runs, and the contact specs dropped from ~3s to <1s each.
+    This is the right boundary anyway — the widget is third-party UI, not this site's code.
+- **`contact.cy.ts`** became `e2e/contact.spec.ts` (just the `/contact` → `/#contact` redirect —
+  its old form assertions were already in `index.cy.ts` as of Stage 6). `about.cy.ts` was
+  already gone. The Stage-8 note about moving assertions "into `index.cy.ts`" was already done in
+  Stage 6; nothing to move here. New file `e2e/contact-form.spec.ts` holds the four
+  submission-path tests (success, forced send failure, forced Turnstile rejection, missing-field
+  rejection via `request.post`). Net coverage is **up** vs Cypress: the old
+  `index.cy.ts` form tests all `cy.intercept`-stubbed `/_actions/contact` and never ran the
+  server handler (it lived in a different repo when they were written).
+- **`.dev.vars.example`** added (committed, all-public test values: the always-passes Turnstile
+  test secret + `test@example.com` addresses). CI copies it to `.dev.vars`; a fresh checkout
+  does the same. `.gitignore` swapped its `cypress/videos|screenshots` block for Playwright's
+  `test-results`/`playwright-report`/`blob-report`/`playwright/.cache`; `.prettierignore` got the
+  same report dirs.
+- **`astro check` gained `e2e/` in its scope** (75 files now vs 66) — one real strict-mode error
+  surfaced and was fixed (`noUncheckedIndexedAccess` on the blog date-order loop; rewrote it as
+  a sort-equality check). Final: 0 errors, 0 warnings, 19 pre-existing Zod-deprecation hints
+  (unchanged count).
+- **ESLint**: the `cypress/**` override for `@typescript-eslint/no-unused-expressions` (Chai
+  getter assertions) was removed — Playwright's `expect().toBe()` is a real call, no such
+  false positive. `docs/adrs/0001` and `CLAUDE.md` both had that override documented; both
+  updated. Added `eslint-plugin-playwright@^2.11.0` (`flat/recommended`, scoped to `e2e/**` +
+  `playwright.config.ts`) — playwright-community's plugin, recommended by Playwright's own docs,
+  no first-party alternative; the ported suite passed it with zero changes needed.
+  `eslint .` and `prettier --check .` both clean.
+- **Deps**: `cypress` removed; `@playwright/test@^1.62.1` added. No `bunfig.toml`/
+  `trustedDependencies` change needed (Playwright's browser download is a separate explicit
+  `playwright install` step, not a blocked postinstall). `dayjs` kept — still used by the blog
+  date-order spec.
+- **`.vscode/extensions.json`** gained `ms-playwright.playwright`. `.claude/settings.json`'s
+  `bunx cypress *` permission swapped for `bunx playwright *` + the two `e2e` scripts.
+- **Not done (needs CI or Toby):** the suite has not run on a real GitHub Actions runner — the
+  workflow changes are staged and ready per the ground rules but won't execute until the Stage 10
+  PR. Worth watching on that first run: `wrangler dev` booting cleanly in Actions (added
+  `WRANGLER_SEND_METRICS: "false"` to the job to avoid any first-run telemetry prompt) and the
+  `bunx playwright install --with-deps` step's apt dependency install.
 
 ## Stage 9 — General cleanup / code review pass
 

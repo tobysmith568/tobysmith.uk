@@ -64,16 +64,7 @@ jobs:
           retention-days: 1
 
   e2e:
-    strategy:
-      fail-fast: false
-      matrix:
-        browser:
-          - name: Chrome
-            value: chrome
-          - name: Firefox
-            value: firefox
-
-    name: E2E Test (${{ matrix.browser.name }})
+    name: E2E Tests
 
     runs-on: ubuntu-latest
 
@@ -87,34 +78,22 @@ jobs:
       - name: Install dependencies
         run: bun install
 
-      - name: Install Cypress
-        run: bunx cypress install
+      - name: Install Playwright browsers
+        run: bunx playwright install --with-deps chromium firefox
 
-      - name: Generate license list
-        run: bun run generate:licenses
-
-      - name: Create development build
-        run: bunx astro build --mode development
+      - name: Create local dev vars
+        run: cp .dev.vars.example .dev.vars
 
       - name: Run E2E Tests
-        uses: cypress-io/github-action@v7
-        with:
-          browser: ${{ matrix.browser.value }}
-          start: bun run preview
-          wait-on: http://localhost:4321
+        run: bunx playwright test
+        env:
+          WRANGLER_SEND_METRICS: "false"
 
-      - name: Upload E2E Screenshots
+      - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: E2E Screenshots (${{ matrix.browser.name }})
-          path: cypress/screenshots/
+          name: Playwright Report
+          path: playwright-report/
           if-no-files-found: ignore
-
-      - name: Upload E2E Videos
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: E2E Videos (${{ matrix.browser.name }})
-          path: cypress/videos/
-          if-no-files-found: ignore
+          retention-days: 7

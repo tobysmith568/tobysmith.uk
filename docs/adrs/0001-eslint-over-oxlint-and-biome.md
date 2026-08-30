@@ -46,8 +46,7 @@ Use `eslintPluginAstro.configs["flat/jsx-a11y-recommended"]`/`"flat/jsx-a11y-str
 The remaining false positives needed the same kind of targeted overrides oxlint's own config
 already carried: `no-unused-vars` needs `argsIgnorePattern: "^_"` for this repo's
 intentionally-unused-callback-param convention; `triple-slash-reference` is off for `src/env.d.ts`
-(Astro's own idiomatic ambient-types wiring); `no-unused-expressions` is off under `cypress/**`
-(Chai's getter-style assertions); and `ContactForm.astro`'s `isValid` needed an inline
+(Astro's own idiomatic ambient-types wiring); and `ContactForm.astro`'s `isValid` needed an inline
 `eslint-disable-next-line` — it's only referenced from an Alpine `x-bind:disabled` directive
 string, invisible to static analysis, the same class of frontmatter/template-boundary blind spot
 every tool evaluated for this decision has in some form.
