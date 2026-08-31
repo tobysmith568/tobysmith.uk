@@ -58,7 +58,12 @@ export default defineConfig({
 
   markdown: {
     shikiConfig: {
-      theme: "light-plus"
+      // Dual themes: Shiki emits the light colours inline plus a --shiki-dark* custom property
+      // per token; global.css swaps to the dark values when the dark palette is active.
+      themes: {
+        light: "light-plus",
+        dark: "dark-plus"
+      }
     }
   },
 

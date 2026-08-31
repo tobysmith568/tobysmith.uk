@@ -15,7 +15,7 @@ const sortedPosts = blogPosts.sort((a, b) => a.data.sortWeight - b.data.sortWeig
   <div class="doc">
     <div class="doc-rail">
       <a
-        class="rss"
+        class="rss icon-button"
         href="/blog/rss.xml"
         target="_blank"
         rel="noopener noreferrer"
@@ -45,21 +45,6 @@ const sortedPosts = blogPosts.sort((a, b) => a.data.sortWeight - b.data.sortWeig
   }
 
   .rss {
-    display: grid;
-    place-items: center;
-    width: 2.25rem;
-    height: 2.25rem;
     flex-shrink: 0;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--muted);
-    transition:
-      color var(--dur-fast) var(--ease-out),
-      border-color var(--dur-fast) var(--ease-out);
-  }
-  .rss:hover,
-  .rss:focus-visible {
-    color: var(--accent);
-    border-color: var(--accent);
   }
 </style>

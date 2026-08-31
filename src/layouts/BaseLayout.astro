@@ -26,10 +26,30 @@ const title =
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-choice="system">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    {
+      /* Set the theme before the first paint so there's no flash. `data-theme` is only stamped
+        for an explicit light/dark choice - "system" leaves it off and prefers-color-scheme
+        decides (see tokens.css). `data-choice` always reflects the toggle state (Header.astro). */
+    }
+    <script is:inline>
+      (() => {
+        try {
+          const c = localStorage.getItem("theme");
+          const choice = c === "light" || c === "dark" || c === "system" ? c : "system";
+          const root = document.documentElement;
+          root.dataset.choice = choice;
+          if (choice === "light" || choice === "dark") root.dataset.theme = choice;
+        } catch {
+          /* private mode / storage blocked - fall back to system */
+        }
+      })();
+    </script>
+
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <link rel="sitemap" href="/sitemap-index.xml" />

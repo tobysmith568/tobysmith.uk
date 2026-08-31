@@ -19,6 +19,40 @@ complete.
 - Any session picking this up mid-redesign: read this whole file first, then the most recent
   Decision log entries and the Open questions.
 
+## Where things stand
+
+_Snapshot — 2026-08-31. Keep this current; the Decision log has the full trail._
+
+**Done and in `src/` (all green: `bun run lint` / `build` / `e2e` — 112 Playwright tests):**
+
+- Direction (**"Public API"**), tokens (type, colour, space, motion, primitives) — locked, and
+  revised several times against real previews (see Decision log).
+- **Light + dark themes** with a header toggle (system / light / dark).
+- **Global shell** — Header (nav + theme toggle + mobile menu button), MobileMenu drawer, Footer,
+  `BaseLayout`. The `.wrap` / `.section` / `.doc` layout system, the `.mono` / `.eyebrow` /
+  `.text-link` / `.more` / `.icon-button` utilities, `Icon.astro`.
+- **Index page** in full — Hero (frontmatter block, one-shot role settle, hover easter egg),
+  About, ProjectsSpotlight, BlogSpotlight, ContactSection, ContactForm. Pending Toby's final
+  visual sign-off but no known issues.
+- **Prose system** — `Prose.astro` + `ProseLayout` + `PolicyLayout`; Shiki dual code themes.
+- The listing / detail / policy / 404 pages **inherit** the system (tokens, `.doc` gutter, shared
+  list-item + prose components, the icon set) and are internally consistent, but have **not had a
+  dedicated design pass** — see the empty subsections under Page layouts.
+
+**Next, in rough order:**
+
+1. **Per-page layout passes** — Blog index, Projects index, then the two detail templates, then
+   policy pages, then 404. Nothing is spec'd for these yet (the subsections are stubs). This is
+   the main remaining chunk.
+2. **Copy pass** — mostly untouched (a couple of one-off fixes logged). Best done after the
+   layouts settle.
+3. **Cross-cutting QA** — responsive / keyboard / reduced-motion / axe-Lighthouse sweep.
+4. **Wrap-up** — finish `CLAUDE.md`, fold migration.md's Open items (spotlight count is decided
+   via `featured`; blog curation still open) into its stage notes, final CI gate.
+
+**Needs Toby (see Open questions):** the concrete Definition-of-done checklist; blog per-post
+curation in scope or deferred; whether to wait for a purpose-shot profile photo.
+
 ## Working agreement — the rules
 
 How this collaboration runs. Agreed up front; changes to these rules are themselves logged.
@@ -56,9 +90,9 @@ How this collaboration runs. Agreed up front; changes to these rules are themsel
   `e2e/page-objects/**` and the specs alongside the components in the same commit — no silent
   coverage loss, no letting the suite rot.
 - **Stack constraints stay:** Astro `output: "static"`; component-scoped `<style>` with native CSS
-  nesting, no preprocessor; Alpine.js is available for interactivity; Shiki `light-plus` for code
-  blocks (revisit only if the palette forces it); fonts self-hosted via `@fontsource*` or
-  equivalent — no external font CDN (CSP + performance).
+  nesting, no preprocessor; Alpine.js is available for interactivity; Shiki for code blocks
+  (`light-plus` / `dark-plus` dual themes since dark mode landed — see Decision log); fonts
+  self-hosted via `@fontsource*` or equivalent — no external font CDN (CSP + performance).
 
 ## Definition of done
 
@@ -66,12 +100,16 @@ migration.md sets the bar as _"this is the public face I want the site to launch
 finished wishlist; leftover polish ships as ordinary small PRs after the cutover. Pin the concrete
 version with Toby at the start of the stage:
 
-- [ ] **TBD** — the concrete, per-page "good enough to launch" checklist
+- [ ] **TBD** — the concrete, per-page "good enough to launch" checklist (needs Toby)
 - [x] Blog posts marked `featured: true`/`false` — resolved, see Decision log
 - [ ] Blog per-post curation — confirmed in scope for Stage 10 or explicitly deferred (migration.md
       tracks it as a separate, non-blocking pass)
-- [ ] `CLAUDE.md` architecture/styling notes updated; "current plain look" framing dropped
-- [ ] migration.md Open items resolved into their stage notes
+- [ ] `CLAUDE.md` architecture/styling notes — _in progress_, kept in step as work lands
+      (styling, icons, theming, mobile nav all updated); the "current plain look" framing is
+      gated on the cutover per CLAUDE.md's own blockquote, so it stays until Stage 11
+- [ ] migration.md Open items resolved into their stage notes — **still to do**; the deferred
+      spotlight-count (2 vs 3) is now decided (editorial `featured` boolean, no fixed count), so
+      that item can be closed out in migration.md
 
 ## The brief
 
@@ -132,9 +170,10 @@ production site nor where the site is meant to end up."
 - **Pages:** index, projects index, project detail, blog index, blog detail, terms, privacy,
   cookies, third-party, 404. (`/contact` is a redirect only — no UI.)
 - **Layouts:** BaseLayout, ProseLayout, PolicyLayout.
-- **Shared components:** Header, HeaderMenuItem, MobileMenu, Footer, Prose, Anchor / NoAnchor, HR,
-  Footnote, ArticleImage, ProjectListItem, BlogListItem, ContactForm, and the Index sections
-  (Hero, About, ProjectsSpotlight, BlogSpotlight, ContactSection).
+- **Shared components:** Header, MobileMenu, Footer, Prose, Anchor, Footnote, ArticleImage, Icon
+  (new), ProjectListItem, BlogListItem, ContactForm, and the Index sections (Hero, About,
+  ProjectsSpotlight, BlogSpotlight, ContactSection). (`HeaderMenuItem` and `HR` were deleted in
+  the Index build — see Decision log.)
 
 ## Sequencing — what we decide, in what order
 
@@ -172,10 +211,10 @@ expected: edit the earlier section and log the change.
 
 ## Design direction
 
-_Status: chosen, refining._ Three directions were explored as HTML previews (throwaway, in the
-scratchpad — see the Decision log); Toby picked **"Public API"** over "Field notes" and "Release".
-The values below are direction 1's starting point, not yet locked — still open to refinement
-before it feeds the Tokens section.
+_Status: locked._ Three directions were explored as HTML previews (throwaway, in a prior
+session's scratchpad — see the Decision log); Toby picked **"Public API"** and confirmed it as
+the committed base ("pure direction 1", nothing borrowed from the others). The values below are
+the agreed direction; refinements since then are captured in the token sections + Decision log.
 
 - **Thesis / one-liner:** the site as a well-documented module — a persistent metadata block like
   file frontmatter, content sections read as named exports.
@@ -192,14 +231,16 @@ before it feeds the Tokens section.
   section numbers that aren't a real sequence); or a full fake-terminal/REPL (rejected during
   brainstorming, before it reached a preview, for being the on-the-nose cliché for a CLI-tool
   author).
-- **Reference points:** the previewed HTML itself (see Decision log) — direction 1 is the working
-  reference until superseded by real `src/` code.
+- **Reference points:** the built site itself is now the reference (`bun run dev` /
+  `bun run preview`); the original direction preview lives in a prior session's scratchpad only.
 
 ## Design tokens
 
-_Status: confirmed._ Toby reviewed `tokens-specimen.html` and liked it, with one change (card/item
-title hover, see Typography below and the Decision log). Values below are locked pending anything
-that surfaces once real content/layouts are built against them.
+_Status: confirmed and in `src/`._ Originally reviewed by Toby as `tokens-specimen.html` (a prior
+session's scratchpad); since revised in place several times against real content (links, the
+shell/gutter, section markers, `--rule` / `--scrim`, the dark palette — all in the Decision log).
+**`src/styles/tokens.css` is now the source of truth for concrete values**; the sections below
+describe the intent and should track it.
 
 ### Typography
 
@@ -207,12 +248,14 @@ that surfaces once real content/layouts are built against them.
   **Fira Code** (400/500 — decided, kept for all code snippets, and doubles as UI chrome per
   direction 1: eyebrows, metadata key/value pairs, tags, dates) · no separate utility/caption
   face — Fira Code at `text-xs` covers that role.
-- Type scale (px @ 1rem = 17px base): `xs` 13 · `sm` 15 · `base` 17 · `lg` 20 · `xl` 24 · `2xl` 30
-  · `3xl` 40 · `4xl` 52. Not a strict modular ratio — tuned by eye per use (mono metadata at `xs`,
-  body copy at `base`, item titles at `xl`, hero lead `3xl`–`4xl` responsive).
-- Base line-height 1.65 (body), tight 1.1–1.15 (display headings), 1.5 (mono metadata blocks).
-- Prose measure: **44rem** (~75ch at base size) — the same value the chosen 1a hero layout
-  already used, kept consistent for the prose column too.
+- Type scale (approximate px; `tokens.css` has the authoritative rem values): `xs` ~13 · `sm` ~15
+  · `base` ~17 · `lg` ~20 · `xl` ~24 · `2xl` ~30 · `3xl` ~40 · `4xl` ~52. Not a strict modular
+  ratio — tuned by eye per use. As built: mono chrome / metadata at `sm` (frontmatter) or `xs`
+  (dates, footer, form labels), body copy at `base`, list-item titles at `lg`, section markers
+  `xl` on narrow / `sm` in the gutter on wide, hero lead `3xl`–`4xl` responsive.
+- Base line-height 1.65 (body), tight ~1.15 (display headings), ~1.5 (mono metadata blocks).
+- Prose / section-body measure: **`--measure` 44rem** (~75ch). The hero is _not_ clamped to this
+  — it sits flush at `--shell` (see Spacing).
 - Weights in use, deliberately few: body 400, display 500 (lead line) / 600 (item titles, nav
   identity), mono 400 (body code) / 500 (UI chrome — labels, metadata, buttons). No 700 anywhere
   — the mood is quiet, not bold.
@@ -241,10 +284,22 @@ that surfaces once real content/layouts are built against them.
   - `--error` `#B3312A` — muted brick red, contact-form failure text only; no separate "success"
     colour — success is communicated by the message text plus a thin `--accent` left rule, not a
     colour of its own (avoids a generic green-tick moment)
-- Light / dark mode: **light only** for Stage 10 (see Open questions — dark mode is a separate
-  yes/no call, not blocking this token set either way since every role above is named, not
-  hard-coded, so dark values could slot in later without a rework)
-- Code-block theme: unchanged, Shiki `light-plus` — reads fine against `--surface`
+- Light / **dark** mode: **both** (reversed from "light only" — see Decision log). Dark is a cool
+  near-black, the light palette's counterpart rather than an inversion. Same eight roles, plus
+  `--rule` (section dividers — `= --ink` on light, a dimmer `#3C4250` on dark so a near-white
+  hairline doesn't shout) and `--scrim` (the mobile-nav overlay). Dark values:
+  `--bg` `#10131A` · `--surface` `#191D26` · `--ink` `#E7E9EC` · `--muted` `#8B94A3` (6:1 on bg)
+  · `--border` `#2A2F3A` · `--rule` `#3C4250` · `--accent` `#4DA6FF` · `--accent-strong` `#7CBEFF`
+  · `--error` `#F0776E` · `--underline` `#4C5462`.
+  Mechanism: `:root` is light; a pinned choice stamps `data-theme` on `<html>` and wins;
+  `prefers-color-scheme` fills in for "system". A header **button** cycles in three steps,
+  ordered so the first click always changes the look: **system → (the theme the OS isn't) →
+  (the theme the OS is, now pinned) → system**. The OS preference only picks the direction; the
+  two pinned steps are concrete and ignore later OS changes. Its icon (monitor / sun / moon —
+  geometric SVGs in `Icon.astro`) _is_ the current state. `BaseLayout`'s inline `<head>` script
+  plus `localStorage` persist the choice with no flash; `Header.astro`'s script runs the cycle.
+- Code-block theme: Shiki **dual** — `light-plus` / `dark-plus` (`shikiConfig.themes`), swapped in
+  `global.css` off the same two activation cases as the palette.
 
 ### Spacing, grid, breakpoints
 
@@ -293,15 +348,16 @@ that surfaces once real content/layouts are built against them.
 
 - Border radius: **2px**, everywhere something has one (inputs, buttons, cards, the avatar) —
   deliberately almost-off, crisp rather than soft-friendly.
-- Borders / rules: 1px `--border` for dividers and input borders; the frontmatter block keeps its
-  2px `--border` accent rule (its one structural flourish).
+- Borders / rules: 1px `--border` for hairline dividers and input borders; 1px `--rule` (see
+  Colour) for the firmer line that opens each index `.section`; the frontmatter block keeps its
+  own 2px `--border` left rule (its one structural flourish).
 - Shadows: **none**, anywhere, in this direction — flat fits "reading source", and it's one fewer
   thing to make consistent across light/dark later.
 - Icon style: a small inline-SVG set in `src/components/Icon.astro` — geometric, 1.5px stroke,
-  `currentColor`, 16px default (`arrow-right`, `arrow-left`, `arrow-up-right`, `rss`, `close`,
-  `menu`). Replaces every unicode glyph that was doing an icon's job (`→`, `×`, the `chevron-left.svg`
-  / `rss.svg` assets — both deleted). `--muted` at rest, `--accent` on hover, often with a 2–3px
-  translate. See Decision log.
+  `currentColor`, 16-unit grid (`arrow-right`, `arrow-left`, `arrow-up-right`, `rss`, `close`,
+  `menu`, `sun`, `moon`, `monitor`). Replaces every unicode glyph that was doing an icon's job
+  (`→`, `×`; the `chevron-left.svg` / `rss.svg` assets deleted). `--muted` at rest, `--accent`
+  on hover, often with a 2–3px translate. See Decision log.
 - Image treatment: the hero avatar is a **96 × 120 (4:5 portrait) crop, 2px radius, 1px
   `--border`**, top-aligned left of the frontmatter record so the two heights roughly match (see
   Decision log). Project logos still sit bare (contain-fit, no frame); revisit once the Projects
@@ -309,18 +365,20 @@ that surfaces once real content/layouts are built against them.
 
 ## Page layouts
 
-_Status: not started._ One subsection per surface — ASCII wireframe plus notes for each.
+_Global shell + Index are implemented; the listing / detail / policy / 404 pages have not had a
+dedicated pass (subsections below are stubs — that work is next). One subsection per surface._
 
 ### Global — header / nav (desktop + mobile)
 
-_Status: implemented._ Header bar at `--shell` width: mono `toby smith` identity left, mono
-nav links right (`projects` / `blog` / `contact`, muted → ink with an underline that draws in
-on hover/active). Below 640px the links are replaced by a bordered icon button ("Open menu",
-`menu` icon). **The mobile drawer** (`MobileMenu.astro`, Alpine) slides in from the right over a
-dimmed overlay: a header row (`# menu` + a bordered `close`-icon button), full-width link rows
-(mono, `arrow-right` icon, `--accent` active/hover state), and a footer row of github / linkedin
-/ rss links. Esc closes it; body scroll locks while open. (Replaces the earlier drawer that
-always rendered the toggle and had the desktop links leaking through — see Decision log.)
+_Status: implemented._ Header bar at `--shell` width: mono `toby smith` identity left; a
+right-side `.controls` group holds the mono nav links (`projects` / `blog` / `contact`, muted →
+ink with an underline that draws in on hover/active), then **the theme toggle** (`.icon-button`,
+cycles system → light → dark, icon = current state — see Colour), then (below 640px only) the
+"Open menu" `.icon-button`. **The mobile drawer** (`MobileMenu.astro`, Alpine) slides in from the
+right over a `--scrim` overlay: a header row (`# menu` + a `close`-`.icon-button`), full-width
+link rows (mono, `arrow-right` icon, `--accent` active/hover state), and a footer row of github /
+linkedin / rss links. Esc closes it; body scroll locks while open. (Replaces the earlier drawer
+that always rendered the toggle and had the desktop links leaking through — see Decision log.)
 
 ### Global — footer
 
@@ -334,51 +392,72 @@ underline. Wraps to two rows under ~480px.
 _Status: implemented in `src/` and revised once against a real preview (Toby's punch-list —
 see Decision log); still pending final visual sign-off._ Hero (frontmatter block + lead line +
 one-shot role settle, all flush at the shell's left edge), then four `.section`s (about,
-projects spotlight, blog spotlight, contact) each opening with a 1px `--ink` rule and a
+projects spotlight, blog spotlight, contact) each opening with a 1px `--rule` line and a
 monospace `# label` that sits in the left gutter on wide viewports / above the body on narrow.
 Section order unchanged from Stage 6 (hero → about → projects → blog → contact).
 Header/footer/mobile nav rebuilt in the same pass.
 
-Local CI green: `bun run lint`, `bun run format:check` (redesign.md aside), `bun run build`
-(`astro check`, 0 errors), full Playwright suite (100 passing, chromium + firefox).
-
-Not yet done — a proper per-page layout pass for the Projects/Blog listings + detail pages, the
-policy pages, and 404. This round gave them mechanical consistency only (shared list-item and
-prose styling, the `.doc` gutter layout so their content lines up with the index body, the icon
-set, a site-consistent 404) but not their own
-design.
+Since then: the round-1 + round-2 polish passes, the hover easter egg, the avatar, dark mode,
+`.icon-button` — all logged. CI green throughout (currently 112 Playwright tests).
 
 ### Projects — index
 
+_Status: no dedicated pass._ Current state (`src/pages/projects/index.astro`): `.doc` wrapper,
+plain `<h1>My Projects</h1>` + an intro `<p>`, then the `ProjectListItem` list. Empty gutter.
+Needs its own treatment — this is next work.
+
 ### Projects — detail
+
+_Status: no dedicated pass._ Current state (`src/pages/projects/[...slug].astro`): `.doc` with a
+sticky `← My Projects` back-link in the gutter; a **centred** block (logo `<Image>` + `<h1>` +
+muted tagline) with a divider under it; then `<Prose>`. The centred header sitting over
+left-aligned prose is a known rough edge.
 
 ### Blog — index
 
+_Status: no dedicated pass._ Current state (`src/pages/blog/index.astro`): `.doc` with the RSS
+`.icon-button` in the gutter; `<h1>Blog Posts</h1>`; then the `BlogListItem` list.
+
 ### Blog — detail
+
+_Status: no dedicated pass._ Current state (`src/pages/blog/[...slug].astro`): `.doc` with
+`← Posts` back-link + mono date in the gutter; `<h1>`; then `<Prose>` (Shiki dual-theme code).
 
 ### Policy pages + license list
 
+_Status: no dedicated pass._ `/terms` `/privacy` `/cookies` route through
+`PolicyLayout → ProseLayout` (now `.doc`-wrapped); `/third-party` uses `ProseLayout` directly and
+renders the generated license list. Legibility only — "not a showcase" per the brief.
+
 ### 404
+
+_Status: light pass done, revisit with the rest._ `src/pages/404.astro`: `.doc`, left-aligned,
+`# 404` marker + "This page doesn't exist" + icon back-link. Copy in the Copy section.
 
 ## Component specs
 
-_Status: several settled implicitly during the Index build + the 2026-08-31 polish pass — not
-yet written up as standalone specs._ Settled in code: buttons/CTAs (dark `--ink` fill,
-`arrow-right` icon, `--accent-strong` hover), contact-form fields (`--surface`, 1px border →
-2px `--accent` outline on focus, `--muted` border on hover), `ProjectListItem` / `BlogListItem`
-(flex row, right-aligned nudging `arrow-right`, `--text-lg` title), links (resting `--underline`,
-see Typography), `.more` section actions, back-links (`arrow-left` + `--measure`), Prose
-(headings, links, blockquote, inline + block code). Still genuinely open: `HR`, `Footnote`,
-`ArticleImage`, code-block chrome beyond the current border treatment.
+_Status: most are settled in code (Index build + the polish passes) but not written up as
+standalone specs — read the components themselves._ Settled: primary button / CTA (dark `--ink`
+fill, `arrow-right` icon, `--accent-strong` hover), `.icon-button` (bordered square — theme
+toggle, menu toggle, blog RSS), contact-form fields (`--surface`, 1px border → 2px `--accent`
+focus outline, `--muted` hover border), `ProjectListItem` / `BlogListItem` (flex row,
+right-aligned nudging `arrow-right`, `--text-lg` title), links (resting `--underline`, see
+Typography), `.more` section actions, back-links (`arrow-left` + `--measure`), Prose (headings,
+links, blockquote, inline + block code with Shiki dual themes). Still genuinely open: `HR`,
+`Footnote`, `ArticleImage`, code-block chrome beyond the current border treatment.
 
 ## Copy
 
-_Status: not started._ Track every wording change here so it's reviewable in one place.
+_Status: only one-off fixes so far; the deliberate copy pass is still to come._ Track every
+wording change here so it's reviewable in one place.
 
-- **Hero:** name, the rotating titles ("Full-stack developer" / "npm package author" /
-  "TypeScript fanatic" / "Burrito over-filler"), and the "Blog and Portfolio Website" line — keep
-  / tighten / replace: TBD
-- **Section headings** ("About Me", "Projects", "Blog"): TBD
+- **Hero lead line** — replaced in the Index build: old "Blog and Portfolio Website" tagline →
+  **"Builds small developer tools and writes about the sharp edges."** (this is now the `<h1>`).
+  The rotating job titles are unchanged ("Full-stack developer" / "npm package author" /
+  "TypeScript fanatic" / "Burrito over-filler" → settles on "Senior Software Developer"); still
+  open to a copy review.
+- **Section headings** ("About Me", "Projects", "Blog", "Contact Me") — still the originals,
+  rendered lowercase by `.eyebrow`. Review TBD.
 - **CTA labels** ("Send Message", "More projects →", "More posts →"): TBD
 - **Contact form:** labels, placeholders, success text ("Message sent successfully!"), error text,
   disabled / submitting states: TBD. Intro line reworded in the 2026-08-31 pass — was "Feel free
@@ -395,38 +474,63 @@ _Status: not started._ Track every wording change here so it's reviewable in one
 
 - Definition of done — the concrete per-page checklist (needs Toby)
 - Blog per-post curation — in scope for Stage 10, or deferred?
-- Dark mode — in or out?
-- Body / display faces — keep Blinker, or replace it? (Fira Code for code is decided.)
+- ~~Dark mode — in or out?~~ **in** — see Colour + Decision log.
+- ~~Body / display faces~~ **resolved** — Blinker + old Fira Code usage replaced with Space
+  Grotesk (display) + Public Sans (body) + Fira Code (mono / UI chrome). See Typography.
 - Profile photo — size/shape/position **resolved** (96 × 120 portrait, see Decision log). Still
   open: the source is the GitHub avatar (a side-cropped selfie — sky above, pavement below); a
   purpose-shot headshot would fill the portrait frame far better.
 
 ## Build sequence (once the direction is locked)
 
-Order of implementation in `src/`; each step ends on a green local CI gate.
+Order of implementation in `src/`; each step ends on a green local CI gate. Progress marked
+`[x]` done · `[~]` partial · `[ ]` not started.
 
-1. **Tokens + global styles** — `BaseLayout.astro`'s `:root` custom properties, font imports,
-   global element styles, the reduced-motion baseline.
-2. **Layout shell** — Header, MobileMenu, Footer, BaseLayout structure.
-3. **Prose system** — Prose.astro + ProseLayout + PolicyLayout (unblocks blog / project / policy
-   bodies).
-4. **Index** — Hero, About, ProjectsSpotlight, BlogSpotlight, ContactSection, ContactForm. Add
-   `featured: boolean` to the `blog` collection schema first (`src/content.config.ts`, `astro
-sync` after); picks are already made (see Decision log) —
-   `my-deployments-in-2024`/`reverse-flex-directions` get `featured: true`, the other 8 posts
-   `featured: false`. Projects' existing `featured` values are unchanged.
-5. **Listing + detail pages** — projects, blog, 404.
-6. **Motion pass** — page-load sequence, scroll reveals, hover states, once the structure is
-   stable.
-7. **Copy pass** — apply the agreed wording; update the e2e page objects and specs.
-8. **Cross-cutting QA** — responsive sweep, keyboard / focus, reduced-motion, an axe / Lighthouse
-   check.
-9. **Wrap-up** — update `CLAUDE.md`, resolve migration.md Open items into their notes, final full
-   CI gate.
+1. `[x]` **Tokens + global styles** — `tokens.css` / `global.css`, font imports, global element
+   styles, reduced-motion baseline. (Later: dark palette, `--rule` / `--scrim`, `.icon-button`.)
+2. `[x]` **Layout shell** — Header (+ theme toggle), MobileMenu, Footer, BaseLayout (+ the
+   no-flash `<head>` script).
+3. `[x]` **Prose system** — Prose.astro + ProseLayout + PolicyLayout; Shiki dual code themes.
+4. `[x]` **Index** — all five sections + ContactForm. `featured: boolean` added to the `blog`
+   schema; picks made (`my-deployments-in-2024` / `reverse-flex-directions` → `true`).
+5. `[~]` **Listing + detail pages** — projects, blog, 404. They inherit the system and are
+   consistent, but only 404 has had any dedicated attention. **This is the main remaining work.**
+6. `[x]` **Motion pass** — the load-in sequence, hover states, the role easter egg, the
+   `clientPrerender` fix. (No scroll reveals — deliberate.)
+7. `[ ]` **Copy pass** — apply agreed wording; update e2e page objects + specs. (Only one-off
+   fixes so far.)
+8. `[ ]` **Cross-cutting QA** — responsive sweep, keyboard / focus, reduced-motion, axe /
+   Lighthouse.
+9. `[ ]` **Wrap-up** — finish `CLAUDE.md`, resolve migration.md Open items into their notes
+   (spotlight count is decided via `featured`; blog curation still open), final full CI gate.
 
 ## Decision log
 
 Append-only, newest first. Format: `YYYY-MM-DD — <area>: <decision>. <why, briefly>.`
+
+- **2026-08-31 — Icon buttons unified.** The blog RSS link had a transparent background while
+  the header menu/theme toggles used `--surface`, so they read as different controls. Pulled the
+  shared frame + hover into a `.icon-button` utility in `global.css`; all three now use it (and
+  the RSS icon is `--ink` at rest like the others, was `--muted`).
+
+- **2026-08-31 — Dark mode (Toby: yes, with a header toggle).** Reverses the "light only for
+  Stage 10" call. A cool near-black dark palette — the light theme's counterpart, not an
+  inversion — added to `tokens.css` as `:root[data-theme="dark"]` plus a
+  `@media (prefers-color-scheme: dark)` block (guarded `:not([data-theme="light"])`) for
+  "system"; the two must stay in sync. Two new tokens: `--rule` (section dividers, so the
+  near-white `--ink` hairline doesn't shout on dark) and `--scrim` (mobile-nav overlay).
+  **The control** is a single header button (Toby's spec: button that swaps its icon, not a
+  switch). It cycles **system → the theme the OS isn't → the theme the OS is (pinned) →
+  system**, so the first click always visibly changes something and the OS only sets the
+  direction (revised from a fixed system→light→dark, which did nothing on the first click for
+  anyone whose OS already matched). The icon is the state — new `monitor` / `sun` / `moon` SVGs
+  in `Icon.astro`, same 16-grid / 1.5-stroke system as the rest. Which icon shows is pure CSS
+  off `<html data-choice>`. `BaseLayout`'s inline `<head>` script reads
+  `localStorage` and stamps `data-theme` + `data-choice` before first paint (no flash);
+  `Header.astro`'s script handles the cycle + persistence. Shiki went dual
+  (`light-plus` / `dark-plus`). New `e2e/theme.spec.ts` (defaults to system, the cycle,
+  persistence across navigation, follows a dark OS, explicit choice beats the OS). CI green —
+  lint / `astro check` (0) / Playwright (112).
 
 - **2026-08-31 — Two bugs found while fixing the hover easter egg.**
   - **`.mono` was never defined.** Every element tagged `class="mono"` — the frontmatter record

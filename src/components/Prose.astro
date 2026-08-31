@@ -55,10 +55,11 @@
       padding: 0.1em 0.4em;
     }
 
+    /* The fill + syntax colours come from Shiki (inline on light; global.css swaps to the
+       --shiki-dark* values when the dark palette is active). Only the frame is ours. */
     pre:has(code) {
       margin: var(--sp-4) 0;
       padding: var(--sp-4) var(--sp-5);
-      background: var(--surface);
       border: 1px solid var(--border);
       border-left: 2px solid var(--border);
       border-radius: var(--radius);

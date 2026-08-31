@@ -21,25 +21,37 @@ const isActive = (href: string) =>
   <nav class="wrap bar" x-data="{ mobileMenuOpen: false }" aria-label="Primary">
     <a class="id" href="/">toby smith</a>
 
-    <div class="links mono">
-      {
-        links.map(({ href, label }) => (
-          <a href={href} aria-current={isActive(href) ? "page" : undefined}>
-            {label}
-          </a>
-        ))
-      }
-    </div>
+    <div class="controls">
+      <div class="links mono">
+        {
+          links.map(({ href, label }) => (
+            <a href={href} aria-current={isActive(href) ? "page" : undefined}>
+              {label}
+            </a>
+          ))
+        }
+      </div>
 
-    <button
-      type="button"
-      class="menu-toggle"
-      aria-label="Open menu"
-      aria-controls="mobile-menu"
-      x-bind:aria-expanded="mobileMenuOpen.toString()"
-      @click="mobileMenuOpen = true">
-      <Icon name="menu" size={18} />
-    </button>
+      <button
+        type="button"
+        class="theme-toggle icon-button"
+        data-theme-toggle
+        aria-label="Theme: follow system">
+        <Icon name="monitor" size={18} class="i-system" />
+        <Icon name="sun" size={18} class="i-light" />
+        <Icon name="moon" size={18} class="i-dark" />
+      </button>
+
+      <button
+        type="button"
+        class="menu-toggle icon-button"
+        aria-label="Open menu"
+        aria-controls="mobile-menu"
+        x-bind:aria-expanded="mobileMenuOpen.toString()"
+        @click="mobileMenuOpen = true">
+        <Icon name="menu" size={18} />
+      </button>
+    </div>
 
     <MobileMenu links={links} />
   </nav>
@@ -64,6 +76,12 @@ const isActive = (href: string) =>
     letter-spacing: -0.02em;
     text-decoration: none;
     color: var(--ink);
+  }
+
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-5);
   }
 
   .links {
@@ -101,33 +119,78 @@ const isActive = (href: string) =>
     right: 0;
   }
 
-  .menu-toggle {
+  /* base look comes from the shared .icon-button (global.css); only the responsive show/hide
+     is header-specific. .controls .menu-toggle keeps this ahead of .icon-button's display. */
+  .controls .menu-toggle {
     display: none;
-    width: 2.25rem;
-    height: 2.25rem;
-    padding: 0;
-    place-items: center;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--surface);
-    color: var(--ink);
-    cursor: pointer;
-    transition:
-      border-color var(--dur-fast) var(--ease-out),
-      color var(--dur-fast) var(--ease-out);
-  }
-
-  .menu-toggle:hover {
-    border-color: var(--accent);
-    color: var(--accent);
   }
 
   @media (max-width: 40rem) {
     .links {
       display: none;
     }
-    .menu-toggle {
+    .controls .menu-toggle {
       display: grid;
     }
   }
 </style>
+
+<script>
+  // Cycle the theme in three steps, ordered so the first click always changes something:
+  //   system  -> the theme the OS *isn't*   (a visible switch)
+  //           -> the theme the OS *is*       (same look, but now pinned - ignores OS changes)
+  //           -> system                      (back to following the OS)
+  // The OS preference only picks the direction; the two pinned steps are concrete values.
+  // The icon shown is CSS-driven off <html data-choice> (set pre-paint by BaseLayout's inline
+  // script, updated here), so there's nothing to swap in JS. `data-theme` is only stamped for a
+  // pinned choice; "system" removes it and lets prefers-color-scheme decide (see tokens.css).
+  const modes = ["system", "light", "dark"];
+
+  const labelFor = (choice: string) =>
+    choice === "light"
+      ? "Theme: light"
+      : choice === "dark"
+        ? "Theme: dark"
+        : "Theme: follow system";
+
+  const nextChoice = (choice: string) => {
+    const osDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const os = osDark ? "dark" : "light";
+    const opposite = osDark ? "light" : "dark";
+    if (choice === "system") return opposite;
+    if (choice === opposite) return os;
+    return "system";
+  };
+
+  const root = document.documentElement;
+  const btn = document.querySelector<HTMLButtonElement>("[data-theme-toggle]");
+
+  const current = () => {
+    const c = root.dataset.choice ?? "system";
+    return modes.includes(c) ? c : "system";
+  };
+
+  const syncButton = (choice: string) => {
+    btn?.setAttribute("aria-label", labelFor(choice));
+    btn?.setAttribute("title", labelFor(choice));
+  };
+
+  if (btn) {
+    // The inline <head> script already set the attributes from localStorage; just catch the
+    // button's label up (its SSR default is "system").
+    syncButton(current());
+
+    btn.addEventListener("click", () => {
+      const next = nextChoice(current());
+      root.dataset.choice = next;
+      if (next === "system") root.removeAttribute("data-theme");
+      else root.dataset.theme = next;
+      try {
+        localStorage.setItem("theme", next);
+      } catch {
+        /* storage blocked - the choice just won't persist */
+      }
+      syncButton(next);
+    });
+  }
+</script>

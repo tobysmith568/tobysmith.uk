@@ -6,19 +6,22 @@
  */
 
 :root {
-  /* colour */
+  /* ---- colour: light (the default) ---- */
   --bg: #f6f7f9;
   --surface: #ffffff;
   --ink: #16181d;
   --muted: #6b7280;
   --border: #e1e4e8;
+  --rule: #16181d; /* section dividers - a firm line; = --ink on light */
   --accent: #1e90ff;
   --accent-strong: #0f6fd1;
   --error: #b3312a;
-
   /* resting underline for body links - visible but quiet, never carries the affordance by
      colour alone; hover/focus promotes it to --accent (see global.css + Prose.astro) */
   --underline: #b9bfc7;
+  --scrim: rgb(22 24 29 / 55%); /* the mobile-nav overlay */
+
+  color-scheme: light;
 
   /* type */
   --f-display: "Space Grotesk", sans-serif;
@@ -57,4 +60,47 @@
   --dur-slow: 400ms;
   --ease-standard: cubic-bezier(0.2, 0.7, 0.3, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/*
+ * Dark palette - a cool near-black, the light theme's counterpart (not an inversion). Only the
+ * colour roles change; type/space/motion are shared. See redesign.md > Colour + Decision log.
+ *
+ * It applies in two cases, and the two blocks below MUST stay in sync:
+ *   1. the visitor explicitly chose dark        -> :root[data-theme="dark"]
+ *   2. their OS is dark and they haven't chosen  -> the media query, guarded so an explicit
+ *      "light" choice still wins
+ * BaseLayout's inline <head> script sets data-theme (for explicit choices) + data-choice (for
+ * the toggle icon) from localStorage before first paint.
+ */
+:root[data-theme="dark"] {
+  --bg: #10131a;
+  --surface: #191d26;
+  --ink: #e7e9ec;
+  --muted: #8b94a3;
+  --border: #2a2f3a;
+  --rule: #3c4250;
+  --accent: #4da6ff;
+  --accent-strong: #7cbeff;
+  --error: #f0776e;
+  --underline: #4c5462;
+  --scrim: rgb(0 0 0 / 66%);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #10131a;
+    --surface: #191d26;
+    --ink: #e7e9ec;
+    --muted: #8b94a3;
+    --border: #2a2f3a;
+    --rule: #3c4250;
+    --accent: #4da6ff;
+    --accent-strong: #7cbeff;
+    --error: #f0776e;
+    --underline: #4c5462;
+    --scrim: rgb(0 0 0 / 66%);
+    color-scheme: dark;
+  }
 }

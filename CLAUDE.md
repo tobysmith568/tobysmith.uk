@@ -86,7 +86,8 @@ separately.
   route is prerendered anyway.
   Also set in `astro.config.mjs`: `site: "https://tobysmith.uk"` (used by the sitemap + RSS),
   `trailingSlash: "never"`, `prefetch` (`prefetchAll` / `viewport` strategy),
-  `experimental: { clientPrerender: true }`, and a Shiki `light-plus` code theme.
+  `experimental: { clientPrerender: true }`, and Shiki dual code themes
+  (`shikiConfig.themes`: `light-plus` / `dark-plus` — see Theming below).
 - **Content collections** (`src/content.config.ts` — the Content Layer API requires this exact
   filename, not `src/content/config.ts`; `glob()` loaders): `projects`, `blog`, `policies`. Each
   collection's schema is a Zod object; `blog` and `projects` both use `sortWeight` for manual
@@ -166,6 +167,16 @@ separately.
   (link + section-action affordances, resting `--underline` → `--accent` on hover), `.sr-only`.
   Icons are inline SVG via `src/components/Icon.astro` (`name` prop; geometric, 1.5px stroke,
   `currentColor`) — no icon dependency, no SVG asset files.
+- **Theming**: light + dark, both defined as token sets in `src/styles/tokens.css` — `:root` is
+  light; `:root[data-theme="dark"]` and a guarded `@media (prefers-color-scheme: dark)` block
+  (keep the two dark blocks in sync) supply dark. An explicit choice stamps `data-theme` on
+  `<html>` and wins; "system" leaves it off. `BaseLayout.astro`'s inline `<head>` script reads
+  `localStorage.theme` (`"light"|"dark"|"system"`) and sets `data-theme` + `data-choice` before
+  first paint (no flash); the header button in `Header.astro` cycles system → the theme the OS
+  isn't → the theme the OS is (pinned) → system (so the first click always changes something),
+  and its icon is CSS-driven off `data-choice` (see the `.theme-toggle` rules in `global.css`). Code
+  blocks use Shiki dual themes (`shikiConfig.themes` in `astro.config.mjs`), activated by CSS in
+  `global.css` mirroring the palette's two cases.
 - **License list**: `scripts/generate-licenses.mjs` runs `generate-license-file`'s
   `getProjectLicenses` as a standalone `bun` script (via the `generate:licenses` package.json
   script, wired in as a `pre*` hook on `dev`/`start`/`build`) and writes

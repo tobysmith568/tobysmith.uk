@@ -12,7 +12,6 @@
 
 html {
   background: var(--bg);
-  color-scheme: light;
 }
 
 body {
@@ -102,6 +101,30 @@ a {
   transform: translateX(2px);
 }
 
+/* Bordered square icon button - the header's menu + theme toggles and the blog RSS link all
+   share this so they read as one control family. Just the frame + hover; sizing an inner SVG is
+   the caller's job (they pass size=18). */
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+.icon-button:hover,
+.icon-button:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 code,
 pre {
   font-family: var(--f-mono);
@@ -154,7 +177,7 @@ img {
 .section {
   padding-top: var(--sp-6);
   margin-top: var(--sp-7);
-  border-top: 1px solid var(--ink);
+  border-top: 1px solid var(--rule);
 }
 .section > .eyebrow {
   margin-bottom: var(--sp-5);
@@ -258,5 +281,39 @@ img {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Theme toggle (Header.astro) - which of the three icons shows is driven by the data-choice
+   attribute the inline <head> script sets, so it's correct on first paint with no JS-driven
+   swap. The button itself and its cycle logic live in Header.astro. */
+.theme-toggle svg {
+  display: none;
+}
+:root[data-choice="system"] .theme-toggle .i-system,
+:root[data-choice="light"] .theme-toggle .i-light,
+:root[data-choice="dark"] .theme-toggle .i-dark {
+  display: block;
+}
+
+/* Shiki dual-theme (astro.config.mjs: themes.light = light-plus, themes.dark = dark-plus).
+   Shiki emits the light colours inline plus a --shiki-dark* custom property for each; these
+   rules swap to the dark ones, mirroring the palette's two activation cases. */
+:root[data-theme="dark"] .astro-code,
+:root[data-theme="dark"] .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .astro-code,
+  :root:not([data-theme="light"]) .astro-code span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
   }
 }
