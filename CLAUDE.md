@@ -95,7 +95,8 @@ separately.
   `slug` field (e.g. `src/content/blog/10-graduated.mdx` → `slug: graduated`) — routing/links use
   `entry.data.slug`, not `entry.id`. `projects` and `policies` have no such field, so
   `entry.id` (the filename, extension stripped) is the routing key instead — e.g.
-  `policies/privacy.mdx` → `entry.id === "privacy"`. `projects` also has a required `featured`
+  `policies/privacy.mdx` → `entry.id === "privacy"`. `policies` has a required `lastUpdated`
+  date field, shown in that page's gutter (see Routing below). `projects` also has a required `featured`
   boolean — an explicit editorial flag driving the index page's Projects
   spotlight, independent of `sortWeight`; two of the four projects are currently `featured: true`.
   `projects` has an optional `tags: string[]` (chips on the `/projects` listing via
@@ -112,7 +113,11 @@ separately.
   closed by a hairline rule before the `<Prose>` body. `blog/rss.xml.ts` builds the RSS feed from the
   `blog` collection (via `@astrojs/rss`); `blog/rss.ts` just re-exports its `GET` handler so
   `/blog/rss` and `/blog/rss.xml` both work.
-  `cookies.astro`/`privacy.astro`/`terms.astro`/`third-party.astro` are standalone one-off pages.
+  `cookies.astro`/`privacy.astro`/`terms.astro` each look up their entry in the `policies`
+  collection and render it through `PolicyLayout`; `third-party.astro` renders its own markup
+  (the generated license list) through `ProseLayout` directly. All four pass a named `rail`
+  slot — `← Home` plus, on the three policy pages, a mono last-updated date (from the
+  `policies` collection's `lastUpdated` field) — into `ProseLayout`'s `.doc-rail`.
   `about.astro` no longer exists (its content was folded into `index.astro`, see below) and
   `contact.astro` is now a redirect-only route (`export const prerender = false` + a bare
   `return Astro.redirect("/#contact")` in its frontmatter) — the only on-demand page route besides
@@ -131,7 +136,12 @@ separately.
   and the `Prose.astro` component style long-form content (blog posts, policy pages); `Index/About.astro`
   also wraps its prose in `Prose.astro` directly (it isn't itself a full page, so it doesn't go
   through `ProseLayout`).
-  `PolicyLayout.astro` wraps the policy pages specifically.
+  `PolicyLayout.astro` wraps the policy pages specifically — it forwards its own `rail` slot
+  through to `ProseLayout`'s (`<slot name="rail" slot="rail" />`, Astro's slot-forwarding
+  pattern) rather than rendering a rail itself.
+  `ProseLayout` also sizes the page's `<h1>` (`:global(.prose h1) { font-size: var(--text-2xl) }`)
+  — scoped to `ProseLayout` itself, not `Prose.astro`, since blog/project post bodies use `Prose`
+  directly and shouldn't be affected (one blog post's body has its own stray top-level heading).
 - **Header/nav** (`BaseLayout/Header.astro`): desktop nav links to `/projects`, `/blog`, and
   `/#contact` (no `/about` link — that page is gone); `Header.astro` owns the link list and
   passes it to `MobileMenu.astro` as a `links` prop. Below 640px the links are hidden and an
@@ -186,7 +196,9 @@ separately.
   blocks whose mono marker sticks in the gutter per group, e.g. one per year on `/blog`),
   `.entry-head` (the hairline-ruled header on the detail pages), `.tags` (mono chips — listing
   rows + project detail), `.eyebrow`, `.text-link` / `.more`
-  (link + section-action affordances, resting `--underline` → `--accent` on hover), `.sr-only`.
+  (link + section-action affordances, resting `--underline` → `--accent` on hover), `.back`
+  (leading-arrow-left back-links — pairs with `.more` for the underline/colour but nudges the
+  icon the opposite way on hover/focus), `.sr-only`.
   Icons are inline SVG via `src/components/Icon.astro` (`name` prop; geometric, 1.5px stroke,
   `currentColor`) — no icon dependency, no SVG asset files.
 - **Theming**: light + dark, both defined as token sets in `src/styles/tokens.css` — `:root` is

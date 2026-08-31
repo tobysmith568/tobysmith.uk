@@ -23,4 +23,19 @@ test.describe("Cookies Page", () => {
 
     await expect(cookiesPage.updateSentence).toBeVisible();
   });
+
+  test("should display a back link to the homepage", async ({ page }) => {
+    const cookiesPage = new CookiesPageObject(page);
+    await cookiesPage.goto();
+
+    await expect(cookiesPage.backLink).toHaveAttribute("href", "/");
+  });
+
+  test("should display the last-updated date in the gutter", async ({ page }) => {
+    const cookiesPage = new CookiesPageObject(page);
+    await cookiesPage.goto();
+
+    await expect(cookiesPage.lastUpdated).toHaveText("30 Aug 2026");
+    await expect(cookiesPage.lastUpdated).toHaveAttribute("datetime", "2026-08-30");
+  });
 });

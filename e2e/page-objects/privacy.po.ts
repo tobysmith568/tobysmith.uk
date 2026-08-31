@@ -19,4 +19,12 @@ export class PrivacyPageObject {
   get updateSentence(): Locator {
     return this.page.getByText("Our Privacy Policy was last updated on 30th August 2026.");
   }
+
+  get backLink(): Locator {
+    return this.page.locator("a.back");
+  }
+
+  get lastUpdated(): Locator {
+    return this.page.locator("time");
+  }
 }

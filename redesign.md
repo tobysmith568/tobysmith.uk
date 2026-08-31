@@ -23,7 +23,7 @@ complete.
 
 _Snapshot — 2026-08-31. Keep this current; the Decision log has the full trail._
 
-**Done and in `src/` (all green: `bun run lint` / `build` / `e2e` — 120 Playwright tests):**
+**Done and in `src/` (all green: `bun run lint` / `build` / `e2e` — 142 Playwright tests):**
 
 - Direction (**"Public API"**), tokens (type, colour, space, motion, primitives) — locked, and
   revised several times against real previews (see Decision log).
@@ -39,18 +39,16 @@ _Snapshot — 2026-08-31. Keep this current; the Decision log has the full trail
   dedicated pass on 2026-08-31 (Decision log). New `.listing` / `.entry-group` utilities.
 - **Detail templates** — blog post + project both passed on 2026-08-31 (shared `.entry-head`;
   project header rebuilt left-aligned with logo + tags + `source`/`npm`/`site` links).
-- The policy pages + 404 **inherit** the system (tokens, `.doc` gutter, shared prose
-  components, the icon set) and are internally consistent, but have **not had a dedicated
-  design pass** — see the subsections under Page layouts.
+- **Policy pages + 404** — also passed on 2026-08-31 (`ProseLayout`'s `.doc-rail` + `lastUpdated`
+  schema field; the 404 marker consolidated onto `.eyebrow`). **Every page has now had a
+  dedicated design pass** — the per-page layout work is done.
 
 **Next, in rough order:**
 
-1. **Per-page layout passes** — policy pages, then 404. Both are low-stakes ("not a showcase" /
-   "get the visitor back somewhere useful"); this is the last of the layout work.
-2. **Copy pass** — mostly untouched (a couple of one-off fixes logged). Best done after the
-   layouts settle.
-3. **Cross-cutting QA** — responsive / keyboard / reduced-motion / axe-Lighthouse sweep.
-4. **Wrap-up** — finish `CLAUDE.md`, fold migration.md's Open items (spotlight count is decided
+1. **Copy pass** — mostly untouched (a couple of one-off fixes logged per page as they landed).
+   The layouts are now settled, so this can start.
+2. **Cross-cutting QA** — responsive / keyboard / reduced-motion / axe-Lighthouse sweep.
+3. **Wrap-up** — finish `CLAUDE.md`, fold migration.md's Open items (spotlight count is decided
    via `featured`; blog curation still open) into its stage notes, final CI gate.
 
 **Needs Toby (see Open questions):** the concrete Definition-of-done checklist; blog per-post
@@ -450,14 +448,28 @@ taken).
 
 ### Policy pages + license list
 
-_Status: no dedicated pass._ `/terms` `/privacy` `/cookies` route through
-`PolicyLayout → ProseLayout` (now `.doc`-wrapped); `/third-party` uses `ProseLayout` directly and
-renders the generated license list. Legibility only — "not a showcase" per the brief.
+_Status: implemented (2026-08-31)._ `/terms` `/privacy` `/cookies` route through
+`PolicyLayout → ProseLayout`; `/third-party` uses `ProseLayout` directly. `ProseLayout` now
+renders a `.doc-rail` (a named `rail` slot, forwarded through `PolicyLayout`) holding
+`← Home` + — on the three policy pages only — a mono last-updated date, mirroring the blog
+post detail's back-link + date exactly. The date comes from a new `lastUpdated` field on the
+`policies` schema (was `z.object({})`, i.e. no fields at all); `/third-party` isn't
+content-collection-backed and has no such concept, so it gets just the back-link. `ProseLayout`
+also fixes the page `<h1>` (from the MDX content, or `third-party.astro`'s own literal one) —
+it previously had no explicit size at all, riding the browser's UA default inside a plain
+`<div>`, undefined across browsers. Sized at `--text-2xl` (the listing pages' restraint, not a
+blog/project detail's `--text-3xl`) — scoped to `ProseLayout` specifically so it can't affect a
+blog/project post body, which uses `Prose` directly. Still legibility-only otherwise — "not a
+showcase" per the brief; no other visual changes to the license list.
 
 ### 404
 
-_Status: light pass done, revisit with the rest._ `src/pages/404.astro`: `.doc`, left-aligned,
-`# 404` marker + "This page doesn't exist" + icon back-link. Copy in the Copy section.
+_Status: implemented (2026-08-31)._ `src/pages/404.astro`: `.doc`, left-aligned. The
+`# 404` marker moved from a bespoke `.code` class (hand-duplicating `.eyebrow`'s exact look)
+into a real `.doc-rail` + `.eyebrow` — net removal of code, and the 404 now reads as one more
+page filed the same way as everything else, the site's own undefined route. No back-link in
+the gutter (the body's "Back to the homepage" `.more` link is already the page's one CTA).
+Copy in the Copy section.
 
 ## Component specs
 
@@ -473,7 +485,10 @@ Typography), `.more` section actions, back-links (`arrow-left` + `--measure`), P
 links, blockquote, inline + block code with Shiki dual themes), `.tags` chips (shared
 `global.css` utility — `/projects` rows + project detail header), the project detail `.links`
 row (`source`/`npm`/`site`, mono, `arrow-up-right`, new tab), the shared `.entry-head` (the
-hairline rule closing a detail page's header). Still genuinely open: `HR`,
+hairline rule closing a detail page's header), `.back` (shared `global.css` hover/focus arrow
+nudge, opposite direction from `.more`'s — every back-link across detail/policy/404 pages),
+`ProseLayout`'s `.doc-rail` (back-link + optional last-updated date; policy pages + third-party).
+Still genuinely open: `HR`,
 `Footnote`, `ArticleImage`, code-block chrome beyond the current border treatment.
 
 ## Copy
@@ -536,10 +551,12 @@ Order of implementation in `src/`; each step ends on a green local CI gate. Prog
 3. `[x]` **Prose system** — Prose.astro + ProseLayout + PolicyLayout; Shiki dual code themes.
 4. `[x]` **Index** — all five sections + ContactForm. `featured: boolean` added to the `blog`
    schema; picks made (`my-deployments-in-2024` / `reverse-flex-directions` → `true`).
-5. `[~]` **Listing + detail pages** — `/blog` + `/projects` listings (year grouping, manifest +
-   tags) and the blog-post + project detail templates (shared `.entry-head`; project header
-   rebuilt with logo + tags + `source`/`npm`/`site` links; new `links` schema field) all had
-   their pass on 2026-08-31. **Only the policy pages + 404 remain** — both low-stakes.
+5. `[x]` **Listing + detail pages + policy/404** — `/blog` + `/projects` listings (year
+   grouping, manifest + tags), the blog-post + project detail templates (shared `.entry-head`;
+   project header rebuilt with logo + tags + `source`/`npm`/`site` links; new `links` schema
+   field), and the policy pages + 404 (`ProseLayout`'s `.doc-rail`, `lastUpdated` schema field,
+   the 404 marker onto `.eyebrow`) all had their pass, done 2026-08-31. Every page has now had a
+   dedicated layout pass.
 6. `[x]` **Motion pass** — the load-in sequence, hover states, the role easter egg, the
    `clientPrerender` fix. (No scroll reveals — deliberate.)
 7. `[ ]` **Copy pass** — apply agreed wording; update e2e page objects + specs. (Only one-off
@@ -552,6 +569,40 @@ Order of implementation in `src/`; each step ends on a green local CI gate. Prog
 ## Decision log
 
 Append-only, newest first. Format: `YYYY-MM-DD — <area>: <decision>. <why, briefly>.`
+
+- **2026-08-31 — Page layouts: policy pages + 404 — the last of the layout work.** Toby had no
+  preference on the one open call (h1 size), so went with the recommendation.
+  - **Policy pages** (`/terms` `/privacy` `/cookies` `/third-party`) were the one page type left
+    with a genuinely empty gutter — every other `.doc` page has a back-link, metadata, or a
+    marker there. `ProseLayout` now renders a `.doc-rail` via a named `rail` slot (forwarded
+    through `PolicyLayout` for the three policy pages); rail content is `← Home` plus, on the
+    three policy pages, a mono last-updated date — mirroring the blog-post-detail idiom
+    (`← Posts` + date) exactly. New `lastUpdated` field on the `policies` schema (was
+    `z.object({})`, no fields at all); populated `2026-08-30` for all three from the date each
+    policy's own prose already states, so nothing new was invented, just structured.
+    `/third-party` isn't content-collection-backed and has no such date, so it gets only the
+    back-link — no fabricated metadata.
+  - **The page `<h1>`** (from the MDX content, or `third-party.astro`'s own literal one) had
+    never been given an explicit size — riding the browser's UA default inside a plain `<div>`,
+    undefined across browsers. Sized at **`--text-2xl`** (matching the listing pages'
+    restraint — these pages are explicitly "not a showcase" per the brief — over a blog/project
+    detail's `--text-3xl`), scoped inside `ProseLayout` itself (not `Prose.astro`, which
+    blog/project post bodies use directly and shouldn't be affected — one existing blog post
+    has its own stray top-level `#` heading in its body).
+  - **404** — the `# 404` marker was a bespoke `.code` class hand-duplicating `.eyebrow`'s exact
+    look (mono, muted, blue `#`). Replaced with the real `.eyebrow` class, moved into a
+    `.doc-rail` — net removal of code, and the 404 now reads as one more page filed the same
+    way as everything else, the site's own undefined route. No back-link added to its gutter —
+    "Back to the homepage" is already the page's one CTA.
+  - `.back:hover svg` (the leading-arrow-left hover nudge, opposite direction from `.more`'s)
+    moved from being duplicated in both detail-page files to a shared `global.css` rule, now
+    that it's used on 6+ pages.
+  - e2e: `terms`/`privacy`/`cookies`/`third-party` page objects gain `backLink` (+ `lastUpdated`
+    on the three policies) getters and specs; new `not-found.po`/`not-found.spec` (404 had zero
+    coverage before). CI green: lint / `format:check` / `astro check` (0 errors, 76 files) /
+    Playwright chromium 71/71 (142 total across both browsers).
+  - **Every page in the site has now had a dedicated layout pass** — the per-page layout work
+    (build sequence step 5) is done. Next: the copy pass.
 
 - **2026-08-31 — Bug: project logos 400 in `astro dev` — fixed by dropping `<Image>`.** Toby
   reported the logos 400ing on his dev server right after the detail-template pass landed.

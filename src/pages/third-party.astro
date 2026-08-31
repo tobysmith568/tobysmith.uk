@@ -1,6 +1,7 @@
 ---
 import ProseLayout from "../layouts/ProseLayout.astro";
 import Anchor from "../components/Anchor.astro";
+import Icon from "../components/Icon.astro";
 import { Code } from "astro:components";
 import licenses from "../data/licenses.generated.json";
 
@@ -17,6 +18,13 @@ const getPackageUrl = (packageNameAndVersion: string) => {
 ---
 
 <ProseLayout title={title} description={description} noIndex>
+  <Fragment slot="rail">
+    <a href="/" class="back more mono">
+      <Icon name="arrow-left" size={14} />
+      Home
+    </a>
+  </Fragment>
+
   <h1>Third-party Content</h1>
 
   <h2>Licenses</h2>

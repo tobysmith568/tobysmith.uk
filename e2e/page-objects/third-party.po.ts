@@ -19,4 +19,8 @@ export class ThirdPartyPageObject {
   get generateLicenseFileCredit(): Locator {
     return this.page.getByText("This content was generated using the");
   }
+
+  get backLink(): Locator {
+    return this.page.locator("a.back");
+  }
 }

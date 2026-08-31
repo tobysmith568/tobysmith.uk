@@ -25,4 +25,11 @@ test.describe("Third Party Page", () => {
 
     await expect(thirdPartyPage.generateLicenseFileCredit).toBeVisible();
   });
+
+  test("should display a back link to the homepage", async ({ page }) => {
+    const thirdPartyPage = new ThirdPartyPageObject(page);
+    await thirdPartyPage.goto();
+
+    await expect(thirdPartyPage.backLink).toHaveAttribute("href", "/");
+  });
 });

@@ -1,6 +1,8 @@
 ---
 import { getCollection, render } from "astro:content";
 import PolicyLayout from "../layouts/PolicyLayout.astro";
+import Icon from "../components/Icon.astro";
+import dayjs from "dayjs";
 
 const title = "Terms & Conditions";
 const description = "The Terms & Conditions for tobysmith.uk";
@@ -13,8 +15,19 @@ if (!termPolicy) {
 }
 
 const { Content } = await render(termPolicy);
+
+const humanReadableDate = dayjs(termPolicy.data.lastUpdated).format("DD MMM YYYY");
+const parseableDate = dayjs(termPolicy.data.lastUpdated).format("YYYY-MM-DD");
 ---
 
 <PolicyLayout title={title} description={description} noIndex>
+  <Fragment slot="rail">
+    <a href="/" class="back more mono">
+      <Icon name="arrow-left" size={14} />
+      Home
+    </a>
+    <time class="mono" datetime={parseableDate}>{humanReadableDate}</time>
+  </Fragment>
+
   <Content />
 </PolicyLayout>

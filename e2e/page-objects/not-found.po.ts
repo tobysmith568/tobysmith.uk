@@ -1,0 +1,26 @@
+import type { Locator, Page } from "@playwright/test";
+import { MetaPageObject } from "./meta.po";
+
+export class NotFoundPageObject {
+  readonly meta: MetaPageObject;
+
+  constructor(private readonly page: Page) {
+    this.meta = new MetaPageObject(page);
+  }
+
+  async goto(): Promise<void> {
+    await this.page.goto("/this-page-does-not-exist");
+  }
+
+  get marker(): Locator {
+    return this.page.locator(".eyebrow");
+  }
+
+  get title(): Locator {
+    return this.page.locator("h1");
+  }
+
+  get homeLink(): Locator {
+    return this.page.locator("a.more");
+  }
+}

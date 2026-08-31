@@ -23,4 +23,19 @@ test.describe("Terms Page", () => {
 
     await expect(termsPage.updateSentence).toBeVisible();
   });
+
+  test("should display a back link to the homepage", async ({ page }) => {
+    const termsPage = new TermsPageObject(page);
+    await termsPage.goto();
+
+    await expect(termsPage.backLink).toHaveAttribute("href", "/");
+  });
+
+  test("should display the last-updated date in the gutter", async ({ page }) => {
+    const termsPage = new TermsPageObject(page);
+    await termsPage.goto();
+
+    await expect(termsPage.lastUpdated).toHaveText("30 Aug 2026");
+    await expect(termsPage.lastUpdated).toHaveAttribute("datetime", "2026-08-30");
+  });
 });

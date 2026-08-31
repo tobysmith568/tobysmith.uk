@@ -9,6 +9,7 @@ interface Props {
 ---
 
 <ProseLayout {...Astro.props}>
+  <slot name="rail" slot="rail" />
   <div class="policy-wrapper">
     <slot />
   </div>

@@ -41,7 +41,12 @@ const blogCollection = defineCollection({
 
 const policiesCollection = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/policies" }),
-  schema: z.object({})
+  schema: z.object({
+    // Shown in the page's gutter alongside the back-link, mirroring the blog post detail's
+    // date. The value is also stated in each policy's own prose ("last updated on ...") -
+    // this is the same fact, just structured so the layout can render it too.
+    lastUpdated: z.date()
+  })
 });
 
 export const collections = {

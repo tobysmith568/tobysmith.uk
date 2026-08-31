@@ -5,8 +5,11 @@ import Icon from "../components/Icon.astro";
 
 <BaseLayout title="404" description="404: Page not found" noIndex>
   <div class="doc">
+    <div class="doc-rail">
+      <p class="eyebrow">404</p>
+    </div>
+
     <div class="wrapper">
-      <p class="code mono">404</p>
       <h1>This page doesn't exist</h1>
       <p class="lead">The link may be broken, or the page may have moved.</p>
       <a class="more mono" href="/">
@@ -22,18 +25,7 @@ import Icon from "../components/Icon.astro";
     padding-block: var(--sp-8) var(--sp-9);
   }
 
-  .code {
-    font-size: var(--text-sm);
-    color: var(--muted);
-  }
-  .code::before {
-    content: "#";
-    margin-right: 0.5ch;
-    color: var(--accent);
-  }
-
   h1 {
-    margin-top: var(--sp-3);
     font-size: var(--text-3xl);
   }
 

@@ -23,4 +23,19 @@ test.describe("Privacy Page", () => {
 
     await expect(privacyPage.updateSentence).toBeVisible();
   });
+
+  test("should display a back link to the homepage", async ({ page }) => {
+    const privacyPage = new PrivacyPageObject(page);
+    await privacyPage.goto();
+
+    await expect(privacyPage.backLink).toHaveAttribute("href", "/");
+  });
+
+  test("should display the last-updated date in the gutter", async ({ page }) => {
+    const privacyPage = new PrivacyPageObject(page);
+    await privacyPage.goto();
+
+    await expect(privacyPage.lastUpdated).toHaveText("30 Aug 2026");
+    await expect(privacyPage.lastUpdated).toHaveAttribute("datetime", "2026-08-30");
+  });
 });

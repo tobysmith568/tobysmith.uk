@@ -11,8 +11,22 @@ interface Props {
 
 <BaseLayout {...Astro.props}>
   <div class="doc">
+    <div class="doc-rail">
+      <slot name="rail" />
+    </div>
     <Prose>
       <slot />
     </Prose>
   </div>
 </BaseLayout>
+
+<style>
+  /* The only heading this layout's slotted content ever carries is the page's own <h1> (policy
+     prose, or third-party.astro's literal <h1>) - size it here rather than in Prose.astro,
+     which blog/project post bodies also use directly and shouldn't be affected. Matches the
+     listing pages' restraint rather than a blog/project detail's --text-3xl - these pages are
+     "legibility only", not a showcase (see redesign.md). */
+  :global(.prose h1) {
+    font-size: var(--text-2xl);
+  }
+</style>

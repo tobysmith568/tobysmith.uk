@@ -101,6 +101,14 @@ a {
   transform: translateX(2px);
 }
 
+/* Back-links (`class="back more mono"`) reuse .more's underline/colour affordance but lead
+   with an arrow-left, so the nudge on hover/focus needs to point the other way. Shared here
+   now that it appears on every detail page, every policy page, and 404. */
+.back:hover svg,
+.back:focus-visible svg {
+  transform: translateX(-2px);
+}
+
 /* Bordered square icon button - the header's menu + theme toggles and the blog RSS link all
    share this so they read as one control family. Just the frame + hover; sizing an inner SVG is
    the caller's job (they pass size=18). */
