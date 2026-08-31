@@ -1,0 +1,637 @@
+# tobysmith.uk — Visual redesign (Stage 10)
+
+The working document for the collaborative visual redesign. It is the companion to
+[migration.md](./migration.md)'s **Stage 10** — that stage's entry stays a short summary of _why_
+and _when_; this file is where the design work actually happens and where every decision is
+recorded. Like migration.md, it is a living document and will be deleted once the migration is
+complete.
+
+## How to use this document
+
+- migration.md Stage 10 is the anchor: the rationale for redesigning before the cutover, the
+  scope guardrails, the exit criteria. Don't restate those here — link back to them.
+- **The body sections (Direction → Tokens → Layouts → Components → Copy) always describe the
+  current agreed spec.** The **Decision log** at the end is the append-only chronological trail of
+  how we got there, including reversals.
+- **Update this file in the same session a decision is made**, not afterwards. If we reverse a
+  decision, edit the body to the new truth _and_ add a Decision log line saying what changed and
+  why.
+- Any session picking this up mid-redesign: read this whole file first, then the most recent
+  Decision log entries and the Open questions.
+
+## Working agreement — the rules
+
+How this collaboration runs. Agreed up front; changes to these rules are themselves logged.
+
+- **Interactive by default.** Toby makes the taste calls. Claude proposes options _with a
+  recommendation and its reasoning_ — it doesn't pick silently, and it doesn't present a flat list
+  with no opinion. Any fork that would send real work in a direction goes to Toby before that work
+  starts.
+- **`/frontend-design` every time.** Every working session on the redesign begins by invoking the
+  `frontend-design` skill and following its process (brainstorm a compact token plan → critique it
+  against the generic-default clusters → build → critique again). Not optional, including for
+  "just a small tweak".
+- **Suggestions as local HTML previews.** When Claude wants to show something visual, it writes a
+  self-contained `.html` file into Toby's scratchpad directory (path is printed per session; this
+  session:
+  `/tmp/claude-1000/-home-tobys-src-tobysmith568-tobysmith-uk/9b2adfe0-7e5a-46d3-a091-93860188f79a/scratchpad`)
+  so Toby opens it in a browser locally. These are throwaway — never committed, never part of the
+  build. Multiple options = multiple files, or one file with the variants clearly separated.
+- **Nothing lands in `src/` until the direction is agreed.** Explore in previews first. Once the
+  token system and the index layout are signed off, implementation can start; later pages can then
+  proceed in parallel, each with its own sign-off.
+- **One decision, or a small batch, at a time.** Resolve direction, then foundational tokens, then
+  layouts, then components, then copy — in that order (see _Sequencing_ below). Don't fan out into
+  dozens of micro-decisions in one exchange.
+- **Scope guardrails** (from migration.md): dodger-blue stays in the palette — it can become far
+  more subtle, no longer the loud primary it is today, but it isn't dropped; design against the
+  `*.workers.dev` preview / `wrangler dev`, not the live domain; production stays on GitHub Pages
+  throughout.
+- **Quality floor, non-negotiable and built in without ceremony:** responsive down to mobile,
+  visible keyboard focus, `prefers-reduced-motion` respected, semantic HTML, real alt text.
+- **Local CI gate after anything lands in `src/`:** `bun run lint`, `bun run format:check`,
+  `bun run build` (`astro check`), `bun run e2e` — all green locally before moving on, exactly as
+  every migration stage.
+- **Playwright will churn.** Selectors and visible copy _will_ change. Update
+  `e2e/page-objects/**` and the specs alongside the components in the same commit — no silent
+  coverage loss, no letting the suite rot.
+- **Stack constraints stay:** Astro `output: "static"`; component-scoped `<style>` with native CSS
+  nesting, no preprocessor; Alpine.js is available for interactivity; Shiki `light-plus` for code
+  blocks (revisit only if the palette forces it); fonts self-hosted via `@fontsource*` or
+  equivalent — no external font CDN (CSP + performance).
+
+## Definition of done
+
+migration.md sets the bar as _"this is the public face I want the site to launch with"_ — not a
+finished wishlist; leftover polish ships as ordinary small PRs after the cutover. Pin the concrete
+version with Toby at the start of the stage:
+
+- [ ] **TBD** — the concrete, per-page "good enough to launch" checklist
+- [x] Blog posts marked `featured: true`/`false` — resolved, see Decision log
+- [ ] Blog per-post curation — confirmed in scope for Stage 10 or explicitly deferred (migration.md
+      tracks it as a separate, non-blocking pass)
+- [ ] `CLAUDE.md` architecture/styling notes updated; "current plain look" framing dropped
+- [ ] migration.md Open items resolved into their stage notes
+
+## The brief
+
+### Subject
+
+Toby Smith — London-based Senior Software Developer at Trayport (React frontends, C# backends),
+npm package author, TypeScript-first with some Rust and C#, background in games development
+(Unity, OpenGL). The site is his personal portfolio and blog at tobysmith.uk.
+
+### Audience
+
+Rough priority order — refine with Toby:
+
+1. Developers who landed on a blog post from a search and might look around
+2. Potential employers / collaborators sizing him up
+3. People following a link to a specific project
+
+Explicitly _not_ optimised for: keyword-scanning recruiters, general non-technical public.
+
+### What each surface is for
+
+- **Index** — "who is this, what do they make, how do I reach them" in one scroll: hero, about,
+  projects spotlight, blog spotlight, contact form.
+- **Projects** (`/projects`, `/projects/[slug]`) — the portfolio proper: a list plus per-project
+  long-form write-ups (4 projects, MDX).
+- **Blog** (`/blog`, `/blog/[slug]`, RSS) — 10 technical posts, dev-notebook style.
+- **Policies** (`/terms`, `/privacy`, `/cookies`, `/third-party`) — legal text and the license
+  list; low-traffic, must stay legible, not a showcase.
+- **404** — get the visitor back to something useful.
+
+### Voice
+
+First-person, informal, dry ("Burrito over-filler" sits in the rotating job titles; the site is
+"a place for me to share cool things I find or create"). The redesign keeps that voice — copy
+changes tighten and focus it, they don't corporatise it.
+
+### In scope / free to change
+
+Everything visual — layouts, typography, colour beyond "still recognisably dodger-blue", spacing,
+motion, component styling, section order — and wording: headings, taglines, CTA labels, form copy,
+meta descriptions, error and empty states. Blog _post bodies_ are out of scope here (that's the
+separate curation pass).
+
+### Fixed
+
+Route URLs (migration.md locked them), the content-collection schemas, the contact-form flow and
+its Turnstile integration, the tech stack.
+
+### What we're replacing
+
+Blinker (sans) + Fira Code, dodger-blue accent, an 800px centred column, a solid-blue nav bar,
+underline-colour-shift links, one CSS animation (the rotating hero job title), justified prose,
+and a corner-bracket blockquote. Functional and generic — per migration.md, "neither the old
+production site nor where the site is meant to end up."
+
+### Inventory (coverage tracking)
+
+- **Pages:** index, projects index, project detail, blog index, blog detail, terms, privacy,
+  cookies, third-party, 404. (`/contact` is a redirect only — no UI.)
+- **Layouts:** BaseLayout, ProseLayout, PolicyLayout.
+- **Shared components:** Header, HeaderMenuItem, MobileMenu, Footer, Prose, Anchor / NoAnchor, HR,
+  Footnote, ArticleImage, ProjectListItem, BlogListItem, ContactForm, and the Index sections
+  (Hero, About, ProjectsSpotlight, BlogSpotlight, ContactSection).
+
+## Sequencing — what we decide, in what order
+
+Short answer to "fonts before layout?": **direction first, then the foundational tokens
+(type, colour, spacing, motion), then page layouts, then components, then copy.** Reasoning:
+
+1. **Design direction** — mood, thesis, the signature element, the anti-goals, the one deliberate
+   risk. Everything downstream serves this; choosing type or colour first is how you back into a
+   generic default.
+2. **Information architecture** — which sections and pages exist and in what order. Almost
+   independent of the visual choices and low-controversy here (migration.md already made the big
+   IA moves), so lock it early and cheaply. Includes what drives the index spotlights (decided —
+   see Decision log).
+3. **Typography** — before layout, because the type scale and line-height set the vertical rhythm
+   that layout spacing is derived from. Display + body + mono, scale, weights, measure.
+4. **Colour** — palette as named hex, semantic roles, light/dark decision, code-block theme.
+   Roughly parallel with type; both feed everything visual.
+5. **Spacing, grid, breakpoints** — derived from the type rhythm; the skeleton every layout
+   shares.
+6. **Motion** — duration scale, easings, the page-load moment, scroll reveals, hover behaviour,
+   reduced-motion. Decided as a system now so it isn't sprinkled on ad hoc later.
+7. **Other primitives** — radius, rules and borders, shadows, icon style, image treatment.
+8. **Page layouts** — index first (it's the thesis and exercises the most components), then
+   projects, blog, policies, 404, then header and footer.
+9. **Component specs** — buttons, form fields, list items, prose elements, code blocks, links —
+   finalised once the layouts that use them are settled.
+10. **Copy pass** — headings, taglines, CTA labels, form / error / empty-state text, meta
+    descriptions.
+11. **Build sequence** — see the final section.
+
+Decisions can loop back — settling the index layout may send us back to the type scale. That's
+expected: edit the earlier section and log the change.
+
+---
+
+## Design direction
+
+_Status: chosen, refining._ Three directions were explored as HTML previews (throwaway, in the
+scratchpad — see the Decision log); Toby picked **"Public API"** over "Field notes" and "Release".
+The values below are direction 1's starting point, not yet locked — still open to refinement
+before it feeds the Tokens section.
+
+- **Thesis / one-liner:** the site as a well-documented module — a persistent metadata block like
+  file frontmatter, content sections read as named exports.
+- **Mood:** precise, quietly confident, systems-y — like reading well-documented source.
+- **Signature element:** the frontmatter block — `name / role / location / links` set as
+  monospace key-value pairs, **inline at the top of the hero** (decided — a sticky left-rail
+  variant was previewed and rejected; see Decision log).
+- **The deliberate risk:** using monospace as real UI chrome (eyebrows, metadata, tags, dates),
+  not just for code — without tipping into a fake-terminal cliché.
+- **Structure device:** monospace field labels, never numbers — the content isn't a sequence.
+- **Anti-goals — must not read as:** the cream-background + high-contrast-serif + terracotta
+  cluster; the near-black + single-acid-accent cluster; the broadsheet / hairline-rule cluster;
+  a generic "developer portfolio" template (dark hero, gradient blob, tech-logo cloud, 01/02/03
+  section numbers that aren't a real sequence); or a full fake-terminal/REPL (rejected during
+  brainstorming, before it reached a preview, for being the on-the-nose cliché for a CLI-tool
+  author).
+- **Reference points:** the previewed HTML itself (see Decision log) — direction 1 is the working
+  reference until superseded by real `src/` code.
+
+## Design tokens
+
+_Status: confirmed._ Toby reviewed `tokens-specimen.html` and liked it, with one change (card/item
+title hover, see Typography below and the Decision log). Values below are locked pending anything
+that surfaces once real content/layouts are built against them.
+
+### Typography
+
+- Display face: **Space Grotesk** (500/600) · Body face: **Public Sans** (400/500) · Mono face:
+  **Fira Code** (400/500 — decided, kept for all code snippets, and doubles as UI chrome per
+  direction 1: eyebrows, metadata key/value pairs, tags, dates) · no separate utility/caption
+  face — Fira Code at `text-xs` covers that role.
+- Type scale (px @ 1rem = 17px base): `xs` 13 · `sm` 15 · `base` 17 · `lg` 20 · `xl` 24 · `2xl` 30
+  · `3xl` 40 · `4xl` 52. Not a strict modular ratio — tuned by eye per use (mono metadata at `xs`,
+  body copy at `base`, item titles at `xl`, hero lead `3xl`–`4xl` responsive).
+- Base line-height 1.65 (body), tight 1.1–1.15 (display headings), 1.5 (mono metadata blocks).
+- Prose measure: **44rem** (~75ch at base size) — the same value the chosen 1a hero layout
+  already used, kept consistent for the prose column too.
+- Weights in use, deliberately few: body 400, display 500 (lead line) / 600 (item titles, nav
+  identity), mono 400 (body code) / 500 (UI chrome — labels, metadata, buttons). No 700 anywhere
+  — the mood is quiet, not bold.
+- Link treatment: ink by default everywhere; dodger-blue (`--accent`) is never a resting
+  colour, only a hover/focus state. **Body, nav and footer links carry a quiet resting
+  underline** (`--underline`, `#b9bfc7`, 1px, `0.15em` offset) so a link is always
+  distinguishable from body text without relying on colour — on hover/focus the underline
+  thickens to 2px and both it and the text go `--accent` (reversed from the earlier
+  "underline only on hover" rule — see Decision log). Card/item titles (project + blog list
+  items) still animate their underline in from transparent to `--accent` on hover/focus
+  alongside the colour shift (1.5px, 3px offset). Focus-visible gets a 2px `--accent` outline,
+  2px offset, on everything interactive (global rule in `global.css`).
+
+### Colour
+
+- Palette (proposed, 8 named roles — deliberately more than "4–6" since several are pure
+  neutrals doing structural work, not accent choices):
+  - `--bg` `#F6F7F9` — page background, cool off-white
+  - `--surface` `#FFFFFF` — cards, inputs, anything raised off the page
+  - `--ink` `#16181D` — primary text, near-black
+  - `--muted` `#6B7280` — secondary text, metadata, captions
+  - `--border` `#E1E4E8` — rules, dividers, input borders
+  - `--accent` `#1E90FF` — dodger-blue, interactive-only (decided: stays in the palette, demoted
+    from loud primary — see Decision log)
+  - `--accent-strong` `#0F6FD1` — accent's hover/active state, a touch deeper
+  - `--error` `#B3312A` — muted brick red, contact-form failure text only; no separate "success"
+    colour — success is communicated by the message text plus a thin `--accent` left rule, not a
+    colour of its own (avoids a generic green-tick moment)
+- Light / dark mode: **light only** for Stage 10 (see Open questions — dark mode is a separate
+  yes/no call, not blocking this token set either way since every role above is named, not
+  hard-coded, so dark values could slot in later without a rework)
+- Code-block theme: unchanged, Shiki `light-plus` — reads fine against `--surface`
+
+### Spacing, grid, breakpoints
+
+- 4px base unit, scale: `sp-1` 4 · `sp-2` 8 · `sp-3` 12 · `sp-4` 16 · `sp-5` 24 · `sp-6` 32 ·
+  `sp-7` 48 · `sp-8` 64 · `sp-9` 96 (px). Roughly ×1.5–2 steps, not a strict formula — kept small
+  and countable on purpose (9 stops).
+  Layout tracks: `--measure` **44rem** (readable text column — prose, section bodies), `--shell`
+  **60rem** (the page shell — wider than the text column), `--gutter` **9rem** (the left label
+  track). The hero (frontmatter block + lead) sits flush at the shell's left edge; every
+  `.section` below it is a two-track grid — the monospace `# label` in the gutter, the body at
+  `--measure` — so the labels read as export markers in a margin. (Reversed from "44rem for
+  everything, single-column at every width" — see Decision log.)
+- Breakpoints: **640px** for the mobile nav toggle, **960px** (`60rem`) for the label-gutter
+  grid (below it the label / rail stacks above the body). Both are content-driven, not a device
+  grid.
+- The listing + article + policy pages use `.doc` — the same gutter grid as `.section`, so
+  their content lines up with the index body rather than sitting in a narrow left-aligned
+  column. The gutter (`.doc-rail`) holds page metadata: an RSS link (`/blog`), a back-link +
+  date (article pages), or nothing (`/projects`, policies — deliberate margin).
+
+### Motion
+
+- Duration scale: `dur-fast` 120ms (hover colour/background shifts) · `dur-base` 200ms
+  (underline-draw, focus transitions) · `dur-slow` 400ms (the load-in settle only).
+- Easing: `ease-standard` `cubic-bezier(.2,.7,.3,1)` for the load-in settle · `ease-out`
+  `cubic-bezier(.16,1,.3,1)` for hovers/underlines.
+- Page-load sequence: **the one orchestrated moment** — the frontmatter block's key/value rows
+  fade + rise in on load, ~70ms stagger per row, `dur-slow`/`ease-standard`. Nothing else animates
+  on load.
+- Scroll-triggered reveals: **none.** Deliberate — direction 3 ("Release") used a scroll stagger
+  and it's exactly the kind of scattered effect the brief flagged as reading AI-generated; this
+  direction's mood is quiet and systems-y, so lists just render. One signature moment (the
+  settle), not several.
+- Hover micro-interactions: underline-draw on body links, colour shift on card titles/buttons,
+  all `dur-fast`–`dur-base`. Plus one easter egg: once the load-in has settled, hovering the
+  frontmatter block flicks the `role` value to a random quip (`Full-stack developer` /
+  `npm package author` / `TypeScript fanatic` / `Burrito over-filler`) and it snaps back to the
+  real title on mouse-leave. Mouse-only (`hover: hover`), never repeats the previous quip, and
+  the `.sr-only` real title is untouched throughout. Keeps the old rotating-title joke alive
+  without the ruled-out ambient loop — it only moves when the reader reaches for it.
+- Reduced-motion: `prefers-reduced-motion: reduce` disables every animation/transition outright
+  (confirmed working in the specimen and both direction-1 previews) — the settle sequence simply
+  never plays, content is present immediately.
+
+### Other primitives
+
+- Border radius: **2px**, everywhere something has one (inputs, buttons, cards, the avatar) —
+  deliberately almost-off, crisp rather than soft-friendly.
+- Borders / rules: 1px `--border` for dividers and input borders; the frontmatter block keeps its
+  2px `--border` accent rule (its one structural flourish).
+- Shadows: **none**, anywhere, in this direction — flat fits "reading source", and it's one fewer
+  thing to make consistent across light/dark later.
+- Icon style: a small inline-SVG set in `src/components/Icon.astro` — geometric, 1.5px stroke,
+  `currentColor`, 16px default (`arrow-right`, `arrow-left`, `arrow-up-right`, `rss`, `close`,
+  `menu`). Replaces every unicode glyph that was doing an icon's job (`→`, `×`, the `chevron-left.svg`
+  / `rss.svg` assets — both deleted). `--muted` at rest, `--accent` on hover, often with a 2–3px
+  translate. See Decision log.
+- Image treatment: the hero avatar is a **96 × 120 (4:5 portrait) crop, 2px radius, 1px
+  `--border`**, top-aligned left of the frontmatter record so the two heights roughly match (see
+  Decision log). Project logos still sit bare (contain-fit, no frame); revisit once the Projects
+  layout section is underway.
+
+## Page layouts
+
+_Status: not started._ One subsection per surface — ASCII wireframe plus notes for each.
+
+### Global — header / nav (desktop + mobile)
+
+_Status: implemented._ Header bar at `--shell` width: mono `toby smith` identity left, mono
+nav links right (`projects` / `blog` / `contact`, muted → ink with an underline that draws in
+on hover/active). Below 640px the links are replaced by a bordered icon button ("Open menu",
+`menu` icon). **The mobile drawer** (`MobileMenu.astro`, Alpine) slides in from the right over a
+dimmed overlay: a header row (`# menu` + a bordered `close`-icon button), full-width link rows
+(mono, `arrow-right` icon, `--accent` active/hover state), and a footer row of github / linkedin
+/ rss links. Esc closes it; body scroll locks while open. (Replaces the earlier drawer that
+always rendered the toggle and had the desktop links leaking through — see Decision log.)
+
+### Global — footer
+
+_Status: implemented._ Rendered as a sibling of `<main>` (not inside it) so `main { flex: 1 }`
+pins it to the viewport bottom on short pages. `--shell` width, mono, `--text-xs`: `© Toby Smith
+{year}` left, legal links (terms / privacy / cookies / licenses) right, each with the resting
+underline. Wraps to two rows under ~480px.
+
+### Index
+
+_Status: implemented in `src/` and revised once against a real preview (Toby's punch-list —
+see Decision log); still pending final visual sign-off._ Hero (frontmatter block + lead line +
+one-shot role settle, all flush at the shell's left edge), then four `.section`s (about,
+projects spotlight, blog spotlight, contact) each opening with a 1px `--ink` rule and a
+monospace `# label` that sits in the left gutter on wide viewports / above the body on narrow.
+Section order unchanged from Stage 6 (hero → about → projects → blog → contact).
+Header/footer/mobile nav rebuilt in the same pass.
+
+Local CI green: `bun run lint`, `bun run format:check` (redesign.md aside), `bun run build`
+(`astro check`, 0 errors), full Playwright suite (100 passing, chromium + firefox).
+
+Not yet done — a proper per-page layout pass for the Projects/Blog listings + detail pages, the
+policy pages, and 404. This round gave them mechanical consistency only (shared list-item and
+prose styling, the `.doc` gutter layout so their content lines up with the index body, the icon
+set, a site-consistent 404) but not their own
+design.
+
+### Projects — index
+
+### Projects — detail
+
+### Blog — index
+
+### Blog — detail
+
+### Policy pages + license list
+
+### 404
+
+## Component specs
+
+_Status: several settled implicitly during the Index build + the 2026-08-31 polish pass — not
+yet written up as standalone specs._ Settled in code: buttons/CTAs (dark `--ink` fill,
+`arrow-right` icon, `--accent-strong` hover), contact-form fields (`--surface`, 1px border →
+2px `--accent` outline on focus, `--muted` border on hover), `ProjectListItem` / `BlogListItem`
+(flex row, right-aligned nudging `arrow-right`, `--text-lg` title), links (resting `--underline`,
+see Typography), `.more` section actions, back-links (`arrow-left` + `--measure`), Prose
+(headings, links, blockquote, inline + block code). Still genuinely open: `HR`, `Footnote`,
+`ArticleImage`, code-block chrome beyond the current border treatment.
+
+## Copy
+
+_Status: not started._ Track every wording change here so it's reviewable in one place.
+
+- **Hero:** name, the rotating titles ("Full-stack developer" / "npm package author" /
+  "TypeScript fanatic" / "Burrito over-filler"), and the "Blog and Portfolio Website" line — keep
+  / tighten / replace: TBD
+- **Section headings** ("About Me", "Projects", "Blog"): TBD
+- **CTA labels** ("Send Message", "More projects →", "More posts →"): TBD
+- **Contact form:** labels, placeholders, success text ("Message sent successfully!"), error text,
+  disabled / submitting states: TBD. Intro line reworded in the 2026-08-31 pass — was "Feel free
+  to reach out me using the message form below." (typo included) → "Got a question or an idea?
+  Send a message below, or reach me on LinkedIn."
+- **404 copy:** reworded in the 2026-08-31 pass — "404! / The page you are looking for does not
+  exist." → "`# 404` / This page doesn't exist / The link may be broken, or the page may have
+  moved." + "← Back to the homepage". Revisit with the rest of the 404 layout pass.
+- **Empty / error states:** TBD
+- **Meta titles + descriptions** per page: TBD
+- **Footer:** "Copyright Toby Smith {year}", link labels: TBD
+
+## Open questions
+
+- Definition of done — the concrete per-page checklist (needs Toby)
+- Blog per-post curation — in scope for Stage 10, or deferred?
+- Dark mode — in or out?
+- Body / display faces — keep Blinker, or replace it? (Fira Code for code is decided.)
+- Profile photo — size/shape/position **resolved** (96 × 120 portrait, see Decision log). Still
+  open: the source is the GitHub avatar (a side-cropped selfie — sky above, pavement below); a
+  purpose-shot headshot would fill the portrait frame far better.
+
+## Build sequence (once the direction is locked)
+
+Order of implementation in `src/`; each step ends on a green local CI gate.
+
+1. **Tokens + global styles** — `BaseLayout.astro`'s `:root` custom properties, font imports,
+   global element styles, the reduced-motion baseline.
+2. **Layout shell** — Header, MobileMenu, Footer, BaseLayout structure.
+3. **Prose system** — Prose.astro + ProseLayout + PolicyLayout (unblocks blog / project / policy
+   bodies).
+4. **Index** — Hero, About, ProjectsSpotlight, BlogSpotlight, ContactSection, ContactForm. Add
+   `featured: boolean` to the `blog` collection schema first (`src/content.config.ts`, `astro
+sync` after); picks are already made (see Decision log) —
+   `my-deployments-in-2024`/`reverse-flex-directions` get `featured: true`, the other 8 posts
+   `featured: false`. Projects' existing `featured` values are unchanged.
+5. **Listing + detail pages** — projects, blog, 404.
+6. **Motion pass** — page-load sequence, scroll reveals, hover states, once the structure is
+   stable.
+7. **Copy pass** — apply the agreed wording; update the e2e page objects and specs.
+8. **Cross-cutting QA** — responsive sweep, keyboard / focus, reduced-motion, an axe / Lighthouse
+   check.
+9. **Wrap-up** — update `CLAUDE.md`, resolve migration.md Open items into their notes, final full
+   CI gate.
+
+## Decision log
+
+Append-only, newest first. Format: `YYYY-MM-DD — <area>: <decision>. <why, briefly>.`
+
+- **2026-08-31 — Two bugs found while fixing the hover easter egg.**
+  - **`.mono` was never defined.** Every element tagged `class="mono"` — the frontmatter record
+    (the _signature element_), the nav, the footer, blog dates, project route paths, form labels,
+    buttons, "more" links — was silently falling back to Public Sans, not Fira Code. The
+    "monospace as UI chrome" layer of the direction simply wasn't rendering. Fixed with a
+    one-line `.mono { font-family: var(--f-mono) }` utility in `global.css` (sibling of
+    `.eyebrow`). This is a visible change across the whole site, but it's the documented intent
+    (Typography section), not a new decision.
+  - **Hover feedback loop.** When the cursor approached the frontmatter block from the right, the
+    role easter egg spun forever: `mouseenter` → swap to a shorter quip → block narrows → cursor
+    is now outside it → `mouseleave` → restore the long title → block widens → `mouseenter` →
+    … Fixed by reserving the field's width — an invisible `.role-sizer` span holding the longest
+    value ("Senior Software Developer") is stacked under the animated span in one grid cell, so
+    swapping the visible text never changes the record's width. Font-agnostic; also stops the
+    block twitching during the load-in cycle.
+
+- **2026-08-31 — Hero avatar (Toby picked from 5 previewed options).** The 60px square thumbnail
+  from the Index build was too small to actually see the face. Now **96 × 120, 4:5 portrait
+  crop, 2px radius, 1px `--border`**, same position as before (top-aligned, left of the
+  frontmatter record, `--sp-5` gap) — sized so it height-matches the record and reads as an
+  ID photo rather than a favicon. Also reset the `<dl>`'s default margin so the record's first
+  row aligns to the avatar's top edge. Options 1/2/4 (80/104/128 square) and 5 (circle) were
+  previewed and rejected; circle was flagged as the generic-portfolio move. Supersedes the "small
+  60px square thumbnail" note in the Index build entry below.
+
+- **2026-08-31 — Hero role, hover easter egg (Toby's idea).** Once the load-in cycle has
+  settled on the real title, hovering the frontmatter block flicks `role` to a random quip;
+  mouse-leave snaps it back to "Senior Software Developer". Guardrails added on top of the bare
+  idea: armed only after the load-in finishes, mouse-only (`hover: hover` — no touch, no
+  keyboard path), never repeats the previous quip, and the `.sr-only` real title is never
+  touched (assistive tech is unaffected). Under `prefers-reduced-motion` the swap is instant
+  (the global rule zeroes the transition) but still works — it's a response to the reader's own
+  hover, not ambient motion. New e2e test + `frontmatter` page-object getter.
+
+- **2026-08-31 — Hero load-in vs `clientPrerender`.** With `prefetch` (`prefetchAll` +
+  `viewport`) upgraded to speculation-rules prerendering, arriving at the index from another
+  page activated a document that had already been built in the background — the frontmatter /
+  lead `settle` animations had run to completion and the role-cycle timer partway, all before
+  the page was ever on screen (so the rows/lead didn't animate and the role cycle appeared to
+  skip its first entry). `Hero.astro`'s script now holds the whole load-in — rows, lead, role
+  cycle — behind `document.prerendering` + the `prerenderingchange` event (a plain no-op on a
+  normal load / in non-Chrome), and a `.hero.defer` class freezes the CSS animations until
+  activation. Verified: the prerender-activation timeline now matches a cold load exactly.
+
+- **2026-08-31 — Polish pass, round 2 (Toby's second punch-list).**
+  - **Nav active state — fixed + widened.** `Astro.url.pathname === href` never matched at build
+    (the emitted route is `blog.html`, not `/blog`), so `/projects` + `/blog` had no active
+    styling. Now normalises away `.html` / trailing slash and matches the section on its own page
+    _and_ its sub-pages (`/blog` stays lit on `/blog/some-post`). `/#contact` still never counts —
+    it targets a section, not a route (Toby's point).
+  - **`.doc` layout for the non-index pages.** New `.doc` utility = the same gutter grid as
+    `.section`. Applied to `/blog`, `/projects`, both detail templates (via the page + `ProseLayout`),
+    `/404`, and the policy pages. Their content now lines up with the index body (x≈360→1064 at
+    1280px) instead of a narrow flush-left 44rem column — answers "the lists / article prose seem
+    to use the old content width". Prose measure itself is unchanged (still `--measure`); it's the
+    _position_ that was off. Gutter holds the RSS link / a back-link + date / nothing.
+  - **List rows.** `.body` now `flex: 1` so the row fills the column and the arrow pins to a
+    consistent right edge (was `justify-content: space-between`, leaving a big gap between a
+    short line of text and a far-flung arrow).
+  - **Project detail.** Divider + `--sp-8` gap between the centred title/tagline header and the
+    prose (Toby: "more margin between tagline and content"); tagline demoted from bold to
+    `--muted`.
+  - **Index RSS link** now opens in a new tab (`target="_blank"`), matching the github/linkedin
+    links beside it.
+  - CI: lint / `astro check` (0) / Playwright (100, both browsers) green.
+
+- **2026-08-31 — Polish pass (Toby's punch-list against the first real preview).** A round of
+  quality fixes on the Index + the global shell; several reverse earlier token decisions, all
+  because the earlier call didn't survive contact with real content. Body sections above and
+  the token files updated to match.
+  - **Links — resting underline.** Body / nav / footer links now carry a quiet 1px `--underline`
+    (`#b9bfc7`) underline at rest, thickening to 2px `--accent` on hover/focus. Reverses
+    "ink-only at rest, underline draws in on hover" — at rest a link was _indistinguishable_
+    from body text (fails "not by colour alone", and just bad usability). New `--underline`
+    token; `.text-link` utility + `.prose a` carry it.
+  - **Wider shell + left label gutter.** New tokens `--shell` 60rem and `--gutter` 9rem. The
+    hero sits flush at the shell's left edge; every `.section` is a two-track grid on ≥960px —
+    monospace `# label` sticky in the gutter, body at `--measure` — collapsing to label-above-body
+    below that. Reverses "44rem for everything, single-column at every width, one 640px
+    breakpoint": the page read as very narrow, and the gutter makes direction 1's
+    "metadata in the margin, content as named exports" literal rather than implied.
+  - **Section markers promoted.** `.eyebrow` is `--text-xl` mono ink on narrow (a real section
+    heading) / `--text-sm` in the gutter on wide, and every section opens with a 1px `--ink`
+    rule. Reverses `--text-xs` muted everywhere — answers "are the section headers meant to be
+    this tiny" and "hard to tell where one section stops". List-item titles dropped `--text-xl`
+    → `--text-lg` and Prose `h3` likewise, so the hierarchy isn't inverted.
+  - **Icon set.** New `src/components/Icon.astro` (see Other primitives). Every unicode glyph
+    doing an icon's job is gone (`→`, `×`); `chevron-left.svg` / `rss.svg` deleted.
+  - **Footer pinned.** `<Footer/>` moved out of `<main>` so it sits at the viewport bottom on
+    short pages (404, policy stubs). Was a real bug.
+  - **Mobile nav — real bug + redesign.** The toggle button and the desktop links _both_
+    rendered at every width (the `.menu-toggle` `display` rule beat the `.mobile-only` helper on
+    source order). Replaced the `.desktop-only`/`.mobile-only` helpers with media queries on the
+    elements themselves. Drawer rebuilt: `# menu` header + icon close button, full-width link
+    rows with active state, a github/linkedin/rss footer, Esc-to-close, body scroll lock, and a
+    dedicated "Open menu" button (open/close state split so the toggle's label is honest).
+  - **Hero.** The lead line now joins the frontmatter settle (staggered after the rows); the
+    role-swap gains a small vertical nudge; `sharp edges` emphasis is now plain ink — a resting
+    `--accent` in the hero contradicted the interactive-only rule and read as a broken link.
+  - **Contact form.** Widened to `--measure`; real 2-column name/email that stacks under 34rem;
+    message full-width; submit button larger with an `arrow-right` icon.
+  - **Deferred pages, mechanical only:** `/blog` + `/projects` listings constrained to
+    `--measure` with a sized `h1` and the RSS glyph swapped for `Icon`; `/404` rebuilt to match
+    the site (left-aligned, `# 404` marker, icon back-link); blog/project detail back-links use
+    `Icon` + a `--measure` column. Full layout passes for these still pending.
+  - CI: lint / `astro check` (0) / Playwright (100 pass, both browsers) green. `e2e/index.spec.ts`
+    contact-copy assertion updated for the reworded intro line.
+
+- **2026-08-30 — Build:** the Index page (build-sequence steps 1–4: tokens/global styles, layout
+  shell, Prose system, Index itself) implemented in `src/`, per Toby's go-ahead to restructure
+  freely rather than shoehorn the redesign into the existing components. Notable calls made along
+  the way, none asked about individually since they followed directly from confirmed
+  direction/tokens:
+  - Centralised every design token into `src/styles/tokens.css` + shared resets/utilities into
+    `src/styles/global.css` (`.wrap`, `.eyebrow`, `.sr-only`) — replaces the old scattered
+    `--primary`/`--primary-light`/`--primary-very-light` custom properties and each component
+    redeclaring its own max-width/centring.
+  - Deleted `HeaderMenuItem.astro` and `HR.astro` — both fully superseded (nav links render
+    directly in `Header.astro`; list-item dividers are CSS borders now, not a component).
+  - Dropped the footer's "invisible until hovered" treatment and gave the mobile-nav drawer a
+    visible close button — both were minor accessibility/discoverability debts in the old design,
+    fixed in passing rather than carried forward.
+  - **Hero's rotating job title**: kept the joke, but changed it from an infinite 3s loop to a
+    one-shot cycle that plays once on load (as an extension of the frontmatter's settle-in
+    moment) and lands permanently on "Senior Software Developer" - the old design never actually
+    said the real title anywhere. Infinite looping ambient motion is exactly what the Motion
+    tokens ruled out; ending on the real title makes the front page state something true at rest,
+    not just at random points in a loop. A visually-hidden span carries the real title throughout
+    so screen readers never see the animated placeholder text. Not asked about individually since
+    it's a direct application of the already-confirmed motion tokens - flagging here in case
+    Toby wants the joke back as an infinite loop regardless.
+  - **Profile photo**: kept (the direction-1 previews had omitted it only for mockup speed, not
+    as a decision) but demoted from a large circular avatar with a heavy accent border to a small
+    (60px) square thumbnail inside the identity block, `--radius`, 1px `--border` - fits the
+    "quiet, precise" primitives instead of the old "generic portfolio hero photo" look.
+  - **Project logos dropped from the shared list-item component** (`ProjectListItem.astro`), so
+    both the index spotlight and the standalone `/projects` listing are text-first now, matching
+    what was already shown and unobjected-to in the direction previews. The `/projects/[slug]`
+    detail page is untouched and still shows the full logo.
+  - **List-item heading level**: started at `h3` (correct nesting under each section's `h2`
+    eyebrow) but reverted to `h2` - `/projects`' own e2e spec asserted list items are `h2`, and
+    matching the old markup's flat-h2 pattern (standard and accessible - AT reads heading levels
+    literally, not the unimplemented HTML5 outline algorithm) avoided a real regression on pages
+    this round doesn't otherwise touch.
+  - **Real bug found and fixed, unrelated to styling taste**: the mobile-nav drawer was painting
+    _behind_ the page's own content instead of over it (confirmed via screenshot - the hero text
+    showed through the "opaque" white drawer) because it relied on default stacking order with no
+    explicit `z-index`. Fixed with `z-index: 100` on the overlay. Verified before/after with
+    Playwright screenshots at multiple wait times to rule out an animation-timing red herring.
+  - e2e updated alongside: `e2e/index.spec.ts` + `index.po.ts` rewritten for the new markup (h1 is
+    now the lead line, `#tag` → `#role-cycle` with new one-shot timing, added a reduced-motion
+    test and an always-correct accessible-name test, `img.profile-pic` → `img.avatar`). Full local
+    CI green: lint, format, `astro check`, and the full Playwright suite (both chromium and
+    firefox where noted).
+
+- **2026-08-30 — Tokens:** confirmed, with one change. Card/item title hover (project + blog list
+  items) gets an underline fading in alongside the colour shift, not colour alone — matches
+  `tokens-specimen.html`'s body-link treatment more closely and keeps the hover affordance from
+  being colour-only. Applied to `tokens-specimen.html` and both direction-1 previews
+  (1a/1b `.item h3:hover`). Rest of the token proposal (type scale, palette, space, motion,
+  primitives) confirmed as proposed.
+- **2026-08-30 — Tokens:** full token proposal built as a throwaway specimen page,
+  `tokens-specimen.html` in Toby's scratchpad (same folder as the direction previews) — type
+  scale, weights, measure, link/hover treatment, an 8-role colour palette, the 4px space scale,
+  the motion system (one load-in settle, no scroll reveals, full reduced-motion kill), and
+  primitives (2px radius, no shadows). Concrete values are in the Design tokens section above.
+  Deliberately covered all five token subsections in one pass rather than five separate rounds,
+  since direction + the two prior decisions already fixed most of the inputs (palette neutrals
+  and the three typefaces were already visible in the direction-1 previews). **Not yet reviewed
+  by Toby** — treat the Design tokens section as a proposal until confirmed.
+- **2026-08-30 — IA:** index spotlights are driven by an editorial `featured: boolean`, not a
+  fixed card count. Projects already have this field (Stage 6); blog posts get the same field
+  added to `src/content.config.ts`'s `blog` schema, and `Index/BlogSpotlight.astro` switches from
+  `SPOTLIGHT_COUNT`-sliced recency to filtering on `featured` — mirroring
+  `Index/ProjectsSpotlight.astro` exactly. No hard cap on how many can show; if that becomes a
+  real problem once posts are marked, revisit then rather than pre-guessing a limit. Toby's call,
+  replaces the "2 vs 3" framing entirely.
+- **2026-08-30 — IA:** per-post `featured` picks made — "the top two of each for now" (Toby's
+  words; revisitable, not treated as final curation). **Blog:** `100-my-deployments-in-2024` and
+  `90-reverse-flex-directions` — the two highest `sortWeight`/most recent by `date`, confirmed
+  those agree for every post (checked all 10, `sortWeight` order matches `date` order exactly).
+  **Projects:** kept the existing Stage 6 picks, `read-receipt` and `generate-license-file`,
+  rather than switching to the top two by `sortWeight` (`generate-license-file` and
+  `license-cop`) — flagging this explicitly since "top two" is ambiguous for projects:
+  `sortWeight` there is a manual display-order field, not a recency signal (unlike blog, where it
+  tracks `date`), and Stage 6's choice of `read-receipt`/`generate-license-file` over
+  `license-cop`/`which-node-js` was a deliberate editorial call, not a by-product of sort order —
+  silently reversing it on a loose "top two" reading felt like the wrong default. Say the word if
+  you actually meant the `sortWeight`-order pair instead.
+- **2026-08-30 — Direction:** frontmatter block stays **inline at the top of the hero**, not a
+  sticky left rail. Both were previewed (1a inline vs 1b sticky rail); Toby preferred 1a. Keeps
+  every page's layout simpler (no persistent rail to account for on narrow content pages like
+  policies) at the cost of the metadata not staying visible while scrolling.
+- **2026-08-30 — Direction:** confirmed **pure direction 1** — "Public API" is the committed base
+  to refine within, not a blend with "Field notes"/"Release". Nothing borrowed across directions.
+- **2026-08-30 — Direction:** three directions brainstormed and shown as throwaway HTML previews
+  in Toby's scratchpad ("Public API" — frontmatter metadata block, mono-as-UI-chrome; "Field
+  notes" — warm paper, margin-column marginalia; "Release" — chronological spine, version/date
+  chips). Toby chose **"Public API"** as the base to work towards; the other two are parked, not
+  deleted, in case an element of them is worth borrowing later. A fourth option, a full
+  fake-terminal/REPL, was rejected pre-preview as the on-the-nose cliché for a CLI-tool author.
+- **2026-08-30 — Typography:** Fira Code kept as the mono face for all code snippets. Toby's call;
+  not up for reconsideration.
+- **2026-08-30 — Colour:** dodger-blue stays in the palette but is no longer required to be the
+  loud primary — free to make it a subtler, more selective accent. Toby's call.
+- **2026-08-30 — Process:** redesign.md created; structure and decision sequencing agreed
+  (direction → tokens → layouts → components → copy). No design decisions made yet.

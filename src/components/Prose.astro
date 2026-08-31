@@ -8,78 +8,78 @@
 
 <style>
   .prose {
-    p {
-      text-align: justify;
+    h2,
+    h3,
+    h4 {
+      margin-top: var(--sp-6);
+      margin-bottom: var(--sp-3);
+    }
+
+    h3 {
+      font-size: var(--text-lg);
+      font-weight: 500;
+    }
+
+    p,
+    ul,
+    ol,
+    blockquote {
+      max-width: var(--measure);
+    }
+
+    a {
+      color: var(--ink);
+      text-decoration-line: underline;
+      text-decoration-color: var(--underline);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 0.15em;
+      transition:
+        text-decoration-color var(--dur-fast) var(--ease-out),
+        color var(--dur-fast) var(--ease-out);
+    }
+    a:hover,
+    a:focus-visible {
+      color: var(--accent);
+      text-decoration-color: var(--accent);
+      text-decoration-thickness: 2px;
     }
 
     code {
-      color: var(--primary);
-      font-size: 0.9rem;
+      font-size: 0.9em;
     }
 
-    :not(pre) code {
-      font-weight: bold;
-      margin: 0 0.2rem;
-      display: inline-block;
+    :not(pre) > code {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0.1em 0.4em;
     }
 
     pre:has(code) {
-      margin: 0.6rem 2rem;
-      padding-left: 0.5rem;
-
-      @media screen and (max-width: 768px) {
-        margin: 0;
-      }
-
-      border-left: 3px solid var(--primary-light);
-      transition: border-left-color 0.3s ease-out;
+      margin: var(--sp-4) 0;
+      padding: var(--sp-4) var(--sp-5);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--border);
+      border-radius: var(--radius);
+      transition: border-left-color var(--dur-base) var(--ease-out);
 
       &:hover {
-        border-left-color: var(--primary);
-      }
-
-      code {
-        font-weight: 500;
+        border-left-color: var(--accent);
       }
     }
 
     blockquote {
-      margin: 1rem 0rem;
-      padding: 1.5rem 2rem;
-      position: relative;
-      background: var(--primary-very-light);
+      margin: var(--sp-4) 0;
+      padding: var(--sp-4) var(--sp-5);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--accent);
+      border-radius: var(--radius);
 
       p {
         margin: 0;
       }
-    }
-
-    blockquote::before {
-      content: "";
-
-      display: block;
-      position: absolute;
-      width: 25px;
-      height: 25px;
-      top: 0;
-      left: 0;
-
-      border-top: var(--primary) 0.4rem solid;
-      border-left: var(--primary) 0.4rem solid;
-    }
-
-    blockquote::after {
-      content: "";
-
-      display: block;
-      position: absolute;
-      width: 25px;
-      height: 25px;
-      bottom: 0;
-      right: 0;
-
-      border-bottom: var(--primary) 0.4rem solid;
-      border-right: var(--primary) 0.4rem solid;
     }
   }
 </style>

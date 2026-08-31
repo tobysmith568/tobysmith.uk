@@ -22,7 +22,11 @@ const blogCollection = defineCollection({
     slug: z.string(),
     title: z.string(),
     description: z.string(),
-    date: z.date()
+    date: z.date(),
+    // Drives the index page's blog spotlight - mirrors the `projects` collection's `featured`
+    // field exactly (see redesign.md's Decision log). No fixed spotlight count; the index shows
+    // every post with featured: true.
+    featured: z.boolean()
   })
 });
 

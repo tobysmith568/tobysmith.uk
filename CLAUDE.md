@@ -123,12 +123,18 @@ separately.
   through `ProseLayout`).
   `PolicyLayout.astro` wraps the policy pages specifically.
 - **Header/nav** (`BaseLayout/Header.astro`): desktop nav links to `/projects`, `/blog`, and
-  `/#contact` (no `/about` link — that page is gone). Mobile nav (`BaseLayout/MobileMenu.astro`)
-  uses Alpine.js: `x-data="{ mobileMenuOpen: false }"` on the `<nav>` in `Header.astro`, a
-  hamburger `<button>` toggling it, and `x-show`/`x-cloak`/`x-transition` on `MobileMenu.astro`'s
-  root. The child component's `x-show` sees the parent's `x-data` because Alpine scopes by
-  rendered-DOM nesting, not Astro component identity. `[x-cloak] { display: none !important; }`
-  in `BaseLayout.astro`'s global styles prevents a flash of the unhydrated drawer.
+  `/#contact` (no `/about` link — that page is gone); `Header.astro` owns the link list and
+  passes it to `MobileMenu.astro` as a `links` prop. Below 640px the links are hidden and an
+  icon `<button>` ("Open menu") shows instead — these are plain media queries on the elements,
+  not `.desktop-only`/`.mobile-only` helper classes (those were removed after they lost a
+  specificity fight and rendered both at once). Mobile nav (`BaseLayout/MobileMenu.astro`) uses
+  Alpine.js: `x-data="{ mobileMenuOpen: false }"` on the `<nav>` in `Header.astro`, the toggle
+  button sets it `true`, and the drawer has its own close button + `@keydown.escape.window`; an
+  `x-effect` locks body scroll while open. `x-show`/`x-cloak`/`x-transition` on the drawer root —
+  the child component's `x-show` sees the parent's `x-data` because Alpine scopes by rendered-DOM
+  nesting, not Astro component identity. `[x-cloak] { display: none !important; }` in
+  `global.css` prevents a flash of the unhydrated drawer. The drawer had a real z-index bug once
+  (painted behind page content) — it carries an explicit `z-index: 100` now.
 - **Contact form flow**: `Contact/ContactForm.astro` (rendered on the index page inside
   `Index/ContactSection.astro` — see the Index page bullet above) renders the form
   and loads Cloudflare
@@ -152,7 +158,14 @@ separately.
   `projects/[...slug].astro`), which requires build-time (Sharp) image processing — see the
   `imageService: "compile"` note above; this breaks (404s) without it.
 - **Styling**: plain component-scoped `<style>` blocks with native CSS nesting, no preprocessor
-  (Sass was dropped; `lighten()` → `color-mix(in srgb, ...)`).
+  (Sass was dropped; `lighten()` → `color-mix(in srgb, ...)`). Design tokens live in
+  `src/styles/tokens.css`, shared resets + utilities in `src/styles/global.css` (both imported
+  once from `BaseLayout.astro`): `.wrap` (page shell at `--shell`), `.section` (the two-track
+  label-gutter grid used by the Index sections — mono `.eyebrow` in a `--gutter` column on
+  ≥960px, body at `--measure`, 1px `--ink` opening rule), `.eyebrow`, `.text-link` / `.more`
+  (link + section-action affordances, resting `--underline` → `--accent` on hover), `.sr-only`.
+  Icons are inline SVG via `src/components/Icon.astro` (`name` prop; geometric, 1.5px stroke,
+  `currentColor`) — no icon dependency, no SVG asset files.
 - **License list**: `scripts/generate-licenses.mjs` runs `generate-license-file`'s
   `getProjectLicenses` as a standalone `bun` script (via the `generate:licenses` package.json
   script, wired in as a `pre*` hook on `dev`/`start`/`build`) and writes

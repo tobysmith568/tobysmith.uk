@@ -1,0 +1,262 @@
+/*
+ * Global reset + base element styles + shared utility classes. Everything here is unscoped by
+ * design (imported once from BaseLayout.astro) so individual components don't redeclare the same
+ * html-element defaults - see redesign.md's working agreement on centralising dispersed styles.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg);
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  background: var(--bg);
+  color: var(--ink);
+
+  font-family: var(--f-body);
+  font-size: var(--text-base);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  flex: 1;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--f-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0;
+}
+
+p {
+  margin: 0 0 var(--sp-4);
+}
+p:last-child {
+  margin-bottom: 0;
+}
+
+a {
+  color: inherit;
+}
+
+/* Shared text-link affordance: a quiet resting underline (never colour alone), promoted to
+   --accent on hover/focus. Prose.astro repeats this for markdown-authored links, which can't
+   carry a class. */
+.text-link {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--underline);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+  transition:
+    text-decoration-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+.text-link:hover,
+.text-link:focus-visible {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+}
+
+/* "more X →" section actions - a clear, consistent affordance with a nudging arrow. */
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5ch;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--underline);
+  text-underline-offset: 0.15em;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    text-decoration-color var(--dur-fast) var(--ease-out);
+}
+.more svg {
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.more:hover,
+.more:focus-visible {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+.more:hover svg,
+.more:focus-visible svg {
+  transform: translateX(2px);
+}
+
+code,
+pre {
+  font-family: var(--f-mono);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* A visible, consistent focus ring on every interactive element - not just the ones that
+   happen to declare their own. Suppressed for mouse/touch users via :focus-visible. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+[x-cloak] {
+  display: none !important;
+}
+
+/* Visually hidden but still reachable by screen readers/find-in-page - for content whose visible
+   presentation is decorative or animated and needs a stable, always-correct text alternative. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* The shared page shell. Header/Footer/BaseLayout's main content all use this rather than each
+   re-declaring their own max-width + centring. Wider than the --measure text column so section
+   labels can hang in the left gutter (see .section). */
+.wrap {
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--sp-5);
+}
+
+/* A named content section. On wide viewports the monospace label sits in a left gutter, aligned
+   like an export marker in a margin; the body stays at the readable --measure. Below that the
+   label stacks above its content. Each section opens with a firm rule so it's unmistakable
+   where one ends and the next begins. */
+.section {
+  padding-top: var(--sp-6);
+  margin-top: var(--sp-7);
+  border-top: 1px solid var(--ink);
+}
+.section > .eyebrow {
+  margin-bottom: var(--sp-5);
+}
+
+@media (min-width: 60rem) {
+  .section {
+    display: grid;
+    grid-template-columns: var(--gutter) minmax(0, var(--measure));
+    column-gap: var(--sp-6);
+  }
+  .section > * {
+    grid-column: 2;
+  }
+  .section > .eyebrow {
+    grid-column: 1;
+    grid-row: 1 / 999;
+    margin-bottom: 0;
+  }
+}
+
+/* Whole-page document layout for the listing + article pages: the same gutter rhythm as
+   .section, so their content lines up with the index body instead of sitting in a narrow
+   left-aligned column. The gutter holds page metadata (a back-link, a date, an RSS link) or is
+   left as deliberate margin. */
+.doc {
+  max-width: var(--measure);
+}
+.doc > .doc-rail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-3) var(--sp-4);
+  margin-bottom: var(--sp-5);
+}
+
+@media (min-width: 60rem) {
+  .doc {
+    display: grid;
+    grid-template-columns: var(--gutter) minmax(0, var(--measure));
+    column-gap: var(--sp-6);
+    max-width: none;
+  }
+  .doc > * {
+    grid-column: 2;
+    min-width: 0;
+  }
+  .doc > .doc-rail {
+    grid-column: 1;
+    grid-row: 1 / 999;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-3);
+    margin-bottom: 0;
+    position: sticky;
+    top: var(--sp-5);
+    align-self: start;
+  }
+}
+
+/* Monospace as UI chrome - nav, the frontmatter record, dates, route paths, form labels,
+   buttons, "more" links. The mono face doubling as interface type is core to the direction
+   (see redesign.md > Typography). Applied via a `mono` class on those elements. */
+.mono {
+  font-family: var(--f-mono);
+}
+
+/* The monospace "field label" that names a section - the one structural device this direction
+   uses instead of numbering. A real heading element, so the outline and screen readers still
+   see a normal heading; only the presentation changes. */
+.eyebrow {
+  font-family: var(--f-mono);
+  font-weight: 500;
+  font-size: var(--text-xl);
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: lowercase;
+  color: var(--ink);
+  margin: 0;
+}
+.eyebrow::before {
+  content: "#";
+  margin-right: 0.5ch;
+  color: var(--accent);
+}
+
+@media (min-width: 60rem) {
+  .eyebrow {
+    position: sticky;
+    top: var(--sp-5);
+    font-size: var(--text-sm);
+    align-self: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

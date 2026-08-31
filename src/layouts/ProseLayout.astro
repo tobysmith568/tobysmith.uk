@@ -10,7 +10,9 @@ interface Props {
 ---
 
 <BaseLayout {...Astro.props}>
-  <Prose>
-    <slot />
-  </Prose>
+  <div class="doc">
+    <Prose>
+      <slot />
+    </Prose>
+  </div>
 </BaseLayout>

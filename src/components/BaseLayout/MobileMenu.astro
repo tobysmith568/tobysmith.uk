@@ -1,51 +1,196 @@
 ---
+import Icon from "../Icon.astro";
 
+interface Props {
+  links: { href: string; label: string }[];
+}
+
+const { links } = Astro.props;
+
+// Mirrors Header.astro's matching - active on the section's own page and its sub-pages;
+// anchor links (`/#contact`) never count.
+const currentPath = Astro.url.pathname.replace(/\.html$/, "").replace(/(.)\/$/, "$1");
+const isActive = (href: string) =>
+  !href.includes("#") && (currentPath === href || currentPath.startsWith(href + "/"));
+
+const social = [
+  { href: "https://github.com/tobysmith568", label: "github" },
+  { href: "https://linkedin.com/in/tobysmith568", label: "linkedin" },
+  { href: "/blog/rss.xml", label: "rss" }
+];
 ---
 
 <div
-  class="shadow"
+  class="overlay"
   x-show="mobileMenuOpen"
   x-cloak
   x-transition.opacity
+  x-effect="document.body.style.overflow = mobileMenuOpen ? 'hidden' : ''"
+  @keydown.escape.window="mobileMenuOpen = false"
   @click.self="mobileMenuOpen = false">
-  <div class="mobile-nav" @click="mobileMenuOpen = false">
-    <a href="/projects">Projects</a>
-    <a href="/blog">Blog</a>
-    <a href="/#contact">Contact</a>
-  </div>
+  <nav
+    id="mobile-menu"
+    class="drawer mono"
+    aria-label="Menu"
+    x-transition:enter="enter"
+    x-transition:enter-start="enter-start"
+    x-transition:enter-end="enter-end">
+    <div class="head">
+      <span class="label">menu</span>
+      <button type="button" class="close" aria-label="Close menu" @click="mobileMenuOpen = false">
+        <Icon name="close" size={18} />
+      </button>
+    </div>
+
+    <ul class="items">
+      {
+        links.map(({ href, label }) => (
+          <li>
+            <a
+              href={href}
+              aria-current={isActive(href) ? "page" : undefined}
+              @click="mobileMenuOpen = false">
+              <span>{label}</span>
+              <Icon name="arrow-right" size={15} />
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="social">
+      {
+        social.map(({ href, label }) => (
+          <a href={href} target="_blank" rel="noopener noreferrer">
+            {label}
+          </a>
+        ))
+      }
+    </div>
+  </nav>
 </div>
 
 <style>
-  .shadow {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-
-    background-color: rgba(0, 0, 0, 0.6);
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background-color: rgb(22 24 29 / 55%);
   }
 
-  .mobile-nav {
+  .drawer {
     display: flex;
     flex-direction: column;
     position: absolute;
-    height: 100vh;
-    width: 40vw;
-    min-width: 350px;
+    inset-block: 0;
     right: 0;
+    width: min(82vw, 20rem);
+    background-color: var(--surface);
+    border-left: 1px solid var(--border);
 
-    background-color: var(--primary);
-    color: var(--primary-text);
-
-    a:first-of-type {
-      margin-top: 5em;
+    &.enter {
+      transition: transform var(--dur-base) var(--ease-out);
+    }
+    &.enter-start {
+      transform: translateX(100%);
+    }
+    &.enter-end {
+      transform: translateX(0);
     }
   }
 
-  a {
-    color: inherit;
-    padding: 1em 2em;
+  .head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sp-4) var(--sp-4) var(--sp-4) var(--sp-5);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .label {
+    font-size: var(--text-xs);
+    color: var(--muted);
+  }
+  .label::before {
+    content: "#";
+    margin-right: 0.5ch;
+    color: var(--accent);
+  }
+
+  .close {
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+  .close:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+  }
+
+  .items a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--sp-4) var(--sp-5);
+    color: var(--ink);
     text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      background var(--dur-fast) var(--ease-out);
+  }
+  .items a :global(svg) {
+    color: var(--muted);
+    transition: transform var(--dur-fast) var(--ease-out);
+  }
+  .items a:hover,
+  .items a:focus-visible,
+  .items a[aria-current="page"] {
+    color: var(--accent);
+    background: var(--bg);
+  }
+  .items a:hover :global(svg),
+  .items a:focus-visible :global(svg) {
+    color: var(--accent);
+    transform: translateX(2px);
+  }
+  .items a[aria-current="page"] :global(svg) {
+    color: var(--accent);
+  }
+
+  .social {
+    display: flex;
+    gap: var(--sp-4);
+    padding: var(--sp-5);
+    font-size: var(--text-xs);
+  }
+  .social a {
+    color: var(--muted);
+    text-decoration: underline;
+    text-decoration-color: var(--underline);
+    text-underline-offset: 0.15em;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .social a:hover,
+  .social a:focus-visible {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
   }
 </style>

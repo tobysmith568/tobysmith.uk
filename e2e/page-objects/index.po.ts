@@ -19,16 +19,31 @@ export class IndexPageObject {
     return this.page.locator("h1");
   }
 
-  get subtitle(): Locator {
-    return this.page.locator("h2.tagline");
+  /** The frontmatter block's `name` value (always the first row) - see `Index/Hero.astro`. */
+  get frontmatterName(): Locator {
+    return this.page.locator(".frontmatter .row").first().locator("dd");
   }
 
-  get tagLine(): Locator {
-    return this.page.locator("#tag");
+  /**
+   * The visually-animated role value - decorative (`aria-hidden`), cycles once through the old
+   * rotating job titles before settling on the real one. See `Index/Hero.astro`.
+   */
+  get roleCycle(): Locator {
+    return this.page.locator("#role-cycle");
+  }
+
+  /** The always-correct, non-animated screen-reader text for the role field. */
+  get roleAccessibleName(): Locator {
+    return this.page.locator(".frontmatter .sr-only");
+  }
+
+  /** The frontmatter key/value block - hovering it flicks the role to a random quip. */
+  get frontmatter(): Locator {
+    return this.page.locator(".frontmatter");
   }
 
   get profilePicture(): Locator {
-    return this.page.locator("img.profile-pic");
+    return this.page.locator("img.avatar");
   }
 
   get aboutHeading(): Locator {

@@ -1,81 +1,133 @@
 ---
-import HeaderMenuItem from "./HeaderMenuItem.astro";
 import MobileMenu from "./MobileMenu.astro";
+import Icon from "../Icon.astro";
+
+const links = [
+  { href: "/projects", label: "projects" },
+  { href: "/blog", label: "blog" },
+  { href: "/#contact", label: "contact" }
+];
+
+// Normalise away any trailing slash or `.html` (the build emits `blog.html` etc.) so the
+// comparison is stable, then treat a section as active on its own page *and* its sub-pages
+// (`/blog` stays lit on `/blog/some-post`). Anchor links (`/#contact`) never count as active -
+// they target a section of a page, not a route.
+const currentPath = Astro.url.pathname.replace(/\.html$/, "").replace(/(.)\/$/, "$1");
+const isActive = (href: string) =>
+  !href.includes("#") && (currentPath === href || currentPath.startsWith(href + "/"));
 ---
 
-<nav x-data="{ mobileMenuOpen: false }">
-  <div class="menu-items">
-    <HeaderMenuItem label="Toby Smith" href="/" />
-  </div>
+<header>
+  <nav class="wrap bar" x-data="{ mobileMenuOpen: false }" aria-label="Primary">
+    <a class="id" href="/">toby smith</a>
 
-  <div class="menu-items desktop-only">
-    <HeaderMenuItem label="Projects" href="/projects" />
-    <HeaderMenuItem label="Blog" href="/blog" />
-    <HeaderMenuItem label="Contact" href="/#contact" />
-  </div>
+    <div class="links mono">
+      {
+        links.map(({ href, label }) => (
+          <a href={href} aria-current={isActive(href) ? "page" : undefined}>
+            {label}
+          </a>
+        ))
+      }
+    </div>
 
-  <button
-    type="button"
-    class="menu-toggle mobile-only"
-    aria-label="Toggle menu"
-    x-bind:aria-expanded="mobileMenuOpen.toString()"
-    @click="mobileMenuOpen = !mobileMenuOpen">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
+    <button
+      type="button"
+      class="menu-toggle"
+      aria-label="Open menu"
+      aria-controls="mobile-menu"
+      x-bind:aria-expanded="mobileMenuOpen.toString()"
+      @click="mobileMenuOpen = true">
+      <Icon name="menu" size={18} />
+    </button>
 
-  <MobileMenu />
-</nav>
+    <MobileMenu links={links} />
+  </nav>
+</header>
 
 <style>
-  nav {
-    background-color: var(--primary);
-    color: var(--primary-text);
+  header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
 
-    padding: 0 2em;
-    min-height: 3.5em;
-
+  .bar {
+    padding-block: var(--sp-4);
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
 
-  .menu-items {
+  .id {
+    font-family: var(--f-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .links {
     display: flex;
+    gap: var(--sp-5);
   }
 
-  .desktop-only {
-    @media (max-width: 600px) {
-      display: none;
-    }
+  .links a {
+    position: relative;
+    text-decoration: none;
+    color: var(--muted);
+    padding-bottom: 2px;
+    transition: color var(--dur-fast) var(--ease-out);
   }
 
-  .mobile-only {
-    @media (min-width: 601px) {
-      display: none;
-    }
+  .links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 100%;
+    bottom: 0;
+    height: 1.5px;
+    background: var(--accent);
+    transition: right var(--dur-base) var(--ease-out);
+  }
+
+  .links a:hover,
+  .links a[aria-current="page"] {
+    color: var(--ink);
+  }
+
+  .links a:hover::after,
+  .links a[aria-current="page"]::after,
+  .links a:focus-visible::after {
+    right: 0;
   }
 
   .menu-toggle {
-    align-self: center;
-    width: 2em;
-    height: 2em;
+    display: none;
+    width: 2.25rem;
+    height: 2.25rem;
     padding: 0;
-    border: none;
-    background: transparent;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    color: var(--ink);
     cursor: pointer;
+    transition:
+      border-color var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 0.3em;
+  .menu-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
 
-    span {
-      display: block;
-      width: 1.6em;
-      height: 2px;
-      background-color: var(--primary-text);
+  @media (max-width: 40rem) {
+    .links {
+      display: none;
+    }
+    .menu-toggle {
+      display: grid;
     }
   }
 </style>

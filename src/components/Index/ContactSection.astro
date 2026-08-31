@@ -3,23 +3,30 @@ import ContactForm from "../Contact/ContactForm.astro";
 import Anchor from "../Anchor.astro";
 ---
 
-<section id="contact">
-  <h2>Contact Me</h2>
-  <p>
-    Feel free to reach out me using the message form below.
-    <br />
-    Alternatively, you can also reach out to me on <Anchor
-      href="https://linkedin.com/in/tobysmith568"
-      text="LinkedIn"
-    />.
-  </p>
+<section id="contact" class="section">
+  <h2 class="eyebrow">Contact Me</h2>
 
-  <ContactForm />
+  <div>
+    <p>
+      Got a question or an idea? Send a message below, or reach me on <Anchor
+        class="text-link"
+        href="https://linkedin.com/in/tobysmith568"
+        text="LinkedIn"
+      />.
+    </p>
+
+    <ContactForm />
+  </div>
 </section>
 
 <style>
   section {
-    margin-top: 3rem;
-    scroll-margin-top: 2rem;
+    scroll-margin-top: var(--sp-5);
+  }
+
+  p {
+    color: var(--muted);
+    max-width: 42ch;
+    margin-bottom: var(--sp-6);
   }
 </style>

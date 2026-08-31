@@ -1,34 +1,29 @@
 ---
 import { getCollection } from "astro:content";
 import BlogListItem from "../Blog/BlogListItem.astro";
+import Icon from "../Icon.astro";
 
-// Placeholder count - the final number is a layout call deferred to the visual redesign, see
-// migration.md's "Open items".
-const SPOTLIGHT_COUNT = 2;
-
-const blogPosts = await getCollection("blog");
-const spotlightPosts = blogPosts
-  .sort((a, b) => a.data.sortWeight - b.data.sortWeight)
-  .reverse()
-  .slice(0, SPOTLIGHT_COUNT);
+// Mirrors ProjectsSpotlight.astro exactly - see redesign.md's Decision log. No fixed count;
+// every post with `featured: true` shows here.
+const featuredPosts = await getCollection("blog", ({ data }) => data.featured);
+const sortedPosts = featuredPosts.sort((a, b) => a.data.sortWeight - b.data.sortWeight).reverse();
 ---
 
-<section id="blog">
-  <h2>Blog</h2>
+<section id="blog" class="section">
+  <h2 class="eyebrow">Blog</h2>
 
-  {spotlightPosts.map(post => <BlogListItem post={post} />)}
+  <div class="list">
+    {sortedPosts.map(post => <BlogListItem post={post} />)}
+  </div>
 
-  <a class="more" href="/blog">More posts →</a>
+  <a class="more mono" href="/blog">
+    more posts
+    <Icon name="arrow-right" size={14} />
+  </a>
 </section>
 
 <style>
-  section {
-    margin-top: 3rem;
-  }
-
   .more {
-    display: inline-block;
-    margin-top: 1rem;
-    font-weight: bold;
+    margin-top: var(--sp-5);
   }
 </style>

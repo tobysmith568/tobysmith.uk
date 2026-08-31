@@ -1,8 +1,8 @@
-﻿---
+---
 import Layout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 import BlogListItem from "../../components/Blog/BlogListItem.astro";
-import RssLogo from "../../assets/rss.svg";
+import Icon from "../../components/Icon.astro";
 
 const title = "Blog Posts";
 const description = "Blog posts written by Toby about things he creates or finds interesting.";
@@ -12,25 +12,54 @@ const sortedPosts = blogPosts.sort((a, b) => a.data.sortWeight - b.data.sortWeig
 ---
 
 <Layout title={title} description={description}>
-  <div class="header">
-    <h1>Blog Posts</h1>
+  <div class="doc">
+    <div class="doc-rail">
+      <a
+        class="rss"
+        href="/blog/rss.xml"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="RSS feed">
+        <Icon name="rss" size={18} />
+      </a>
+    </div>
 
-    <a class="rss" href="/blog/rss.xml" target="_blank">
-      <img src={RssLogo.src} alt="RSS feed" />
-    </a>
+    <div>
+      <h1>Blog Posts</h1>
+
+      <div class="list">
+        {sortedPosts.map(post => <BlogListItem post={post} />)}
+      </div>
+    </div>
   </div>
-
-  {sortedPosts.map(post => <BlogListItem post={post} />)}
 </Layout>
 
 <style>
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
+  .doc-rail {
+    justify-content: flex-end;
+  }
+
+  h1 {
+    font-size: var(--text-3xl);
+    margin-bottom: var(--sp-6);
   }
 
   .rss {
-    padding: 0.5em;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--muted);
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-out);
+  }
+  .rss:hover,
+  .rss:focus-visible {
+    color: var(--accent);
+    border-color: var(--accent);
   }
 </style>

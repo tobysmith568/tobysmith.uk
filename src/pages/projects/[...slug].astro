@@ -1,8 +1,8 @@
-﻿---
-import chevronLeft from "../../assets/chevron-left.svg";
+---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Prose from "../../components/Prose.astro";
+import Icon from "../../components/Icon.astro";
 import { resolveProjectImage } from "../../components/Projects/resolveProjectImage";
 import { Image } from "astro:assets";
 
@@ -24,44 +24,56 @@ const projectImgSrcPromise = resolveProjectImage(entry.id);
 ---
 
 <BaseLayout title={title} description={tagLine}>
-  <a href="/projects" class="back">
-    <img src={chevronLeft.src} alt="" />
-    My Projects
-  </a>
+  <div class="doc">
+    <div class="doc-rail">
+      <a href="/projects" class="back more mono">
+        <Icon name="arrow-left" size={14} />
+        My Projects
+      </a>
+    </div>
 
-  <div class="details">
-    {projectImgSrcPromise && <Image src={projectImgSrcPromise} alt="" />}
-    <h1>{entry.data.title}</h1>
-    <p class="tagline">{tagLine}</p>
+    <article>
+      <div class="details">
+        {projectImgSrcPromise && <Image src={projectImgSrcPromise} alt="" />}
+        <h1>{entry.data.title}</h1>
+        <p class="tagline">{tagLine}</p>
+      </div>
+
+      <Prose>
+        <Content />
+      </Prose>
+    </article>
   </div>
-
-  <Prose>
-    <Content />
-  </Prose>
 </BaseLayout>
 
 <style>
-  .back {
-    display: flex;
+  .back:hover :global(svg),
+  .back:focus-visible :global(svg) {
+    transform: translateX(-2px);
   }
 
   .details {
-    margin-top: 2rem;
-
     display: flex;
     flex-direction: column;
     align-items: center;
-
     text-align: center;
+    margin-bottom: var(--sp-8);
+    padding-bottom: var(--sp-7);
+    border-bottom: 1px solid var(--border);
 
     img {
       max-width: min(10rem, 40vw);
       height: auto;
+      margin-bottom: var(--sp-4);
+    }
+
+    h1 {
+      font-size: var(--text-3xl);
     }
 
     .tagline {
-      margin-top: 0;
-      font-weight: bold;
+      margin-top: var(--sp-3);
+      color: var(--muted);
     }
   }
 </style>

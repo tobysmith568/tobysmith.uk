@@ -1,9 +1,9 @@
-﻿---
+---
 import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import dayjs from "dayjs";
-import chevronLeft from "../../assets/chevron-left.svg";
 import Prose from "../../components/Prose.astro";
+import Icon from "../../components/Icon.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -24,28 +24,38 @@ const parseableDate = dayjs(date).format("YYYY-MM-DD");
 ---
 
 <BaseLayout {...entry.data}>
-  <a href="/blog" class="back">
-    <img src={chevronLeft.src} alt="" />
-    Posts
-  </a>
+  <div class="doc">
+    <div class="doc-rail">
+      <a href="/blog" class="back more mono">
+        <Icon name="arrow-left" size={14} />
+        Posts
+      </a>
+      <time class="mono" datetime={parseableDate}>{humanReadableDate}</time>
+    </div>
 
-  <h1>{entry.data.title}</h1>
-  <p>
-    <time datetime={parseableDate}>{humanReadableDate}</time>
-  </p>
+    <article>
+      <h1>{entry.data.title}</h1>
 
-  <Prose>
-    <Content />
-  </Prose>
+      <Prose>
+        <Content />
+      </Prose>
+    </article>
+  </div>
 </BaseLayout>
 
 <style>
-  time {
-    font-weight: bold;
-    font-size: 1.17em;
+  .back:hover :global(svg),
+  .back:focus-visible :global(svg) {
+    transform: translateX(-2px);
   }
 
-  .back {
-    display: flex;
+  time {
+    font-size: var(--text-sm);
+    color: var(--muted);
+  }
+
+  h1 {
+    font-size: var(--text-3xl);
+    margin-bottom: var(--sp-6);
   }
 </style>

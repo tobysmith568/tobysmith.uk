@@ -16,30 +16,81 @@ test.describe("Index", () => {
     const indexPage = new IndexPageObject(page);
     await indexPage.goto();
 
-    await expect(indexPage.title).toContainText("Toby Smith");
-    await expect(indexPage.subtitle).toContainText("Blog and Portfolio Website");
+    await expect(indexPage.title).toContainText("Builds small developer tools");
+    await expect(indexPage.frontmatterName).toHaveText("Toby Smith");
   });
 
-  test("should cycle through the tag lines", async ({ page }) => {
+  test("should cycle the role once and settle on the real title", async ({ page }) => {
     const indexPage = new IndexPageObject(page);
 
     await page.clock.install();
     await indexPage.goto();
 
-    await page.clock.fastForward(1000);
-    await expect(indexPage.tagLine).toHaveText("Full-stack developer");
+    // Before the load-in moment finishes, it's still the initial static value.
+    await expect(indexPage.roleCycle).toHaveText("Full-stack developer");
 
-    await page.clock.fastForward(3000);
-    await expect(indexPage.tagLine).toHaveText("npm package author");
+    await page.clock.fastForward(1040);
+    await expect(indexPage.roleCycle).toHaveText("npm package author");
 
-    await page.clock.fastForward(3000);
-    await expect(indexPage.tagLine).toHaveText("TypeScript fanatic");
+    await page.clock.fastForward(620);
+    await expect(indexPage.roleCycle).toHaveText("TypeScript fanatic");
 
-    await page.clock.fastForward(3000);
-    await expect(indexPage.tagLine).toHaveText("Burrito over-filler");
+    await page.clock.fastForward(620);
+    await expect(indexPage.roleCycle).toHaveText("Burrito over-filler");
 
-    await page.clock.fastForward(3000);
-    await expect(indexPage.tagLine).toHaveText("Full-stack developer");
+    await page.clock.fastForward(620);
+    await expect(indexPage.roleCycle).toHaveText("Senior Software Developer");
+
+    // Unlike the old design, it doesn't loop - it stays on the real title.
+    await page.clock.fastForward(5000);
+    await expect(indexPage.roleCycle).toHaveText("Senior Software Developer");
+  });
+
+  test("should flick the role to a quip while the frontmatter is hovered, then reset", async ({
+    page
+  }) => {
+    const indexPage = new IndexPageObject(page);
+
+    await page.clock.install();
+    await indexPage.goto();
+
+    // Let the load-in cycle finish - the hover behaviour is only armed once it has.
+    await page.clock.fastForward(5000);
+    await expect(indexPage.roleCycle).toHaveText("Senior Software Developer");
+
+    await indexPage.frontmatter.hover();
+    await page.clock.fastForward(200);
+    await expect(indexPage.roleCycle).toHaveText(
+      /^(Full-stack developer|npm package author|TypeScript fanatic|Burrito over-filler)$/
+    );
+    // The real title is still the one exposed to assistive tech.
+    await expect(indexPage.roleAccessibleName).toHaveText("Senior Software Developer");
+
+    await page.mouse.move(0, 0);
+    await page.clock.fastForward(200);
+    await expect(indexPage.roleCycle).toHaveText("Senior Software Developer");
+  });
+
+  test("should always expose the real title to screen readers, animation aside", async ({
+    page
+  }) => {
+    const indexPage = new IndexPageObject(page);
+    await indexPage.goto();
+
+    await expect(indexPage.roleAccessibleName).toHaveText("Senior Software Developer");
+  });
+
+  test("should show the real title immediately when reduced motion is preferred", async ({
+    browser
+  }) => {
+    const context = await browser.newContext({ reducedMotion: "reduce" });
+    const page = await context.newPage();
+    const indexPage = new IndexPageObject(page);
+
+    await indexPage.goto();
+    await expect(indexPage.roleCycle).toHaveText("Senior Software Developer");
+
+    await context.close();
   });
 
   test("should load the profile picture", async ({ page }) => {
@@ -66,7 +117,7 @@ test.describe("Index", () => {
     await indexPage.goto();
 
     await expect(indexPage.contactHeading).toContainText("Contact Me");
-    await expect(indexPage.contactMessage).toContainText("Feel free to reach out me");
+    await expect(indexPage.contactMessage).toContainText("Send a message below");
   });
 
   test("should display the full contact form", async ({ page }) => {

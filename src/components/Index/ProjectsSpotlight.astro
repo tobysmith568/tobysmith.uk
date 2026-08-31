@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import ProjectListItem from "../Projects/ProjectListItem.astro";
+import Icon from "../Icon.astro";
 
 const featuredProjects = await getCollection("projects", ({ data }) => data.featured);
 const sortedProjects = featuredProjects
@@ -8,22 +9,21 @@ const sortedProjects = featuredProjects
   .reverse();
 ---
 
-<section id="projects">
-  <h2>Projects</h2>
+<section id="projects" class="section">
+  <h2 class="eyebrow">Projects</h2>
 
-  {sortedProjects.map(project => <ProjectListItem project={project} />)}
+  <div class="list">
+    {sortedProjects.map(project => <ProjectListItem project={project} />)}
+  </div>
 
-  <a class="more" href="/projects">More projects →</a>
+  <a class="more mono" href="/projects">
+    more projects
+    <Icon name="arrow-right" size={14} />
+  </a>
 </section>
 
 <style>
-  section {
-    margin-top: 3rem;
-  }
-
   .more {
-    display: inline-block;
-    margin-top: 1rem;
-    font-weight: bold;
+    margin-top: var(--sp-5);
   }
 </style>

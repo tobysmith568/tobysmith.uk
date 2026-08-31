@@ -1372,6 +1372,11 @@ built against the `*.workers.dev` preview / `wrangler dev`, not the live domain 
 still GitHub Pages at this point, and that's fine, a preview URL is a perfectly good surface to
 design against.
 
+> **The detailed working doc for this stage is [redesign.md](./redesign.md).** The collaboration
+> rules, the agreed design direction, and every decision from page flow down to easing curves live
+> there, kept current the same way this file is. This stage's entry stays a summary; the design
+> work happens in redesign.md. Delete it (like this file) once the migration is complete.
+
 **Why this now runs _before_ the cutover (this used to be Stage 11, after it):** the migration's
 big-bang rule is about making the switch to the new stack a single, deliberate, watched event.
 The branch as it stands is technically sound but its look is neither the old production site nor
