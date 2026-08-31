@@ -38,6 +38,16 @@ test.describe("Blog Page", () => {
     expect(timestamps).toEqual(sortedDescending);
   });
 
+  test("should group the posts by year, newest year first", async ({ page }) => {
+    const blogPage = new BlogPageObject(page);
+    await blogPage.goto();
+
+    const years = (await blogPage.yearHeadings.allInnerTexts()).map(Number);
+
+    expect(years.length).toBeGreaterThan(1);
+    expect(years).toEqual([...years].sort((a, b) => b - a));
+  });
+
   test("should navigate to the correct blog post page", async ({ page }) => {
     const blogPage = new BlogPageObject(page);
     await blogPage.goto();
@@ -50,5 +60,6 @@ test.describe("Blog Page", () => {
     await blogPage.goto();
 
     await expect(blogPage.rssLink).toHaveAttribute("href", "/blog/rss.xml");
+    await expect(blogPage.rssLink).toHaveAttribute("target", "_blank");
   });
 });

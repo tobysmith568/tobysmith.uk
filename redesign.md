@@ -23,7 +23,7 @@ complete.
 
 _Snapshot — 2026-08-31. Keep this current; the Decision log has the full trail._
 
-**Done and in `src/` (all green: `bun run lint` / `build` / `e2e` — 112 Playwright tests):**
+**Done and in `src/` (all green: `bun run lint` / `build` / `e2e` — 116 Playwright tests):**
 
 - Direction (**"Public API"**), tokens (type, colour, space, motion, primitives) — locked, and
   revised several times against real previews (see Decision log).
@@ -35,15 +35,17 @@ _Snapshot — 2026-08-31. Keep this current; the Decision log has the full trail
   About, ProjectsSpotlight, BlogSpotlight, ContactSection, ContactForm. Pending Toby's final
   visual sign-off but no known issues.
 - **Prose system** — `Prose.astro` + `ProseLayout` + `PolicyLayout`; Shiki dual code themes.
-- The listing / detail / policy / 404 pages **inherit** the system (tokens, `.doc` gutter, shared
+- **Listing pages** — `/blog` (grouped by year) and `/projects` (manifest + tags) had their
+  dedicated pass on 2026-08-31 (Decision log). New `.listing` / `.entry-group` utilities.
+- The detail / policy / 404 pages **inherit** the system (tokens, `.doc` gutter, shared
   list-item + prose components, the icon set) and are internally consistent, but have **not had a
   dedicated design pass** — see the empty subsections under Page layouts.
 
 **Next, in rough order:**
 
-1. **Per-page layout passes** — Blog index, Projects index, then the two detail templates, then
-   policy pages, then 404. Nothing is spec'd for these yet (the subsections are stubs). This is
-   the main remaining chunk.
+1. **Per-page layout passes** — the two detail templates (blog post, project), then policy
+   pages, then 404. Nothing is spec'd for these yet (the subsections are stubs). This is the
+   main remaining chunk.
 2. **Copy pass** — mostly untouched (a couple of one-off fixes logged). Best done after the
    layouts settle.
 3. **Cross-cutting QA** — responsive / keyboard / reduced-motion / axe-Lighthouse sweep.
@@ -402,9 +404,12 @@ Since then: the round-1 + round-2 polish passes, the hover easter egg, the avata
 
 ### Projects — index
 
-_Status: no dedicated pass._ Current state (`src/pages/projects/index.astro`): `.doc` wrapper,
-plain `<h1>My Projects</h1>` + an intro `<p>`, then the `ProjectListItem` list. Empty gutter.
-Needs its own treatment — this is next work.
+_Status: implemented (2026-08-31)._ `.listing` wrapper. Opens like an index `.section` — a firm
+`--rule`, the `# projects` marker in the gutter — then `<h1>Projects</h1>` and a mono `.summary`
+line (`4 projects · all open source`). One un-marked `.entry-group` holds the `ProjectListItem`
+list (no grouping — only four projects). Each row now carries monospace tag chips, via a new
+`showTags` prop on `ProjectListItem` that `/projects` opts into (the index spotlight leaves it
+off). Tag values live in each project's frontmatter (`tags: string[]`) — currently placeholders.
 
 ### Projects — detail
 
@@ -415,8 +420,14 @@ left-aligned prose is a known rough edge.
 
 ### Blog — index
 
-_Status: no dedicated pass._ Current state (`src/pages/blog/index.astro`): `.doc` with the RSS
-`.icon-button` in the gutter; `<h1>Blog Posts</h1>`; then the `BlogListItem` list.
+_Status: implemented (2026-08-31)._ `.listing` wrapper. Opens like an index `.section` — a firm
+`--rule`, the `# blog` marker in the gutter — then `<h1>Blog</h1>` and a mono `.summary` line
+(`10 posts · 2020–2024 · RSS`, the RSS being a text link, `a.rss`). Posts then group into
+calendar years (`.entry-group` per year, newest first); each year is a monospace `.group-marker`
+that sticks in the gutter while its group scrolls, like a version header down a changelog margin.
+The 2023 gap is deliberately left visible. `BlogListItem` is unchanged — rows keep their full
+date. The signature move for this page; see the Decision log for the rationale and the rejected
+alternatives.
 
 ### Blog — detail
 
@@ -441,7 +452,9 @@ standalone specs — read the components themselves._ Settled: primary button / 
 fill, `arrow-right` icon, `--accent-strong` hover), `.icon-button` (bordered square — theme
 toggle, menu toggle, blog RSS), contact-form fields (`--surface`, 1px border → 2px `--accent`
 focus outline, `--muted` hover border), `ProjectListItem` / `BlogListItem` (flex row,
-right-aligned nudging `arrow-right`, `--text-lg` title), links (resting `--underline`, see
+right-aligned nudging `arrow-right`, `--text-lg` title; `ProjectListItem` also takes an optional
+`showTags` prop rendering monospace tag chips, used on `/projects` but not the index spotlight),
+links (resting `--underline`, see
 Typography), `.more` section actions, back-links (`arrow-left` + `--measure`), Prose (headings,
 links, blockquote, inline + block code with Shiki dual themes). Still genuinely open: `HR`,
 `Footnote`, `ArticleImage`, code-block chrome beyond the current border treatment.
@@ -458,6 +471,13 @@ wording change here so it's reviewable in one place.
   open to a copy review.
 - **Section headings** ("About Me", "Projects", "Blog", "Contact Me") — still the originals,
   rendered lowercase by `.eyebrow`. Review TBD.
+- **Listing page titles + summaries** (2026-08-31 pass): `/blog` `<h1>` "Blog Posts" → **"Blog"**;
+  `/projects` `<h1>` "My Projects" → **"Projects"** (both match the nav + the `# marker`). New
+  mono summary lines: `/blog` **"10 posts · 2020–2024 · RSS"** (counts + year span computed),
+  `/projects` **"4 projects · all open source"**. `/projects`' old intro `<p>` ("A selection of
+  the projects I've been working on recently.") is dropped — it was stale. Page `<title>` /
+  meta descriptions are unchanged (still "Blog Posts" / "A selection of the projects…") — that's
+  the meta-description pass's job.
 - **CTA labels** ("Send Message", "More projects →", "More posts →"): TBD
 - **Contact form:** labels, placeholders, success text ("Message sent successfully!"), error text,
   disabled / submitting states: TBD. Intro line reworded in the 2026-08-31 pass — was "Feel free
@@ -493,8 +513,10 @@ Order of implementation in `src/`; each step ends on a green local CI gate. Prog
 3. `[x]` **Prose system** — Prose.astro + ProseLayout + PolicyLayout; Shiki dual code themes.
 4. `[x]` **Index** — all five sections + ContactForm. `featured: boolean` added to the `blog`
    schema; picks made (`my-deployments-in-2024` / `reverse-flex-directions` → `true`).
-5. `[~]` **Listing + detail pages** — projects, blog, 404. They inherit the system and are
-   consistent, but only 404 has had any dedicated attention. **This is the main remaining work.**
+5. `[~]` **Listing + detail pages** — `/blog` + `/projects` listings had their pass on
+   2026-08-31 (year grouping, manifest + tags, the `.listing` / `.entry-group` utilities). The
+   blog-post + project detail templates, the policy pages and 404 still inherit the system
+   without a dedicated pass. **This is the main remaining work.**
 6. `[x]` **Motion pass** — the load-in sequence, hover states, the role easter egg, the
    `clientPrerender` fix. (No scroll reveals — deliberate.)
 7. `[ ]` **Copy pass** — apply agreed wording; update e2e page objects + specs. (Only one-off
@@ -507,6 +529,37 @@ Order of implementation in `src/`; each step ends on a green local CI gate. Prog
 ## Decision log
 
 Append-only, newest first. Format: `YYYY-MM-DD — <area>: <decision>. <why, briefly>.`
+
+- **2026-08-31 — Page layouts: `/blog` + `/projects` listing pass (Toby picked variants 1 + 5
+  from a preview of 5).** Both pages now open the way an index `.section` does — a firm `--rule`,
+  the monospace `# blog` / `# projects` marker in the gutter — then a modest `<h1>` ("Blog" /
+  "Projects", copy shortened from "Blog Posts" / "My Projects") and a one-line mono `.summary`
+  doing real work instead of a tagline: `10 posts · 2020–2024 · RSS`, `4 projects · all open
+source`. New `.listing` / `.listing-head` / `.entry-group` utilities in `global.css`, kept
+  separate from `.doc` (which has one page-wide rail; a grouped listing needs a marker per
+  group).
+  - **`/blog` — grouped by calendar year**, newest first; each year is a mono marker that sticks
+    in the gutter while its group scrolls (changelog-margin feel). The **2023 gap is left
+    visible** — honest cadence information, and it gives the otherwise-dead gutter a job. Years
+    are real data, not `01/02/03` decoration (which the direction forbids). Rejected in the
+    preview: a flat list (#3, nothing in the gutter for the whole scroll) and a
+    marker-as-heading header with no visible `<h1>` (#2, too quiet at the top on wide screens).
+    `BlogListItem` unchanged — rows keep full dates (also keeps the existing time-order e2e
+    assertion working).
+  - **`/projects` — manifest + tags.** Four projects, no grouping. `ProjectListItem` gains an
+    optional `showTags` prop (default off — the index spotlight stays lean); `/projects` opts
+    in. `tags: string[]` added to all four project frontmatters as **placeholder values** for
+    Toby to retune: `["typescript","cli","licensing"]` (generate-license-file),
+    `["typescript","cli","ci"]` (license-cop), `["typescript","next.js","reference"]`
+    (which-node-js), `["next.js","docker","privacy"]` (read-receipt).
+  - RSS moved from a floating `.icon-button` in the gutter to a text link in the `.summary`
+    line (`a.rss`, href `/blog/rss.xml` unchanged).
+  - e2e: `blog.po` / `projects.po` gain `yearHeadings` / `tags` getters; new specs for the year
+    grouping and per-project tags; `projects.spec`'s `<h1>` assertion updated "My Projects" →
+    "Projects". CI green: `bun run lint`, `format:check`, `astro check` (0 errors / 0 warnings,
+    76 files), Playwright — chromium 58/58, firefox verified on the changed specs (the full
+    firefox run is flaky under the local sandbox, as noted in earlier stages; a real runner
+    covers it).
 
 - **2026-08-31 — Icon buttons unified.** The blog RSS link had a transparent background while
   the header menu/theme toggles used `--surface`, so they read as different controls. Pulled the

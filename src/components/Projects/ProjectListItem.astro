@@ -4,11 +4,13 @@ import Icon from "../Icon.astro";
 
 export interface Props {
   project: CollectionEntry<"projects">;
+  // Tags are shown on the /projects listing only, not the index spotlight (which stays lean).
+  showTags?: boolean;
 }
 
-const { project } = Astro.props;
+const { project, showTags = false } = Astro.props;
 const { id: slug, data } = project;
-const { title, tagLine } = data;
+const { title, tagLine, tags } = data;
 const path = "/projects/" + slug;
 ---
 
@@ -18,6 +20,15 @@ const path = "/projects/" + slug;
       <h2>{title}</h2>
       <p>{tagLine}</p>
       <span class="path mono">{path}</span>
+      {
+        showTags && tags && tags.length > 0 && (
+          <ul class="tags">
+            {tags.map(tag => (
+              <li>{tag}</li>
+            ))}
+          </ul>
+        )
+      }
     </div>
     <Icon name="arrow-right" size={16} />
   </a>
@@ -88,5 +99,23 @@ const path = "/projects/" + slug;
     margin-top: var(--sp-2);
     font-size: var(--text-xs);
     color: var(--muted);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    margin: var(--sp-3) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tags li {
+    font-family: var(--f-mono);
+    font-size: var(--text-xs);
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.1em 0.6ch;
   }
 </style>

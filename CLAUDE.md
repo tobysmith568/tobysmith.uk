@@ -98,9 +98,14 @@ separately.
   `policies/privacy.mdx` → `entry.id === "privacy"`. `projects` also has a required `featured`
   boolean — an explicit editorial flag driving the index page's Projects
   spotlight, independent of `sortWeight`; two of the four projects are currently `featured: true`.
+  `projects` has an optional `tags: string[]` — rendered as chips on the `/projects` listing only
+  (via `ProjectListItem`'s `showTags` prop), not the index spotlight.
 - **Routing**: `src/pages/blog/[...slug].astro` and `src/pages/projects/[...slug].astro` are
   `getStaticPaths()`-driven detail pages reading from the collections above; `blog/index.astro`
-  and `projects/index.astro` are their listings. `blog/rss.xml.ts` builds the RSS feed from the
+  and `projects/index.astro` are their listings — both use the `.listing` layout (see Styling):
+  a `# blog` / `# projects` gutter marker, an `<h1>` + a computed mono summary line, then the
+  list. `blog/index.astro` groups posts into `.entry-group` blocks by calendar year (newest
+  first, sticky year marker in the gutter). `blog/rss.xml.ts` builds the RSS feed from the
   `blog` collection (via `@astrojs/rss`); `blog/rss.ts` just re-exports its `GET` handler so
   `/blog/rss` and `/blog/rss.xml` both work.
   `cookies.astro`/`privacy.astro`/`terms.astro`/`third-party.astro` are standalone one-off pages.
@@ -163,7 +168,11 @@ separately.
   `src/styles/tokens.css`, shared resets + utilities in `src/styles/global.css` (both imported
   once from `BaseLayout.astro`): `.wrap` (page shell at `--shell`), `.section` (the two-track
   label-gutter grid used by the Index sections — mono `.eyebrow` in a `--gutter` column on
-  ≥960px, body at `--measure`, 1px `--ink` opening rule), `.eyebrow`, `.text-link` / `.more`
+  ≥960px, body at `--measure`, 1px `--ink` opening rule), `.doc` (the same gutter grid with one
+  page-wide sticky rail — article/policy/404 pages), `.listing` + `.entry-group` (the `/blog` +
+  `/projects` listing pages — a `.listing-head` that opens like a `.section`, then `.entry-group`
+  blocks whose mono marker sticks in the gutter per group, e.g. one per year on `/blog`),
+  `.eyebrow`, `.text-link` / `.more`
   (link + section-action affordances, resting `--underline` → `--accent` on hover), `.sr-only`.
   Icons are inline SVG via `src/components/Icon.astro` (`name` prop; geometric, 1.5px stroke,
   `currentColor`) — no icon dependency, no SVG asset files.

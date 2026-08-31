@@ -2,49 +2,51 @@
 import Layout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 import BlogListItem from "../../components/Blog/BlogListItem.astro";
-import Icon from "../../components/Icon.astro";
 
 const title = "Blog Posts";
 const description = "Blog posts written by Toby about things he creates or finds interesting.";
 
 const blogPosts = await getCollection("blog");
 const sortedPosts = blogPosts.sort((a, b) => a.data.sortWeight - b.data.sortWeight).reverse();
+
+// Group into calendar years, newest first. Posts within a year keep the order above, which
+// matches date order for every post (checked - see redesign.md's Decision log).
+const years = [...new Set(sortedPosts.map(post => post.data.date.getFullYear()))];
+const postsByYear = years.map(year => ({
+  year,
+  posts: sortedPosts.filter(post => post.data.date.getFullYear() === year)
+}));
+
+const count = sortedPosts.length;
+const oldest = years[years.length - 1];
+const newest = years[0];
+const span = oldest === newest ? `${oldest}` : `${oldest}–${newest}`;
+const summary = `${count} ${count === 1 ? "post" : "posts"} · ${span} · `;
 ---
 
 <Layout title={title} description={description}>
-  <div class="doc">
-    <div class="doc-rail">
-      <a
-        class="rss icon-button"
-        href="/blog/rss.xml"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="RSS feed">
-        <Icon name="rss" size={18} />
-      </a>
+  <div class="listing">
+    <div class="listing-head">
+      <p class="eyebrow">blog</p>
+      <h1>Blog</h1>
+      <p class="summary mono">
+        {summary}<a class="rss" href="/blog/rss.xml" target="_blank" rel="noopener noreferrer"
+          >RSS</a
+        >
+      </p>
     </div>
 
-    <div>
-      <h1>Blog Posts</h1>
-
-      <div class="list">
-        {sortedPosts.map(post => <BlogListItem post={post} />)}
-      </div>
-    </div>
+    {
+      postsByYear.map(({ year, posts }) => (
+        <section class="entry-group">
+          <h2 class="group-marker">{year}</h2>
+          <div class="list">
+            {posts.map(post => (
+              <BlogListItem post={post} />
+            ))}
+          </div>
+        </section>
+      ))
+    }
   </div>
 </Layout>
-
-<style>
-  .doc-rail {
-    justify-content: flex-end;
-  }
-
-  h1 {
-    font-size: var(--text-3xl);
-    margin-bottom: var(--sp-6);
-  }
-
-  .rss {
-    flex-shrink: 0;
-  }
-</style>

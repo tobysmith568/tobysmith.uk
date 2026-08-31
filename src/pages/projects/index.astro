@@ -8,29 +8,23 @@ const description = "A selection of the projects Toby has been working on recent
 
 const projects = await getCollection("projects");
 const sortedProjects = projects.sort((a, b) => a.data.sortWeight - b.data.sortWeight).reverse();
+
+const count = sortedProjects.length;
+const summary = `${count} ${count === 1 ? "project" : "projects"} · all open source`;
 ---
 
 <Layout title={title} description={description}>
-  <div class="doc">
-    <div>
-      <h1>My Projects</h1>
-      <p class="intro">A selection of the projects I've been working on recently.</p>
-
-      <div class="list">
-        {sortedProjects.map(project => <ProjectListItem project={project} />)}
-      </div>
+  <div class="listing">
+    <div class="listing-head">
+      <p class="eyebrow">projects</p>
+      <h1>Projects</h1>
+      <p class="summary mono">{summary}</p>
     </div>
+
+    <section class="entry-group">
+      <div class="list">
+        {sortedProjects.map(project => <ProjectListItem project={project} showTags />)}
+      </div>
+    </section>
   </div>
 </Layout>
-
-<style>
-  h1 {
-    font-size: var(--text-3xl);
-  }
-
-  .intro {
-    margin-top: var(--sp-3);
-    margin-bottom: var(--sp-6);
-    color: var(--muted);
-  }
-</style>

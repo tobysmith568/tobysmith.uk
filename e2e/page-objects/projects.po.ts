@@ -19,4 +19,8 @@ export class ProjectsPageObject {
   get projects(): Locator {
     return this.page.locator("article");
   }
+
+  get tags(): Locator {
+    return this.page.locator("article .tags li");
+  }
 }

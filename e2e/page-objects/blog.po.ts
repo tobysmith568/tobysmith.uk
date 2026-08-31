@@ -23,4 +23,8 @@ export class BlogPageObject {
   get rssLink(): Locator {
     return this.page.locator("a.rss");
   }
+
+  get yearHeadings(): Locator {
+    return this.page.locator(".group-marker");
+  }
 }

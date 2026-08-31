@@ -245,6 +245,90 @@ img {
   font-family: var(--f-mono);
 }
 
+/* Collection listing pages (/blog, /projects). The page opens the way every index .section
+   does - a firm --rule, the monospace `# marker` hanging in the left gutter - then lists the
+   collection at --measure. Kept separate from .doc (a single rail spanning the whole page)
+   because a grouped listing needs a marker per group: see .entry-group. */
+.listing > .listing-head {
+  border-top: 1px solid var(--rule);
+  padding-top: var(--sp-6);
+  margin-bottom: var(--sp-6);
+  max-width: var(--measure);
+}
+.listing-head > h1 {
+  font-size: var(--text-2xl);
+}
+.listing-head > .summary {
+  margin-top: var(--sp-3);
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+.listing-head > .summary a {
+  text-decoration: underline;
+  text-decoration-color: var(--underline);
+  text-underline-offset: 0.15em;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    text-decoration-color var(--dur-fast) var(--ease-out);
+}
+.listing-head > .summary a:hover,
+.listing-head > .summary a:focus-visible {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+
+/* A group of entries within a listing (one calendar year on /blog). Same gutter | body
+   rhythm as .section, but no firm --rule between groups - the marker plus whitespace is
+   divider enough, and stacking --rule lines would read as broadsheet (an explicit anti-goal
+   in redesign.md). On wide viewports the marker sticks in the gutter while its group scrolls
+   past, like a version header down a changelog margin. */
+.entry-group + .entry-group {
+  margin-top: var(--sp-7);
+}
+.entry-group > .group-marker {
+  font-family: var(--f-mono);
+  font-weight: 500;
+  font-size: var(--text-xl);
+  color: var(--muted);
+  margin: 0 0 var(--sp-2);
+}
+
+@media (min-width: 60rem) {
+  .listing > .listing-head {
+    display: grid;
+    grid-template-columns: var(--gutter) minmax(0, var(--measure));
+    column-gap: var(--sp-6);
+    max-width: none;
+  }
+  .listing-head > * {
+    grid-column: 2;
+    min-width: 0;
+  }
+  .listing-head > .eyebrow {
+    grid-column: 1;
+    grid-row: 1 / 999;
+  }
+
+  .entry-group {
+    display: grid;
+    grid-template-columns: var(--gutter) minmax(0, var(--measure));
+    column-gap: var(--sp-6);
+  }
+  .entry-group > * {
+    grid-column: 2;
+    min-width: 0;
+  }
+  .entry-group > .group-marker {
+    grid-column: 1;
+    grid-row: 1 / 999;
+    position: sticky;
+    top: var(--sp-5);
+    align-self: start;
+    font-size: var(--text-sm);
+    margin: 0;
+  }
+}
+
 /* The monospace "field label" that names a section - the one structural device this direction
    uses instead of numbering. A real heading element, so the outline and screen readers still
    see a normal heading; only the presentation changes. */

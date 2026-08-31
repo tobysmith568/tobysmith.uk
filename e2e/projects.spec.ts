@@ -16,7 +16,7 @@ test.describe("Projects Page", () => {
     const projectsPage = new ProjectsPageObject(page);
     await projectsPage.goto();
 
-    await expect(projectsPage.title).toContainText("My Projects");
+    await expect(projectsPage.title).toContainText("Projects");
   });
 
   test("should display the projects", async ({ page }) => {
@@ -24,6 +24,15 @@ test.describe("Projects Page", () => {
     await projectsPage.goto();
 
     await expect(projectsPage.projects).toHaveCount(4);
+  });
+
+  test("should display tags for every project", async ({ page }) => {
+    const projectsPage = new ProjectsPageObject(page);
+    await projectsPage.goto();
+
+    for (const project of await projectsPage.projects.all()) {
+      await expect(project.locator(".tags li").first()).toBeVisible();
+    }
   });
 
   test("should display the projects in order", async ({ page }) => {
