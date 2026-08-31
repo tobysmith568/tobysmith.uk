@@ -5,11 +5,11 @@ class ProjectDetailsPageObject {
   constructor(private readonly page: Page) {}
 
   private get details(): Locator {
-    return this.page.locator("div.details");
+    return this.page.locator("div.entry-head");
   }
 
   get image(): Locator {
-    return this.details.locator("img");
+    return this.details.locator("img.logo");
   }
 
   get title(): Locator {
@@ -18,6 +18,14 @@ class ProjectDetailsPageObject {
 
   get tagLine(): Locator {
     return this.details.locator("p.tagline");
+  }
+
+  get tags(): Locator {
+    return this.details.locator(".tags li");
+  }
+
+  get links(): Locator {
+    return this.details.locator(".links a");
   }
 }
 

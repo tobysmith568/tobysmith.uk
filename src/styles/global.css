@@ -329,6 +329,35 @@ img {
   }
 }
 
+/* The header block on the detail pages (blog post, project) - the title (and, on projects,
+   the logo / tagline / tags / links) sit above a hairline rule that marks "end of the
+   metadata, start of the body". The per-page internals live in each page's own <style>;
+   only the rule + spacing is shared. */
+.entry-head {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--sp-5);
+  margin-bottom: var(--sp-6);
+}
+
+/* Monospace tag chips - the project's `tags`, shown on the /projects listing rows and again
+   on the project detail header. */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tags li {
+  font-family: var(--f-mono);
+  font-size: var(--text-xs);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.1em 0.6ch;
+}
+
 /* The monospace "field label" that names a section - the one structural device this direction
    uses instead of numbering. A real heading element, so the outline and screen readers still
    see a normal heading; only the presentation changes. */

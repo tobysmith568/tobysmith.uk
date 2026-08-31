@@ -34,7 +34,9 @@ const parseableDate = dayjs(date).format("YYYY-MM-DD");
     </div>
 
     <article>
-      <h1>{entry.data.title}</h1>
+      <div class="entry-head">
+        <h1>{entry.data.title}</h1>
+      </div>
 
       <Prose>
         <Content />
@@ -56,6 +58,5 @@ const parseableDate = dayjs(date).format("YYYY-MM-DD");
 
   h1 {
     font-size: var(--text-3xl);
-    margin-bottom: var(--sp-6);
   }
 </style>

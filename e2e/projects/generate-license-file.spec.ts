@@ -17,7 +17,7 @@ test.describe("Generate License File Project", () => {
     const projectPage = new GenerateLicenseFileProjectPageObject(page);
     await projectPage.goto();
 
-    await expect(projectPage.backLink).toContainText("My Projects");
+    await expect(projectPage.backLink).toContainText("Projects");
     await expect(projectPage.backLink).toHaveAttribute("href", "/projects");
   });
 
@@ -45,6 +45,25 @@ test.describe("Generate License File Project", () => {
     await projectPage.goto();
 
     await expect(projectPage.details.tagLine).toContainText(tagLine);
+  });
+
+  test("should display the tags", async ({ page }) => {
+    const projectPage = new GenerateLicenseFileProjectPageObject(page);
+    await projectPage.goto();
+
+    await expect(projectPage.details.tags).toHaveText(["typescript", "cli", "licensing"]);
+  });
+
+  test("should display the project links", async ({ page }) => {
+    const projectPage = new GenerateLicenseFileProjectPageObject(page);
+    await projectPage.goto();
+
+    await expect(projectPage.details.links).toHaveText([/source/, /npm/, /site/]);
+    await expect(projectPage.details.links.first()).toHaveAttribute(
+      "href",
+      "https://github.com/TobyAndToby/generate-license-file"
+    );
+    await expect(projectPage.details.links.first()).toHaveAttribute("target", "_blank");
   });
 
   test("should display the content", async ({ page }) => {

@@ -101,21 +101,9 @@ const path = "/projects/" + slug;
     color: var(--muted);
   }
 
+  /* chip styling comes from the shared .tags utility in global.css; only the offset from
+     the route path above it is list-item specific */
   .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sp-2);
-    margin: var(--sp-3) 0 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .tags li {
-    font-family: var(--f-mono);
-    font-size: var(--text-xs);
-    color: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 0.1em 0.6ch;
+    margin-top: var(--sp-3);
   }
 </style>

@@ -4,7 +4,6 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import Prose from "../../components/Prose.astro";
 import Icon from "../../components/Icon.astro";
 import { resolveProjectImage } from "../../components/Projects/resolveProjectImage";
-import { Image } from "astro:assets";
 
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
@@ -18,9 +17,15 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 
-const { title, tagLine } = entry.data;
+const { title, tagLine, tags, links } = entry.data;
 
-const projectImgSrcPromise = resolveProjectImage(entry.id);
+const projectImgSrc = await resolveProjectImage(entry.id);
+
+const linkList = [
+  { label: "source", href: links?.source },
+  { label: "npm", href: links?.npm },
+  { label: "site", href: links?.site }
+].filter((link): link is { label: string; href: string } => Boolean(link.href));
 ---
 
 <BaseLayout title={title} description={tagLine}>
@@ -28,15 +33,53 @@ const projectImgSrcPromise = resolveProjectImage(entry.id);
     <div class="doc-rail">
       <a href="/projects" class="back more mono">
         <Icon name="arrow-left" size={14} />
-        My Projects
+        Projects
       </a>
     </div>
 
     <article>
-      <div class="details">
-        {projectImgSrcPromise && <Image src={projectImgSrcPromise} alt="" />}
-        <h1>{entry.data.title}</h1>
-        <p class="tagline">{tagLine}</p>
+      <div class="entry-head">
+        <div class="identity">
+          {
+            projectImgSrc && (
+              <img
+                class="logo"
+                src={projectImgSrc.src}
+                width={projectImgSrc.width}
+                height={projectImgSrc.height}
+                alt=""
+              />
+            )
+          }
+
+          <div class="text">
+            <h1>{title}</h1>
+            <p class="tagline">{tagLine}</p>
+
+            {
+              tags && tags.length > 0 && (
+                <ul class="tags">
+                  {tags.map(tag => (
+                    <li>{tag}</li>
+                  ))}
+                </ul>
+              )
+            }
+
+            {
+              linkList.length > 0 && (
+                <div class="links mono">
+                  {linkList.map(({ label, href }) => (
+                    <a href={href} target="_blank" rel="noopener noreferrer">
+                      {label}
+                      <Icon name="arrow-up-right" size={13} />
+                    </a>
+                  ))}
+                </div>
+              )
+            }
+          </div>
+        </div>
       </div>
 
       <Prose>
@@ -52,28 +95,78 @@ const projectImgSrcPromise = resolveProjectImage(entry.id);
     transform: translateX(-2px);
   }
 
-  .details {
+  .identity {
     display: flex;
-    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-4);
+  }
+
+  .logo {
+    flex-shrink: 0;
+    width: 3.5rem;
+    height: 3.5rem;
+    object-fit: contain;
+  }
+
+  .text {
+    min-width: 0;
+  }
+
+  h1 {
+    font-size: var(--text-3xl);
+  }
+
+  .tagline {
+    margin-top: var(--sp-3);
+    font-size: var(--text-lg);
+    color: var(--muted);
+  }
+
+  .tags {
+    margin-top: var(--sp-4);
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-4);
+    margin-top: var(--sp-4);
+    font-size: var(--text-sm);
+  }
+
+  .links a {
+    display: inline-flex;
     align-items: center;
-    text-align: center;
-    margin-bottom: var(--sp-8);
-    padding-bottom: var(--sp-7);
-    border-bottom: 1px solid var(--border);
+    gap: 0.4ch;
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--underline);
+    text-underline-offset: 0.15em;
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      text-decoration-color var(--dur-fast) var(--ease-out);
+  }
 
-    img {
-      max-width: min(10rem, 40vw);
-      height: auto;
-      margin-bottom: var(--sp-4);
-    }
+  .links a:hover,
+  .links a:focus-visible {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
+  }
 
-    h1 {
-      font-size: var(--text-3xl);
-    }
+  .links a :global(svg) {
+    color: var(--muted);
+    transition: color var(--dur-fast) var(--ease-out);
+  }
 
-    .tagline {
-      margin-top: var(--sp-3);
-      color: var(--muted);
+  .links a:hover :global(svg),
+  .links a:focus-visible :global(svg) {
+    color: var(--accent);
+  }
+
+  @media (max-width: 34rem) {
+    .identity {
+      flex-direction: column;
+      gap: var(--sp-3);
     }
   }
 </style>

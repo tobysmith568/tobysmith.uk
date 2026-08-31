@@ -98,14 +98,18 @@ separately.
   `policies/privacy.mdx` → `entry.id === "privacy"`. `projects` also has a required `featured`
   boolean — an explicit editorial flag driving the index page's Projects
   spotlight, independent of `sortWeight`; two of the four projects are currently `featured: true`.
-  `projects` has an optional `tags: string[]` — rendered as chips on the `/projects` listing only
-  (via `ProjectListItem`'s `showTags` prop), not the index spotlight.
+  `projects` has an optional `tags: string[]` (chips on the `/projects` listing via
+  `ProjectListItem`'s `showTags` prop, and on the project detail header — not the index
+  spotlight) and an optional `links: { source?, npm?, site? }` map, rendered as the mono link
+  row on the project detail page.
 - **Routing**: `src/pages/blog/[...slug].astro` and `src/pages/projects/[...slug].astro` are
   `getStaticPaths()`-driven detail pages reading from the collections above; `blog/index.astro`
   and `projects/index.astro` are their listings — both use the `.listing` layout (see Styling):
   a `# blog` / `# projects` gutter marker, an `<h1>` + a computed mono summary line, then the
   list. `blog/index.astro` groups posts into `.entry-group` blocks by calendar year (newest
-  first, sticky year marker in the gutter). `blog/rss.xml.ts` builds the RSS feed from the
+  first, sticky year marker in the gutter). Both detail templates open with a left-aligned
+  `.entry-head` (title, plus — on projects — the logo, tagline, `.tags` chips and `links` row)
+  closed by a hairline rule before the `<Prose>` body. `blog/rss.xml.ts` builds the RSS feed from the
   `blog` collection (via `@astrojs/rss`); `blog/rss.ts` just re-exports its `GET` handler so
   `/blog/rss` and `/blog/rss.xml` both work.
   `cookies.astro`/`privacy.astro`/`terms.astro`/`third-party.astro` are standalone one-off pages.
@@ -159,10 +163,18 @@ separately.
   they never reach the browser. **This backend used to live in a separate Cloudflare Worker repo
   (`tobysmith568/email.tobysmith.uk`) — folded into this repo.** That old Worker is still deployed
   and still what production actually uses until the production cutover; don't decommission it yet.
-- **Images**: `astro:assets`'s `<Image>`/`Astro.assets` is used for project logos
-  (`src/components/Projects/resolveProjectImage.ts`, `Projects/ProjectListItem.astro`,
-  `projects/[...slug].astro`), which requires build-time (Sharp) image processing — see the
-  `imageService: "compile"` note above; this breaks (404s) without it.
+- **Images**: project logos (`src/components/Projects/resolveProjectImage.ts`, used from
+  `projects/[...slug].astro`) are rendered as a plain `<img>`, not `astro:assets`'s `<Image>` —
+  `resolveProjectImage` resolves the Vite-processed asset itself (`{ src, width, height }`) so
+  the page can use its `.src` directly. `<Image>` doesn't currently appear anywhere in the
+  codebase; if it's reintroduced, know that **it only gets Sharp-based (`"compile"`)
+  optimization for prerendered routes at `astro build` time** (see the `imageService` note
+  above) — `astro dev` renders every route on demand, so `<Image>` there (and for any
+  non-prerendered route in production) always goes through the adapter's _runtime_ image
+  service instead, which only transforms `jpeg`/`png`/`gif`/`webp`/`avif` — **not SVG** ("Unsupported
+  format: svg", a 400 from `/_image`). This is exactly why the logos were moved off `<Image>`:
+  SVGs don't need Sharp's resize/recompress anyway, so a plain `<img>` sidesteps the image
+  service question in both dev and prod rather than fighting it.
 - **Styling**: plain component-scoped `<style>` blocks with native CSS nesting, no preprocessor
   (Sass was dropped; `lighten()` → `color-mix(in srgb, ...)`). Design tokens live in
   `src/styles/tokens.css`, shared resets + utilities in `src/styles/global.css` (both imported
@@ -172,7 +184,8 @@ separately.
   page-wide sticky rail — article/policy/404 pages), `.listing` + `.entry-group` (the `/blog` +
   `/projects` listing pages — a `.listing-head` that opens like a `.section`, then `.entry-group`
   blocks whose mono marker sticks in the gutter per group, e.g. one per year on `/blog`),
-  `.eyebrow`, `.text-link` / `.more`
+  `.entry-head` (the hairline-ruled header on the detail pages), `.tags` (mono chips — listing
+  rows + project detail), `.eyebrow`, `.text-link` / `.more`
   (link + section-action affordances, resting `--underline` → `--accent` on hover), `.sr-only`.
   Icons are inline SVG via `src/components/Icon.astro` (`name` prop; geometric, 1.5px stroke,
   `currentColor`) — no icon dependency, no SVG asset files.

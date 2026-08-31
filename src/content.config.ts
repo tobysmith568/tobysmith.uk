@@ -11,6 +11,15 @@ const projectsCollection = defineCollection({
     title: z.string(),
     tagLine: z.string(),
     tags: z.array(z.string()).optional(),
+    // Shown as a row of links on the project's detail page (source / npm / live site).
+    // All optional - not every project is on npm or has a live site.
+    links: z
+      .object({
+        source: z.string().optional(),
+        npm: z.string().optional(),
+        site: z.string().optional()
+      })
+      .optional(),
     featured: z.boolean()
   })
 });

@@ -23,7 +23,7 @@ complete.
 
 _Snapshot — 2026-08-31. Keep this current; the Decision log has the full trail._
 
-**Done and in `src/` (all green: `bun run lint` / `build` / `e2e` — 116 Playwright tests):**
+**Done and in `src/` (all green: `bun run lint` / `build` / `e2e` — 120 Playwright tests):**
 
 - Direction (**"Public API"**), tokens (type, colour, space, motion, primitives) — locked, and
   revised several times against real previews (see Decision log).
@@ -37,15 +37,16 @@ _Snapshot — 2026-08-31. Keep this current; the Decision log has the full trail
 - **Prose system** — `Prose.astro` + `ProseLayout` + `PolicyLayout`; Shiki dual code themes.
 - **Listing pages** — `/blog` (grouped by year) and `/projects` (manifest + tags) had their
   dedicated pass on 2026-08-31 (Decision log). New `.listing` / `.entry-group` utilities.
-- The detail / policy / 404 pages **inherit** the system (tokens, `.doc` gutter, shared
-  list-item + prose components, the icon set) and are internally consistent, but have **not had a
-  dedicated design pass** — see the empty subsections under Page layouts.
+- **Detail templates** — blog post + project both passed on 2026-08-31 (shared `.entry-head`;
+  project header rebuilt left-aligned with logo + tags + `source`/`npm`/`site` links).
+- The policy pages + 404 **inherit** the system (tokens, `.doc` gutter, shared prose
+  components, the icon set) and are internally consistent, but have **not had a dedicated
+  design pass** — see the subsections under Page layouts.
 
 **Next, in rough order:**
 
-1. **Per-page layout passes** — the two detail templates (blog post, project), then policy
-   pages, then 404. Nothing is spec'd for these yet (the subsections are stubs). This is the
-   main remaining chunk.
+1. **Per-page layout passes** — policy pages, then 404. Both are low-stakes ("not a showcase" /
+   "get the visitor back somewhere useful"); this is the last of the layout work.
 2. **Copy pass** — mostly untouched (a couple of one-off fixes logged). Best done after the
    layouts settle.
 3. **Cross-cutting QA** — responsive / keyboard / reduced-motion / axe-Lighthouse sweep.
@@ -53,7 +54,10 @@ _Snapshot — 2026-08-31. Keep this current; the Decision log has the full trail
    via `featured`; blog curation still open) into its stage notes, final CI gate.
 
 **Needs Toby (see Open questions):** the concrete Definition-of-done checklist; blog per-post
-curation in scope or deferred; whether to wait for a purpose-shot profile photo.
+curation in scope or deferred; whether to wait for a purpose-shot profile photo; **verify the
+project `links` npm package names** — the rest were best-effort guesses from the content and
+Toby has already corrected them where wrong (`generate-license-file`'s `source` is
+`TobyAndToby`, not `tobysmith568`; `license-cop`'s `site` is `license-cop.js.org`, confirmed).
 
 ## Working agreement — the rules
 
@@ -413,10 +417,17 @@ off). Tag values live in each project's frontmatter (`tags: string[]`) — curre
 
 ### Projects — detail
 
-_Status: no dedicated pass._ Current state (`src/pages/projects/[...slug].astro`): `.doc` with a
-sticky `← My Projects` back-link in the gutter; a **centred** block (logo `<Image>` + `<h1>` +
-muted tagline) with a divider under it; then `<Prose>`. The centred header sitting over
-left-aligned prose is a known rough edge.
+_Status: implemented (2026-08-31)._ `.doc` with a sticky `← Projects` back-link in the gutter.
+The centring is gone. Header is a left-aligned `.entry-head`: the logo — a plain `<img>`, not
+`astro:assets`'s `<Image>` (see the Decision log entry on the dev-mode `/_image` 400 this
+avoids) — bare, contain-fit, 3.5rem, sits inline to the left of a text block — `<h1>` (`--text-3xl`),
+`--text-lg` muted tagline, the `.tags` chips, then a monospace `.links` row of
+`source` / `npm` / `site` links (each with an `arrow-up-right` icon, new tab). Below 34rem the
+logo stacks above the text. Projects with no logo SVG (read-receipt) just render the text.
+Then the shared hairline `.entry-head` rule, then `<Prose>`. Logo placement was picked from a
+preview (variant "A"); a frontmatter-record variant ("E", echoing the index hero's
+photo + record) was previewed and rejected. Needs a new `links` map on the projects schema —
+see the Decision log.
 
 ### Blog — index
 
@@ -431,8 +442,11 @@ alternatives.
 
 ### Blog — detail
 
-_Status: no dedicated pass._ Current state (`src/pages/blog/[...slug].astro`): `.doc` with
-`← Posts` back-link + mono date in the gutter; `<h1>`; then `<Prose>` (Shiki dual-theme code).
+_Status: implemented (2026-08-31)._ `.doc` with `← Posts` back-link + mono date in the sticky
+gutter; `<h1>` (`--text-3xl`) wrapped in a `.entry-head` that carries the shared hairline rule
+before the `<Prose>` body — the same "end of the metadata, start of the body" beat the project
+detail has. Light touch: the current page was already close. No standfirst (previewed, not
+taken).
 
 ### Policy pages + license list
 
@@ -456,7 +470,10 @@ right-aligned nudging `arrow-right`, `--text-lg` title; `ProjectListItem` also t
 `showTags` prop rendering monospace tag chips, used on `/projects` but not the index spotlight),
 links (resting `--underline`, see
 Typography), `.more` section actions, back-links (`arrow-left` + `--measure`), Prose (headings,
-links, blockquote, inline + block code with Shiki dual themes). Still genuinely open: `HR`,
+links, blockquote, inline + block code with Shiki dual themes), `.tags` chips (shared
+`global.css` utility — `/projects` rows + project detail header), the project detail `.links`
+row (`source`/`npm`/`site`, mono, `arrow-up-right`, new tab), the shared `.entry-head` (the
+hairline rule closing a detail page's header). Still genuinely open: `HR`,
 `Footnote`, `ArticleImage`, code-block chrome beyond the current border treatment.
 
 ## Copy
@@ -478,6 +495,12 @@ wording change here so it's reviewable in one place.
   the projects I've been working on recently.") is dropped — it was stale. Page `<title>` /
   meta descriptions are unchanged (still "Blog Posts" / "A selection of the projects…") — that's
   the meta-description pass's job.
+- **Detail page back-links** (2026-08-31 pass): project detail `← My Projects` → **`← Projects`**
+  (the `/projects` `<h1>` is now "Projects"). Blog post detail keeps `← Posts` for now — a
+  wider "back-link matches its destination" sweep (`← Blog`?) is left for the copy pass.
+- **Project detail links row** (2026-08-31 pass): labels are **`source` / `npm` / `site`**
+  (lowercase mono). URLs are in each project's `links` frontmatter — best-effort, need Toby to
+  verify.
 - **CTA labels** ("Send Message", "More projects →", "More posts →"): TBD
 - **Contact form:** labels, placeholders, success text ("Message sent successfully!"), error text,
   disabled / submitting states: TBD. Intro line reworded in the 2026-08-31 pass — was "Feel free
@@ -513,10 +536,10 @@ Order of implementation in `src/`; each step ends on a green local CI gate. Prog
 3. `[x]` **Prose system** — Prose.astro + ProseLayout + PolicyLayout; Shiki dual code themes.
 4. `[x]` **Index** — all five sections + ContactForm. `featured: boolean` added to the `blog`
    schema; picks made (`my-deployments-in-2024` / `reverse-flex-directions` → `true`).
-5. `[~]` **Listing + detail pages** — `/blog` + `/projects` listings had their pass on
-   2026-08-31 (year grouping, manifest + tags, the `.listing` / `.entry-group` utilities). The
-   blog-post + project detail templates, the policy pages and 404 still inherit the system
-   without a dedicated pass. **This is the main remaining work.**
+5. `[~]` **Listing + detail pages** — `/blog` + `/projects` listings (year grouping, manifest +
+   tags) and the blog-post + project detail templates (shared `.entry-head`; project header
+   rebuilt with logo + tags + `source`/`npm`/`site` links; new `links` schema field) all had
+   their pass on 2026-08-31. **Only the policy pages + 404 remain** — both low-stakes.
 6. `[x]` **Motion pass** — the load-in sequence, hover states, the role easter egg, the
    `clientPrerender` fix. (No scroll reveals — deliberate.)
 7. `[ ]` **Copy pass** — apply agreed wording; update e2e page objects + specs. (Only one-off
@@ -529,6 +552,50 @@ Order of implementation in `src/`; each step ends on a green local CI gate. Prog
 ## Decision log
 
 Append-only, newest first. Format: `YYYY-MM-DD — <area>: <decision>. <why, briefly>.`
+
+- **2026-08-31 — Bug: project logos 400 in `astro dev` — fixed by dropping `<Image>`.** Toby
+  reported the logos 400ing on his dev server right after the detail-template pass landed.
+  Reproduced: `astro dev` renders every route on demand (prerendering only happens at
+  `astro build`), so `<Image>` always goes through the Cloudflare adapter's _runtime_ image
+  service there — never the Sharp-based `imageService: "compile"` path, which only ever covers
+  the build's prerendering pass. That runtime service only transforms
+  `jpeg`/`png`/`gif`/`webp`/`avif` and 400s any other format ("Unsupported format: svg") — so
+  every project logo was always going to 400 in dev, going all the way back to the original
+  centred-logo header; it just hadn't been hit before (earlier verification went through
+  `wrangler dev` against a build, or `astro preview`, which both serve the pre-optimized static
+  file, or `astro dev` on a page whose logo wasn't looked at closely). Fix: SVGs don't need
+  Sharp's resize/recompress anyway, so `resolveProjectImage` now resolves and returns the
+  Vite-processed asset directly (`{ src, width, height }`) and the project detail page renders
+  a plain `<img src={...}>` instead of `astro:assets`'s `<Image>` — sidesteps the runtime image
+  service (and its format list) entirely, in both dev and prod. `<Image>` no longer appears
+  anywhere in the codebase. Confirmed: `astro dev` 200s the page and the image; `astro build`
+  still emits a static hashed `/_astro/*.svg`.
+
+- **2026-08-31 — Page layouts: the two detail templates (blog post, project).** Both get a
+  shared `.entry-head` (global.css) — a left-aligned header closed by a hairline `--border`
+  rule that marks "end of the metadata, start of the body".
+  - **Blog post** — light touch (was already close): `<h1>` wrapped in `.entry-head` for the
+    rule; `← Posts` + date stay in the sticky gutter; `--text-3xl` title. A `description`
+    standfirst was previewed and **not** taken (Toby: variant 1).
+  - **Project** — the centred logo/title/tagline block is **gone**. Header is now left-aligned:
+    the logo sits bare (contain-fit, 3.5rem) inline to the left of a text block (`<h1>`,
+    `--text-lg` muted tagline, `.tags` chips, a monospace `.links` row). Stacks below 34rem;
+    no-logo projects (read-receipt) render text only. Toby picked layout **"A"** from a
+    5-option preview; the frontmatter-record variant **"E"** (framed logo + mono key:value
+    record echoing the index hero's photo + frontmatter block) was previewed and rejected.
+    Back-link copy `← My Projects` → `← Projects` (the listing's `<h1>` is now "Projects").
+  - **New `links` map on the `projects` schema** — `{ source?, npm?, site? }`, all optional.
+    Populated for all four projects; **the exact URLs are best-effort and need Toby to
+    verify** (esp. the npm package names, and license-cop has no `site` because its js.org
+    domain wasn't confirmable from the content).
+  - `.tags` chip styling moved from `ProjectListItem`'s scoped `<style>` to a shared
+    `global.css` utility (now used by the listing rows _and_ the project detail header).
+  - The project logo as a build-time `og:image` was raised and **deferred** to a separate
+    follow-up (needs build-time image composition) — noted so it isn't lost.
+  - e2e: `generate-license-file.po` gains `tags` / `links` getters + specs; the details
+    selector moved `div.details` → `div.entry-head`, image `img` → `img.logo`; back-link
+    assertion "My Projects" → "Projects". CI green: lint / `format:check` / `astro check`
+    (0 errors) / Playwright chromium.
 
 - **2026-08-31 — Page layouts: `/blog` + `/projects` listing pass (Toby picked variants 1 + 5
   from a preview of 5).** Both pages now open the way an index `.section` does — a firm `--rule`,
