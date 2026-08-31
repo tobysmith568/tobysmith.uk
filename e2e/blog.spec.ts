@@ -7,7 +7,7 @@ test.describe("Blog Page", () => {
     const blogPage = new BlogPageObject(page);
     await blogPage.goto();
 
-    expect(await blogPage.meta.title()).toBe("Blog Posts - Toby Smith");
+    expect(await blogPage.meta.title()).toBe("Blog - Toby Smith");
     expect(await blogPage.meta.description()).toBe(
       "Blog posts written by Toby about things he creates or finds interesting."
     );

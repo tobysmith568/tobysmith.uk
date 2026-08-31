@@ -8,7 +8,7 @@ test.describe("Index", () => {
 
     expect(await indexPage.meta.title()).toBe("Toby Smith");
     expect(await indexPage.meta.description()).toBe(
-      "Toby Smith is a London-based software developer who enjoys focusing on web-based technologies."
+      "Toby Smith is a London-based Senior Software Engineer, focusing on web stacks."
     );
   });
 
@@ -33,7 +33,7 @@ test.describe("Index", () => {
     await expect(indexPage.roleCycle).toHaveText("npm package author");
 
     await page.clock.fastForward(620);
-    await expect(indexPage.roleCycle).toHaveText("TypeScript fanatic");
+    await expect(indexPage.roleCycle).toHaveText("Bun runtime adopter");
 
     await page.clock.fastForward(620);
     await expect(indexPage.roleCycle).toHaveText("Burrito over-filler");
@@ -61,7 +61,7 @@ test.describe("Index", () => {
     await indexPage.frontmatter.hover();
     await page.clock.fastForward(200);
     await expect(indexPage.roleCycle).toHaveText(
-      /^(Full-stack developer|npm package author|TypeScript fanatic|Burrito over-filler)$/
+      /^(Full-stack developer|npm package author|Bun runtime adopter|Burrito over-filler)$/
     );
     // The real title is still the one exposed to assistive tech.
     await expect(indexPage.roleAccessibleName).toHaveText("Senior Software Developer");

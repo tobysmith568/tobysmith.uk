@@ -21,7 +21,14 @@ export const server = {
 
       const turnstileValidation = await verifyTurnstileToken(turnstileToken, contactEnv.turnstile);
       if (!turnstileValidation.success) {
-        throw new ActionError({ code: "BAD_REQUEST", message: turnstileValidation.error });
+        // As with the email-send failure below: log the real reason (which can be a raw
+        // Turnstile error-code payload, not something to show a visitor) server-side, and give
+        // the browser a clean, generic message instead.
+        console.error("Contact form Turnstile verification failed:", turnstileValidation.error);
+        throw new ActionError({
+          code: "BAD_REQUEST",
+          message: "Something went wrong verifying your submission. Please try again."
+        });
       }
 
       const subject = `New message from ${name} via tobysmith.uk`;

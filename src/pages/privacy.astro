@@ -5,7 +5,7 @@ import Icon from "../components/Icon.astro";
 import dayjs from "dayjs";
 
 const title = "Privacy Policy";
-const description = "This privacy policy for tobysmith.uk";
+const description = "The privacy policy for tobysmith.uk";
 
 const policies = await getCollection("policies");
 const termPolicy = policies.find(p => p.id === "privacy");

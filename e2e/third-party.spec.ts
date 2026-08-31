@@ -8,7 +8,7 @@ test.describe("Third Party Page", () => {
 
     expect(await thirdPartyPage.meta.title()).toBe("Third-Party Content - Toby Smith");
     expect(await thirdPartyPage.meta.description()).toBe(
-      "The Third-party content used by tobysmith.uk"
+      "The third-party content used by tobysmith.uk"
     );
   });
 

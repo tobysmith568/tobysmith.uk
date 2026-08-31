@@ -7,7 +7,7 @@ test.describe("Privacy Page", () => {
     await privacyPage.goto();
 
     expect(await privacyPage.meta.title()).toBe("Privacy Policy - Toby Smith");
-    expect(await privacyPage.meta.description()).toBe("This privacy policy for tobysmith.uk");
+    expect(await privacyPage.meta.description()).toBe("The privacy policy for tobysmith.uk");
   });
 
   test("should display the title", async ({ page }) => {

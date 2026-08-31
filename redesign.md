@@ -23,7 +23,7 @@ complete.
 
 _Snapshot — 2026-08-31. Keep this current; the Decision log has the full trail._
 
-**Done and in `src/` (all green: `bun run lint` / `build` / `e2e` — 142 Playwright tests):**
+**Done and in `src/` (all green: `bun run lint` / `build` / `e2e` — 144 Playwright tests):**
 
 - Direction (**"Public API"**), tokens (type, colour, space, motion, primitives) — locked, and
   revised several times against real previews (see Decision log).
@@ -42,13 +42,15 @@ _Snapshot — 2026-08-31. Keep this current; the Decision log has the full trail
 - **Policy pages + 404** — also passed on 2026-08-31 (`ProseLayout`'s `.doc-rail` + `lastUpdated`
   schema field; the 404 marker consolidated onto `.eyebrow`). **Every page has now had a
   dedicated design pass** — the per-page layout work is done.
+- **Copy pass** — done 2026-08-31, worked collaboratively top to bottom (see the Copy section).
+  Along the way, turned up and fixed two real bugs, not just wording: a malformed email showing
+  a useless "Invalid field data" message, and a Turnstile failure leaking a raw JSON payload
+  into the UI.
 
 **Next, in rough order:**
 
-1. **Copy pass** — mostly untouched (a couple of one-off fixes logged per page as they landed).
-   The layouts are now settled, so this can start.
-2. **Cross-cutting QA** — responsive / keyboard / reduced-motion / axe-Lighthouse sweep.
-3. **Wrap-up** — finish `CLAUDE.md`, fold migration.md's Open items (spotlight count is decided
+1. **Cross-cutting QA** — responsive / keyboard / reduced-motion / axe-Lighthouse sweep.
+2. **Wrap-up** — finish `CLAUDE.md`, fold migration.md's Open items (spotlight count is decided
    via `featured`; blog curation still open) into its stage notes, final CI gate.
 
 **Needs Toby (see Open questions):** the concrete Definition-of-done checklist; blog per-post
@@ -493,16 +495,20 @@ Still genuinely open: `HR`,
 
 ## Copy
 
-_Status: only one-off fixes so far; the deliberate copy pass is still to come._ Track every
-wording change here so it's reviewable in one place.
+_Status: done (2026-08-31) — worked through top to bottom, collaboratively, item by item with
+Toby._ Track every wording change here so it's reviewable in one place.
 
 - **Hero lead line** — replaced in the Index build: old "Blog and Portfolio Website" tagline →
   **"Builds small developer tools and writes about the sharp edges."** (this is now the `<h1>`).
-  The rotating job titles are unchanged ("Full-stack developer" / "npm package author" /
-  "TypeScript fanatic" / "Burrito over-filler" → settles on "Senior Software Developer"); still
-  open to a copy review.
-- **Section headings** ("About Me", "Projects", "Blog", "Contact Me") — still the originals,
-  rendered lowercase by `.eyebrow`. Review TBD.
+- **Hero rotating job titles** (copy pass, 2026-08-31): "TypeScript fanatic" →
+  **"Bun runtime adopter"** — true rather than invented (the other three quips are all real
+  facts; a first pass at a mock-title replacement, "Chief Type Safety Officer," was rejected for
+  breaking that "it's all true" pattern). Sequence is now "Full-stack developer" / "npm package
+  author" / "Bun runtime adopter" / "Burrito over-filler" → settles on "Senior Software
+  Developer". At 19 characters it's well under the row's reserved width (25, set by "Senior
+  Software Developer"), so no layout change needed.
+- **Section headings** ("About Me", "Projects", "Blog", "Contact Me") — reviewed in the copy
+  pass (2026-08-31), kept as-is.
 - **Listing page titles + summaries** (2026-08-31 pass): `/blog` `<h1>` "Blog Posts" → **"Blog"**;
   `/projects` `<h1>` "My Projects" → **"Projects"** (both match the nav + the `# marker`). New
   mono summary lines: `/blog` **"10 posts · 2020–2024 · RSS"** (counts + year span computed),
@@ -511,22 +517,60 @@ wording change here so it's reviewable in one place.
   meta descriptions are unchanged (still "Blog Posts" / "A selection of the projects…") — that's
   the meta-description pass's job.
 - **Detail page back-links** (2026-08-31 pass): project detail `← My Projects` → **`← Projects`**
-  (the `/projects` `<h1>` is now "Projects"). Blog post detail keeps `← Posts` for now — a
-  wider "back-link matches its destination" sweep (`← Blog`?) is left for the copy pass.
+  (the `/projects` `<h1>` is now "Projects"). Blog post detail keeps **`← Posts`** — considered
+  `← Blog` for consistency in the copy pass, but Toby prefers `← Posts` (reads better in
+  context: "you're reading a post, here's the way back to all posts") even though it doesn't
+  literally match the page's `<h1>`. Kept as-is, deliberately.
 - **Project detail links row** (2026-08-31 pass): labels are **`source` / `npm` / `site`**
   (lowercase mono). URLs are in each project's `links` frontmatter — best-effort, need Toby to
   verify.
-- **CTA labels** ("Send Message", "More projects →", "More posts →"): TBD
-- **Contact form:** labels, placeholders, success text ("Message sent successfully!"), error text,
-  disabled / submitting states: TBD. Intro line reworded in the 2026-08-31 pass — was "Feel free
-  to reach out me using the message form below." (typo included) → "Got a question or an idea?
-  Send a message below, or reach me on LinkedIn."
+- **CTA labels** ("Send Message", "More projects →", "More posts →") — reviewed in the copy
+  pass (2026-08-31), kept as-is.
+- **Contact form** (copy pass, 2026-08-31): labels (`name`/`email`/`message`), no placeholders,
+  submit label ("send message"), success text ("Message sent successfully!") all reviewed and
+  **kept as-is** — Toby: disabled-while-submitting is signal enough, no separate "sending…"
+  state needed. Intro line reworded earlier in the redesign — was "Feel free to reach out me
+  using the message form below." (typo included) → "Got a question or an idea? Send a message
+  below, or reach me on LinkedIn."
+  - **Two real bugs found and fixed while reviewing the error copy** (not just wording - actual
+    defects): (1) the submit button only checks fields aren't _empty_, not that they're
+    _valid_, so a malformed email reached the server and came back as a bare, unhelpful
+    "Invalid field data" - `parseFormData`'s `fieldsValidator` now carries the same per-field
+    messages as the Action's own input schema ("The email field must be a valid email
+    address", etc.), and surfaces the actual issue instead of a hardcoded string. (2) a
+    Turnstile verification failure surfaced its raw error payload straight into
+    `#result-message` - e.g. `{"turnstileErrorCodes":["invalid-input-response"]}` shown
+    directly to the visitor. Fixed to match the email-send-failure pattern already used: the
+    real detail is `console.error`'d server-side only, the browser gets "Something went wrong
+    verifying your submission. Please try again." e2e: `contact-form.spec.ts`'s Turnstile-failure
+    assertion updated (it had pinned the old, wrong behaviour), plus a new spec for the
+    invalid-email case (using `a@b` - passes the `<input type="email">`'s native browser
+    validation, which a `not-an-email`-style value would block before any JS runs, but still
+    fails Zod's stricter check).
 - **404 copy:** reworded in the 2026-08-31 pass — "404! / The page you are looking for does not
   exist." → "`# 404` / This page doesn't exist / The link may be broken, or the page may have
   moved." + "← Back to the homepage". Revisit with the rest of the 404 layout pass.
-- **Empty / error states:** TBD
-- **Meta titles + descriptions** per page: TBD
-- **Footer:** "Copyright Toby Smith {year}", link labels: TBD
+- **Empty / error states** — considered in the copy pass (2026-08-31), **skipped**: nothing in
+  the current site can actually render empty (every collection always has entries), and the
+  real error-copy gaps that existed (contact form) were handled under that item instead.
+- **Meta titles + descriptions** (copy pass, 2026-08-31):
+  - `/` description → **"Toby Smith is a London-based Senior Software Engineer, focusing on web
+    stacks."** (was "...software developer who enjoys focusing on web-based technologies." —
+    that exact older sentence is still the About section's opening line,
+    `Index/About.astro`; left alone, not part of this ask).
+  - `/blog` and `/projects` `<title>` → **"Blog"** / **"Projects"**, now matching the `<h1>`s
+    from the listing-pages pass instead of the older "Blog Posts" / "My Projects".
+  - `/privacy` description: fixed a missing verb — "This privacy policy for tobysmith.uk" →
+    **"The privacy policy for tobysmith.uk"**, matching `/terms` and `/cookies`'s "The X for
+    tobysmith.uk" shape.
+  - `/third-party` description: fixed inconsistent capitalization — "The Third-party content…"
+    → **"The third-party content used by tobysmith.uk"** (lowercase mid-sentence, matching the
+    description's own sentence case; the `<title>` "Third-Party Content" is unaffected).
+  - Left as-is: `/` `<title>`, `/blog` + `/projects` descriptions, detail-page meta (sourced
+    from each post/project's own `description`/`tagLine`), `/cookies`, `/404`.
+- **Footer** ("© Toby Smith {year}", link labels "terms" / "privacy" / "cookies" / "licenses")
+  — reviewed in the copy pass (2026-08-31), kept as-is. **This was the last open item — the
+  copy pass is done.**
 
 ## Open questions
 
@@ -559,8 +603,10 @@ Order of implementation in `src/`; each step ends on a green local CI gate. Prog
    dedicated layout pass.
 6. `[x]` **Motion pass** — the load-in sequence, hover states, the role easter egg, the
    `clientPrerender` fix. (No scroll reveals — deliberate.)
-7. `[ ]` **Copy pass** — apply agreed wording; update e2e page objects + specs. (Only one-off
-   fixes so far.)
+7. `[x]` **Copy pass** — done 2026-08-31, worked top to bottom with Toby (see the Copy section);
+   e2e page objects + specs updated alongside every wording change. Turned up two real bugs
+   along the way (a malformed-email error and a Turnstile-failure JSON leak), fixed under this
+   step too.
 8. `[ ]` **Cross-cutting QA** — responsive sweep, keyboard / focus, reduced-motion, axe /
    Lighthouse.
 9. `[ ]` **Wrap-up** — finish `CLAUDE.md`, resolve migration.md Open items into their notes
@@ -569,6 +615,29 @@ Order of implementation in `src/`; each step ends on a green local CI gate. Prog
 ## Decision log
 
 Append-only, newest first. Format: `YYYY-MM-DD — <area>: <decision>. <why, briefly>.`
+
+- **2026-08-31 — Copy pass — done, worked top to bottom with Toby.** Ran it as a genuine
+  back-and-forth per item (Toby's explicit ask) rather than Claude drafting a full pass for
+  approval: current text + context/questions, Toby picks/writes/rejects, settle, log, move on.
+  Landed: the hero's "TypeScript fanatic" quip retired through several rounds of riffing →
+  **"Bun runtime adopter"** (true rather than invented — a mock-title first draft, "Chief Type
+  Safety Officer," was rejected for breaking the "every other quip is a real fact" pattern); the
+  index meta description rewritten; `/blog` + `/projects` `<title>`s brought in line with their
+  `<h1>`s; a couple of stray typos/inconsistencies fixed in the policy pages' meta descriptions.
+  Section headings, CTA labels, the blog back-link, the contact form's labels/button/success
+  text, and the footer were all reviewed and **kept exactly as they were** — reviewed, not
+  rubber-stamped. Empty-states were skipped (nothing in the site can currently render empty).
+  Full list with before/after text is in the Copy section, not repeated here.
+  - **Two real bugs surfaced and fixed while reviewing error copy**, not just wording: a
+    malformed email reaching the server and coming back as a bare "Invalid field data" (the
+    submit button only checks fields aren't empty, not valid); and a Turnstile verification
+    failure putting its raw error payload (`{"turnstileErrorCodes":[...]}`) straight into the
+    visitor-facing `#result-message`. Both fixed to match the email-send-failure pattern that
+    already existed correctly: real detail logged server-side only, a clean generic message to
+    the browser. e2e: the Turnstile-failure spec had pinned the old, wrong behaviour as
+    correct — fixed; added a new spec for the invalid-email path.
+  - CI green throughout: lint / `format:check` / `astro check` (0 errors) / Playwright chromium
+    72/72 (144 total).
 
 - **2026-08-31 — Page layouts: policy pages + 404 — the last of the layout work.** Toby had no
   preference on the one open call (h1 size), so went with the recommendation.

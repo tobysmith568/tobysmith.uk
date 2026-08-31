@@ -3,7 +3,7 @@ import Layout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 import BlogListItem from "../../components/Blog/BlogListItem.astro";
 
-const title = "Blog Posts";
+const title = "Blog";
 const description = "Blog posts written by Toby about things he creates or finds interesting.";
 
 const blogPosts = await getCollection("blog");
