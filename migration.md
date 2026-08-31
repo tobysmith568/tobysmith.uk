@@ -1365,7 +1365,7 @@ hints), `bun run build`, and the full 96-case Playwright suite (chromium + firef
   (Firefox `page.goto` timeouts under high parallelism); it passes cleanly at `--workers=2` or
   on an unloaded machine, and CI runs with `retries: 2`.
 
-## Stage 10 — Visual redesign
+## Stage 10 — Visual redesign ✅ done
 
 **Depends on:** Stage 9 (the technical rework is code-complete and cleaned up). Designed and
 built against the `*.workers.dev` preview / `wrangler dev`, not the live domain — production is
@@ -1418,6 +1418,64 @@ with the new design in front of us.
 **Exit criteria:** the site, under the preview deploy, looks the way it should launch — Toby's
 call — with the spotlight-count and blog-curation decisions resolved into the relevant notes;
 lint/build/typecheck/Playwright all green locally.
+
+### Outcome / deviations from the plan above
+
+Done. Toby's call on 2026-08-31: _"I think the site looks great"_ — that's the launch sign-off
+the exit criteria hang on. The full trail (direction, every token, every page, the decision log)
+is in [redesign.md](./redesign.md); the summary:
+
+- **Direction: "Public API"** — the site as a well-documented module; a monospace frontmatter
+  block as the hero's signature element, mono used as real UI chrome (eyebrows, tags, dates,
+  nav) without tipping into fake-terminal. Three directions were previewed; Toby picked this one
+  outright.
+- **Every page got a dedicated pass** — index (hero + about + projects/blog spotlights +
+  contact), the `/blog` and `/projects` listings, the blog-post and project detail templates,
+  the policy pages, and 404. New shared layout system (`.wrap` / `.section` / `.doc` / `.listing`)
+  and utilities in `tokens.css` / `global.css`; a geometric inline-SVG icon set replaced every
+  unicode glyph and SVG asset.
+- **Light + dark themes**, both as token sets, with a three-state header toggle
+  (system / light / dark) and a no-flash `<head>` script. Shiki dual code themes.
+- **New fonts** — Space Grotesk (display) + Public Sans (body) + Fira Code (mono/chrome),
+  self-hosted, replacing Blinker + the old Fira Code usage.
+- **Motion** — one orchestrated load-in (the frontmatter rows settle, once), a hover easter egg
+  keeping the old rotating-title joke alive on demand, no scroll reveals. `prefers-reduced-motion`
+  disables all of it.
+- **Copy pass** — worked top to bottom with Toby. Hero lead line, About section, the rotating
+  quips, meta descriptions, listing titles/summaries all reworked; section headings, CTA labels
+  and form copy reviewed and kept. Turned up and fixed two real bugs in the process: a
+  malformed-email error showing a useless message, and a Turnstile failure leaking a raw JSON
+  payload into the UI.
+- **Cross-cutting QA sweep** — axe (WCAG 2.1 A/AA) clean on every route in both themes; keyboard
+  focus indicators present throughout; reduced-motion verified. Four real responsive
+  horizontal-overflow bugs found and fixed (prose code blocks, long policy URLs, the hero
+  frontmatter label column, the Turnstile widget) — nothing scrolls sideways down to 320px.
+- **`CLAUDE.md`** — rewritten. Toby's call was to strip _all_ migration framing (not just the
+  "current plain look" note the plan anticipated): the top blockquote is gone and the deployment
+  section describes the Cloudflare Workers setup as-is. The same pass removed every "see
+  migration.md / redesign.md" pointer from source, test and env-file comments — those two docs
+  are due to be deleted at the cutover and dangling references would outlive them. This file and
+  redesign.md still reference each other; they go together.
+
+**Deferred deliberately (Toby, 2026-08-31), not blocking the cutover:**
+
+- **Blog per-post curation** — stays a separate pass, now explicitly _after_ Stage 11, shipping
+  as an ordinary small PR under normal CD. See Open items.
+- **Profile photo** — launching with the current GitHub avatar (a side-cropped selfie);
+  a purpose-shot headshot swaps in later as a small PR.
+- **Project `links` npm/source/site URLs** — best-effort values in each project's frontmatter,
+  a couple already corrected by Toby; the rest to be verified in a follow-up. Content accuracy,
+  not a design blocker.
+
+**Spotlight count (the deferred 2-vs-3 call):** dissolved rather than decided. Both spotlights
+now render _every_ entry flagged `featured: true` on its collection — no fixed count, no
+`SPOTLIGHT_COUNT` constant. The `blog` schema gained a `featured` boolean to match `projects`.
+Currently 2 projects (`read-receipt`, `generate-license-file`) and 2 posts
+(`my-deployments-in-2024`, `reverse-flex-directions`) are featured; changing the count is now an
+editorial edit to frontmatter, not a code change.
+
+**CI gate:** `bun run lint`, `bun run format:check`, `astro check` (0 errors), `bun run build`,
+and the full Playwright suite (144 cases, chromium + firefox) — all green locally.
 
 ## Stage 11 — Production cutover
 
@@ -1503,11 +1561,16 @@ contact-form submission confirmed delivered end-to-end on the live domain.
 ## Open items (intentionally deferred, not blocking)
 
 - **Blog per-post curation** (keep/rewrite/drop each of the 10 posts) — do this as its own pass,
-  whenever it's convenient; not gated on any stage above.
-- **Exact spotlight count** on the index (2 vs 3 projects/posts) — a layout call, decide during
-  Stage 10. Currently hardcoded to 2 in both `Index/ProjectsSpotlight.astro` (2 of 4 projects
-  marked `featured: true`) and `Index/BlogSpotlight.astro` (`SPOTLIGHT_COUNT = 2`) as of Stage 6 —
-  a placeholder, not a final decision.
+  whenever it's convenient; not gated on any stage above. **Confirmed during Stage 10 (Toby,
+  2026-08-31) as deferred past the cutover** — it ships as an ordinary small PR under normal CD
+  once Stage 11 lands, rather than holding the launch.
+- ~~**Exact spotlight count** on the index (2 vs 3 projects/posts) — a layout call, decide during
+  Stage 10.~~ **Resolved in Stage 10: no fixed count.** Both `Index/ProjectsSpotlight.astro` and
+  `Index/BlogSpotlight.astro` now render every entry with `featured: true` on its collection;
+  the `SPOTLIGHT_COUNT` constant is gone and the `blog` schema gained a `featured` boolean to
+  match `projects`. Changing what's spotlighted is now a frontmatter edit. (Currently: projects
+  `read-receipt` + `generate-license-file`; posts `my-deployments-in-2024` +
+  `reverse-flex-directions`.)
 - ~~**Contact's nav treatment** (own link vs. anchor-only) — Toby's call during Stage 6.~~
   **Decided in Stage 6: kept as its own nav link**, pointing at `/#contact` (desktop and mobile).
 - ~~**Initial `featured: true` project set** — Toby's call during Stage 6.~~ **Decided in Stage 6:

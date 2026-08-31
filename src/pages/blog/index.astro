@@ -10,7 +10,7 @@ const blogPosts = await getCollection("blog");
 const sortedPosts = blogPosts.sort((a, b) => a.data.sortWeight - b.data.sortWeight).reverse();
 
 // Group into calendar years, newest first. Posts within a year keep the order above, which
-// matches date order for every post (checked - see redesign.md's Decision log).
+// matches date order for every post (checked).
 const years = [...new Set(sortedPosts.map(post => post.data.date.getFullYear()))];
 const postsByYear = years.map(year => ({
   year,

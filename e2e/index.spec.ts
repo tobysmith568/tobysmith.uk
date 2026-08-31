@@ -41,7 +41,7 @@ test.describe("Index", () => {
     await page.clock.fastForward(620);
     await expect(indexPage.roleCycle).toHaveText("Senior Software Developer");
 
-    // Unlike the old design, it doesn't loop - it stays on the real title.
+    // The cycle is one-shot: once settled it stays on the real title, it doesn't loop.
     await page.clock.fastForward(5000);
     await expect(indexPage.roleCycle).toHaveText("Senior Software Developer");
   });

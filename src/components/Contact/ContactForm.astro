@@ -153,6 +153,13 @@ import Icon from "../Icon.astro";
     }
   }
 
+  /* Turnstile's rendered widget has a fixed ~300px minimum width - keep it from pushing the
+     page sideways on very narrow viewports by letting the container scroll instead. */
+  #turnstile-widget {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
   #result-message {
     margin-top: var(--sp-2);
     padding-left: var(--sp-3);

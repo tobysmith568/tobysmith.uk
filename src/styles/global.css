@@ -1,7 +1,7 @@
 /*
  * Global reset + base element styles + shared utility classes. Everything here is unscoped by
  * design (imported once from BaseLayout.astro) so individual components don't redeclare the same
- * html-element defaults - see redesign.md's working agreement on centralising dispersed styles.
+ * html-element defaults - dispersed styling is centralised here.
  */
 
 *,
@@ -247,8 +247,8 @@ img {
 }
 
 /* Monospace as UI chrome - nav, the frontmatter record, dates, route paths, form labels,
-   buttons, "more" links. The mono face doubling as interface type is core to the direction
-   (see redesign.md > Typography). Applied via a `mono` class on those elements. */
+   buttons, "more" links. The mono face doubling as interface type is core to the design.
+   Applied via a `mono` class on those elements. */
 .mono {
   font-family: var(--f-mono);
 }
@@ -287,9 +287,9 @@ img {
 
 /* A group of entries within a listing (one calendar year on /blog). Same gutter | body
    rhythm as .section, but no firm --rule between groups - the marker plus whitespace is
-   divider enough, and stacking --rule lines would read as broadsheet (an explicit anti-goal
-   in redesign.md). On wide viewports the marker sticks in the gutter while its group scrolls
-   past, like a version header down a changelog margin. */
+   divider enough, and stacking --rule lines would read as broadsheet. On wide viewports the
+   marker sticks in the gutter while its group scrolls past, like a version header down a
+   changelog margin. */
 .entry-group + .entry-group {
   margin-top: var(--sp-7);
 }

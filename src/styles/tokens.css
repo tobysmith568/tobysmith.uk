@@ -1,8 +1,6 @@
 /*
- * Design tokens for the Stage 10 redesign ("Public API" direction).
- * See redesign.md's "Design tokens" section for the rationale behind these values - this file
- * is the single source of truth for them, every component reads from here rather than declaring
- * its own colours/sizes.
+ * Design tokens. This file is the single source of truth for them - every component reads from
+ * here rather than declaring its own colours, sizes, spacing or timings.
  */
 
 :root {
@@ -64,7 +62,7 @@
 
 /*
  * Dark palette - a cool near-black, the light theme's counterpart (not an inversion). Only the
- * colour roles change; type/space/motion are shared. See redesign.md > Colour + Decision log.
+ * colour roles change; type/space/motion are shared.
  *
  * It applies in two cases, and the two blocks below MUST stay in sync:
  *   1. the visitor explicitly chose dark        -> :root[data-theme="dark"]

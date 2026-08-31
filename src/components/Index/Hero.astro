@@ -1,8 +1,9 @@
 ---
-// The frontmatter block is this direction's signature element - see redesign.md's Design
-// direction section. `role` cycles once through the old rotating job-title joke on load, then
-// settles on the real title; a visually-hidden span carries the real title throughout so screen
-// readers never see the animation. Everything here respects prefers-reduced-motion (see script).
+// The frontmatter block is the site's signature element - name / role / location / links set as
+// monospace key-value pairs, like file frontmatter. `role` plays a one-shot cycle through a few
+// job-title quips on load, then settles on the real title; a visually-hidden span carries the
+// real title throughout so screen readers never see the animation. Everything here respects
+// prefers-reduced-motion (see script).
 ---
 
 <section class="hero">
@@ -184,7 +185,9 @@
       gap: var(--sp-4);
     }
     .row {
-      grid-template-columns: 4rem 1fr;
+      /* size the label track to its content ("location" is the widest) so a fixed rem value
+         can't clip it once the record is at full narrow-viewport width */
+      grid-template-columns: auto 1fr;
     }
   }
 
@@ -199,13 +202,12 @@
 </style>
 
 <script>
-  // The old design cycled the job title forever, every 3s - this direction's motion tokens
-  // deliberately rule out that kind of persistent ambient motion (see redesign.md's Design
-  // tokens > Motion). Instead the whole load-in - the frontmatter rows settling, the lead line,
-  // and this one-shot role cycle - plays once, together, and lands on the real title. Once
-  // that's done, hovering the frontmatter block flicks the role to a random quip and it snaps
-  // back to the real title on leave - the joke stays reachable, but only when the reader asks
-  // for it (see redesign.md's Design tokens > Motion, and the Decision log).
+  // The role cycle is one-shot, not a loop: the whole load-in - the frontmatter rows settling,
+  // the lead line, and this role cycle - plays once, together, and lands on the real title.
+  // A forever-cycling title would be the kind of persistent ambient motion the motion tokens
+  // deliberately rule out. Once the load-in has settled, hovering the frontmatter block flicks
+  // the role to a random quip and it snaps back to the real title on leave - the joke stays
+  // reachable, but only when the reader asks for it.
   const quips = [
     "Full-stack developer",
     "npm package author",

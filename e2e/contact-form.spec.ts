@@ -81,7 +81,7 @@ test.describe("Contact form submission", () => {
     await expect(indexPage.form.resultMessage).toBeVisible({ timeout: resultTimeout });
     // The action maps any Turnstile failure to a generic message - the stub's raw error-code
     // payload (`{"turnstileErrorCodes":["e2e-forced-failure"]}`) is logged server-side, never
-    // shown to the browser (this used to leak straight into the UI - see redesign.md).
+    // shown to the browser (this used to leak straight into the UI).
     await expect(indexPage.form.resultMessage).toHaveText(
       "Something went wrong verifying your submission. Please try again."
     );
@@ -96,7 +96,7 @@ test.describe("Contact form submission", () => {
     // (no submit event at all), but a domain with no dot satisfies that native check while
     // still failing Zod's stricter .email() - so this is the realistic way to reach
     // `parseFormData`, which now surfaces its actual Zod message instead of a generic
-    // "Invalid field data" (see redesign.md). This never reaches the server: `parseFormData`
+    // "Invalid field data". This never reaches the server: `parseFormData`
     // throws before `sendContactEmail` makes any request.
     await indexPage.form.fillOut({ ...validForm, email: "a@b" });
     await indexPage.form.waitUntilReady();

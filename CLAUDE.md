@@ -2,22 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-> **A migration is in progress.** See [migration.md](./migration.md) at the repo root for the full
-> plan; it is kept current as work lands, so check it before assuming anything below is still
-> accurate, and keep this file in step with it. The technical rework (framework, hosting, tooling,
-> tests, backend) plus the general cleanup pass are code-complete and on this branch; what
-> remains is the **collaborative visual redesign** and then the **production cutover** (the one
-> real deploy — flip DNS, retire GitHub Pages, decommission the old email Worker). The redesign
-> was deliberately moved ahead of the cutover so the site goes live once, already looking the way
-> it should — see migration.md. Delete this blockquote and the GitHub-Pages / old-Worker caveats
-> below once the cutover has landed.
-
 ## Project
 
-Toby Smith's personal portfolio and blog (tobysmith.uk), built with Astro + TypeScript. The
-codebase now targets Cloudflare Workers hosting, but **production is still served by GitHub
-Pages, unchanged, until the production cutover** — see the Deployment bullet below and
-migration.md.
+Toby Smith's personal portfolio and blog (tobysmith.uk), built with Astro + TypeScript, hosted on
+Cloudflare Workers.
 
 ## Commands
 
@@ -61,16 +49,15 @@ Playwright suite (chromium + firefox). The `e2e` job installs Playwright browser
 `playwright.config.ts` handles the licenses/build/`wrangler dev` chain itself (so there's no
 separate build step for that job, and `E2E=true` reaches `astro build` via `webServer.env`).
 `integration.yml` triggers on PRs to `main` and pushes to `renovate/*`, and is also
-`workflow_call`ed by `deployment.yml` (which runs on push to `main` — harmless until the cutover
-adds a `routes` entry, see Deployment). `.github/workflows/codeql-analysis.yml` runs CodeQL
-separately.
+`workflow_call`ed by `deployment.yml` (which runs on push to `main` — see Deployment).
+`.github/workflows/codeql-analysis.yml` runs CodeQL separately.
 
 ## Architecture
 
 - **Non-obvious tooling/architecture decisions are recorded as ADRs in `docs/adrs/`** (one
   decision per file, numbered, no template — see the existing files for the expected shape/tone)
-  rather than only in this file or `migration.md` — check there before re-litigating a choice
-  that already has a documented rationale.
+  rather than only in this file — check there before re-litigating a choice that already has a
+  documented rationale.
 - **Astro site on the Cloudflare adapter** (`@astrojs/cloudflare`, `output: "static"` — the
   default and Astro's own recommendation for a mostly-static site; adding an adapter does _not_
   itself switch to on-demand rendering), `build.format: "file"` (routes emit as `foo.html`, not
@@ -96,8 +83,8 @@ separately.
   `entry.data.slug`, not `entry.id`. `projects` and `policies` have no such field, so
   `entry.id` (the filename, extension stripped) is the routing key instead — e.g.
   `policies/privacy.mdx` → `entry.id === "privacy"`. `policies` has a required `lastUpdated`
-  date field, shown in that page's gutter (see Routing below). `projects` also has a required `featured`
-  boolean — an explicit editorial flag driving the index page's Projects
+  date field, shown in that page's gutter (see Routing below). `blog` and `projects` both have a
+  required `featured` boolean — an explicit editorial flag driving that collection's index-page
   spotlight, independent of `sortWeight`; two of the four projects are currently `featured: true`.
   `projects` has an optional `tags: string[]` (chips on the `/projects` listing via
   `ProjectListItem`'s `showTags` prop, and on the project detail header — not the index
@@ -128,10 +115,9 @@ separately.
   `Hero.astro` (name/tagline, pre-existing), `About.astro` (folded in from the old
   `/about` page's content, typos fixed), `ProjectsSpotlight.astro` (featured projects, reusing
   `Projects/ProjectListItem.astro`, "More projects →" link to `/projects`), `BlogSpotlight.astro`
-  (most recent posts by `sortWeight` — count currently hardcoded to 2, an explicit placeholder
-  deferred to a future design pass per migration.md's "Open items"; "More posts →" link to
-  `/blog`), and `ContactSection.astro` (wraps `Contact/ContactForm.astro`, `id="contact"` — the
-  target of `contact.astro`'s redirect above).
+  (every post with `featured: true`, ordered by `sortWeight`, mirroring `ProjectsSpotlight` — no
+  fixed count; "More posts →" link to `/blog`), and `ContactSection.astro` (wraps
+  `Contact/ContactForm.astro`, `id="contact"` — the target of `contact.astro`'s redirect above).
 - **Layouts**: `BaseLayout.astro` wraps every page (header/nav/footer, `<head>`). `ProseLayout.astro`
   and the `Prose.astro` component style long-form content (blog posts, policy pages); `Index/About.astro`
   also wraps its prose in `Prose.astro` directly (it isn't itself a full page, so it doesn't go
@@ -171,8 +157,7 @@ separately.
   error server-side (`console.error`, visible in Worker tail logs) and throws an `ActionError`
   with a generic user-facing message — raw error strings can carry internal binding detail, so
   they never reach the browser. **This backend used to live in a separate Cloudflare Worker repo
-  (`tobysmith568/email.tobysmith.uk`) — folded into this repo.** That old Worker is still deployed
-  and still what production actually uses until the production cutover; don't decommission it yet.
+  (`tobysmith568/email.tobysmith.uk`) — it was folded into this repo.**
 - **Images**: project logos (`src/components/Projects/resolveProjectImage.ts`, used from
   `projects/[...slug].astro`) are rendered as a plain `<img>`, not `astro:assets`'s `<Image>` —
   `resolveProjectImage` resolves the Vite-processed asset itself (`{ src, width, height }`) so
@@ -244,9 +229,10 @@ separately.
     third-party UI that's flaky to automate. The token it issues still travels to the real Action.
 - **Env vars**: `PUBLIC_TURNSTILE_SITE_KEY` (`.env.development`, `.env.production`) is the only
   client-exposed var — `.env.development` uses Cloudflare's published "always passes" invisible
-  test sitekey; `.env.production` still has a `REPLACE_ME` placeholder pending one Toby-only step
-  (see migration.md). Server-side, the contact Action reads bindings/secrets via
-  `import { env } from "cloudflare:workers"` (the current adapter's `Astro.locals.runtime.env` was
+  test sitekey; `.env.production` carries a `REPLACE_ME` placeholder for the real production
+  sitekey (`scripts/setup-turnstile.ts`, below, mints it). Server-side, the contact Action reads
+  bindings/secrets via `import { env } from "cloudflare:workers"` (the current adapter's
+  `Astro.locals.runtime.env` was
   removed — using it now throws, pointing at this import instead). `TURNSTILE_ENDPOINT` is a plain,
   non-sensitive `vars` entry in `wrangler.jsonc`; `EMAIL_TO`/`EMAIL_FROM`/`TURNSTILE_SECRET_KEY` are
   real Worker secrets (`wrangler secret put`, never committed) and are typed by hand in
@@ -262,19 +248,12 @@ separately.
   public, so the real recipient only ever lives in the `EMAIL_TO` secret, never committed —
   `compatibility_flags: ["global_fetch_strictly_public"]` (not `nodejs_compat` — nothing in the
   deployed bundle uses Node builtins), and `observability.enabled`).
-  `deployment.yml` builds via `integration.yml`, downloads that build artifact, then deploys with
-  `cloudflare/wrangler-action`, which also pushes `EMAIL_TO`/`EMAIL_FROM`/`TURNSTILE_SECRET_KEY` as
-  real Worker secrets (via its `secrets:` input, sourced from matching GitHub Actions secrets) —
-  those three don't exist as GitHub secrets yet, so this step is unexercised until the production
-  cutover anyway.
-  **This is still not what's live in production** —
-  per the migration's big-bang ground rule, `tobysmith.uk` keeps being served by GitHub Pages
-  unchanged until the production cutover explicitly happens; `wrangler.jsonc` deliberately has no
-  `routes` entry yet, so `wrangler deploy` only ever targets a harmless `*.workers.dev` preview URL
-  until then. `wrangler dev`/`wrangler deploy` for local preview auth via `wrangler login`
-  (personal OAuth) with no stored token needed; the `CLOUDFLARE_API_TOKEN`/`CLOUDFLARE_ACCOUNT_ID`
-  GitHub secrets `deployment.yml` reads are only required once it runs for real, at the production
-  cutover. See migration.md.
+  `deployment.yml` (push to `main`) builds via `integration.yml`, downloads that build artifact,
+  then deploys with `cloudflare/wrangler-action`, which also pushes
+  `EMAIL_TO`/`EMAIL_FROM`/`TURNSTILE_SECRET_KEY` as real Worker secrets (via its `secrets:` input,
+  sourced from matching GitHub Actions secrets). It reads the `CLOUDFLARE_API_TOKEN` /
+  `CLOUDFLARE_ACCOUNT_ID` GitHub secrets for auth. Locally, `wrangler dev`/`wrangler deploy` auth
+  via `wrangler login` (personal OAuth), no stored token needed.
 - **Package manager**: Bun (`bun.lock`). `astro`/`wrangler`/`playwright` are
   invoked directly via `bunx` (or `bun run <script>` for the `package.json` script aliases) —
   there's no `bunx`-equivalent-of-`pnpm exec` distinction to worry about, both resolve the same

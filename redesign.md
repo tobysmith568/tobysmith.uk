@@ -21,9 +21,13 @@ complete.
 
 ## Where things stand
 
-_Snapshot — 2026-08-31. Keep this current; the Decision log has the full trail._
+_Snapshot — 2026-08-31. **The redesign is complete** — Toby signed off ("I think the site looks
+great") and Stage 10 is marked `✅ done` in migration.md. What follows is the record; the
+Decision log has the full trail. This doc (and migration.md) get deleted at the Stage 11
+cutover._
 
-**Done and in `src/` (all green: `bun run lint` / `build` / `e2e` — 144 Playwright tests):**
+**Done and in `src/` (all green: `bun run lint` / `format:check` / `build` / `e2e` — 144
+Playwright tests):**
 
 - Direction (**"Public API"**), tokens (type, colour, space, motion, primitives) — locked, and
   revised several times against real previews (see Decision log).
@@ -32,8 +36,7 @@ _Snapshot — 2026-08-31. Keep this current; the Decision log has the full trail
   `BaseLayout`. The `.wrap` / `.section` / `.doc` layout system, the `.mono` / `.eyebrow` /
   `.text-link` / `.more` / `.icon-button` utilities, `Icon.astro`.
 - **Index page** in full — Hero (frontmatter block, one-shot role settle, hover easter egg),
-  About, ProjectsSpotlight, BlogSpotlight, ContactSection, ContactForm. Pending Toby's final
-  visual sign-off but no known issues.
+  About, ProjectsSpotlight, BlogSpotlight, ContactSection, ContactForm.
 - **Prose system** — `Prose.astro` + `ProseLayout` + `PolicyLayout`; Shiki dual code themes.
 - **Listing pages** — `/blog` (grouped by year) and `/projects` (manifest + tags) had their
   dedicated pass on 2026-08-31 (Decision log). New `.listing` / `.entry-group` utilities.
@@ -46,18 +49,24 @@ _Snapshot — 2026-08-31. Keep this current; the Decision log has the full trail
   Along the way, turned up and fixed two real bugs, not just wording: a malformed email showing
   a useless "Invalid field data" message, and a Turnstile failure leaking a raw JSON payload
   into the UI.
+- **Cross-cutting QA sweep** — done 2026-08-31 (Decision log). axe (WCAG 2.1 A/AA) clean on
+  every route in both themes; keyboard focus indicators present throughout; reduced-motion kills
+  every animation. Fixed four real responsive overflow bugs (prose code blocks, long policy
+  URLs, the hero frontmatter label column, the Turnstile widget) — nothing scrolls sideways down
+  to 320px now. Same pass stripped every reference to migration.md / redesign.md from the
+  codebase (`CLAUDE.md` rewritten with no migration framing, source/test/env comments trimmed).
+- **Wrap-up** — done 2026-08-31. Stage 10 marked `✅ done` with a full outcome section in
+  migration.md; its Open items resolved (spotlight count → no fixed count via `featured`; blog
+  curation → confirmed deferred past the cutover). Final CI gate green.
 
-**Next, in rough order:**
+**Deferred past the Stage 11 cutover (Toby, 2026-08-31 — not blocking):**
 
-1. **Cross-cutting QA** — responsive / keyboard / reduced-motion / axe-Lighthouse sweep.
-2. **Wrap-up** — finish `CLAUDE.md`, fold migration.md's Open items (spotlight count is decided
-   via `featured`; blog curation still open) into its stage notes, final CI gate.
-
-**Needs Toby (see Open questions):** the concrete Definition-of-done checklist; blog per-post
-curation in scope or deferred; whether to wait for a purpose-shot profile photo; **verify the
-project `links` npm package names** — the rest were best-effort guesses from the content and
-Toby has already corrected them where wrong (`generate-license-file`'s `source` is
-`TobyAndToby`, not `tobysmith568`; `license-cop`'s `site` is `license-cop.js.org`, confirmed).
+- Blog per-post curation — ships as an ordinary small PR under normal CD after the cutover.
+- Profile photo — launching with the current GitHub avatar; a purpose-shot headshot swaps in
+  later.
+- Project `links` URLs — best-effort frontmatter values, a couple already corrected
+  (`generate-license-file`'s `source` is `TobyAndToby`; `license-cop`'s `site` is
+  `license-cop.js.org`); the rest to be verified in a follow-up. Content accuracy, not design.
 
 ## Working agreement — the rules
 
@@ -103,19 +112,21 @@ How this collaboration runs. Agreed up front; changes to these rules are themsel
 ## Definition of done
 
 migration.md sets the bar as _"this is the public face I want the site to launch with"_ — not a
-finished wishlist; leftover polish ships as ordinary small PRs after the cutover. Pin the concrete
-version with Toby at the start of the stage:
+finished wishlist; leftover polish ships as ordinary small PRs after the cutover. **Met on
+2026-08-31** — Toby's sign-off ("I think the site looks great") is the call the bar hangs on. No
+separate per-page checklist was pinned; the "every page has had a dedicated pass + all CI green +
+QA sweep clean" state below stood in for it.
 
-- [ ] **TBD** — the concrete, per-page "good enough to launch" checklist (needs Toby)
+- [x] Every page has had a dedicated design pass (index, both listings, both detail templates,
+      policy pages, 404) — see the Page layouts section
 - [x] Blog posts marked `featured: true`/`false` — resolved, see Decision log
-- [ ] Blog per-post curation — confirmed in scope for Stage 10 or explicitly deferred (migration.md
-      tracks it as a separate, non-blocking pass)
-- [ ] `CLAUDE.md` architecture/styling notes — _in progress_, kept in step as work lands
-      (styling, icons, theming, mobile nav all updated); the "current plain look" framing is
-      gated on the cutover per CLAUDE.md's own blockquote, so it stays until Stage 11
-- [ ] migration.md Open items resolved into their stage notes — **still to do**; the deferred
-      spotlight-count (2 vs 3) is now decided (editorial `featured` boolean, no fixed count), so
-      that item can be closed out in migration.md
+- [x] Blog per-post curation — **explicitly deferred past the cutover** (Toby, 2026-08-31);
+      migration.md's Open items records it as a post-Stage-11 small PR
+- [x] `CLAUDE.md` — rewritten with no migration framing at all (Toby's call, 2026-08-31)
+- [x] migration.md Open items resolved into their stage notes — done: spotlight count → no fixed
+      count via `featured`; blog curation → deferred
+- [x] Cross-cutting QA sweep — axe / keyboard / reduced-motion / responsive, all clean or fixed
+- [x] Final CI gate — `lint` / `format:check` / `astro check` / `build` / Playwright all green
 
 ## The brief
 
@@ -371,8 +382,8 @@ describe the intent and should track it.
 
 ## Page layouts
 
-_Global shell + Index are implemented; the listing / detail / policy / 404 pages have not had a
-dedicated pass (subsections below are stubs — that work is next). One subsection per surface._
+_All implemented — every surface below has had its dedicated pass (see each subsection's status
+line and the Decision log). One subsection per surface._
 
 ### Global — header / nav (desktop + mobile)
 
@@ -602,14 +613,19 @@ Toby._ Track every wording change here so it's reviewable in one place.
 
 ## Open questions
 
-- Definition of done — the concrete per-page checklist (needs Toby)
-- Blog per-post curation — in scope for Stage 10, or deferred?
+_All resolved — the redesign is done._
+
+- ~~Definition of done — the concrete per-page checklist~~ **no separate checklist pinned**;
+  Toby's "looks great" sign-off on 2026-08-31 is the call, against the "every page passed + CI
+  green + QA clean" state. See Definition of done.
+- ~~Blog per-post curation — in scope for Stage 10, or deferred?~~ **deferred** past the Stage 11
+  cutover (Toby, 2026-08-31) — a small PR under normal CD afterwards.
 - ~~Dark mode — in or out?~~ **in** — see Colour + Decision log.
 - ~~Body / display faces~~ **resolved** — Blinker + old Fira Code usage replaced with Space
   Grotesk (display) + Public Sans (body) + Fira Code (mono / UI chrome). See Typography.
-- Profile photo — size/shape/position **resolved** (96 × 120 portrait, see Decision log). Still
-  open: the source is the GitHub avatar (a side-cropped selfie — sky above, pavement below); a
-  purpose-shot headshot would fill the portrait frame far better.
+- ~~Profile photo — size/shape/position~~ **resolved** (96 × 120 portrait, see Decision log).
+  Launching with the GitHub avatar (a side-cropped selfie); a purpose-shot headshot swapping in
+  later is post-cutover polish, not a blocker (Toby, 2026-08-31).
 
 ## Build sequence (once the direction is locked)
 
@@ -635,14 +651,71 @@ Order of implementation in `src/`; each step ends on a green local CI gate. Prog
    e2e page objects + specs updated alongside every wording change. Turned up two real bugs
    along the way (a malformed-email error and a Turnstile-failure JSON leak), fixed under this
    step too.
-8. `[ ]` **Cross-cutting QA** — responsive sweep, keyboard / focus, reduced-motion, axe /
-   Lighthouse.
-9. `[ ]` **Wrap-up** — finish `CLAUDE.md`, resolve migration.md Open items into their notes
-   (spotlight count is decided via `featured`; blog curation still open), final full CI gate.
+8. `[x]` **Cross-cutting QA** — done 2026-08-31 (Decision log). Responsive sweep (10 routes ×
+   {320, 375, 768, 1280} × light/dark), keyboard focus, reduced-motion, axe WCAG 2.1 A/AA. Four
+   responsive overflow bugs fixed; axe clean everywhere. Also removed all migration.md /
+   redesign.md references from the codebase.
+9. `[x]` **Wrap-up** — done 2026-08-31. `CLAUDE.md` rewritten with no migration framing;
+   migration.md's Open items resolved (spotlight count → no fixed count via `featured`; blog
+   curation → deferred past the cutover); Stage 10 marked `✅ done` there with a full outcome
+   section; final full CI gate green (`lint` / `format:check` / `astro check` / `build` /
+   Playwright 144).
 
 ## Decision log
 
 Append-only, newest first. Format: `YYYY-MM-DD — <area>: <decision>. <why, briefly>.`
+
+- **2026-08-31 — Wrap-up: the redesign is done, Stage 10 closed.** Toby: _"I think the site looks
+  great"_ — the launch sign-off the Stage 10 exit criteria hang on. No separate per-page
+  Definition-of-done checklist was ever pinned; the "every page had a dedicated pass + full CI
+  green + QA sweep clean" state stood in for it, and that's the honest bar migration.md set
+  anyway ("this is the public face I want the site to launch with", not a finished wishlist).
+  - **Stage 10 → `✅ done` in migration.md**, with a full `Outcome / deviations` section
+    (direction, every page, themes, fonts, motion, copy, QA, the `CLAUDE.md` rewrite) per that
+    file's own convention.
+  - **Open items resolved into migration.md's notes:** (1) the deferred spotlight-count (2 vs 3)
+    is dissolved, not decided — both spotlights render every `featured: true` entry, no fixed
+    count, `SPOTLIGHT_COUNT` gone, `blog` schema gained `featured` to match `projects`; (2) blog
+    per-post curation is **confirmed deferred past the Stage 11 cutover** — ships as an ordinary
+    small PR under normal CD afterwards.
+  - **Also deferred past the cutover, Toby's call, none blocking:** the profile photo (launching
+    with the GitHub avatar, a better headshot swaps in later); verifying the project `links`
+    npm/source/site URLs (best-effort frontmatter values, content accuracy not design).
+  - **Both plan docs (this one + migration.md) stay until the cutover** — Stage 11 still uses
+    migration.md as its runbook. They get deleted together when Stage 11 lands.
+  - Final CI gate green: `lint` / `format:check` / `astro check` (0 errors) / `build` /
+    Playwright 144.
+
+- **2026-08-31 — QA: cross-cutting sweep done, plus a codebase de-reference of the plan docs.**
+  Build-sequence step 8. Ran automated checks against the production build (`astro preview`) with
+  Playwright + `axe-core`:
+  - **axe (WCAG 2.1 A/AA):** clean on all 10 routes in both light and dark. The one transient
+    `color-contrast` hit was the `aria-hidden` `#role-cycle` span caught mid-fade during the
+    load-in cycle (~3.5s) — gone once settled, and reduced-motion skips the fade entirely. Not a
+    defect.
+  - **Responsive (320 / 375 / 768 / 1280):** found and fixed four real horizontal-overflow bugs,
+    all breaking the "body never scrolls sideways" floor: (1) prose `<pre>` code blocks had no
+    `overflow-x` — added `max-width: 100%; overflow-x: auto` in `Prose.astro`; (2) long bare
+    URLs used as link text on `/cookies` didn't wrap — added `overflow-wrap` to `.prose` +
+    `.prose a` + inline `code`; (3) the hero frontmatter label column was a fixed `4rem` below
+    480px and clipped "location" — switched to `auto 1fr`; (4) Turnstile's ~300px-min widget
+    pushed the page at ≤320px — `#turnstile-widget { max-width: 100%; overflow-x: auto }`. Clean
+    at every width after.
+  - **Keyboard focus:** every interactive element tabbed on the index page shows a focus
+    indicator. The lone exception is Turnstile's own injected container (an empty focusable div
+    while the sitekey is the `REPLACE_ME` placeholder) — third-party, out of scope, and a real
+    key renders CF's iframe with its own focus handling.
+  - **Reduced-motion:** with `prefers-reduced-motion: reduce`, nothing on the page animates or
+    transitions.
+  - **Plan-doc de-reference:** with migration.md / redesign.md due to be deleted soon, stripped
+    every reference to them from the permanent codebase. `CLAUDE.md` rewritten with no
+    migration/cutover/GitHub-Pages framing at all (Toby's call — "strip all migration framing");
+    the top blockquote removed; a couple of now-stale bullets (the BlogSpotlight "hardcoded to
+    2" note) corrected to match the shipped `featured`-boolean behaviour. Source, e2e and
+    `.env.production` comments that said "see redesign.md" had the pointer removed (rationale
+    kept inline where it mattered). The two docs still cross-reference each other — that's fine,
+    they go together.
+  - CI green: `lint` / `format:check` / `astro check` (0 errors) / Playwright.
 
 - **2026-08-31 — Copy: hero lead line + About section reworded (post-copy-pass tidy-up).** Toby
   flagged both as unfinished — the lead line was "vibed up as a placeholder", the About section

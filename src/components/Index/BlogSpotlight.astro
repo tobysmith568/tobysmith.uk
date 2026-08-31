@@ -3,8 +3,8 @@ import { getCollection } from "astro:content";
 import BlogListItem from "../Blog/BlogListItem.astro";
 import Icon from "../Icon.astro";
 
-// Mirrors ProjectsSpotlight.astro exactly - see redesign.md's Decision log. No fixed count;
-// every post with `featured: true` shows here.
+// Mirrors ProjectsSpotlight.astro exactly. No fixed count; every post with `featured: true`
+// shows here.
 const featuredPosts = await getCollection("blog", ({ data }) => data.featured);
 const sortedPosts = featuredPosts.sort((a, b) => a.data.sortWeight - b.data.sortWeight).reverse();
 ---
