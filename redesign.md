@@ -499,7 +499,12 @@ _Status: done (2026-08-31) — worked through top to bottom, collaboratively, it
 Toby._ Track every wording change here so it's reviewable in one place.
 
 - **Hero lead line** — replaced in the Index build: old "Blog and Portfolio Website" tagline →
-  **"Builds small developer tools and writes about the sharp edges."** (this is now the `<h1>`).
+  "Builds small developer tools and writes about the sharp edges." Reworked again in a later
+  wording pass (see Decision log, newest entry) → **"Builds developer tools and sometimes writes
+  about it."** — "small" was cut for hedging (reads as _don't expect much_); "sometimes … it"
+  keeps the claim loose and honest about a ~10-posts-in-4-years cadence without pinning the blog
+  to being tool write-ups (it's a general dev notebook). The `<em>` wrapper around "sharp edges"
+  and its now-dead `.lead em` rule were removed with it. This is the `<h1>`.
 - **Hero rotating job titles** (copy pass, 2026-08-31): "TypeScript fanatic" →
   **"Bun runtime adopter"** — true rather than invented (the other three quips are all real
   facts; a first pass at a mock-title replacement, "Chief Type Safety Officer," was rejected for
@@ -507,6 +512,29 @@ Toby._ Track every wording change here so it's reviewable in one place.
   author" / "Bun runtime adopter" / "Burrito over-filler" → settles on "Senior Software
   Developer". At 19 characters it's well under the row's reserved width (25, set by "Senior
   Software Developer"), so no layout change needed.
+- **About section** (`Index/About.astro`) — reworded 2026-08-31 (Toby: "outdated and crude").
+  Cut from ~9 short paragraphs to 6, then Toby trimmed further in his own pass. Opening: "I'm a
+  London-based software developer who enjoys focusing on web-based technologies." → **"I'm a
+  software developer in London, working mostly on the web."** ("Senior" deliberately kept out of
+  the prose opening — it's already the frontmatter `role` field and the Experience line's first
+  words; a third instance reads as a LinkedIn headline against the site's dry voice. The stack
+  spell-out from Claude's draft, "TypeScript on the frontend, C# on the backend", was cut by
+  Toby — the Experience line covers it). Rust dropped entirely (Toby: "drop all rust"). "Most of
+  the time I work with TypeScript and C#…on projects like websites, APIs, apps, and command line
+  tools" + "This website is a place for me to share cool things I find or create" → **"Outside
+  work I build and maintain open-source tools, mostly npm packages and command-line utilities.
+  This site is where I write about that, and whatever else seems worth sharing."** (no "small" /
+  no count — Toby has more than "a handful"; the old voice-anchor line "cool things I find or
+  create" retired for "whatever else seems worth sharing"). Experience: two paragraphs instead of
+  three, "Trayport Ltd." → "Trayport", the games-dev + Java Spring/Angular history compressed to
+  one sentence, kept. "My Code": three paragraphs → two — the **`tobysmith568-university` archive
+  sentence was dropped** (Toby: uni was ~6 years ago; it was the most outdated line left and drew
+  a click toward student work — the account still exists and is linked from his GitHub profile).
+  The collaborator-orgs sentence stays (a real "works with other people" signal for the
+  employer/collaborator audience). Footnote unchanged. **No em dashes anywhere** (Toby: "too
+  AI") — the section uses colons,
+  full stops and parens instead. e2e: no body-copy assertions existed (only the "About Me"
+  heading, unchanged).
 - **Section headings** ("About Me", "Projects", "Blog", "Contact Me") — reviewed in the copy
   pass (2026-08-31), kept as-is.
 - **Listing page titles + summaries** (2026-08-31 pass): `/blog` `<h1>` "Blog Posts" → **"Blog"**;
@@ -615,6 +643,28 @@ Order of implementation in `src/`; each step ends on a green local CI gate. Prog
 ## Decision log
 
 Append-only, newest first. Format: `YYYY-MM-DD — <area>: <decision>. <why, briefly>.`
+
+- **2026-08-31 — Copy: hero lead line + About section reworded (post-copy-pass tidy-up).** Toby
+  flagged both as unfinished — the lead line was "vibed up as a placeholder", the About section
+  "outdated and crude".
+  - **Lead line:** "Builds small developer tools and writes about the sharp edges." →
+    **"Builds developer tools and sometimes writes about it."** Worked broad-then-narrow: ~8
+    justified options across four registers (verb-first / fragment / first-person / thesis), Toby
+    rejected the lot, then two specific notes drove it home — "small" implies _don't expect much_
+    (cut), and he wasn't settled on the second half. Landed on his own phrasing with one tweak:
+    "them" → "it" (the blog is a general dev notebook, not write-ups of his own packages, so
+    "them" over-coupled) and a closing full stop for doc-comment finality. Dropped the vestigial
+    `<em>sharp edges</em>` wrapper and the dead `.lead em { font-style: normal }` rule.
+  - **About section:** cut ~9 short paragraphs to 6, same top-to-bottom back-and-forth. "I'm a
+    London-based software developer who enjoys focusing on web-based technologies." → "I'm a
+    software developer in London, working mostly on the web: TypeScript on the frontend, C# on
+    the backend." Rust dropped entirely (Toby); "senior" kept out of the prose opening (already
+    in the frontmatter field + the Experience line — a third mention reads as a LinkedIn
+    headline); no "small" and no count on the tools ("more than a handful"); the old voice-anchor
+    line "cool things I find or create" retired. **No em dashes** anywhere (Toby: "too AI") —
+    colons / full stops / parens instead. Full before/after in the Copy section.
+  - e2e: `index.spec.ts` title assertion "Builds small developer tools" → "Builds developer
+    tools"; no About body-copy assertions existed.
 
 - **2026-08-31 — Copy pass — done, worked top to bottom with Toby.** Ran it as a genuine
   back-and-forth per item (Toby's explicit ask) rather than Claude drafting a full pass for

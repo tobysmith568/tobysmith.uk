@@ -16,7 +16,7 @@ test.describe("Index", () => {
     const indexPage = new IndexPageObject(page);
     await indexPage.goto();
 
-    await expect(indexPage.title).toContainText("Builds small developer tools");
+    await expect(indexPage.title).toContainText("Builds developer tools");
     await expect(indexPage.frontmatterName).toHaveText("Toby Smith");
   });
 
