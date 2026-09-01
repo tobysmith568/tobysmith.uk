@@ -9,6 +9,7 @@
     "binding": "ASSETS"
   },
   "send_email": [{ "name": "SEB" }],
+  "routes": [{ "pattern": "tobysmith.uk", "custom_domain": true }],
   "vars": {
     // Not sensitive - Cloudflare's own public siteverify endpoint, safe to commit. The actual
     // secret is TURNSTILE_SECRET_KEY, set via `wrangler secret put` (never in this file).

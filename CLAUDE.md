@@ -229,8 +229,8 @@ separate build step for that job, and `E2E=true` reaches `astro build` via `webS
     third-party UI that's flaky to automate. The token it issues still travels to the real Action.
 - **Env vars**: `PUBLIC_TURNSTILE_SITE_KEY` (`.env.development`, `.env.production`) is the only
   client-exposed var — `.env.development` uses Cloudflare's published "always passes" invisible
-  test sitekey; `.env.production` carries a `REPLACE_ME` placeholder for the real production
-  sitekey (`scripts/setup-turnstile.ts`, below, mints it). Server-side, the contact Action reads
+  test sitekey; `.env.production` carries the real production sitekey (a public value — the
+  widget was created in the Cloudflare dashboard). Server-side, the contact Action reads
   bindings/secrets via `import { env } from "cloudflare:workers"` (the current adapter's
   `Astro.locals.runtime.env` was
   removed — using it now throws, pointing at this import instead). `TURNSTILE_ENDPOINT` is a plain,
@@ -240,8 +240,7 @@ separate build step for that job, and `E2E=true` reaches `astro build` via `webS
   actually declared in `wrangler.jsonc`. Locally, `wrangler dev`/`astro dev`/`astro build` read
   `.dev.vars` (gitignored) for these instead — seeded with Cloudflare's published "always passes"
   Turnstile test secret. `.dev.vars.example` (committed, all-public test values) is what a new
-  checkout / the CI E2E job copies to `.dev.vars`. `scripts/setup-turnstile.ts` (run manually,
-  not in CI) creates the real widget via the Cloudflare API and prints the real sitekey/secret.
+  checkout / the CI E2E job copies to `.dev.vars`.
 - **Deployment**: `wrangler.jsonc` configures the Cloudflare Worker (`name: "tobysmith-uk"`,
   `main` pointing at the adapter's own generated server entrypoint, an `ASSETS` binding at
   `./dist`, a `send_email` binding named `SEB` with **no** `destination_address` — this repo is
