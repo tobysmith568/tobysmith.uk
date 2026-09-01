@@ -37,6 +37,10 @@ export default defineConfig({
   output: "static",
   trailingSlash: "never",
 
+  // Nothing here uses sessions (static pages + a stateless contact Action). Without this the
+  // Cloudflare adapter provisions a "SESSION" Workers KV namespace on every deploy.
+  session: false,
+
   build: {
     format: "file"
   },
