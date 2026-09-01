@@ -1,0 +1,51 @@
+---
+import Prose from "../Prose.astro";
+import Footnote from "../Footnote.astro";
+import Anchor from "../Anchor.astro";
+---
+
+<section id="about" class="section">
+  <h2 class="eyebrow">About Me</h2>
+
+  <Prose>
+    <p>I'm a software developer in London, working mostly on the web.</p>
+
+    <p>
+      Outside work I build and maintain open-source tools, mostly npm packages and command-line
+      utilities. This site is where I write about that, and whatever else seems worth sharing.
+    </p>
+
+    <h3>Experience</h3>
+
+    <p>
+      By day I'm a Senior Software Developer at <Anchor
+        href="https://trayport.com"
+        text="Trayport"
+      /> in London, across their React frontends and C# backends.
+    </p>
+
+    <p>
+      Before that I built web-based mobile apps in the commerce sector with Java Spring and Angular.
+      My degree was in games development, so there's some Unity and OpenGL back there too.
+    </p>
+
+    <Footnote>
+      All opinions and views expressed on this site are my own and do not represent those of my
+      employers.
+    </Footnote>
+
+    <h3>My Code</h3>
+
+    <p>
+      Lots of what I build outside of work is public on my GitHub profile, <Anchor
+        href="https://github.com/tobysmith568"
+        text="tobysmith568"
+      />. Feel free to look around.
+    </p>
+
+    <p>
+      Anything I build with other people usually gets its own GitHub organisation, all linked from
+      my profile.
+    </p>
+  </Prose>
+</section>

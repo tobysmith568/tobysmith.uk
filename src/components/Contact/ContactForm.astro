@@ -1,82 +1,114 @@
 ---
 import Anchor from "../Anchor.astro";
+import Icon from "../Icon.astro";
 ---
 
-<script is:inline src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script
+  is:inline
+  src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=onloadTurnstileCallback&render=explicit"
+  async
+  defer></script>
 
 <form id="contact-form">
   <div class="fields" x-data="{ name: '', email: '', message: '' }">
-    <label for="name">Name</label>
-    <input id="name" x-model="name" type="text" minlength="1" name="name" placeholder="Name" />
+    <div class="field">
+      <label class="mono" for="name">name</label>
+      <input id="name" x-model="name" type="text" minlength="1" name="name" autocomplete="name" />
+    </div>
 
-    <label for="email">Email</label>
-    <input id="email" x-model="email" type="email" name="email" placeholder="Email" />
+    <div class="field">
+      <label class="mono" for="email">email</label>
+      <input id="email" x-model="email" type="email" name="email" autocomplete="email" />
+    </div>
 
-    <label for="message">Message</label>
-    <textarea id="message" x-model="message" name="message" minlength="1" placeholder="Your message"
-    ></textarea>
+    <div class="field field--full">
+      <label class="mono" for="message">message</label>
+      <textarea id="message" x-model="message" name="message" minlength="1" rows="6"></textarea>
+    </div>
 
-    <button type="submit" disabled x-bind:disabled="!isValid(name, email, message)">
-      Send Message
+    <button type="submit" class="mono" disabled x-bind:disabled="!isValid(name, email, message)">
+      send message
+      <Icon name="arrow-right" size={14} />
     </button>
 
-    <p id="result-message" class="hidden"></p>
+    <p id="result-message" class="hidden mono"></p>
 
-    <p class="recaptcha-terms">
-      This site is protected by reCAPTCHA and the Google
-      <Anchor href="https://policies.google.com/privacy" text="Privacy Policy" />
+    <p class="turnstile-terms">
+      This site is protected by Cloudflare Turnstile and the Cloudflare
+      {" "}
+      <Anchor href="https://www.cloudflare.com/privacypolicy/" text="Privacy Policy" />
+      {" "}
       and
-      <Anchor href="https://policies.google.com/terms" text="Terms of Service" />
+      {" "}
+      <Anchor href="https://www.cloudflare.com/website-terms/" text="Terms of Service" />
+      {" "}
       apply.
     </p>
   </div>
 </form>
 
-<div
-  class="g-recaptcha"
-  data-sitekey={import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY}
-  data-callback="onGetRecaptchaToken"
-  data-size="invisible">
-</div>
+<div id="turnstile-widget" data-sitekey={import.meta.env.PUBLIC_TURNSTILE_SITE_KEY}></div>
 
 <script is:inline>
+  // Only referenced from the `x-bind:disabled` directive string on the submit button above -
+  // invisible to static analysis, so ESLint sees this as unused.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function isValid(name, email, message) {
     return name && email && message;
   }
 </script>
 
-<style is:global>
-  .grecaptcha-badge {
-    display: none !important;
-  }
-</style>
-
-<style lang="scss">
+<style>
   .fields {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    max-width: 450px;
+    gap: var(--sp-4) var(--sp-4);
+    max-width: var(--measure);
 
-    label {
-      margin-top: 0.5rem;
+    @media (max-width: 34rem) {
+      grid-template-columns: 1fr;
     }
 
-    label,
-    #email,
-    #message,
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-1);
+    }
+
+    .field--full,
     #result-message,
-    button[type="submit"] {
-      grid-column: span 2;
+    button[type="submit"],
+    .turnstile-terms {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: var(--text-xs);
+      color: var(--muted);
     }
 
     input,
-    textarea,
-    button[type="submit"] {
-      font-size: 1em;
-      font-family: inherit;
+    textarea {
+      font: inherit;
+      font-size: var(--text-base);
+      padding: var(--sp-2) var(--sp-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--ink);
+      transition: border-color var(--dur-fast) var(--ease-out);
+    }
 
-      padding: 0.2em;
-      margin: 0.4em 0px;
+    input:hover,
+    textarea:hover {
+      border-color: var(--muted);
+    }
+
+    input:focus-visible,
+    textarea:focus-visible {
+      border-color: transparent;
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
     }
 
     textarea {
@@ -84,14 +116,60 @@ import Anchor from "../Anchor.astro";
     }
 
     button[type="submit"] {
-      margin-top: 1rem;
-      margin-bottom: 1rem;
+      justify-self: start;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6ch;
+      margin-top: var(--sp-3);
+      font-size: var(--text-sm);
+      padding: var(--sp-3) var(--sp-5);
+      background: var(--ink);
+      color: var(--surface);
+      border: 0;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background var(--dur-fast) var(--ease-out);
+
+      &:hover:not(:disabled) {
+        background: var(--accent-strong);
+      }
+
+      &:disabled {
+        background: var(--border);
+        color: var(--muted);
+        cursor: not-allowed;
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
     }
 
-    .recaptcha-terms {
-      grid-column: span 2;
-      font-size: 0.6em;
+    .turnstile-terms {
+      margin-top: var(--sp-4);
+      font-size: var(--text-xs);
+      color: var(--muted);
     }
+  }
+
+  /* Turnstile's rendered widget has a fixed ~300px minimum width - keep it from pushing the
+     page sideways on very narrow viewports by letting the container scroll instead. */
+  #turnstile-widget {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  #result-message {
+    margin-top: var(--sp-2);
+    padding-left: var(--sp-3);
+    border-left: 2px solid var(--accent);
+    font-size: var(--text-sm);
+  }
+
+  #result-message.err {
+    color: var(--error);
+    border-left-color: var(--error);
   }
 
   .hidden {
@@ -103,18 +181,26 @@ import Anchor from "../Anchor.astro";
   import { parseFormData } from "../../scripts/contact/parseFormData";
   import { sendContactEmail } from "../../scripts/contact/sendContactEmail";
 
+  interface TurnstileRenderOptions {
+    sitekey: string;
+    callback: (token: string) => void;
+    execution?: "render" | "execute";
+  }
+
   declare global {
     interface Window {
-      onGetRecaptchaToken: (token: string) => Promise<void>;
+      onloadTurnstileCallback: () => void;
     }
 
-    var grecaptcha: {
-      execute: () => void;
+    var turnstile: {
+      render: (container: string | HTMLElement, options: TurnstileRenderOptions) => string;
+      execute: (container: string | HTMLElement) => void;
     };
   }
 
   const form = document.getElementById("contact-form") as HTMLFormElement | null;
   const resultMessage = document.getElementById("result-message");
+  const turnstileWidget = document.getElementById("turnstile-widget");
 
   let formData: FormData | null = null;
 
@@ -133,13 +219,11 @@ import Anchor from "../Anchor.astro";
       submitButton.setAttribute("disabled", "true");
     }
 
-    grecaptcha.execute();
+    turnstile.execute("#turnstile-widget");
   });
 
-  async function onGetRecaptchaToken(token: string) {
+  async function onGetTurnstileToken(token: string) {
     if (!formData) return;
-
-    console.log("inside onGetRecaptchaToken", formData);
 
     try {
       const validatedFormData = parseFormData(formData);
@@ -147,20 +231,30 @@ import Anchor from "../Anchor.astro";
 
       if (resultMessage) {
         resultMessage.textContent = "Message sent successfully!";
-        resultMessage.classList.remove("hidden");
+        resultMessage.classList.remove("hidden", "err");
       }
     } catch (error) {
       console.error(error);
 
       const errorMessage =
-        error instanceof Error ? error.message : error?.toString() ?? "Unknown error";
+        error instanceof Error ? error.message : (error?.toString() ?? "Unknown error");
 
       if (resultMessage) {
         resultMessage.textContent = errorMessage;
         resultMessage.classList.remove("hidden");
+        resultMessage.classList.add("err");
       }
     }
   }
 
-  window.onGetRecaptchaToken = onGetRecaptchaToken;
+  window.onloadTurnstileCallback = function onloadTurnstileCallback() {
+    const sitekey = turnstileWidget?.dataset.sitekey;
+    if (!turnstileWidget || !sitekey) return;
+
+    turnstile.render(turnstileWidget, {
+      sitekey,
+      callback: onGetTurnstileToken,
+      execution: "execute"
+    });
+  };
 </script>

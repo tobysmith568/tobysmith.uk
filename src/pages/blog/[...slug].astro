@@ -1,21 +1,21 @@
-﻿---
-import { getCollection } from "astro:content";
+---
+import { getCollection, render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import dayjs from "dayjs";
-import chevronLeft from "../../assets/chevron-left.svg";
 import Prose from "../../components/Prose.astro";
+import Icon from "../../components/Icon.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
 
   return posts.map(entry => ({
-    params: { slug: entry.slug },
+    params: { slug: entry.data.slug },
     props: { entry }
   }));
 }
 
 const { entry } = Astro.props;
-const { Content } = await entry.render();
+const { Content } = await render(entry);
 
 const date = new Date(entry.data.date);
 
@@ -24,28 +24,34 @@ const parseableDate = dayjs(date).format("YYYY-MM-DD");
 ---
 
 <BaseLayout {...entry.data}>
-  <a href="/blog" class="back">
-    <img src={chevronLeft.src} alt="" />
-    Posts
-  </a>
+  <div class="doc">
+    <div class="doc-rail">
+      <a href="/blog" class="back more mono">
+        <Icon name="arrow-left" size={14} />
+        Posts
+      </a>
+      <time class="mono" datetime={parseableDate}>{humanReadableDate}</time>
+    </div>
 
-  <h1>{entry.data.title}</h1>
-  <p>
-    <time datetime={parseableDate}>{humanReadableDate}</time>
-  </p>
+    <article>
+      <div class="entry-head">
+        <h1>{entry.data.title}</h1>
+      </div>
 
-  <Prose>
-    <Content />
-  </Prose>
+      <Prose>
+        <Content />
+      </Prose>
+    </article>
+  </div>
 </BaseLayout>
 
 <style>
   time {
-    font-weight: bold;
-    font-size: 1.17em;
+    font-size: var(--text-sm);
+    color: var(--muted);
   }
 
-  .back {
-    display: flex;
+  h1 {
+    font-size: var(--text-3xl);
   }
 </style>

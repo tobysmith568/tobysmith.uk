@@ -1,16 +1,12 @@
 ---
-import { getProjectLicenses } from "generate-license-file";
 import ProseLayout from "../layouts/ProseLayout.astro";
-import { join } from "node:path";
 import Anchor from "../components/Anchor.astro";
+import Icon from "../components/Icon.astro";
 import { Code } from "astro:components";
+import licenses from "../data/licenses.generated.json";
 
 const title = "Third-Party Content";
-const description = "The Third-party content used by tobysmith.uk";
-
-const packageJsonPath = join(process.cwd(), "package.json");
-console.log("packageJsonPath", packageJsonPath);
-const licenses = await getProjectLicenses(packageJsonPath);
+const description = "The third-party content used by tobysmith.uk";
 
 const getPackageUrl = (packageNameAndVersion: string) => {
   const indexOfLastAt = packageNameAndVersion.lastIndexOf("@");
@@ -22,6 +18,13 @@ const getPackageUrl = (packageNameAndVersion: string) => {
 ---
 
 <ProseLayout title={title} description={description} noIndex>
+  <Fragment slot="rail">
+    <a href="/" class="back more mono">
+      <Icon name="arrow-left" size={14} />
+      Home
+    </a>
+  </Fragment>
+
   <h1>Third-party Content</h1>
 
   <h2>Licenses</h2>
@@ -42,7 +45,7 @@ const getPackageUrl = (packageNameAndVersion: string) => {
           <ul class="packages">
             {license.dependencies.map(pkg => (
               <li>
-                <a href={getPackageUrl(pkg)} target="_blank">
+                <a href={getPackageUrl(pkg)} target="_blank" rel="noopener">
                   {pkg}
                 </a>
               </li>
@@ -76,6 +79,7 @@ const getPackageUrl = (packageNameAndVersion: string) => {
 
   hr {
     margin: 0 0 2rem 0;
-    border-bottom: var(--primary) 0.1rem solid;
+    border: 0;
+    border-bottom: 1px solid var(--border);
   }
 </style>

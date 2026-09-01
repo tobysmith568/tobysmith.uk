@@ -4,36 +4,57 @@
   "type": "module",
   "version": "0.0.0",
   "prettier": "@tobysmith568/prettier-config",
-  "packageManager": "pnpm@10.34.5+sha512.a4ee05f2f73658255bd6a89859c065a45c28a57daefae2c893a168ee2b73168c37b91e83e57ea67654ad03f03031746430e8bce38e362e042605fb8abc80192e",
+  "packageManager": "bun@1.4.0",
   "scripts": {
+    "predev": "bun run generate:licenses",
     "dev": "astro dev",
+    "prestart": "bun run generate:licenses",
     "start": "astro dev",
+    "prebuild": "bun run generate:licenses",
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "cypress": "cypress open"
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "e2e:serve": "bun run generate:licenses && astro build --mode development && wrangler dev --port 8788",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "generate-types": "wrangler types",
+    "generate:licenses": "bun scripts/generate-licenses.mjs"
   },
   "dependencies": {
-    "@astrojs/alpinejs": "^0.5.0",
-    "@astrojs/check": "^0.9.0",
-    "@astrojs/mdx": "^3.1.9",
-    "@astrojs/rss": "^4.0.6",
-    "@astrojs/sitemap": "^3.1.5",
+    "@astrojs/alpinejs": "^1.0.0",
+    "@astrojs/check": "^0.9.10",
+    "@astrojs/cloudflare": "^14.2.5",
+    "@astrojs/mdx": "^7.0.8",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.3",
     "@fontsource-variable/fira-code": "^5.0.16",
-    "@fontsource/blinker": "^5.0.18",
+    "@fontsource/public-sans": "^5.3.0",
+    "@fontsource/space-grotesk": "^5.3.0",
     "@types/alpinejs": "^3.13.6",
     "alpinejs": "^3.13.5",
-    "astro": "^4.16.18",
+    "astro": "^7.2.7",
     "dayjs": "^1.11.10",
     "generate-license-file": "^4.1.0",
+    "mimetext": "^3.0.28",
     "sharp": "^0.34.0",
     "typescript": "^5.3.3",
+    "wrangler": "^4.126.0",
     "zod": "^4.0.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@tobysmith568/prettier-config": "^2.1.0",
     "@types/node": "^24.0.0",
-    "cypress": "^15.0.0",
-    "sass": "^1.70.0"
-  }
+    "eslint": "^10.9.1",
+    "eslint-plugin-astro": "^3.1.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-playwright": "^2.11.0",
+    "typescript-eslint": "^8.68.0"
+  },
+  "trustedDependencies": [
+    "@parcel/watcher"
+  ]
 }

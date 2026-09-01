@@ -1,51 +1,196 @@
-﻿---
-import HeaderMenuItem from "./HeaderMenuItem.astro";
+---
 import MobileMenu from "./MobileMenu.astro";
+import Icon from "../Icon.astro";
+
+const links = [
+  { href: "/projects", label: "projects" },
+  { href: "/blog", label: "blog" },
+  { href: "/#contact", label: "contact" }
+];
+
+// Normalise away any trailing slash or `.html` (the build emits `blog.html` etc.) so the
+// comparison is stable, then treat a section as active on its own page *and* its sub-pages
+// (`/blog` stays lit on `/blog/some-post`). Anchor links (`/#contact`) never count as active -
+// they target a section of a page, not a route.
+const currentPath = Astro.url.pathname.replace(/\.html$/, "").replace(/(.)\/$/, "$1");
+const isActive = (href: string) =>
+  !href.includes("#") && (currentPath === href || currentPath.startsWith(href + "/"));
 ---
 
-<nav>
-  <div class="menu-items">
-    <HeaderMenuItem label="Toby Smith" href="/" />
-  </div>
+<header>
+  <nav class="wrap bar" x-data="{ mobileMenuOpen: false }" aria-label="Primary">
+    <a class="id" href="/">toby smith</a>
 
-  <div class="menu-items desktop-only">
-    <HeaderMenuItem label="About" href="/about" />
-    <HeaderMenuItem label="Projects" href="/projects" />
-    <HeaderMenuItem label="Blog" href="/blog" />
-    <HeaderMenuItem label="Contact" href="/contact" />
-  </div>
+    <div class="controls">
+      <div class="links mono">
+        {
+          links.map(({ href, label }) => (
+            <a href={href} aria-current={isActive(href) ? "page" : undefined}>
+              {label}
+            </a>
+          ))
+        }
+      </div>
 
-  <div class="mobile-only" style="display: none">
-    <!--TODO: Remove display none when mobile menu is ready-->
-    <MobileMenu />
-  </div>
-</nav>
+      <button
+        type="button"
+        class="theme-toggle icon-button"
+        data-theme-toggle
+        aria-label="Theme: follow system">
+        <Icon name="monitor" size={18} class="i-system" />
+        <Icon name="sun" size={18} class="i-light" />
+        <Icon name="moon" size={18} class="i-dark" />
+      </button>
+
+      <button
+        type="button"
+        class="menu-toggle icon-button"
+        aria-label="Open menu"
+        aria-controls="mobile-menu"
+        x-bind:aria-expanded="mobileMenuOpen.toString()"
+        @click="mobileMenuOpen = true">
+        <Icon name="menu" size={18} />
+      </button>
+    </div>
+
+    <MobileMenu links={links} />
+  </nav>
+</header>
 
 <style>
-  nav {
-    background-color: var(--primary);
-    color: var(--primary-text);
+  header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+  }
 
-    padding: 0 2em;
-    min-height: 3.5em;
-
+  .bar {
+    padding-block: var(--sp-4);
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
 
-  .menu-items {
+  .id {
+    font-family: var(--f-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .controls {
     display: flex;
+    align-items: center;
+    gap: var(--sp-5);
   }
 
-  .desktop-only {
-    @media (max-width: 600px) {
+  .links {
+    display: flex;
+    gap: var(--sp-5);
+  }
+
+  .links a {
+    position: relative;
+    text-decoration: none;
+    color: var(--muted);
+    padding-bottom: 2px;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  .links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 100%;
+    bottom: 0;
+    height: 1.5px;
+    background: var(--accent);
+    transition: right var(--dur-base) var(--ease-out);
+  }
+
+  .links a:hover,
+  .links a[aria-current="page"] {
+    color: var(--ink);
+  }
+
+  .links a:hover::after,
+  .links a[aria-current="page"]::after,
+  .links a:focus-visible::after {
+    right: 0;
+  }
+
+  /* base look comes from the shared .icon-button (global.css); only the responsive show/hide
+     is header-specific. .controls .menu-toggle keeps this ahead of .icon-button's display. */
+  .controls .menu-toggle {
+    display: none;
+  }
+
+  @media (max-width: 40rem) {
+    .links {
       display: none;
     }
-  }
-
-  .mobile-only {
-    @media (min-width: 601px) {
-      display: none;
+    .controls .menu-toggle {
+      display: grid;
     }
   }
 </style>
+
+<script>
+  // Cycle the theme in three steps, ordered so the first click always changes something:
+  //   system  -> the theme the OS *isn't*   (a visible switch)
+  //           -> the theme the OS *is*       (same look, but now pinned - ignores OS changes)
+  //           -> system                      (back to following the OS)
+  // The OS preference only picks the direction; the two pinned steps are concrete values.
+  // The icon shown is CSS-driven off <html data-choice> (set pre-paint by BaseLayout's inline
+  // script, updated here), so there's nothing to swap in JS. `data-theme` is only stamped for a
+  // pinned choice; "system" removes it and lets prefers-color-scheme decide (see tokens.css).
+  const modes = ["system", "light", "dark"];
+
+  const labelFor = (choice: string) =>
+    choice === "light"
+      ? "Theme: light"
+      : choice === "dark"
+        ? "Theme: dark"
+        : "Theme: follow system";
+
+  const nextChoice = (choice: string) => {
+    const osDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const os = osDark ? "dark" : "light";
+    const opposite = osDark ? "light" : "dark";
+    if (choice === "system") return opposite;
+    if (choice === opposite) return os;
+    return "system";
+  };
+
+  const root = document.documentElement;
+  const btn = document.querySelector<HTMLButtonElement>("[data-theme-toggle]");
+
+  const current = () => {
+    const c = root.dataset.choice ?? "system";
+    return modes.includes(c) ? c : "system";
+  };
+
+  const syncButton = (choice: string) => {
+    btn?.setAttribute("aria-label", labelFor(choice));
+    btn?.setAttribute("title", labelFor(choice));
+  };
+
+  if (btn) {
+    // The inline <head> script already set the attributes from localStorage; just catch the
+    // button's label up (its SSR default is "system").
+    syncButton(current());
+
+    btn.addEventListener("click", () => {
+      const next = nextChoice(current());
+      root.dataset.choice = next;
+      if (next === "system") root.removeAttribute("data-theme");
+      else root.dataset.theme = next;
+      try {
+        localStorage.setItem("theme", next);
+      } catch {
+        /* storage blocked - the choice just won't persist */
+      }
+      syncButton(next);
+    });
+  }
+</script>

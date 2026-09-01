@@ -1,3 +1,4 @@
 {
-  "extends": "./node_modules/astro/tsconfigs/strictest.json"
+  "extends": "./node_modules/astro/tsconfigs/strictest.json",
+  "include": [".astro/types.d.ts", "**/*", "./worker-configuration.d.ts"]
 }

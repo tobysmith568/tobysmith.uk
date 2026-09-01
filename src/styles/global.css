@@ -1,0 +1,440 @@
+/*
+ * Global reset + base element styles + shared utility classes. Everything here is unscoped by
+ * design (imported once from BaseLayout.astro) so individual components don't redeclare the same
+ * html-element defaults - dispersed styling is centralised here.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  background: var(--bg);
+  color: var(--ink);
+
+  font-family: var(--f-body);
+  font-size: var(--text-base);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+main {
+  flex: 1;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--f-display);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin: 0;
+}
+
+p {
+  margin: 0 0 var(--sp-4);
+}
+p:last-child {
+  margin-bottom: 0;
+}
+
+a {
+  color: inherit;
+}
+
+/* Shared text-link affordance: a quiet resting underline (never colour alone), promoted to
+   --accent on hover/focus. Prose.astro repeats this for markdown-authored links, which can't
+   carry a class. */
+.text-link {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--underline);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+  transition:
+    text-decoration-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+.text-link:hover,
+.text-link:focus-visible {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+}
+
+/* "more X →" section actions - a clear, consistent affordance with a nudging arrow. */
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5ch;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--underline);
+  text-underline-offset: 0.15em;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    text-decoration-color var(--dur-fast) var(--ease-out);
+}
+.more svg {
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.more:hover,
+.more:focus-visible {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+.more:hover svg,
+.more:focus-visible svg {
+  transform: translateX(2px);
+}
+
+/* Back-links (`class="back more mono"`) reuse .more's underline/colour affordance but lead
+   with an arrow-left, so the nudge on hover/focus needs to point the other way. Shared here
+   now that it appears on every detail page, every policy page, and 404. */
+.back:hover svg,
+.back:focus-visible svg {
+  transform: translateX(-2px);
+}
+
+/* Bordered square icon button - the header's menu + theme toggles and the blog RSS link all
+   share this so they read as one control family. Just the frame + hover; sizing an inner SVG is
+   the caller's job (they pass size=18). */
+.icon-button {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+.icon-button:hover,
+.icon-button:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+code,
+pre {
+  font-family: var(--f-mono);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* A visible, consistent focus ring on every interactive element - not just the ones that
+   happen to declare their own. Suppressed for mouse/touch users via :focus-visible. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 1px;
+}
+
+[x-cloak] {
+  display: none !important;
+}
+
+/* Visually hidden but still reachable by screen readers/find-in-page - for content whose visible
+   presentation is decorative or animated and needs a stable, always-correct text alternative. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* The shared page shell. Header/Footer/BaseLayout's main content all use this rather than each
+   re-declaring their own max-width + centring. Wider than the --measure text column so section
+   labels can hang in the left gutter (see .section). */
+.wrap {
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: var(--sp-5);
+}
+
+/* A named content section. On wide viewports the monospace label sits in a left gutter, aligned
+   like an export marker in a margin; the body stays at the readable --measure. Below that the
+   label stacks above its content. Each section opens with a firm rule so it's unmistakable
+   where one ends and the next begins. */
+.section {
+  padding-top: var(--sp-6);
+  margin-top: var(--sp-7);
+  border-top: 1px solid var(--rule);
+}
+.section > .eyebrow {
+  margin-bottom: var(--sp-5);
+}
+
+@media (min-width: 60rem) {
+  .section {
+    display: grid;
+    grid-template-columns: var(--gutter) minmax(0, var(--measure));
+    column-gap: var(--sp-6);
+  }
+  .section > * {
+    grid-column: 2;
+  }
+  .section > .eyebrow {
+    grid-column: 1;
+    grid-row: 1 / 999;
+    margin-bottom: 0;
+  }
+}
+
+/* Whole-page document layout for the listing + article pages: the same gutter rhythm as
+   .section, so their content lines up with the index body instead of sitting in a narrow
+   left-aligned column. The gutter holds page metadata (a back-link, a date, an RSS link) or is
+   left as deliberate margin. */
+.doc {
+  max-width: var(--measure);
+}
+.doc > .doc-rail {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-3) var(--sp-4);
+  margin-bottom: var(--sp-5);
+}
+
+@media (min-width: 60rem) {
+  .doc {
+    display: grid;
+    grid-template-columns: var(--gutter) minmax(0, var(--measure));
+    column-gap: var(--sp-6);
+    max-width: none;
+  }
+  .doc > * {
+    grid-column: 2;
+    min-width: 0;
+  }
+  .doc > .doc-rail {
+    grid-column: 1;
+    grid-row: 1 / 999;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--sp-3);
+    margin-bottom: 0;
+    position: sticky;
+    top: var(--sp-5);
+    align-self: start;
+  }
+}
+
+/* Monospace as UI chrome - nav, the frontmatter record, dates, route paths, form labels,
+   buttons, "more" links. The mono face doubling as interface type is core to the design.
+   Applied via a `mono` class on those elements. */
+.mono {
+  font-family: var(--f-mono);
+}
+
+/* Collection listing pages (/blog, /projects). The page opens the way every index .section
+   does - a firm --rule, the monospace `# marker` hanging in the left gutter - then lists the
+   collection at --measure. Kept separate from .doc (a single rail spanning the whole page)
+   because a grouped listing needs a marker per group: see .entry-group. */
+.listing > .listing-head {
+  border-top: 1px solid var(--rule);
+  padding-top: var(--sp-6);
+  margin-bottom: var(--sp-6);
+  max-width: var(--measure);
+}
+.listing-head > h1 {
+  font-size: var(--text-2xl);
+}
+.listing-head > .summary {
+  margin-top: var(--sp-3);
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+.listing-head > .summary a {
+  text-decoration: underline;
+  text-decoration-color: var(--underline);
+  text-underline-offset: 0.15em;
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    text-decoration-color var(--dur-fast) var(--ease-out);
+}
+.listing-head > .summary a:hover,
+.listing-head > .summary a:focus-visible {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+
+/* A group of entries within a listing (one calendar year on /blog). Same gutter | body
+   rhythm as .section, but no firm --rule between groups - the marker plus whitespace is
+   divider enough, and stacking --rule lines would read as broadsheet. On wide viewports the
+   marker sticks in the gutter while its group scrolls past, like a version header down a
+   changelog margin. */
+.entry-group + .entry-group {
+  margin-top: var(--sp-7);
+}
+.entry-group > .group-marker {
+  font-family: var(--f-mono);
+  font-weight: 500;
+  font-size: var(--text-xl);
+  color: var(--muted);
+  margin: 0 0 var(--sp-2);
+}
+
+@media (min-width: 60rem) {
+  .listing > .listing-head {
+    display: grid;
+    grid-template-columns: var(--gutter) minmax(0, var(--measure));
+    column-gap: var(--sp-6);
+    max-width: none;
+  }
+  .listing-head > * {
+    grid-column: 2;
+    min-width: 0;
+  }
+  .listing-head > .eyebrow {
+    grid-column: 1;
+    grid-row: 1 / 999;
+  }
+
+  .entry-group {
+    display: grid;
+    grid-template-columns: var(--gutter) minmax(0, var(--measure));
+    column-gap: var(--sp-6);
+  }
+  .entry-group > * {
+    grid-column: 2;
+    min-width: 0;
+  }
+  .entry-group > .group-marker {
+    grid-column: 1;
+    grid-row: 1 / 999;
+    position: sticky;
+    top: var(--sp-5);
+    align-self: start;
+    font-size: var(--text-sm);
+    margin: 0;
+  }
+}
+
+/* The header block on the detail pages (blog post, project) - the title (and, on projects,
+   the logo / tagline / tags / links) sit above a hairline rule that marks "end of the
+   metadata, start of the body". The per-page internals live in each page's own <style>;
+   only the rule + spacing is shared. */
+.entry-head {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: var(--sp-5);
+  margin-bottom: var(--sp-6);
+}
+
+/* Monospace tag chips - the project's `tags`, shown on the /projects listing rows and again
+   on the project detail header. */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tags li {
+  font-family: var(--f-mono);
+  font-size: var(--text-xs);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.1em 0.6ch;
+}
+
+/* The monospace "field label" that names a section - the one structural device this direction
+   uses instead of numbering. A real heading element, so the outline and screen readers still
+   see a normal heading; only the presentation changes. */
+.eyebrow {
+  font-family: var(--f-mono);
+  font-weight: 500;
+  font-size: var(--text-xl);
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: lowercase;
+  color: var(--ink);
+  margin: 0;
+}
+.eyebrow::before {
+  content: "#";
+  margin-right: 0.5ch;
+  color: var(--accent);
+}
+
+@media (min-width: 60rem) {
+  .eyebrow {
+    position: sticky;
+    top: var(--sp-5);
+    font-size: var(--text-sm);
+    align-self: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Theme toggle (Header.astro) - which of the three icons shows is driven by the data-choice
+   attribute the inline <head> script sets, so it's correct on first paint with no JS-driven
+   swap. The button itself and its cycle logic live in Header.astro. */
+.theme-toggle svg {
+  display: none;
+}
+:root[data-choice="system"] .theme-toggle .i-system,
+:root[data-choice="light"] .theme-toggle .i-light,
+:root[data-choice="dark"] .theme-toggle .i-dark {
+  display: block;
+}
+
+/* Shiki dual-theme (astro.config.mjs: themes.light = light-plus, themes.dark = dark-plus).
+   Shiki emits the light colours inline plus a --shiki-dark* custom property for each; these
+   rules swap to the dark ones, mirroring the palette's two activation cases. */
+:root[data-theme="dark"] .astro-code,
+:root[data-theme="dark"] .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .astro-code,
+  :root:not([data-theme="light"]) .astro-code span {
+    color: var(--shiki-dark) !important;
+    background-color: var(--shiki-dark-bg) !important;
+    font-style: var(--shiki-dark-font-style) !important;
+    font-weight: var(--shiki-dark-font-weight) !important;
+    text-decoration: var(--shiki-dark-text-decoration) !important;
+  }
+}

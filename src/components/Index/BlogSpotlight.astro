@@ -1,0 +1,29 @@
+---
+import { getCollection } from "astro:content";
+import BlogListItem from "../Blog/BlogListItem.astro";
+import Icon from "../Icon.astro";
+
+// Mirrors ProjectsSpotlight.astro exactly. No fixed count; every post with `featured: true`
+// shows here.
+const featuredPosts = await getCollection("blog", ({ data }) => data.featured);
+const sortedPosts = featuredPosts.sort((a, b) => a.data.sortWeight - b.data.sortWeight).reverse();
+---
+
+<section id="blog" class="section">
+  <h2 class="eyebrow">Blog</h2>
+
+  <div class="list">
+    {sortedPosts.map(post => <BlogListItem post={post} />)}
+  </div>
+
+  <a class="more mono" href="/blog">
+    more posts
+    <Icon name="arrow-right" size={14} />
+  </a>
+</section>
+
+<style>
+  .more {
+    margin-top: var(--sp-5);
+  }
+</style>

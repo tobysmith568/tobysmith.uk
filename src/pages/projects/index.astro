@@ -1,18 +1,30 @@
-﻿---
+---
 import Layout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 import ProjectListItem from "../../components/Projects/ProjectListItem.astro";
 
-const title = "My Projects";
+const title = "Projects";
 const description = "A selection of the projects Toby has been working on recently.";
 
 const projects = await getCollection("projects");
 const sortedProjects = projects.sort((a, b) => a.data.sortWeight - b.data.sortWeight).reverse();
+
+const count = sortedProjects.length;
+const summary = `${count} ${count === 1 ? "project" : "projects"} · all open source`;
 ---
 
 <Layout title={title} description={description}>
-  <h1>My Projects</h1>
-  <p>A selection of the projects I've been working on recently.</p>
+  <div class="listing">
+    <div class="listing-head">
+      <p class="eyebrow">projects</p>
+      <h1>Projects</h1>
+      <p class="summary mono">{summary}</p>
+    </div>
 
-  {sortedProjects.map(project => <ProjectListItem project={project} />)}
+    <section class="entry-group">
+      <div class="list">
+        {sortedProjects.map(project => <ProjectListItem project={project} showTags />)}
+      </div>
+    </section>
+  </div>
 </Layout>

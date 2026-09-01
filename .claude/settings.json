@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bun install)",
+      "Bash(bun run dev)",
+      "Bash(bun run start)",
+      "Bash(bun run build)",
+      "Bash(bun run preview)",
+      "Bash(bunx astro *)",
+      "Bash(bunx prettier *)",
+      "Bash(bunx playwright *)",
+      "Bash(bun run e2e)",
+      "Bash(bun run e2e:serve)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git show *)",
+      "Bash(git branch)",
+      "Bash(git branch --list)",
+      "Bash(ls *)",
+      "Bash(find *)",
+      "Bash(cat *)"
+    ]
+  }
+}

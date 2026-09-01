@@ -13,14 +13,18 @@
 interface Props {
   href: string;
   text?: string;
+  class?: string;
 }
 
-const { href } = Astro.props;
+const { href, class: className } = Astro.props;
 const text = Astro.props.text ?? href;
 
 const isExternal = href.startsWith("http");
 ---
 
-<a href={href} target={isExternal ? "_blank" : null} rel={isExternal ? "noopener noreferrer" : null}
-  >{text}</a
+<a
+  href={href}
+  class={className}
+  target={isExternal ? "_blank" : null}
+  rel={isExternal ? "noopener noreferrer" : null}>{text}</a
 >

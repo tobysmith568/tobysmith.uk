@@ -3,59 +3,52 @@ import Anchor from "../Anchor.astro";
 const year = new Date().getUTCFullYear();
 ---
 
-<div class="footer">
-  <div class="padding">
-    <div>
-      Copyright Toby Smith {year}
-    </div>
+<footer>
+  <div class="wrap bar mono">
+    <span>© Toby Smith {year}</span>
 
-    <div class="links">
-      <span>
-        <Anchor href="/terms" text="Terms" data-astro-prefetch="false" />
-      </span>
-
-      <span>
-        <Anchor href="/privacy" text="Privacy" data-astro-prefetch="false" />
-      </span>
-
-      <span>
-        <Anchor href="/cookies" text="Cookies" data-astro-prefetch="false" />
-      </span>
-
-      <span>
-        <Anchor href="/third-party" text="Licenses" data-astro-prefetch="false" />
-      </span>
-    </div>
+    <nav class="links" aria-label="Legal">
+      <Anchor href="/terms" text="terms" data-astro-prefetch="false" />
+      <Anchor href="/privacy" text="privacy" data-astro-prefetch="false" />
+      <Anchor href="/cookies" text="cookies" data-astro-prefetch="false" />
+      <Anchor href="/third-party" text="licenses" data-astro-prefetch="false" />
+    </nav>
   </div>
-</div>
+</footer>
 
-<style lang="scss">
-  $noHoverTextColor: lightgray;
-
-  .footer {
-    display: flex;
-    justify-content: center;
-
-    &:not(:hover) {
-      opacity: 40%;
-    }
-
-    transition: opacity 0.2s ease-in-out;
+<style>
+  footer {
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    padding-block: var(--sp-5) var(--sp-7);
   }
 
-  .padding {
+  .bar {
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-
-    min-height: 3rem;
-    width: 800px;
-
-    font-size: 0.8rem;
+    gap: var(--sp-3);
+    font-size: var(--text-xs);
   }
 
-  .links > * {
-    padding-right: 0.2rem;
+  .links {
+    display: flex;
+    gap: var(--sp-4);
+  }
+
+  .links :global(a) {
+    color: var(--muted);
+    text-decoration: underline;
+    text-decoration-color: var(--underline);
+    text-underline-offset: 0.15em;
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      text-decoration-color var(--dur-fast) var(--ease-out);
+  }
+  .links :global(a:hover),
+  .links :global(a:focus-visible) {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
   }
 </style>

@@ -1,71 +1,95 @@
-﻿---
+---
 import type { CollectionEntry } from "astro:content";
-import Hr from "../HR.astro";
 import dayjs from "dayjs";
+import Icon from "../Icon.astro";
 
 export interface Props {
   post: CollectionEntry<"blog">;
 }
 
 const { post } = Astro.props;
-const { slug, data } = post;
-const { title, description, date } = data;
+const { data } = post;
+const { slug, title, description, date } = data;
 
 const humanReadableDate = dayjs(date).format("DD MMM YYYY");
 const parseableDate = dayjs(date).format("YYYY-MM-DD");
 ---
 
-<article>
+<article class="item">
   <a href={"/blog/" + slug}>
-    <header>
+    <div class="body">
+      <time class="mono" datetime={parseableDate}>{humanReadableDate}</time>
       <h2>{title}</h2>
-      <time datetime={parseableDate}>{humanReadableDate}</time>
       <p>{description}</p>
-    </header>
+    </div>
+    <Icon name="arrow-right" size={16} />
   </a>
-
-  <Hr />
 </article>
 
-<style lang="scss">
-  a {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    text-decoration: none;
-
-    h2 {
-      text-decoration: underline;
-      text-decoration-color: var(--primary-light);
-
-      transition: text-decoration-color 0.2s ease-in-out;
-    }
-
-    &:hover {
-      h2 {
-        text-decoration-color: var(--primary);
-      }
-    }
+<style>
+  .item {
+    border-bottom: 1px solid var(--border);
+  }
+  .item:first-of-type {
+    border-top: 1px solid var(--border);
   }
 
-  .image-container {
-    min-width: 100px;
-    height: 100px;
-    margin-right: 2em;
+  a {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--sp-4);
+    padding-block: var(--sp-5);
+    text-decoration: none;
+    color: inherit;
+  }
 
-    @media screen and (max-width: 600px) {
-      display: none;
-    }
+  .body {
+    flex: 1;
+    min-width: 0;
+  }
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
+  a > :global(svg) {
+    flex-shrink: 0;
+    margin-top: 0.35em;
+    color: var(--muted);
+    transition:
+      transform var(--dur-fast) var(--ease-out),
+      color var(--dur-fast) var(--ease-out);
+  }
+  a:hover > :global(svg),
+  a:focus-visible > :global(svg) {
+    transform: translateX(3px);
+    color: var(--accent);
+  }
+
+  time {
+    display: block;
+    margin-bottom: var(--sp-1);
+    font-size: var(--text-xs);
+    color: var(--muted);
   }
 
   h2 {
-    margin-bottom: 0;
+    font-size: var(--text-lg);
+    font-weight: 600;
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+    transition:
+      color var(--dur-fast) var(--ease-out),
+      text-decoration-color var(--dur-fast) var(--ease-out);
+  }
+
+  a:hover h2,
+  a:focus-visible h2 {
+    color: var(--accent);
+    text-decoration-color: var(--accent);
+  }
+
+  p {
+    margin: var(--sp-2) 0 0;
+    color: var(--muted);
+    max-width: 58ch;
   }
 </style>

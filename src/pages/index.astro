@@ -1,24 +1,20 @@
 ---
 import Hero from "../components/Index/Hero.astro";
+import About from "../components/Index/About.astro";
+import ProjectsSpotlight from "../components/Index/ProjectsSpotlight.astro";
+import BlogSpotlight from "../components/Index/BlogSpotlight.astro";
+import ContactSection from "../components/Index/ContactSection.astro";
 import Layout from "../layouts/BaseLayout.astro";
 
 const title = "Toby Smith";
 const description =
-  "Toby Smith is a London-based software developer who enjoys focusing on web-based technologies.";
+  "Toby Smith is a London-based Senior Software Engineer, focusing on web stacks.";
 ---
 
 <Layout title={title} description={description}>
   <Hero />
+  <About />
+  <ProjectsSpotlight />
+  <BlogSpotlight />
+  <ContactSection />
 </Layout>
-
-<style>
-  main {
-    margin: auto;
-    padding: 1rem;
-    width: 800px;
-    max-width: calc(100% - 2rem);
-    color: #000000;
-    font-size: 20px;
-    line-height: 1.6;
-  }
-</style>

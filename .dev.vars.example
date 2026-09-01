@@ -1,0 +1,10 @@
+# Example local dev secrets for `wrangler dev` / `astro dev` / `astro build`.
+#
+# Copy to `.dev.vars` (gitignored) for local work. CI copies this file verbatim for the
+# Playwright E2E run. Every value here is safe to commit: TURNSTILE_SECRET_KEY is Cloudflare's
+# published "always passes" Turnstile test secret (paired with the test site key in
+# .env.development), and the addresses are throwaways.
+# https://developers.cloudflare.com/turnstile/troubleshooting/testing/
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+EMAIL_TO=test@example.com
+EMAIL_FROM=test@example.com

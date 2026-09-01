@@ -1,0 +1,21 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "compatibility_date": "2026-08-25",
+  "compatibility_flags": ["global_fetch_strictly_public"],
+  "name": "tobysmith-uk",
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS"
+  },
+  "send_email": [{ "name": "SEB" }],
+  "routes": [{ "pattern": "tobysmith.uk", "custom_domain": true }],
+  "vars": {
+    // Not sensitive - Cloudflare's own public siteverify endpoint, safe to commit. The actual
+    // secret is TURNSTILE_SECRET_KEY, set via `wrangler secret put` (never in this file).
+    "TURNSTILE_ENDPOINT": "https://challenges.cloudflare.com/turnstile/v0/siteverify"
+  },
+  "observability": {
+    "enabled": true
+  }
+}

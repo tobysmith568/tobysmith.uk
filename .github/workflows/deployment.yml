@@ -1,0 +1,58 @@
+name: Continuous Deployment
+run-name: Continuous Deployment for ${{ github.ref_name }}
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: pwsh
+
+permissions:
+  contents: read
+  deployments: write
+
+concurrency:
+  group: Continuous Deployment
+  cancel-in-progress: false
+
+jobs:
+  integration:
+    name: Run Continuous Integration
+    uses: ./.github/workflows/integration.yml
+    secrets: inherit
+
+  deploy:
+    name: Deploy Website
+
+    needs:
+      - integration
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Download Build
+        uses: actions/download-artifact@v8
+        with:
+          name: Build
+          path: ./dist
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          secrets: |
+            EMAIL_TO
+            EMAIL_FROM
+            TURNSTILE_SECRET_KEY
+        env:
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}

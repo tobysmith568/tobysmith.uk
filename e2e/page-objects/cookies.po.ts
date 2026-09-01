@@ -1,0 +1,30 @@
+import type { Locator, Page } from "@playwright/test";
+import { MetaPageObject } from "./meta.po";
+
+export class CookiesPageObject {
+  readonly meta: MetaPageObject;
+
+  constructor(private readonly page: Page) {
+    this.meta = new MetaPageObject(page);
+  }
+
+  async goto(): Promise<void> {
+    await this.page.goto("/cookies");
+  }
+
+  get title(): Locator {
+    return this.page.locator("h1");
+  }
+
+  get updateSentence(): Locator {
+    return this.page.getByText("Our Cookies Policy was last updated on 30th August 2026.");
+  }
+
+  get backLink(): Locator {
+    return this.page.locator("a.back");
+  }
+
+  get lastUpdated(): Locator {
+    return this.page.locator("time");
+  }
+}

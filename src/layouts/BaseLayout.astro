@@ -1,7 +1,12 @@
 ---
-import "@fontsource/blinker";
-import blinkerWoff2 from "@fontsource/blinker/files/blinker-latin-400-normal.woff2?url";
+import "@fontsource/space-grotesk/500.css";
+import "@fontsource/space-grotesk/600.css";
+import spaceGroteskWoff2 from "@fontsource/space-grotesk/files/space-grotesk-latin-600-normal.woff2?url";
+import "@fontsource/public-sans/400.css";
+import "@fontsource/public-sans/400-italic.css";
 import "@fontsource-variable/fira-code";
+import "../styles/tokens.css";
+import "../styles/global.css";
 import Header from "../components/BaseLayout/Header.astro";
 import Footer from "../components/BaseLayout/Footer.astro";
 
@@ -21,14 +26,34 @@ const title =
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" data-choice="system">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    {
+      /* Set the theme before the first paint so there's no flash. `data-theme` is only stamped
+        for an explicit light/dark choice - "system" leaves it off and prefers-color-scheme
+        decides (see tokens.css). `data-choice` always reflects the toggle state (Header.astro). */
+    }
+    <script is:inline>
+      (() => {
+        try {
+          const c = localStorage.getItem("theme");
+          const choice = c === "light" || c === "dark" || c === "system" ? c : "system";
+          const root = document.documentElement;
+          root.dataset.choice = choice;
+          if (choice === "light" || choice === "dark") root.dataset.theme = choice;
+        } catch {
+          /* private mode / storage blocked - fall back to system */
+        }
+      })();
+    </script>
+
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
     <meta name="generator" content={Astro.generator} />
     <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="preload" as="font" type="font/woff2" href={blinkerWoff2} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={spaceGroteskWoff2} crossorigin />
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -39,77 +64,17 @@ const title =
     <Header />
 
     <main>
-      <div class="content">
+      <div class="wrap content">
         <slot />
       </div>
-
-      <Footer />
     </main>
+
+    <Footer />
   </body>
 </html>
 
-<style is:global lang="scss">
-  @use "sass:color";
-
-  $primary: dodgerblue;
-  $primary-text: white;
-
-  :root {
-    --primary: #{$primary};
-    --primary-text: #{$primary-text};
-    --primary-light: #{lighten($primary, 30%)};
-    --primary-very-light: #{lighten($primary, 41%)};
-  }
-
-  html {
-    font-family: Blinker, sans-serif;
-    background: #fff;
-    font-size: 1.1em;
-  }
-
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-
-    font-size: 1.1em;
-
-    display: flex;
-    flex-direction: column;
-  }
-
-  main {
-    flex-grow: 1;
-    overflow-y: auto;
-
-    font-size: 1.2rem;
-
-    a {
-      color: inherit;
-      text-decoration: underline;
-      text-decoration-color: var(--primary-light);
-      text-decoration-thickness: 2px;
-
-      transition: text-decoration-color 0.2s ease-in-out;
-
-      &:hover {
-        text-decoration-color: var(--primary);
-      }
-    }
-  }
-
-  code {
-    font-family: "Fira Code", monospace;
-  }
-</style>
-
 <style>
   .content {
-    margin: 0 auto;
-    padding: 20px;
-    padding-top: 1.5em;
-
-    max-width: 800px;
-    min-height: 100%;
+    padding-block: clamp(2rem, 6vw, 3.5rem) var(--sp-9);
   }
 </style>

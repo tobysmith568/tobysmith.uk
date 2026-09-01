@@ -1,0 +1,32 @@
+---
+import ContactForm from "../Contact/ContactForm.astro";
+import Anchor from "../Anchor.astro";
+---
+
+<section id="contact" class="section">
+  <h2 class="eyebrow">Contact Me</h2>
+
+  <div>
+    <p>
+      Got a question or an idea? Send a message below, or reach me on <Anchor
+        class="text-link"
+        href="https://linkedin.com/in/tobysmith568"
+        text="LinkedIn"
+      />.
+    </p>
+
+    <ContactForm />
+  </div>
+</section>
+
+<style>
+  section {
+    scroll-margin-top: var(--sp-5);
+  }
+
+  p {
+    color: var(--muted);
+    max-width: 42ch;
+    margin-bottom: var(--sp-6);
+  }
+</style>
