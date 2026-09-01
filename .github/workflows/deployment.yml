@@ -55,6 +55,11 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           packageManager: bun
+          # The Astro Cloudflare adapter writes the real deploy config into the build output;
+          # the repo-root wrangler.jsonc is only the pre-build stub. The `.wrangler/deploy`
+          # redirect that points wrangler at it locally isn't part of the `dist` artifact, so
+          # target it explicitly here.
+          command: deploy --config dist/server/wrangler.json
           secrets: |
             EMAIL_TO
             EMAIL_FROM
