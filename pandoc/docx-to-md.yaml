@@ -1,0 +1,20 @@
+# Pandoc defaults file for converting .docx into Markdown.
+#
+# Usage:
+#   pandoc -d pandoc/docx-to-md.yaml input.docx -o output.md
+#
+# Run from the repo root so the relative filter path resolves, or pass an
+# absolute path to -d.
+
+from: docx
+to: gfm
+
+# One line per paragraph - no hard wrapping.
+wrap: none
+
+# Prefer ATX-style (#) headings.
+markdown-headings: atx
+
+# Force ``` fenced code blocks; strip Word's auto-underline on link text.
+filters:
+  - pandoc/docx-cleanup.lua

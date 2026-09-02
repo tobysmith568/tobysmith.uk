@@ -26,6 +26,9 @@ bun-debug.log*
 # macOS-specific files
 .DS_Store
 
+# pandoc docx -> md conversion output, see scripts/docx-to-md.ts
+pandoc/outputs/
+
 # Playwright
 /test-results/
 /playwright-report/

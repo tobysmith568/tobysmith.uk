@@ -14,6 +14,7 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "docx-to-md": "bun scripts/docx-to-md.ts",
     "e2e": "playwright test",
     "e2e:ui": "playwright test --ui",
     "e2e:serve": "bun run generate:licenses && astro build --mode development && wrangler dev --port 8788",
@@ -47,11 +48,13 @@
   "devDependencies": {
     "@playwright/test": "^1.62.1",
     "@tobysmith568/prettier-config": "^2.1.0",
+    "@types/bun": "^1.4.0",
     "@types/node": "^26.0.0",
     "eslint": "^10.9.1",
     "eslint-plugin-astro": "^3.1.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-playwright": "^2.11.0",
+    "fflate": "^0.8.3",
     "typescript-eslint": "^8.68.0"
   },
   "trustedDependencies": [
