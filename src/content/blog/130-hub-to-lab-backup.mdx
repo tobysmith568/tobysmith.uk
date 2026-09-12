@@ -1,0 +1,52 @@
+---
+sortWeight: 130
+slug: hub-to-lab-backup
+title: My Hub->Lab Backup
+description: How & why I've started mirroring all of my GitHub repositories to GitLab.
+date: 2026-09-12
+featured: true
+---
+
+import Anchor from "../../components/Anchor.astro";
+
+Like 99% of those who author code non-commercially, I host my stuff on GitHub. I won't spend too long justifying why I use GitHub because I'm pretty sure the reasons speak for themselves. That said, GitHub has been struggling with uptime recently. Depending on who you ask, throughout 2026, <Anchor href="https://mrshu.github.io/github-statuses/?view=all" text="some people" /> suggest that GitHub is struggling to maintain a consistent three nines of reliability, with some 90-day rolling averages dropping below _a single nine_ of reliability. It's pretty convenient to blame the parent company, Microsoft, for the downtime - it's a fairly commonly reoccurring meme to blame Microsoft for drops in quality; however, I think the far more likely cause is what GitHub's official statements pin down as the source for the outages…. AI traffic. From April to August this year alone, <Anchor href="https://github.blog/news-insights/company-news/the-august-17-outage-and-the-work-ahead/?utm_source=chatgpt.com#:~:text=Since%20April%2C%20monthly%20commits%20have%20grown%20from%201.4%20billion%20to%202.9%20billion" text="they claim" /> that their commit traffic has more than doubled. GitHub's official status is that everything will be under control once they finish their migration to Azure Cloud, but personally, I think something has to give.
+
+## What gives?
+
+I think we all agree that AI programming is here to stay. Sure, most of these models & companies <Anchor href="https://isaiprofitable.com/" text="aren't profitable yet" />, but I don't see us going back to the "dark ages" of writing our own unit tests. So is traffic always going to increase? Probably?
+
+If it's not the traffic that gives, I think it has to be the offering. Unlimited free repositories is fantastic, but that, along with thousands of minutes of free compute per month, is what's allowing users to let their LLMs chuck up whatever they wish to the platform and flood the infrastructure. If something gives, I'd bet on it being the free tier of GitHub.
+
+## What happens when it gives?
+
+If these somewhat thought-out predictions become reality, then we're all faced with two options:
+
+- Start paying for what we actually use, or
+- Move somewhere else that's got a competitive offer.
+
+While I'm usually happy enough to comply with the former, I have enough moving parts in my GitHub account to want to try and squeeze out as much free stuff as I can - which is where GitLab comes into play for me.
+
+I'm not saying that GitLab is the best alternative to GitHub. There are many out there, but I wanted one that would be as simple as possible to move to; something that's pretty much like-for-like. And to be clear, I'm certainly not moving off of GitHub now. I won't move off them until there are official changes that get in my way… But I want to be ready.
+
+## What am I doing before it gives?
+
+In short, I'm archiving all my GitHub repositories on GitLab. All repositories in all organisations I own get mirrored to GitLab every night. This way, no matter what gives out, I'm not in a mad panic to abandon ship. Plus, let's be honest, a little data redundancy has never hurt anyone.
+
+If you want to follow along at home, here's what I've done so far.
+
+I don't just want _code_ archives; I want _git_ archives. This means that a .zip of the code won't cut it. I want all commits, from all branches, each with their authors, timestamps, signatures, and commit messages. Obviously, GitLab is a git remote with first-class git support (that's why I'm doing this), so the archive process is "as simple as" for-looping over my GitHub repos, and:
+
+- Cloning the GitHub repository to a pipeline agent.
+- Idempotently creating the equivalent repo on GitLab.
+- Adding the GitLab repo as a second origin in my local clone.
+- Force-pushing branches & tags, etc. up to that second origin.
+
+This whole process could certainly have been a small shell script that runs in a GitLab pipeline along with a PAT token for each of the platforms, but like many software engineers, I'll happily over-complicate something if I'm permitted to. It's just more fun that way. While all the archived repos are private (even if their GitHub counterparts are public), the GitLab <Anchor href="https://gitlab.com/tobysmith568-github-archive/archive" text="repo that contains the archiving process is public" />, so you're welcome to take a peek.
+
+Those who have peeked will see that the repo contains a whole npm project, complete with a linter, formatter, and CI pipeline… Like i said, it's fun to overcomplicate when the stakes are low. I jest, but in reality, the job is more complex than the four steps outlined above, including things like git LFS support, bypassing repos that are already up to date, and making sure that all newly created GitLab repos are created with the correct config; so hopefully, reviewers of the archiving process will agree that the complexity is a worthwhile trade-off for the feature set.
+
+## What am I not doing before it gives?
+
+Right now, this process only covers git primitives. There's no archive process for issues, PRs, releases, or anything else that GitHub offers. This is probably something that I will extend it to cover in the near future, but for now I'm just happy to have archives of my source code.
+
+If you decide that you want to experiment with this yourself, feel free to take a copy of the code in the <Anchor href="https://gitlab.com/tobysmith568-github-archive/archive" /> repository.

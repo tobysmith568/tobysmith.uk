@@ -1,0 +1,32 @@
+---
+sortWeight: 120
+slug: exporting-grammarly-as-markdown
+title: Exporting Grammarly as Markdown is Hard
+description: gramdown is a CLI tool that converts Grammarly exports to Markdown, solving the problem of exporting your Grammarly documents in a format that you can actually use.
+date: 2026-09-08
+featured: true
+---
+
+import Anchor from "../../components/Anchor.astro";
+
+I would have thought that one of the easiest ways to advertise a writing tool like Grammarly would be to have the selling point that "you can export your documents in whatever format you like". However, apparently that's not true, because the web editor for Grammarly only supports Word docs (.docx) and PDFs. I write my blog posts in Grammarly, but because I commit my posts to my blog site repo and then re-deploy it in order to publish a post, neither of those choices are really great for me. Realistically speaking, I need Markdown.
+
+If you take a .docx file that you've exported from Grammarly and run it through a "normal" Word doc to Markdown converter (like Pandoc), you'll be disappointed. The Word docs their site produces look fine by themselves, but they don't contain any of the context required for a Markdown conversion tool to pick up on in order to create good Markdown. The best (worst) example of this is code blocks. On the Grammarly website, you can create a code block by typing three backticks to create a code fence. While the code looks like code on the Grammarly website, and the code looks like code in the exported .docx, by the time it's passed through your Markdown conversion tool, it just looks like normal text. The reason behind that is that there's nothing encoded into the Grammarly-created .docx file to indicate that those lines are a code block; Grammarly exports your code as normal paragraphs that they just happen to dress up in a monospace font. Markdown conversion tools typically don't see a monospace font and decide to drop it into a code fence.
+
+## So why Grammarly?
+
+Writing doesn't come naturally to me, so I've typically leant on tools like Grammarly to help me get the job done. (This also explains the posting inconsistency on this site!) In fact, I think all the posts on this site have been written with Grammarly. Pre-AI, the reason I just gave you was my only reason for using Grammarly… But now I have another one: I really don't want my writing to turn into AI slop, and Grammarly is my walled garden.
+
+I'm not saying that everyone who creates AI-assisted prose produces slop, but, like with producing code, if you're good at something, then AI can be a great tool in your toolbox; however, if you're not so great at something, the AI becomes your crutch. If I wrote my blog posts directly into my IDE with a spell-checker plugin and an LLM, then I'd very quickly find myself producing content that wasn't authentically mine. This is a long way of saying that I think tools like Grammarly are important to me.
+
+It's worth noting that Grammarly does have many AI-specific features (ignoring the fact that their spell-checker is probably also LLM-driven these days)… But luckily for me, I don't pay for Grammarly Premium, so I get the basic spell-checker and zero temptation to pull moves like "re-write this sentence to be more engaging".
+
+## gramdown
+
+The code fence issue outlined above, and others like it, are exactly the niche that my new CLI tool, gramdown, solves.
+
+gramdown is a .docx to markdown converter that explicitly expects all the quirks of a Grammarly export so that you can get high-quality Markdown out of Grammarly. By default, you install it as a CLI tool and run it from your terminal; however, I've also created the website <Anchor href="http://gramdown.tobythe.dev" text="gramdown.tobythe.dev" /> where you can convert your Grammarly exports directly in your browser, client-side.
+
+The underlying conversion process is written in TypeScript, which is what allows me to both publish it to npm and incorporate it into the build of the website. On top of that, I use the Bun `--compile` build flag to produce executables for all three of the major operating systems, which I publish to the website and a select few package managers.
+
+If you're in a similar situation to mine, where you want to export your Grammarly documents as Markdown, then head over to the website for installation instructions as well as more information on how it works.

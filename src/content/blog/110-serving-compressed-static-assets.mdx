@@ -1,0 +1,340 @@
+---
+sortWeight: 110
+slug: serving-compressed-static-assets
+title: Serving Compressed Static Build Assets
+description: How I serve my static frontend build asserts in a compressed format, without having to compress them at request time.
+date: 2026-08-04
+featured: true
+---
+
+import Anchor from "../../components/Anchor.astro";
+
+The 80/20 rule (or Pareto Principle) is something that continues to crop up as I create new pieces of software. For those who aren't familiar, the interpretation of it that people often apply in software development is "80% of the work takes 20% of the time, and thus, the remaining 20% of the work takes up the remaining 80% of the time". I think what it's really trying to say is that it's usually simple enough to chew through the trivial bulk of something, while the real skill & effort lie in the "sprinkles" that you decorate your metaphorical cake with. Configuring your web server to respond with compressed responses, when permitted by the browser, is one of these "sprinkles".
+
+I say this because the functionality of your website will never depend on how compressed the responses are that leave your web server. You might have some pretty large bundles, which take a second or two to download, but a lack of compression will never truly break your site.
+
+Many modern server-side web stacks can automatically compress HTTP responses before sending them back to the client. However, the majority of these stacks have the feature off by default, leaving it to you as something for you to _sprinkle_ on later. Or, maybe you don't even bother applying this sort of data manipulation at the application level, leaving it to your infrastructure to perform in your reverse proxy or similar. Note, however, <Anchor href="https://en.wikipedia.org/wiki/BREACH" text="there are dangers in enabling compression for all your endpoints by default" />, so you should only enable compression on a per-endpoint basis when you're confident it's safe to do so, or you've mitigated known attacks.
+
+## My Situation
+
+I was recently working on an app where none of the approaches above sat right with me. I was building a static Astro app and then serving the pre-built assets produced by the build through a Hono server. This is now one of my new favourite ways to serve my static assets rather than serving from a storage bucket directly due to the amount of control and customisability it gives me - but that's a story for another blog post. In short, I could have compressed the assets in Hono via their built-in `compress` middleware, but doing so as the static assets pass through the Hono app is an excessive amount of compression compute for assets that will never change; I wanted to compress them once, and before the requests are made.
+
+Much like the many options available to developers for compressing at serve-time, there are many different ways to compress a bunch of static assets in between when they're produced and when you deploy your app. However, I chose to implement this process as a build tool plugin for the frontend app itself. There are pros and cons to this; however, I chose to use a build tool plugin for the following reasons:
+
+- Easy to re-use between apps
+- Logic is unit-testable
+- Builds will fail if the compression fails
+- The assets are already compressed before they're uploaded as pipeline artefacts
+- The same process that compresses assets in production builds automatically happens on developer machines too
+
+The app I was working with when I first created this is an Astro app, which, for those who don't know, is built on top of Vite. In this instance, I opted for an Astro _integration_ rather than a Vite _plugin;_ however, both are fine choices for this type of feature, and there's an argument to be had that a Vite plugin would have been more portable between different apps. It's just that in my case I wanted the compression process to also work for other files that are produced by my Astro build but that don't come from my inner Vite build - like my sitemaps produced by the `@astrojs/sitemap` integration. (Sitemaps are another great example of a _sprinkle_ for those who are looking to up the amount of polish they add to their apps).
+
+> You can apply the logic from this Astro integration into a plugin for any/all build tools out there.
+
+The integration is dead simple, and it relies on zero external dependencies; however, before we look at how it works, let's outline the requirements:
+
+- It needs to support multiple compression algorithms. From today, I want both gzip and Brotli compression
+- It needs to still produce uncompressed assets for when compression is not supported by the client
+- As mentioned above, it needs to break the build if it fails to process an asset
+- It needs to find all the assets produced by each stage in the build process, while letting me filter the compressed files down by whatever rules I wish (in this implementation, I have a file extension allow list)
+
+## The Plugin
+
+The full plugin will be dropped into the bottom of this post, but let's first run through it section by section, starting with the imports. The first three sections we look at are all build-framework agnostic, so will apply anywhere; it's just the last one that's Astro-specific.
+
+As mentioned, this only relies on standard Node.JS imports because, luckily for us, the <Anchor href="https://nodejs.org/api/zlib.html" text="Node.JS zlib library" /> comes with both gzip and Brotli support (<Anchor href="https://bun.com/reference/node/zlib" text="it's fully implemented in Bun" /> for those of us who work over there - and <Anchor href="https://docs.deno.com/api/node/zlib/" text="other JS runtimes are available too" />). I'm using `promisify` here just to neaten up the callback-based APIs.
+
+```javascript
+import { readdir, readFile, writeFile } from "node:fs/promises";
+import { extname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
+import {
+  brotliCompress as brotliCompressCallback,
+  gzip as gzipCallback,
+  constants as zlibConstants
+} from "node:zlib";
+
+const gzip = promisify(gzipCallback);
+const brotliCompress = promisify(brotliCompressCallback);
+```
+
+Up next is a function I use to filter which files I want to compress. This is important because you don't want to automatically compress everything. Plaintext file formats like HTML, CSS, and JSON are prime candidates for compression; however, most binary file formats are already compressed, and compressing them further can actually _increase_ their file size. As such, you don't want to include things like `.zip`, `.png`, or `.jpeg`. You also don't want to re-compress things that have already passed through this compression logic, so you'll want to avoid adding `.gz` or `.br`.
+
+```javascript
+/**
+ * All the file types that we want to compress.
+ *
+ * This should never include already compressed file types, either things like
+ * `.br` or `.gz` that are products of this compression step, or things like
+ * `.zip`, `.png`, or `.jpg` which are file formats that are already compressed.
+ */
+const compressibleExtensions = new Set([
+  ".html",
+  ".css",
+  ".js",
+  ".mjs",
+  ".json",
+  ".xml",
+  ".svg",
+  ".txt"
+]);
+
+/** @param {string} filePath */
+const shouldCompressFile = filePath => {
+  const extension = extname(filePath).toLowerCase();
+  return compressibleExtensions.has(extension);
+};
+```
+
+Next up, we need a way to find all the soon-to-be-compressed files in our build output directory. There's certainly more concise ways to achieve this, but I like an easily debuggable function… (That said, do humans even debug our own code any more?). This is calling our function from above to strip out unwanted files.
+
+```javascript
+/** @param {string} directoryPath */
+const findFiles = async directoryPath => {
+  /** @type {string[]} */
+  const files = [];
+
+  const entries = await readdir(directoryPath, {
+    withFileTypes: true,
+    recursive: true
+  });
+
+  for (const entry of entries) {
+    const entryPath = join(entry.parentPath, entry.name);
+
+    if (entry.isFile() && shouldCompressFile(entryPath)) {
+      files.push(entryPath);
+    }
+  }
+
+  return files;
+};
+```
+
+The final framework-agnostic section is a function that takes in a given file path and compresses it - arguably the meat of the plugin. I suggest you do your own research on the various knobs & dials one can turn when either gzipping or Brotli compressing a file; I've gone with these settings, but I'm certainly no expert here. My understanding is that level 9 and quality 11 are respectively the highest levels of compression for these algorithms. If you were compressing files "live" as they streamed through your application, then the compression level you should pick would be a trade-off between the achieved compression ratio and the time it takes to compress the file. As we're compressing the files at build-time, the compression is basically free, so I've maxed it out. Again, do your own research though.
+
+In my implementation, the returned integer reflects how many compressed files were produced.
+
+```javascript
+/** @param {string} filePath */
+const writeCompressedVariants = async filePath => {
+  const sourceBuffer = await readFile(filePath);
+
+  if (sourceBuffer.byteLength === 0) {
+    return 0;
+  }
+
+  const gzipTask = gzip(sourceBuffer, { level: 9 }).then(gzipSource =>
+    writeFile(`${filePath}.gz`, gzipSource)
+  );
+
+  const brotliTask = brotliCompress(sourceBuffer, {
+    params: { [zlibConstants.BROTLI_PARAM_QUALITY]: 11 }
+  }).then(brotliSource => writeFile(`${filePath}.br`, brotliSource));
+
+  await Promise.all([gzipTask, brotliTask]);
+
+  return 2; // `.gz` and `.br`
+};
+```
+
+For the plugin itself, if you're not working with Astro, then that's all you'll get from me. In my Astro integration, however, here's how I then combine these three functions and run them over my build output:
+
+```javascript
+export const compressionIntegration = () => {
+  return {
+    name: "app-build-compression",
+    hooks: {
+      /** @param {{ dir: URL }} params */
+      "astro:build:done": async ({ dir }) => {
+        const outputDirectoryPath = fileURLToPath(dir);
+        console.info(`[app-build-compression] Scanning build output in ${outputDirectoryPath}`);
+
+        const buildFiles = await findFiles(outputDirectoryPath);
+
+        console.info(`[app-build-compression] Compressing ${buildFiles.length} file(s)`);
+
+        const compressionTasks = buildFiles.map(filePath => writeCompressedVariants(filePath));
+
+        const variantCounts = await Promise.all(compressionTasks);
+        const compressedVariantCount = variantCounts.reduce((total, count) => total + count, 0);
+
+        console.info(
+          `[app-build-compression] Wrote ${compressedVariantCount} compressed variant(s)`
+        );
+      }
+    }
+  };
+};
+```
+
+## Serving Compressed Static Build Assets
+
+> It's not lost on me that this section of the post has the same title as the post itself. Hopefully that means we're nearly there!
+
+With a plugin like the above in place, you're most of the way there (called it!). If you now look in your output directory, you'll see that you've roughly trebled the number of output files. For every uncompressed `about.html` or `logo.svg`, you now also have `about.html.gz`, `about.html.br`, `logo.svg.gz`, and `logo.svg.br`. This is good. This solves the original concern I had about compressing my static assets at request time from within my Hono app.
+
+When a client (web browser) sends a request to a server, it'll typically send up the <Anchor href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Accept-Encoding" text="Accept-Encoding" /> HTTP header. The value of this header tells us which compression algorithms the client supports. Once we know that they support one of our two compression algorithms, we can serve our pre-compressed files rather than the uncompressed originals. When your server responds with content that's compressed, you should use the <Anchor href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Encoding" text="Content-Encoding" /> response header to tell the client how you compressed the response.
+
+In Hono, I achieve this whole process something like the following. Similarly to the plugin above, you can translate it so that it's compatible with whichever framework you're using.
+
+Please note the following notes:
+
+- As you can see, I'm leaning on the npm package `negotiator` to read and parse the `Accept-Encoding` HTTP request header for me, because that's not something I want to take on myself.
+- Also note that I'm running this code in the Bun JS runtime, so I'm able to leverage things like their `Bun.file()` API; this returns a lazily evaluated readable stream, which means it slots perfectly into a Hono app because Hono is designed around JS primitives/standards like the `Response` class, which takes in a readable stream.
+- Note the third: this is just example code. **It has not been security reviewed.** Be aware of things like path traversal attacks.
+
+```javascript
+import { resolve } from "node:path";
+import { Hono } from "hono";
+import Negotiator from "negotiator";
+
+const distDir = resolve("./wherever/your/frontend/dist/is");
+
+const app = new Hono().get("*", async c => {
+  const requestPath = new URL(c.req.url).pathname;
+  const filePath = resolve(distDir, `.${requestPath === "/" ? "/index.html" : requestPath}`);
+
+  // 1. Determine what the client supports, in our preferred order.
+  const negotiator = new Negotiator({
+    headers: { "accept-encoding": c.req.header("accept-encoding") ?? "" }
+  });
+  const encoding = negotiator.encoding(["br", "gzip"]);
+
+  // 2. If it supports our compression, see if we already have that file pre-compressed.
+  if (encoding === "br" || encoding === "gzip") {
+    const ext = encoding === "br" ? ".br" : ".gz";
+    const compressedFile = Bun.file(`${filePath}${ext}`);
+
+    if (await compressedFile.exists()) {
+      return new Response(compressedFile, {
+        headers: {
+          "Content-Type": Bun.file(filePath).type, // MIME of the original, not .br/.gz
+          "Content-Encoding": encoding,
+          Vary: "Accept-Encoding"
+        }
+      });
+    }
+  }
+
+  // 3. Otherwise, just serve the uncompressed file.
+  const file = Bun.file(filePath);
+  return (await file.exists()) ? new Response(file) : c.text("Not found", 404);
+});
+
+export default app;
+```
+
+This is a technique that I've used multiple times now, and in my opinion, it's a great way to apply compression broadly, safely, and efficiently from a web-server stack that's already proxying static files for other reasons. If you're serving your static assets directly from a CDN or other type of static bucket, then hopefully it also has ways of letting you route requests to pre-compressed variants… Assuming it doesn't just do it for you. For me, this approach is one of those rare bits of 20% that's earned a permanent spot in the sprinkle shaker.
+
+## Appendix
+
+As promised, the Astro integration in full:
+
+```javascript
+import { readdir, readFile, writeFile } from "node:fs/promises";
+import { extname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
+import {
+  brotliCompress as brotliCompressCallback,
+  gzip as gzipCallback,
+  constants as zlibConstants
+} from "node:zlib";
+
+const gzip = promisify(gzipCallback);
+const brotliCompress = promisify(brotliCompressCallback);
+
+/**
+ * All the file types that we want to compress.
+ *
+ * This should never include already compressed file types, either things like
+ * `.br` or `.gz` that are products of this compression step, or things like
+ * `.zip`, `.png`, or `.jpg` which are file formats that are already compressed.
+ */
+const compressibleExtensions = new Set([
+  ".html",
+  ".css",
+  ".js",
+  ".mjs",
+  ".json",
+  ".xml",
+  ".svg",
+  ".txt"
+]);
+
+/** @param {string} filePath */
+const shouldCompressFile = filePath => {
+  const extension = extname(filePath).toLowerCase();
+  return compressibleExtensions.has(extension);
+};
+
+/** @param {string} directoryPath */
+const findFiles = async directoryPath => {
+  /** @type {string[]} */
+  const files = [];
+
+  const entries = await readdir(directoryPath, {
+    withFileTypes: true,
+    recursive: true
+  });
+
+  for (const entry of entries) {
+    const entryPath = join(entry.parentPath, entry.name);
+
+    if (entry.isFile() && shouldCompressFile(entryPath)) {
+      files.push(entryPath);
+    }
+  }
+
+  return files;
+};
+
+/** @param {string} filePath */
+const writeCompressedVariants = async filePath => {
+  const sourceBuffer = await readFile(filePath);
+
+  if (sourceBuffer.byteLength === 0) {
+    return 0;
+  }
+
+  const gzipTask = gzip(sourceBuffer, { level: 9 }).then(gzipSource =>
+    writeFile(`${filePath}.gz`, gzipSource)
+  );
+
+  const brotliTask = brotliCompress(sourceBuffer, {
+    params: { [zlibConstants.BROTLI_PARAM_QUALITY]: 11 }
+  }).then(brotliSource => writeFile(`${filePath}.br`, brotliSource));
+
+  await Promise.all([gzipTask, brotliTask]);
+
+  return 2; // `.gz` and `.br`
+};
+
+export const compressionIntegration = () => {
+  return {
+    name: "app-build-compression",
+    hooks: {
+      /** @param {{ dir: URL }} params */
+      "astro:build:done": async ({ dir }) => {
+        const outputDirectoryPath = fileURLToPath(dir);
+        console.info(`[app-build-compression] Scanning build output in ${outputDirectoryPath}`);
+
+        const buildFiles = await findFiles(outputDirectoryPath);
+
+        console.info(`[app-build-compression] Compressing ${buildFiles.length} file(s)`);
+
+        const compressionTasks = buildFiles.map(filePath => writeCompressedVariants(filePath));
+
+        const variantCounts = await Promise.all(compressionTasks);
+        const compressedVariantCount = variantCounts.reduce((total, count) => total + count, 0);
+
+        console.info(
+          `[app-build-compression] Wrote ${compressedVariantCount} compressed variant(s)`
+        );
+      }
+    }
+  };
+};
+```
