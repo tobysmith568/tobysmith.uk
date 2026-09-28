@@ -12,53 +12,42 @@ featured: true
 
 import Anchor from "../../components/Anchor.astro";
 
-Using packages of software created by others is a great way to develop your projects without having to re-solve the problems that others have faced before you. Reducing the scope of the code you need to write means you get to focus on the core of what makes your particular piece of software so great.
+We all use open-source software as a part of the products we build, but do we always follow the licensing requirements of all those free-to-use packages?
 
-That said, using software created by others seldom comes without a price to pay. More often than not, the price isn't one of money but is typically in the form of legal terms found in an open-source license that constrains the way you're legally able to use a particular package of code.
+Probably not.
 
-At the time of writing, the website <Anchor href="https://choosealicense.com"/> (created by the people at GitHub) helps to explain the terms of 47 different open-source licenses that developers can use to constrain the use of their packages. Of those 47, a staggering 42 of them all share a single constraint:
+The website <Anchor href="https://choosealicense.com"/> (created by the people at GitHub) helps to explain the terms of 47 different open-source licenses that developers can use to constrain the use of their packages. As of September 2026, of those 47 packages, 40 of them all share a single constraint:
 
 > A copy of the license and copyright notice must be included with the licensed material.
 
-In essence: "if you distribute the code found in this package to other people, then you also need to distribute this license and the copyright notice alongside it".
+In essence: "if you use the licensed code in your app, and other people download your app, you need to also give them the license text and the copyright notice alongside it". This is what <Anchor href="https://generate-license-file.js.org" text="generate-license-file"/> helps you to do.
 
-This requirement is so common that the most sensible way to make sure you adhere to it is to distribute the licenses for _all_ packages that you use; and that's where generate-licence-file comes in.
+Generate-license-file is a code library and a CLI bundled together into an npm package. When run, it scans all the packages in your `node_modules` directory that your production code depends on, and it concatenates all their licenses together into a single output. The goal here is that so many of your dependencies are using licenses that require you to distribute their license, that it doesn't make sense to check the constraints of each individual package in order to see what you need to do to be compliant... **Just always ship _all_ their licenses**.
 
-Using generate-license-file a developer can produce a single text file containing all the licenses for all their installedproduction npm packages. The outputted single file can then be distributed alongside whatever software is published - no matter what it is.
+Once generate-license-file has produced this output file, you can include it wherever or however you're distributing the licensed material.
 
-## CLI
+## Usages
 
-After a developer has installed generate-license-file, the simplest way to produce a plaintext file is to use the command line functionality. Those using <Anchor href="https://www.npmjs.com" text="npm"/> as their package manager can run the following command, where the `input` is a path to their package.json file, and the `output` is where they'd like the output to be written.
+### CLI
 
-```bash
-npx generate-license-file --input ./package.json --output ./licenses.txt
+The CLI is a great way to generate an output that you want in simple plaintext. For example, this is useful if you're committing other people's code and need to commit their licenses alongside it; or perhaps if you're looking to create a simple "meets the legal requirements and does no more"-style webpage that you host on your site at something like website.com/licenses.txt.
 
-```
+### Programmatic Library
 
-The generate-license-file CLI has many command line flags that alter the behaviour or the result; you can see them all over on the generate-license-file website: <Anchor href="https://generate-license-file.js.org"/>.
+If you're looking to customise the presentation of the output a little more, then this is where calling the functions yourself is most useful. You can see that the <Anchor href="/third-party" text="/third-party" external/> page of this website is generated using generate-license-file; the source code is available <Anchor href="https://github.com/tobysmith568/tobysmith.uk/blob/main/scripts/generate-licenses.mjs" text="here as an example"/>.
 
-## Programmatic Use
+### Webpack plugin
 
-For those with more complex use cases for the outputted data, generate-license-file exposes some TypeScript/JavaScript APIs for developers to call. Using these APIs, developers could, for example, manipulate each resulting license one at a time.
+If you're after that "meeting the legal requirement" build output, and you're using Webpack, then there's also the npm package <Anchor href="https://www.npmjs.com/package/generate-license-file-webpack-plugin" text="generate-license-file-webpack-plugin"/>. This contains a Webpack plugin that will automatically invoke generate-license-file as part of your build process and drop the output into your build directory.
 
-Using the exposed programmatic APIs is a technique I often use when developing websites. Rather than hosting a plaintext file as a static asset, I generate a web page as a part of my project. You can see a React example of me doing this in my project <Anchor href="https://which-node.js.org/third-party" text="https://which-node.js.org"/> (<Anchor href="https://github.com/tobysmith568/which-node-js/blob/6221addead9ebede200f098402b523439f937a9d/src/pages/third-party.tsx#L14" text="code"/>) and an example of me doing this in Astro on <Anchor href="https://..." text="this website"/> (<Anchor href="https://..." text="code"/>).
+## What's Supported
 
-## Advantages
+Right now, generate-license-file supports projects using npm/yarn/pnpm, and it runs on many different versions of Node.JS (and Bun & Deno). It has multiple different ways that it can be configured, all of which are documented on the website.
 
-While there are other similar tools out there (for example, the package manager <Anchor href="https://pnpm.io" text="pnpm"/> has a built-in command to achieve something similar), generate-license-file is compatible with all build tools and package managers. Other advantages include:
+## Other features
 
-- It only includes production dependencies; dev-dependencies are ignored.
-- It groups packages that share identical licenses, reducing the overall output.
-- It warns you when a package doesn't contain a license or contains more than one.
-- It lets you set up a config file to alter the behaviour consistently, including doing things like:
-  - Omitting specific packages
-  - Replacing license content
-  - Configuring which line endings to use
-- It lets you combine multiple inputs to produce a single output spanning multiple microservices or frontends etc.
-
-## Tech Stack
-
-Generate-license-file is written in TypeScript. The code is kept in an <Anchor href="https://nx.dev" text="Nx Monorepo"/>,
-allowing the website source to be co-located with the product itself. The CLI and programmatic APIs are fully unit-tested and end-to-end tested - as is the website.
-
-While the website is published using a continuous deployment strategy, the npm package uses ad-hoc deployments from a different pipeline, the latter of which leverages the npm Provenance feature for maximum user trust.
+- Allows for multiple input files to be combined into a single output
+- Warns when a package doesn't have a license or contains more than one
+- Groups multiple packages together that share identical license file content
+- Lets you swap out the content of a package's license
+- Lets you prepend or append your own other external text to the output

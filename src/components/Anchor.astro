@@ -14,12 +14,13 @@ interface Props {
   href: string;
   text?: string;
   class?: string;
+  external?: boolean;
 }
 
-const { href, class: className } = Astro.props;
+const { href, class: className, external } = Astro.props;
 const text = Astro.props.text ?? href;
 
-const isExternal = href.startsWith("http");
+const isExternal = external || href.startsWith("http");
 ---
 
 <a
