@@ -71,7 +71,7 @@ test.describe("Generate License File Project", () => {
     await projectPage.goto();
 
     await expect(projectPage.content).toContainText(
-      "Using packages of software created by others is a great way to develop your projects"
+      "We all use open-source software as a part of the products we build"
     );
   });
 });
