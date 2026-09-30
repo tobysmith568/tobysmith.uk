@@ -20,6 +20,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "license-check": "license-cop",
     "generate-types": "wrangler types",
     "generate:licenses": "bun scripts/generate-licenses.mjs"
   },
@@ -45,6 +46,7 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
+    "@license-cop/permissive": "^2.1.1",
     "@playwright/test": "^1.62.1",
     "@tobysmith568/prettier-config": "^2.1.0",
     "@types/node": "^26.0.0",
@@ -52,6 +54,7 @@
     "eslint-plugin-astro": "^3.1.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-playwright": "^2.11.0",
+    "license-cop": "^2.1.1",
     "typescript-eslint": "^8.68.0"
   },
   "trustedDependencies": [

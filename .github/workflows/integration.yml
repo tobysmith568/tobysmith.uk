@@ -38,6 +38,24 @@ jobs:
       - name: Run Prettier
         run: bun run format:check
 
+  licenses:
+    name: Licenses
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Check licenses
+        run: bun run license-check
+
   build:
     name: Build
 
