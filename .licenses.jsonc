@@ -1,0 +1,32 @@
+{
+  "$schema": "https://license-cop.js.org/schema.json",
+  "extends": "@license-cop/permissive",
+  "licenses": [
+    // SIL Open Font License; used by the @fontsource packages that ship font assets with the
+    // website. Permissive for bundling/distributing fonts, even commercially.
+    "OFL-1.1"
+  ],
+  "packages": [
+    // Declared as "Python-2.0", but the LICENSE file is the real PSF license text: OSI-approved
+    // and permissive. Pulled in transitively via js-yaml (astro's markdown/MDX pipeline and
+    // license-cop's own tooling).
+    "argparse@2.0.1",
+
+    // CC-BY-3.0 data package (SPDX license-exception list), not code; pulled in via the npm
+    // arborist chain used by generate-license-file and license-cop, only at build time.
+    "spdx-exceptions",
+
+    // MPL-2.0 CSS engine used by vite/astro at build time only; not bundled into the website
+    // output.
+    "lightningcss",
+    "lightningcss-linux-x64-gnu",
+    "lightningcss-linux-x64-musl",
+
+    // LGPL-3.0-or-later native libvips binaries used by sharp. astro.config.mjs sets
+    // imageService: "compile" so every image-bearing route is prerendered and images are
+    // optimized once at build time; sharp is also used by wrangler/miniflare for local dev only.
+    // Not redistributed in the deployed website output.
+    "@img/sharp-libvips-linux-x64",
+    "@img/sharp-libvips-linuxmusl-x64"
+  ]
+}
