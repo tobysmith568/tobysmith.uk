@@ -1,0 +1,79 @@
+---
+sortWeight: 140
+slug: handling-temporary-files-with-agents
+title: Handling Temporary Files With Agent-First Engineering
+description: How the scratch-dir agent skill gives temporary plans and scripts a diffable home in your repo, and a git hook that stops you from ever committing them.
+date: 2026-10-15
+featured: true
+---
+
+import Anchor from "../../components/Anchor.astro";
+
+Over time, it's become clear that there's a whole spectrum of ways to turn a requirement into a pull request when using an agent to write your code for you. We might not all agree on a standardised process for the best way to author code, but I might tentatively guess we all agree that agents produce better outputs when you front-load your effort before it writes the first line of prod-ready code. For me, this usually involves:
+
+- Breaking down a feature into requirements
+- Creating a plan for how we can meet those requirements
+- Having the agent "grill me" (interview me) on the plan
+- Finally implementing the plan.
+
+I think a lot of us work this way with our agents, asking them to produce intermediary plaintext artefacts before we progress with the work itself. We say things like "Create a markdown plan for X" or "Create a script to check Y", where the agent then goes off and creates the asset either in a temporary directory or somewhere semi-random in the current repository. But I'm bored of this. Temporary file paths offered up by the OS get lost and/or can't be diffed between edits, and while files within the repo don't have these limitations, they can be accidentally committed… I often found myself doing.
+
+## Scratch-dir Skill
+
+My solution for this issue is to introduce a standard. This standard, which I'll detail below, comes in the form of an agent skill called <Anchor href="https://github.com/tobysmith568/scratch-dir-skill" text="scratch-dir" />. The skill is not designed to be installed on a per-repo basis because it modifies how the agent solves problems - it's a personal preference. Instead, users are encouraged to install the skill globally into their setup if this is a way of working that they wish to adopt. I suggest users do this using the `skills` CLI:
+
+```sh
+npx skills add -g tobysmith568/scratch-dir-skill
+```
+
+Once installed, the skill instructs the agent on where & how all user-facing temporary files should be created. In short, they are to be created in a top-level directory in the current repo, called `_scratch`. This location is a perfect home for all temporary plans and scripts because it keeps them all together in a place that can still be git diffed.
+
+I've said a few times now that I want the files to be diffable, but I don't want to commit them. These ideas slightly fight against each other at first glance, but I think I've settled on a development pattern that works for me. The key is that while I don't commit these files, I do stage them. After asking my agent to create a plan for implementing X, I want to be able to tweak that plan in a way where I can see what's changed. Before I ask for an edit to a scratch file, I stage it, allowing the agent to change it however it wishes, and I get to see what changes it makes by comparing the working directory to the staged files.
+
+About now, the root cause of the "but sometimes I accidentally commit my scratch files" point from before is probably becoming glaringly obvious. Of course I accidentally commit scratch files once in a while if I stage them on purpose. The magic behind this skill - the thing that separates it from the "write all temporary files to a ./\_scratch directory" one-liner that you could chuck in your global CLAUDE.md - is that the skill also governs the creation of a git hook to block the committing of scratch files.
+
+### The Git Hook
+
+Along with the .md file of the skill, there is a bash script for detecting, creating, and removing a git commit hook. As mentioned, the hook blocks git commits that contain files under the top-level `_scratch` directory. It's this git hook that guarantees I never commit a scratch file ever again.
+
+Skills are obviously plain text, so you could probably read it yourself, but in short: whenever the agent decides to create a file that doesn't contain code to be committed, it loads in the skill. The skill tells the agent to run the bash script and to pass in the "status" command-line argument; this makes the script report if the commit hook is installed in the current repo or not. If the hook is installed, then it can continue with the creation of the file under the `_scratch` directory.
+
+If the script reports that the hook is not installed, the agent asks if you'd like to install the hook with the following options:
+
+- Yes
+- Not this time
+- Not in this repository
+- Not at all on this machine
+
+"Yes" obviously means that it does, and "Not this time" means that it doesn't, but the other two are slightly more interesting because they require the agent to remember a binary(ish) setting for other chats to be able to recall.
+
+### Getting The Agent To Remember Settings
+
+Agents can write plaintext statements into memory files, but I wanted something more definitive - a way to toggle a setting on and off. Agents can manually create JSON/YAML/TOML files, but this is also slightly too flimsy (and token-hungry) for what I was looking for - I wanted a CLI for the agent to use with an API somewhat like:
+
+```sh
+$ cliname get setting-name
+setting-value
+$ cliname set setting-name updated-value --repo-level
+$ cliname set setting-name newer-value --global-level
+```
+
+Luckily for me, a CLI like this already exists, and I'm pretty sure that everyone who wants to use my skill already has it installed… git.
+
+Git has plenty of built-in settings that users can configure via the git CLI. Each of these settings can live at the git-installation-level, or at the repository-level, and interestingly for this use case, the CLI will blindly let you configure arbitrary settings that the git CLI itself won't pick up on. Using this technique, my skill instructs the agent to use `git config --local scratchSkill.skipHookPrompt true` to remember "Not in this repository" and `git config --global scratchSkill.skipHookPrompt true` to remember "Not at all on this machine". Whenever the agent wants to read back this setting, it runs `git config --get scratchSkill.skipHookPrompt || echo false` to get a deterministic result about how it should proceed.
+
+### Why A Bash Script?
+
+I see lots of skills porting around scripts written in languages like Python, JavaScript, or Ruby, but these are all making assumptions about what will be installed on the end user's machine - especially if that end user is running Windows. I wanted to use a scripting language that I knew would be on my users' machines; and surprisingly, that's Bash. I get away with making this assumption because of an assumption that we've already made in order for this skill to function properly: we assume they have git installed for the config setting above; and when git is installed on a Windows machine, it comes with git-bash.
+
+Towards the beginning of the skill, there's a section about identifying how to invoke bash scripts. On Linux and macOS, it can just run the bash that's on the path. For Windows users, it identifies the install location of git, and works backwards from there in order to find the location of git-bash. It's not generally safe to rely on the bash located on the path of Windows machines because for lots of people, particularly developers, that bash will be the WSL bash, which doesn't help us here. Git-bash bundles a trimmed version of MSYS2 and obviously won't ship with all the POSIX commands that you might be used to when working with bash. This means that while many of the standard bash features work just fine, there are a few footguns, and as such, anyone else using this pattern in their own skills needs to make sure they avoid bash-scripting features that won't work in git-bash… This just requires testing on Windows (or believing your agent when it says you're all good). Me personally, I've written some unit tests in bash that exercise the script shipped with the skill, and I run them in a GitHub Action workflow that targets Linux, macOS, and Windows.
+
+## Final Thoughts
+
+If you find yourself regularly asking your agents to create plans/checklists/scripts, etc., that you want to keep for more than 30 seconds but not commit, then I urge you to give this skill a go. If you think you've got a better solution, then I urge you to let me know!
+
+To try it out:
+
+```sh
+npx skills add -g tobysmith568/scratch-dir-skill
+```
